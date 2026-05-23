@@ -69,7 +69,7 @@
                                     @if($type === 'sensors')
                                         <td class="px-6 py-4">
                                             @if($item->image)
-                                                <img src="{{ Str::startsWith($item->image, ['images/', '/images/']) ? asset($item->image) : asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="h-16 w-16 rounded-lg object-cover border border-gray-200 dark:border-gray-700">
+                                                <img src="{{ Str::startsWith($item->image, ['http://', 'https://']) ? $item->image : (Str::startsWith($item->image, ['images/', '/images/']) ? asset($item->image) : asset('storage/' . $item->image)) }}" alt="{{ $item->name }}" class="h-16 w-16 rounded-lg object-cover border border-gray-200 dark:border-gray-700">
                                             @else
                                                 <img src="{{ asset('images/no-image.svg') }}" alt="No image" class="h-16 w-16 rounded-lg object-cover border border-gray-200 dark:border-gray-700 opacity-60">
                                             @endif
