@@ -90,7 +90,7 @@
             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow overflow-hidden hover:shadow-lg transition flex flex-col">
                 <div class="h-32 bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center overflow-hidden">
                     @if($sensor->image)
-                        <img src="{{ Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
+                        <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : (Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image)) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
                     @else
                         <i class="fas fa-microchip text-4xl text-white"></i>
                     @endif
@@ -242,7 +242,7 @@
             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition transform hover:-translate-y-2 flex flex-col">
                 <div class="h-48 bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center overflow-hidden">
                     @if($sensor->image)
-                        <img src="{{ Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
+                        <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : (Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image)) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
                     @else
                         <i class="fas fa-microchip text-8xl text-white"></i>
                     @endif
