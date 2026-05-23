@@ -1,5 +1,4 @@
 FROM php:8.2-cli
-WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
     unzip \
@@ -8,9 +7,13 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    zip
+    libzip-dev \
+    zip \
+    default-mysql-client
 
-RUN docker-php-ext-install pdo pdo_mysql mbstring
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip bcmath
+
+WORKDIR /app
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
