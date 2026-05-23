@@ -215,6 +215,7 @@ class ContentController extends Controller
                 'price' => 'required|numeric|min:0',
                 'link' => 'required|url',
                 'category' => 'required|string|max:255',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]),
             'videos' => $request->validate([
                 'title' => 'required|string|max:255',
@@ -237,7 +238,7 @@ class ContentController extends Controller
             $data['youtube_id'] = $this->extractYouTubeId($data['youtube_link']);
         }
 
-       if (in_array($type, ['sensors', 'products']) && $request->hasFile('image')) {
+        if (in_array($type, ['sensors', 'products']) && $request->hasFile('image')) {
             $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath());
             $data['image'] = $uploadedFile->getSecurePath();
         }
