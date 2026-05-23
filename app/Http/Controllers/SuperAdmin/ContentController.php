@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Project;
 use App\Models\Sensor;
 use App\Models\Video;
+use Cloudinary\Cloudinary;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -239,8 +240,20 @@ class ContentController extends Controller
         }
 
         if (in_array($type, ['sensors', 'products']) && $request->hasFile('image')) {
-            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath());
-            $data['image'] = $uploadedFile->getSecurePath();
+            $cloudinary = new \Cloudinary\Cloudinary([
+                'cloud' => [
+                    'cloud_name' => config('cloudinary.cloud_name'),
+                    'api_key'    => config('cloudinary.api_key'),
+                    'api_secret' => config('cloudinary.api_secret'),
+                ],
+                'url' => [
+                    'secure' => true,
+                ],
+            ]);
+
+            $uploadApi = $cloudinary->uploadApi();
+            $result = $uploadApi->upload($request->file('image')->getRealPath());
+            $data['image'] = $result['secure_url'];
         }
 
         $data['is_active'] = $request->has('is_active');
