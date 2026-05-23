@@ -25,4 +25,4 @@ RUN chmod -R 777 storage bootstrap/cache
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "chmod -R 775 storage bootstrap/cache && php artisan config:clear && php artisan migrate --force && php artisan db:seed --class=AdminUserSeeder --force && php artisan serve --host=0.0.0.0 --port=10000"]
+CMD ["sh", "-c", "chmod -R 775 storage bootstrap/cache && php artisan config:clear && php artisan cache:clear && php artisan migrate --force && php artisan db:seed --class=AdminUserSeeder --force && php artisan serve --host=0.0.0.0 --port=10000"]
