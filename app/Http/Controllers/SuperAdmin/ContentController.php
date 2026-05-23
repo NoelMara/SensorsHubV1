@@ -237,7 +237,7 @@ class ContentController extends Controller
             $data['youtube_id'] = $this->extractYouTubeId($data['youtube_link']);
         }
 
-        if ($type === 'sensors' && $request->hasFile('image')) {
+       if (in_array($type, ['sensors', 'products']) && $request->hasFile('image')) {
             $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath());
             $data['image'] = $uploadedFile->getSecurePath();
         }
