@@ -34,19 +34,9 @@ class ProfileController extends Controller
         ];
 
         // Handle profile image upload
-        if ($request->hasFile('profile_image')) {
-            $directory = public_path('images/profile_images');
-            File::ensureDirectoryExists($directory);
-
-            // Delete old image if exists
-            if ($user->profile_image && file_exists(public_path($user->profile_image))) {
-                File::delete(public_path($user->profile_image));
-            }
-
-            $file = $request->file('profile_image');
-            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            $file->move($directory, $filename);
-            $data['profile_image'] = 'images/profile_images/' . $filename;
+       if ($request->hasFile('profile_image')) {
+            $uploadedFile = cloudinary()->upload($request->file('profile_image')->getRealPath());
+            $data['profile_image'] = $uploadedFile->getSecurePath();
         }
 
         $user->update($data);

@@ -35,7 +35,8 @@ class SensorController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('sensors', 'public');
+            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath());
+            $validated['image'] = $uploadedFile->getSecurePath();
         }
 
         Sensor::create($validated);
@@ -64,7 +65,8 @@ class SensorController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('sensors', 'public');
+            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath());
+            $validated['image'] = $uploadedFile->getSecurePath();
         }
 
         $sensor->update($validated);

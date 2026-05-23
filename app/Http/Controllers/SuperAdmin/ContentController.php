@@ -238,11 +238,8 @@ class ContentController extends Controller
         }
 
         if ($type === 'sensors' && $request->hasFile('image')) {
-            // Delete old image if exists
-            if ($item && $item->image) {
-                \Illuminate\Support\Facades\Storage::disk('public')->delete($item->image);
-            }
-            $data['image'] = $request->file('image')->store('sensors', 'public');
+            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath());
+            $data['image'] = $uploadedFile->getSecurePath();
         }
 
         $data['is_active'] = $request->has('is_active');
