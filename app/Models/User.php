@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'role',
+        'profile_image',
         'verification_code',
         'verification_code_expires_at',
     ];
@@ -63,6 +64,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isAdmin()
     {
         return $this->role === 'admin';
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->role === 'super_admin';
+    }
+
+    public function canManageAdminArea()
+    {
+        return in_array($this->role, ['admin', 'super_admin'], true);
     }
 
     public function isUser()

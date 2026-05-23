@@ -1,190 +1,279 @@
 @extends('layouts.app')
 
-@section('title', 'Login')
+@php($isSuperAdminLogin = ($loginMode ?? 'default') === 'super_admin')
+
+@section('title', $isSuperAdminLogin ? 'Super Admin Login' : 'Login')
 
 @push('styles')
 <style>
-    .auth-gradient {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .auth-shell {
+        background:
+            radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.12), transparent 28%),
+            radial-gradient(circle at 88% 12%, rgba(59, 130, 246, 0.16), transparent 30%),
+            linear-gradient(135deg, #f8fafc 0%, #eef6f2 48%, #f7fafc 100%);
     }
-    .glass-effect {
-        backdrop-filter: blur(10px);
-        background: rgba(255, 255, 255, 0.95);
+
+    .dark .auth-shell {
+        background:
+            radial-gradient(circle at 15% 20%, rgba(16, 185, 129, 0.12), transparent 28%),
+            radial-gradient(circle at 88% 12%, rgba(59, 130, 246, 0.12), transparent 30%),
+            linear-gradient(135deg, #0f172a 0%, #111827 48%, #0b1120 100%);
     }
-    .dark .glass-effect {
-        background: rgba(31, 41, 55, 0.95);
+
+    .auth-panel {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(148, 163, 184, 0.28);
+        box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+        backdrop-filter: blur(18px);
     }
-    .input-field {
-        transition: all 0.3s ease;
+
+    .dark .auth-panel {
+        background: rgba(15, 23, 42, 0.88);
+        border-color: rgba(148, 163, 184, 0.18);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
     }
-    .input-field:focus {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+
+    .auth-input {
+        transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .auth-input:focus {
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
+    }
+
+    .metric-card {
+        background: rgba(255, 255, 255, 0.16);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 </style>
 @endpush
 
 @section('content')
-<div class="min-h-screen flex">
-    <!-- Left Side - Branding -->
-    <div class="hidden lg:flex lg:w-1/2 auth-gradient items-center justify-center p-12">
-        <div class="max-w-md text-white">
-            <div class="mb-8">
-                <i class="fas fa-microchip text-7xl mb-6 opacity-90"></i>
-                <h1 class="text-5xl font-bold mb-4">Welcome Back!</h1>
-                <p class="text-xl opacity-90 leading-relaxed">Access your SensorHub account to explore sensors, manage projects, and connect with the community.</p>
-            </div>
-            <div class="space-y-4">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-check-circle text-2xl"></i>
-                    <span class="text-lg">Access to all sensor tutorials</span>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-check-circle text-2xl"></i>
-                    <span class="text-lg">Save and track your projects</span>
-                </div>
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-check-circle text-2xl"></i>
-                    <span class="text-lg">Join the maker community</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Right Side - Login Form -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-gray-50 dark:bg-gray-900">
-        <div class="w-full max-w-md">
-            @if(session('require_verification'))
-            <!-- Verification Code Form -->
-            <div class="glass-effect rounded-2xl shadow-2xl p-8">
-                <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900 mb-4">
-                        <i class="fas fa-envelope text-4xl text-primary"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Verify Your Email</h2>
-                    <p class="text-gray-600 dark:text-gray-400">We've sent a 6-digit code to</p>
-                    <p class="text-primary font-semibold">{{ session('user_email') }}</p>
-                </div>
-
-                <form method="POST" action="{{ route('login.verify') }}" class="space-y-6">
-                    @csrf
-                    <input type="hidden" name="email" value="{{ session('user_email') }}">
-                    
+<div class="auth-shell min-h-screen">
+    <div class="mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:px-10">
+        <section class="hidden overflow-hidden rounded-[2rem] bg-slate-950 p-10 text-white shadow-2xl lg:block">
+            <div class="relative min-h-[650px]">
+                <div class="absolute inset-0 bg-[linear-gradient(145deg,rgba(16,185,129,0.24),transparent_42%),linear-gradient(315deg,rgba(59,130,246,0.24),transparent_45%)]"></div>
+                <div class="relative z-10 flex min-h-[650px] flex-col justify-between">
                     <div>
-                        <input 
-                            id="verification_code" 
-                            name="verification_code" 
-                            type="text" 
-                            maxlength="6" 
-                            pattern="[0-9]{6}"
-                            required 
-                            class="input-field w-full px-4 py-4 text-center text-4xl font-bold tracking-widest border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/20 dark:bg-gray-700 dark:text-white"
-                            placeholder="000000"
-                            autocomplete="off"
-                        >
-                        @error('verification_code')
-                            <p class="text-red-500 text-sm mt-2"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
-                        @enderror
+                        <a href="{{ route('home') }}" class="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold tracking-wide text-white/90">
+                            <i class="fas fa-microchip text-emerald-300"></i>
+                            SensorHub
+                        </a>
+
+                        <div class="mt-16 max-w-xl">
+                            <p class="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-200">
+                                {{ $isSuperAdminLogin ? 'Platform command' : 'Project workspace' }}
+                            </p>
+                            <h1 class="mt-5 text-5xl font-bold leading-tight">
+                                {{ $isSuperAdminLogin ? 'Manage SensorHub with clarity.' : 'Build smarter sensor projects.' }}
+                            </h1>
+                            <p class="mt-6 text-lg leading-8 text-slate-200">
+                                {{ $isSuperAdminLogin ? 'Review accounts, roles, and platform activity from a secure administrator entry point.' : 'Access guides, save project ideas, and continue learning with a workspace designed for makers.' }}
+                            </p>
+                        </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
-                        <i class="fas fa-check-circle mr-2"></i>Verify & Login
-                    </button>
+                    <div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="metric-card rounded-2xl p-4">
+                                <p class="text-2xl font-bold">120+</p>
+                                <p class="mt-1 text-xs uppercase tracking-wide text-slate-300">Guides</p>
+                            </div>
+                            <div class="metric-card rounded-2xl p-4">
+                                <p class="text-2xl font-bold">24/7</p>
+                                <p class="mt-1 text-xs uppercase tracking-wide text-slate-300">Access</p>
+                            </div>
+                            <div class="metric-card rounded-2xl p-4">
+                                <p class="text-2xl font-bold">IoT</p>
+                                <p class="mt-1 text-xs uppercase tracking-wide text-slate-300">Focused</p>
+                            </div>
+                        </div>
 
-                    <div class="space-y-3 text-center">
-                        <form method="POST" action="{{ route('login.resend') }}" class="inline">
+                        <div class="mt-8 space-y-4 text-sm text-slate-200">
+                            <div class="flex items-center gap-3">
+                                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-200">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                <span>{{ $isSuperAdminLogin ? 'Protected access for elevated accounts' : 'Continue saved builds and learning paths' }}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-400/15 text-blue-200">
+                                    <i class="fas fa-chart-line"></i>
+                                </span>
+                                <span>{{ $isSuperAdminLogin ? 'Monitor users and content activity' : 'Find sensor references faster' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mx-auto w-full max-w-md">
+            <div class="mb-8 text-center lg:text-left">
+                <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200 lg:hidden">
+                    <i class="fas fa-microchip text-emerald-500"></i>
+                    SensorHub
+                </a>
+                <p class="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-300">
+                    {{ session('require_verification') ? 'Email verification' : ($isSuperAdminLogin ? 'Super admin access' : 'Welcome back') }}
+                </p>
+                <h2 class="mt-3 text-3xl font-bold text-slate-950 dark:text-white">
+                    {{ session('require_verification') ? 'Enter your security code' : ($isSuperAdminLogin ? 'Sign in securely' : 'Sign in to your account') }}
+                </h2>
+                <p class="mt-3 text-slate-600 dark:text-slate-400">
+                    {{ session('require_verification') ? 'We sent a 6-digit code to your email address.' : ($isSuperAdminLogin ? 'Use your authorized SensorHub administrator credentials.' : 'Pick up where you left off with sensors, tutorials, and saved projects.') }}
+                </p>
+            </div>
+
+            @if(session('require_verification'))
+                <div class="auth-panel rounded-3xl p-7 sm:p-8">
+                    <div class="mb-7 flex items-start gap-4 rounded-2xl bg-emerald-50 p-4 text-emerald-950 dark:bg-emerald-400/10 dark:text-emerald-100">
+                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+                            <i class="fas fa-envelope-open-text"></i>
+                        </span>
+                        <div>
+                            <p class="font-semibold">Verification required</p>
+                            <p class="mt-1 text-sm text-emerald-800 dark:text-emerald-200">{{ session('user_email') }}</p>
+                        </div>
+                    </div>
+
+                    {{-- Success message (resend confirmation) --}}
+                    @if(session('message'))
+                        <div class="mb-5 flex items-center gap-3 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-300">
+                            <i class="fas fa-check-circle"></i>
+                            {{ session('message') }}
+                        </div>
+                    @endif
+
+                    {{-- Resend rate limit error --}}
+                    @error('email')
+                        <div class="mb-5 flex items-center gap-3 rounded-2xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 dark:bg-red-400/10 dark:text-red-400">
+                            <i class="fas fa-circle-exclamation"></i>
+                            {{ $message }}
+                        </div>
+                    @enderror
+
+                    <form method="POST" action="{{ route('login.verify') }}" class="space-y-6">
+                        @csrf
+                        <input type="hidden" name="email" value="{{ session('user_email') }}">
+
+                        <div>
+                            <label for="verification_code" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Verification code</label>
+                            <input
+                                id="verification_code"
+                                name="verification_code"
+                                type="text"
+                                maxlength="6"
+                                pattern="[0-9]{6}"
+                                required
+                                class="auth-input mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-4 text-center text-3xl font-bold tracking-[0.35em] text-slate-950 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white @error('verification_code') border-red-500 @enderror"
+                                placeholder="000000"
+                                autocomplete="one-time-code"
+                            >
+                            {{-- Wrong code error --}}
+                            @error('verification_code')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                    <i class="fas fa-circle-exclamation mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 py-4 font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400">
+                            <i class="fas fa-shield-halved"></i>
+                            Verify and continue
+                        </button>
+                    </form>
+
+                    <div class="mt-6 flex flex-col items-center justify-between gap-3 border-t border-slate-200 pt-5 text-sm dark:border-slate-800 sm:flex-row">
+                        <form method="POST" action="{{ route('login.resend') }}">
                             @csrf
                             <input type="hidden" name="email" value="{{ session('user_email') }}">
-                            <button type="submit" class="text-primary hover:text-purple-600 font-medium text-sm">
-                                <i class="fas fa-redo mr-1"></i>Resend Code
+                            <button type="submit" class="font-semibold text-emerald-700 transition hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200">
+                                <i class="fas fa-rotate-right mr-1"></i>Resend code
                             </button>
                         </form>
-                        <div>
-                            <a href="{{ route('login') }}" class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 text-sm">
-                                <i class="fas fa-arrow-left mr-1"></i>Back to Login
-                            </a>
-                        </div>
+                        <a href="{{ $isSuperAdminLogin ? route('super-admin.login') : route('login') }}" class="font-semibold text-slate-500 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                            Back to login
+                        </a>
                     </div>
-                </form>
-            </div>
-            @else
-            <!-- Login Form -->
-            <div class="glass-effect rounded-2xl shadow-2xl p-8">
-                <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 mb-4">
-                        <i class="fas fa-sign-in-alt text-4xl text-white"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Sign In</h2>
-                    <p class="text-gray-600 dark:text-gray-400">Enter your credentials to access your account</p>
                 </div>
+            @else
+                <div class="auth-panel rounded-3xl p-7 sm:p-8">
+                    <form method="POST" action="{{ $isSuperAdminLogin ? route('super-admin.login.submit') : route('login') }}" class="space-y-5">
+                        @csrf
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-5">
-                    @csrf
-                    
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-gray-400"></i>
+                        <div>
+                            <label for="email" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Email address</label>
+                            <div class="relative mt-2">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input id="email" name="email" type="email" required
+                                    class="auth-input w-full rounded-2xl border border-slate-300 bg-white py-3.5 pl-12 pr-4 text-slate-950 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white @error('email') border-red-500 @enderror"
+                                    placeholder="you@example.com"
+                                    value="{{ old('email') }}">
                             </div>
-                            <input id="email" name="email" type="email" required 
-                                class="input-field w-full pl-12 pr-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/20 dark:bg-gray-700 dark:text-white @error('email') border-red-500 @enderror" 
-                                placeholder="you@example.com" 
-                                value="{{ old('email') }}">
+                            @error('email')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                    <i class="fas fa-circle-exclamation mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
                         </div>
-                        @error('email')
-                            <p class="text-red-500 text-sm mt-2"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
-                        @enderror
-                    </div>
 
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Password</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
+                        <div>
+                            <label for="password" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Password</label>
+                            <div class="relative mt-2">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input id="password" name="password" type="password" required
+                                    class="auth-input w-full rounded-2xl border border-slate-300 bg-white py-3.5 pl-12 pr-12 text-slate-950 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white @error('password') border-red-500 @enderror"
+                                    placeholder="Enter your password">
+                                <button type="button" id="togglePassword" aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400 transition hover:text-slate-700 dark:hover:text-slate-200">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                             </div>
-                            <input id="password" name="password" type="password" required 
-                                class="input-field w-full pl-12 pr-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/20 dark:bg-gray-700 dark:text-white" 
-                                placeholder="••••••••">
+                            @error('password')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">
+                                    <i class="fas fa-circle-exclamation mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
                         </div>
-                        @error('password')
-                            <p class="text-red-500 text-sm mt-2"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</p>
-                        @enderror
-                    </div>
 
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input id="remember" name="remember" type="checkbox" 
-                                class="h-5 w-5 text-primary focus:ring-primary border-gray-300 rounded cursor-pointer">
-                            <label for="remember" class="ml-2 block text-sm text-gray-700 dark:text-gray-300 cursor-pointer">
+                        <div class="flex items-center justify-between">
+                            <label for="remember" class="flex cursor-pointer items-center gap-3 text-sm font-medium text-slate-600 dark:text-slate-300">
+                                <input id="remember" name="remember" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500">
                                 Remember me
                             </label>
                         </div>
-                    </div>
 
-                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-semibold hover:shadow-lg transform hover:-translate-y-0.5 transition duration-200">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Sign In
-                    </button>
+                        <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 py-4 font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400">
+                            <i class="fas {{ $isSuperAdminLogin ? 'fa-user-shield' : 'fa-right-to-bracket' }}"></i>
+                            {{ $isSuperAdminLogin ? 'Enter super admin' : 'Sign in' }}
+                        </button>
+                    </form>
 
-                    <div class="text-center pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <p class="text-gray-600 dark:text-gray-400">
-                            Don't have an account? 
-                            <a href="{{ route('register') }}" class="text-primary hover:text-purple-600 font-semibold transition">
-                                Create Account
+                    <div class="mt-7 border-t border-slate-200 pt-6 text-center text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
+                        @if($isSuperAdminLogin)
+                            Need a regular account?
+                            <a href="{{ route('login') }}" class="font-semibold text-emerald-700 transition hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200">
+                                User/Admin login
                             </a>
-                        </p>
+                        @else
+                            New to SensorHub?
+                            <a href="{{ route('register') }}" class="font-semibold text-emerald-700 transition hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200">
+                                Create an account
+                            </a>
+                        @endif
                     </div>
-                </form>
-            </div>
+                </div>
             @endif
 
-            <!-- Footer -->
-            <div class="mt-8 text-center">
-                <p class="text-sm text-gray-500 dark:text-gray-400">
-                    &copy; {{ date('Y') }} SensorHub. All rights reserved.
-                </p>
-            </div>
-        </div>
+            <p class="mt-8 text-center text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
+                &copy; {{ date('Y') }} SensorHub
+            </p>
+        </section>
     </div>
 </div>
 @endsection
@@ -193,8 +282,20 @@
 <script>
     const codeInput = document.getElementById('verification_code');
     if (codeInput) {
-        codeInput.addEventListener('input', function(e) {
+        codeInput.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+        });
+    }
+
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+
+    if (passwordInput && togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
         });
     }
 </script>

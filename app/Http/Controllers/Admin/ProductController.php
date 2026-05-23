@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -24,14 +25,21 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',  // Changed from required
             'price' => 'required|numeric|min:0',
-            'link' => 'required|url',
-            'category' => 'required|string|max:255',
+            'link' => 'nullable|url',  // Changed from required
+            'category' => 'nullable|string|max:255',  // Changed from required
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // ADDED
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->has('is_active');
+
+        // ADDED: Handle image upload
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('products', 'public');
+            $validated['image'] = $path;
+        }
 
         Product::create($validated);
 
@@ -48,14 +56,27 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'link' => 'required|url',
-            'category' => 'required|string|max:255',
+            'link' => 'nullable|url',
+            'category' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // ADDED
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->has('is_active');
+
+        // ADDED: Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+            
+            // Upload new image
+            $path = $request->file('image')->store('products', 'public');
+            $validated['image'] = $path;
+        }
 
         $product->update($validated);
 
@@ -65,7 +86,13 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        // ADDED: Delete the image file when deleting product
+        if ($product->image && Storage::disk('public')->exists($product->image)) {
+            Storage::disk('public')->delete($product->image);
+        }
+        
         $product->delete();
+        
         return redirect()->route('admin.products.index')
             ->with('success', 'Product deleted successfully!');
     }

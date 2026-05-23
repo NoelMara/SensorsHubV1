@@ -6,8 +6,8 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Header -->
     <div class="text-center mb-12">
-        <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-4">Explore Sensors</h1>
-        <p class="text-xl text-gray-600 dark:text-gray-400">Discover different types of sensors and learn how they work</p>
+        <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 dark:text-white mb-4">Explore Sensors</h1>
+        <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-400">Discover different types of sensors and learn how they work</p>
     </div>
 
     <!-- Search & Filter -->
@@ -16,7 +16,7 @@
             <div class="flex-1">
                 <input type="text" placeholder="Search sensors..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
             </div>
-            <div class="md:w-48">
+            <div class="w-full md:w-48">
                 <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
                     <option value="">All Categories</option>
                     <option value="temperature">Temperature</option>
@@ -35,7 +35,7 @@
             <!-- Image Container with Fixed Size -->
             <div class="h-56 w-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center overflow-hidden">
                 @if($sensor->image)
-                    <img src="{{ asset($sensor->image) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
+                    <img src="{{ Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
                 @else
                     <i class="fas fa-microchip text-8xl text-white"></i>
                 @endif
@@ -47,7 +47,7 @@
                 <p class="text-gray-600 dark:text-gray-300 mb-4 flex-1">{{ Str::limit($sensor->description, 120) }}</p>
                 
                 <!-- Quick Info -->
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                     <span class="text-sm text-gray-500 dark:text-gray-400">
                         <i class="fas fa-project-diagram mr-1"></i> 
                         {{ $sensor->projects()->count() }} Projects

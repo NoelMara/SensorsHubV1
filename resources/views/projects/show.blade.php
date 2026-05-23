@@ -6,7 +6,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
     <nav class="mb-8">
-        <ol class="flex items-center space-x-2 text-sm">
+        <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
             <li><a href="{{ route('home') }}" class="text-primary hover:underline">Home</a></li>
             <li class="text-gray-500 dark:text-gray-400">/</li>
             <li><a href="{{ route('projects.index') }}" class="text-primary hover:underline">Projects</a></li>
@@ -20,8 +20,8 @@
         <div class="lg:col-span-2">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
                 <!-- Header -->
-                <div class="p-8 border-b dark:border-gray-700">
-                    <div class="flex items-center justify-between mb-4">
+                <div class="p-5 sm:p-8 border-b dark:border-gray-700">
+                    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
                         <span class="px-4 py-2 rounded-full text-sm font-semibold
                             @if($project->difficulty == 'Beginner') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
                             @elseif($project->difficulty == 'Intermediate') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
@@ -36,9 +36,9 @@
                         @endif
                     </div>
 
-                    <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-4">{{ $project->title }}</h1>
+                    <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-4 break-words">{{ $project->title }}</h1>
                     
-                    <div class="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
+                    <div class="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
                         <span>
                             <i class="fas fa-microchip mr-1 text-primary"></i> 
                             <a href="{{ route('sensors.show', $project->sensor->slug) }}" class="text-primary hover:underline">
@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Description -->
-                <div class="p-8">
+                <div class="p-5 sm:p-8">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">
                         <i class="fas fa-info-circle mr-2 text-primary"></i>Project Overview
                     </h2>
@@ -60,7 +60,7 @@
 
                 <!-- Instructions -->
                 @if($project->instructions)
-                <div class="p-8 border-t dark:border-gray-700">
+                <div class="p-5 sm:p-8 border-t dark:border-gray-700">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">
                         <i class="fas fa-tasks mr-2 text-primary"></i>Instructions
                     </h2>
@@ -91,7 +91,7 @@
                 <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
                     <i class="fas fa-microchip mr-2 text-primary"></i>Related Sensor
                 </h3>
-                <div class="flex items-center space-x-3 mb-3">
+                <div class="flex items-start space-x-3 mb-3">
                     <div class="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
                         <i class="fas fa-microchip text-white text-xl"></i>
                     </div>

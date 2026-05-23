@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('difficulty')->nullable(); // Beginner, Intermediate, Advanced
             $table->string('sensor_type')->nullable();
-            $table->string('status')->default('pending'); // pending, approved, rejected, published
+            $table->string('status')->default('pending'); 
             $table->text('admin_notes')->nullable();
             $table->timestamps();
         });

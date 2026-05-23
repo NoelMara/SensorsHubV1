@@ -6,7 +6,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Breadcrumb -->
     <nav class="mb-8">
-        <ol class="flex items-center space-x-2 text-sm">
+        <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
             <li><a href="{{ route('home') }}" class="text-gray-500 dark:text-gray-400 hover:text-primary">Home</a></li>
             <li><span class="text-gray-400">/</span></li>
             <li><a href="{{ route('sensors.index') }}" class="text-gray-500 dark:text-gray-400 hover:text-primary">Sensors</a></li>
@@ -18,9 +18,9 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
         <!-- Sensor Image -->
         <div>
-            <div class="bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg shadow-lg overflow-hidden h-96 flex items-center justify-center">
+            <div class="bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg shadow-lg overflow-hidden h-72 sm:h-80 lg:h-96 flex items-center justify-center">
                 @if($sensor->image)
-                    <img src="{{ asset($sensor->image) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
+                    <img src="{{ Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
                 @else
                     <i class="fas fa-microchip text-9xl text-white"></i>
                 @endif
@@ -29,9 +29,9 @@
 
         <!-- Sensor Info -->
         <div>
-            <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-4">{{ $sensor->name }}</h1>
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 dark:text-white mb-4 break-words">{{ $sensor->name }}</h1>
             
-            <div class="flex items-center gap-4 mb-6">
+            <div class="flex flex-wrap items-center gap-3 mb-6">
                 <span class="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 px-4 py-2 rounded-full text-sm font-semibold">
                     <i class="fas fa-check-circle mr-1"></i> Active
                 </span>
@@ -43,10 +43,10 @@
                 </span>
             </div>
 
-            <p class="text-lg text-gray-600 dark:text-gray-300 mb-6">{{ $sensor->description }}</p>
+            <p class="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-6">{{ $sensor->description }}</p>
 
             <!-- Quick Stats -->
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Difficulty Level</p>
                     <p class="text-lg font-semibold text-gray-800 dark:text-white">Beginner to Advanced</p>
@@ -58,7 +58,7 @@
             </div>
 
             <!-- CTA Buttons -->
-            <div class="flex gap-4">
+            <div class="flex flex-col sm:flex-row gap-4">
                 <a href="#projects" class="flex-1 text-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
                     <i class="fas fa-project-diagram mr-2"></i> View Projects
                 </a>

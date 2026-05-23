@@ -33,11 +33,35 @@
                 <i class="fas fa-user mr-2 text-primary"></i>Profile Information
             </h2>
             
-            <form action="{{ route('dashboard.profile.update') }}" method="POST">
+            <form action="{{ route('dashboard.profile.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                @method('POST')
+                @method('PUT')
                 
                 <div class="space-y-4">
+                    <!-- Profile Image -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="fas fa-image mr-1 text-blue-500"></i>Profile Image
+                        </label>
+                        <div class="flex items-center gap-4">
+                            <div class="w-24 h-24 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
+                                @if($user->profile_image && file_exists(public_path($user->profile_image)))
+                                    <img src="{{ asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                @else
+                                    <i class="fas fa-user text-4xl text-gray-400"></i>
+                                @endif
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" 
+                                       name="profile_image" 
+                                       id="profile_image" 
+                                       accept="image/*"
+                                       class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">PNG, JPG, GIF up to 2MB</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Full Name
@@ -67,7 +91,7 @@
                             Account Type
                         </label>
                         <input type="text" 
-                               value="{{ $user->role == 'admin' ? 'Administrator' : 'Regular User' }}"
+                               value="{{ $user->isSuperAdmin() ? 'Super Administrator' : ($user->isAdmin() ? 'Administrator' : 'Regular User') }}"
                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 dark:text-white"
                                disabled>
                     </div>
@@ -105,22 +129,32 @@
                         <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Current Password
                         </label>
-                        <input type="password" 
-                               name="current_password" 
-                               id="current_password" 
-                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
-                               required>
+                        <div class="relative">
+                            <input type="password" 
+                                   name="current_password" 
+                                   id="current_password" 
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                   required>
+                            <button type="button" class="absolute right-3 top-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" onclick="togglePasswordVisibility('current_password', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             New Password
                         </label>
-                        <input type="password" 
-                               name="password" 
-                               id="password" 
-                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
-                               required>
+                        <div class="relative">
+                            <input type="password" 
+                                   name="password" 
+                                   id="password" 
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                   required>
+                            <button type="button" class="absolute right-3 top-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" onclick="togglePasswordVisibility('password', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Minimum 8 characters</p>
                     </div>
 
@@ -128,11 +162,16 @@
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Confirm New Password
                         </label>
-                        <input type="password" 
-                               name="password_confirmation" 
-                               id="password_confirmation" 
-                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
-                               required>
+                        <div class="relative">
+                            <input type="password" 
+                                   name="password_confirmation" 
+                                   id="password_confirmation" 
+                                   class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                   required>
+                            <button type="button" class="absolute right-3 top-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200" onclick="togglePasswordVisibility('password_confirmation', this)">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" 
@@ -146,9 +185,31 @@
 
     <!-- Back to Dashboard -->
     <div class="mt-8">
-        <a href="{{ route('dashboard.index') }}" class="inline-flex items-center text-primary hover:underline">
+        <a href="{{ $user->isAdmin() ? route('admin.dashboard') : route('dashboard.index') }}" class="inline-flex items-center text-primary hover:underline">
             <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
         </a>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function togglePasswordVisibility(inputId, button) {
+        const input = document.getElementById(inputId);
+
+        if (!input || !button) {
+            return;
+        }
+
+        const icon = button.querySelector('i');
+        const isPassword = input.type === 'password';
+
+        input.type = isPassword ? 'text' : 'password';
+
+        if (icon) {
+            icon.classList.toggle('fa-eye', !isPassword);
+            icon.classList.toggle('fa-eye-slash', isPassword);
+        }
+    }
+</script>
+@endpush

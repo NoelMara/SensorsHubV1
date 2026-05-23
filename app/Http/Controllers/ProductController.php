@@ -12,4 +12,10 @@ class ProductController extends Controller
         $products = Product::where('is_active', true)->latest()->paginate(12);
         return view('shop.index', compact('products'));
     }
+    
+    public function show($id)
+    {
+        $product = Product::where('is_active', true)->findOrFail($id);
+        return view('shop.show', compact('product'));
+    }
 }

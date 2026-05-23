@@ -13,7 +13,14 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::with('sensor')->latest()->paginate(10);
-        return view('admin.projects.index', compact('projects'));
+        $stats = [
+            'total' => Project::count(),
+            'active' => Project::where('is_active', true)->count(),
+            'featured' => Project::where('is_featured', true)->count(),
+            'advanced' => Project::where('difficulty', 'Advanced')->count(),
+        ];
+
+        return view('admin.projects.index', compact('projects', 'stats'));
     }
 
     public function create()

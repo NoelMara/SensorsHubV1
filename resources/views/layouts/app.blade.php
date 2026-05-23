@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'SensorHub') - Learn Sensors. Build Projects. Share Ideas.</title>
+    <title>@yield('title', 'SensorsHub') - Learn Sensors. Build Projects. Share Ideas.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -22,38 +22,72 @@
     </script>
     @stack('styles')
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-hidden">
+    @php
+        $homeRoute = 'home';
+
+        if (auth()->check()) {
+            if (auth()->user()->isSuperAdmin()) {
+                $homeRoute = 'super-admin.dashboard';
+            } elseif (auth()->user()->isAdmin()) {
+                $homeRoute = 'admin.dashboard';
+            } else {
+                $homeRoute = 'dashboard.index';
+            }
+        }
+        
+        $isSuperAdmin = auth()->check() && auth()->user()->isSuperAdmin();
+        $isAdmin = auth()->check() && auth()->user()->isAdmin();
+    @endphp
+
     <!-- Navigation -->
     <nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="flex items-center space-x-2">
-                        <i class="fas fa-microchip text-3xl text-primary"></i>
+            <div class="flex justify-between gap-3 h-16">
+                <div class="flex items-center min-w-0">
+                    <a href="{{ route($homeRoute) }}" class="flex items-center space-x-2 min-w-0">
+                        <i class="fas fa-microchip text-2xl sm:text-3xl text-primary shrink-0"></i>
                         <div>
-                            <span class="text-2xl font-bold text-gray-800 dark:text-white">SensorHub</span>
+                            <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorHub</span>
+                            @if($isSuperAdmin)
+                                <span class="text-xs text-primary font-semibold">Super Admin</span>
+                            @elseif($isAdmin)
+                                <span class="text-xs text-secondary font-semibold">Admin</span>
+                            @endif
                         </div>
                     </a>
                 </div>
 
-                <!-- Desktop Menu -->
+                <!-- Desktop Menu - Text only -->
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Home</a>
+                    {{-- Super Admin Desktop Menu --}}
+                    @if($isSuperAdmin)
+                        <a href="{{ route('super-admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold">Dashboard</a>
+                        <a href="{{ route('super-admin.users.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Users</a>
+                        <a href="{{ route('super-admin.suggestions.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Suggestions</a>
+                        <a href="{{ route('super-admin.sensors.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sensors</a>
+                        <a href="{{ route('admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Admin Panel</a>
+                        <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
                     
-                    @auth
-                        @if(auth()->user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Dashboard</a>
-                        @else
-                            <a href="{{ route('dashboard.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Dashboard</a>
-                        @endif
-                    @endauth
+                    {{-- Admin Desktop Menu --}}
+                    @elseif($isAdmin)
+                        <a href="{{ route('admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold">Dashboard</a>
+                        <a href="{{ route('admin.sensors.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sensors</a>
+                        <a href="{{ route('admin.projects.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Projects</a>
+                        <a href="{{ route('admin.products.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Products</a>
+                        <a href="{{ route('admin.videos.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Videos</a>
+                        <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
                     
-                    <a href="{{ route('sensors.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sensors</a>
-                    <a href="https://sensorshub.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">
-                        <i class="fas fa-flask mr-1"></i>Simulation
-                    </a>
-                    <a href="{{ route('videos.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Tutorials</a>
-                    <a href="{{ route('shop.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Shop</a>
+                    {{-- User Desktop Menu --}}
+                    @else
+                        <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Home</a>
+                        <a href="{{ route('sensors.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sensors</a>
+                        <a href="{{ route('projects.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Projects</a>
+                        <a href="{{ route('videos.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Tutorials</a>
+                        <a href="{{ route('suggestions.community') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Community</a>
+                        <a href="{{ route('shop.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Shop</a>
+                        <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
+                    @endif
                     
                     @auth
                         <form method="POST" action="{{ route('logout') }}" class="inline">
@@ -74,7 +108,7 @@
 
                 <!-- Mobile menu button -->
                 <div class="md:hidden flex items-center">
-                    <button id="mobileMenuButton" class="text-gray-700 dark:text-gray-300">
+                    <button id="mobileMenuButton" class="text-gray-700 dark:text-gray-300 p-2 -mr-2">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -83,26 +117,95 @@
 
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-800 border-t dark:border-gray-700">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="{{ route('home') }}" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Home</a>
-                @auth
-                    <a href="{{ route('dashboard.index') }}" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Dashboard</a>
-                @endauth
-                <a href="{{ route('sensors.index') }}" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Sensors</a>
-                <a href="https://sensorshub.infinityfree.me/" target="_blank" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                    <i class="fas fa-flask mr-1"></i>Simulation
-                </a>
-                <a href="{{ route('videos.index') }}" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Tutorials</a>
-                <a href="{{ route('shop.index') }}" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Shop</a>
+            <div class="px-4 pt-2 pb-4 space-y-1">
+                {{-- Super Admin Mobile Menu --}}
+                @if($isSuperAdmin)
+                    <a href="{{ route('super-admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-tachometer-alt w-5"></i> Dashboard
+                    </a>
+                    <a href="{{ route('super-admin.users.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-users w-5"></i> Users
+                    </a>
+                    <a href="{{ route('super-admin.suggestions.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-lightbulb w-5"></i> Suggestions
+                    </a>
+                    <a href="{{ route('super-admin.sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-microchip w-5"></i> Simulation
+                    </a>
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-user-shield w-5"></i> Admin Panel
+                    </a>
+                    <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-flask w-5"></i> Simulation
+                    </a>
+                
+                {{-- Admin Mobile Menu --}}
+                @elseif($isAdmin)
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-tachometer-alt w-5"></i> Dashboard
+                    </a>
+                    <a href="{{ route('admin.sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-microchip w-5"></i> Sensors
+                    </a>
+                    <a href="{{ route('admin.projects.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-folder-open w-5"></i> Projects
+                    </a>
+                    <a href="{{ route('admin.products.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-shopping-cart w-5"></i> Products
+                    </a>
+                    <a href="{{ route('admin.videos.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-video w-5"></i> Videos
+                    </a>
+                    <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-flask w-5"></i> Simulation
+                    </a>
+
+                {{-- User Mobile Menu --}}
+                @else
+                    <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-home w-5"></i> Home
+                    </a>
+                    <a href="{{ route('sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-microchip w-5"></i> Sensors
+                    </a>
+                    <a href="{{ route('projects.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-folder-open w-5"></i> Projects
+                    </a>
+                    <a href="{{ route('videos.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-play-circle w-5"></i> Tutorials
+                    </a>
+                    <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-comments w-5"></i> Community
+                    </a>
+                    <a href="{{ route('shop.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-store w-5"></i> Shop
+                    </a>
+                    <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-flask w-5"></i> Simulation
+                    </a>
+                @endif
+                
                 @auth
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="w-full text-left px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Logout</button>
+                        <button type="submit" class="flex items-center gap-3 w-full text-left px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                            <i class="fas fa-sign-out-alt w-5"></i> Logout
+                        </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">Login</a>
-                    <a href="{{ route('register') }}" class="block px-3 py-2 text-primary font-semibold">Register</a>
+                    <a href="{{ route('login') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-key w-5"></i> Login
+                    </a>
+                    <a href="{{ route('register') }}" class="flex items-center gap-3 px-3 py-2 text-primary font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-user-plus w-5"></i> Register
+                    </a>
                 @endauth
+                
+                <button id="mobileDarkModeToggle" type="button" class="flex items-center gap-3 w-full px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                    <i class="fas fa-moon dark:hidden w-5"></i>
+                    <i class="fas fa-sun hidden dark:inline w-5"></i>
+                    Dark/Light Mode
+                </button>
             </div>
         </div>
     </nav>
@@ -127,18 +230,17 @@
     <!-- Footer -->
     <footer class="bg-gray-800 dark:bg-gray-950 text-white mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
                     <h3 class="text-2xl font-bold mb-4 flex items-center">
                         <i class="fas fa-microchip mr-2"></i> SensorHub
                     </h3>
                     <p class="text-gray-400">Learn Sensors. Build Projects. Share Ideas.</p>
-                    <p class="text-gray-400 mt-2 text-sm">Created by Jay</p>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
                     <ul class="space-y-2">
-                        <li><a href="{{ route('home') }}" class="text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="{{ route($homeRoute) }}" class="text-gray-400 hover:text-white transition">Home</a></li>
                         <li><a href="{{ route('sensors.index') }}" class="text-gray-400 hover:text-white transition">Sensors</a></li>
                         <li><a href="{{ route('projects.index') }}" class="text-gray-400 hover:text-white transition">Projects</a></li>
                         <li><a href="{{ route('videos.index') }}" class="text-gray-400 hover:text-white transition">Tutorials</a></li>
@@ -147,14 +249,14 @@
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Resources</h4>
                     <ul class="space-y-2">
+                        <li><a href="{{ route('suggestions.community') }}" class="text-gray-400 hover:text-white transition">Community</a></li>
                         <li><a href="{{ route('shop.index') }}" class="text-gray-400 hover:text-white transition">Shop</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Documentation</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition">Community</a></li>
+                        <li><a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-400 hover:text-white transition">Simulation</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Connect</h4>
-                    <div class="flex space-x-4">
+                    <div class="flex flex-wrap gap-4">
                         <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-2xl"></i></a>
                         <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-github text-2xl"></i></a>
                         <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-2xl"></i></a>
@@ -168,8 +270,8 @@
     </footer>
 
     <script>
-        // Dark mode toggle
         const darkModeToggle = document.getElementById('darkModeToggle');
+        const mobileDarkModeToggle = document.getElementById('mobileDarkModeToggle');
         const html = document.documentElement;
 
         if (localStorage.getItem('darkMode') === 'true') {
@@ -180,13 +282,24 @@
             html.classList.toggle('dark');
             localStorage.setItem('darkMode', html.classList.contains('dark'));
         });
+        mobileDarkModeToggle?.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('darkMode', html.classList.contains('dark'));
+        });
 
-        // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobileMenuButton');
         const mobileMenu = document.getElementById('mobileMenu');
 
         mobileMenuButton?.addEventListener('click', () => {
             mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Close mobile menu when clicking any link
+        const mobileLinks = mobileMenu?.querySelectorAll('a, button[type="submit"]');
+        mobileLinks?.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
         });
     </script>
     @stack('scripts')

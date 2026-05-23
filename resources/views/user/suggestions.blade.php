@@ -42,22 +42,22 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Approved</p>
-                    <p class="text-2xl font-bold text-green-600">{{ $suggestions->where('status', 'approved')->count() }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Reviewed</p>
+                    <p class="text-2xl font-bold text-blue-600">{{ $suggestions->where('status', 'reviewed')->count() }}</p>
                 </div>
-                <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-                    <i class="fas fa-check text-green-600 text-xl"></i>
+                <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
+                    <i class="fas fa-search text-blue-600 text-xl"></i>
                 </div>
             </div>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Published</p>
-                    <p class="text-2xl font-bold text-blue-600">{{ $suggestions->where('status', 'published')->count() }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Implemented</p>
+                    <p class="text-2xl font-bold text-green-600">{{ $suggestions->where('status', 'implemented')->count() }}</p>
                 </div>
-                <div class="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
-                    <i class="fas fa-rocket text-blue-600 text-xl"></i>
+                <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full">
+                    <i class="fas fa-check text-green-600 text-xl"></i>
                 </div>
             </div>
         </div>
@@ -73,37 +73,29 @@
                     <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">{{ $suggestion->title }}</h3>
                     <p class="text-gray-600 dark:text-gray-300 mb-3">{{ Str::limit($suggestion->description, 150) }}</p>
                     
-                    <!-- Meta Information -->
                     <div class="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400">
                         @if($suggestion->difficulty)
-                        <span>
-                            <i class="fas fa-signal mr-1"></i> {{ $suggestion->difficulty }}
-                        </span>
+                        <span><i class="fas fa-signal mr-1"></i> {{ $suggestion->difficulty }}</span>
                         @endif
                         @if($suggestion->sensor_type)
-                        <span>
-                            <i class="fas fa-microchip mr-1"></i> {{ $suggestion->sensor_type }}
-                        </span>
+                        <span><i class="fas fa-microchip mr-1"></i> {{ $suggestion->sensor_type }}</span>
                         @endif
-                        <span>
-                            <i class="fas fa-calendar mr-1"></i> {{ $suggestion->created_at->format('M d, Y') }}
-                        </span>
+                        <span><i class="fas fa-calendar mr-1"></i> {{ $suggestion->created_at->format('M d, Y') }}</span>
                     </div>
                 </div>
 
-                <!-- Status Badge -->
                 <div class="ml-4">
                     @if($suggestion->status == 'pending')
                         <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
                             <i class="fas fa-clock mr-2"></i> Pending
                         </span>
-                    @elseif($suggestion->status == 'approved')
-                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                            <i class="fas fa-check mr-2"></i> Approved
-                        </span>
-                    @elseif($suggestion->status == 'published')
+                    @elseif($suggestion->status == 'reviewed')
                         <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                            <i class="fas fa-rocket mr-2"></i> Published
+                            <i class="fas fa-search mr-2"></i> Reviewed
+                        </span>
+                    @elseif($suggestion->status == 'implemented')
+                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                            <i class="fas fa-check mr-2"></i> Implemented
                         </span>
                     @elseif($suggestion->status == 'rejected')
                         <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
@@ -113,7 +105,6 @@
                 </div>
             </div>
 
-            <!-- Admin Notes (if any) -->
             @if($suggestion->admin_notes)
             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mt-4">
                 <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
@@ -122,11 +113,23 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400">{{ $suggestion->admin_notes }}</p>
             </div>
             @endif
+
+            <div class="flex gap-3 mt-4">
+                <a href="{{ route('dashboard.suggestions.show', $suggestion) }}"
+                   class="text-sm text-primary hover:underline">
+                    <i class="fas fa-eye mr-1"></i> View Details
+                </a>
+                @if($suggestion->status === 'pending')
+                    <a href="{{ route('dashboard.suggestions.edit', $suggestion) }}"
+                       class="text-sm text-blue-600 hover:underline">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </a>
+                @endif
+            </div>
         </div>
         @endforeach
     </div>
     @else
-    <!-- Empty State -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-16 text-center">
         <i class="fas fa-lightbulb text-8xl text-gray-300 dark:text-gray-600 mb-4"></i>
         <h3 class="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-2">No Suggestions Yet</h3>

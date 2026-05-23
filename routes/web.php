@@ -19,9 +19,14 @@ use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\VideoController as AdminVideoController;
 use App\Http\Controllers\Admin\SuggestionController as AdminSuggestionController;
+use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
+use App\Http\Controllers\SuperAdmin\UserController as SuperAdminUserController;
+use App\Http\Controllers\SuperAdmin\ProfileController as SuperAdminProfileController;
+use App\Http\Controllers\SuperAdmin\SuggestionController as SuperAdminSuggestionController;
+use App\Http\Controllers\SuperAdmin\ContentController as SuperAdminContentController;
 use App\Http\Controllers\EmailVerificationController;
 
-// Public Routes
+// ─── Public Routes ────────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/sensors', [SensorController::class, 'index'])->name('sensors.index');
 Route::get('/sensors/{slug}', [SensorController::class, 'show'])->name('sensors.show');
@@ -30,41 +35,66 @@ Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projec
 Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/shop', [ProductController::class, 'index'])->name('shop.index');
 
-// Authentication Routes
+// ─── Community Suggestions (Public - requires auth to comment) ────────────────
+Route::get('/community', [SuggestionController::class, 'community'])->name('suggestions.community');
+
+// ─── Authentication Routes ────────────────────────────────────────────────────
+// NOTE: No route-level throttle here — all rate limiting is handled
+//       manually inside LoginController using RateLimiter::hit/tooManyAttempts
+//       so only FAILED attempts count, not every request.
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::get('/sys/secure-entry', [LoginController::class, 'showSuperAdminLoginForm'])->name('super-admin.login');
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+
+    Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/sys/secure-entry', [LoginController::class, 'superAdminLogin'])->name('super-admin.login.submit');
     Route::post('/login/verify', [LoginController::class, 'verifyCode'])->name('login.verify');
     Route::post('/login/resend', [LoginController::class, 'resendCode'])->name('login.resend');
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
-// User Routes
+// ─── User Dashboard Routes ────────────────────────────────────────────────────
 Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+    // Profile
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-    Route::get('/suggestions', [SuggestionController::class, 'mySuggestions'])->name('suggestions');
+
+    // Saved Projects
     Route::get('/saved-projects', [ProjectController::class, 'saved'])->name('saved');
-    Route::post('/suggestions', [SuggestionController::class, 'store'])->name('suggestions.store');
     Route::post('/projects/{project}/save', [ProjectController::class, 'toggleSave'])->name('projects.save');
+
+    // My Suggestions
+    Route::get('/suggestions', [SuggestionController::class, 'mySuggestions'])->name('suggestions');
+    Route::post('/suggestions', [SuggestionController::class, 'store'])->name('suggestions.store');
+    Route::get('/suggestions/{suggestion}/edit', [SuggestionController::class, 'edit'])->name('suggestions.edit');
+    Route::put('/suggestions/{suggestion}', [SuggestionController::class, 'update'])->name('suggestions.update');
+    Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy'])->name('suggestions.destroy');
+
+    // View any suggestion (community-linked)
+    Route::get('/suggestions/{suggestion}/view', [SuggestionController::class, 'show'])->name('suggestions.show');
+
+    // Comments (any authenticated user can comment)
+    Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
+    Route::put('/suggestions/{suggestion}/comment/{comment}', [SuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 });
 
-// Email Verification Routes
+// ─── Email Verification Routes ────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
     Route::get('/email/verify', [EmailVerificationController::class, 'show'])->name('verification.notice');
     Route::post('/email/verify', [EmailVerificationController::class, 'verify'])->name('verification.verify');
     Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend');
 });
 
-// Admin Routes
+// ─── Admin Routes ─────────────────────────────────────────────────────────────
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
-    
+
     // Sensors CRUD
     Route::get('/sensors', [AdminSensorController::class, 'index'])->name('sensors.index');
     Route::get('/sensors/create', [AdminSensorController::class, 'create'])->name('sensors.create');
@@ -72,7 +102,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/sensors/{sensor}/edit', [AdminSensorController::class, 'edit'])->name('sensors.edit');
     Route::put('/sensors/{sensor}', [AdminSensorController::class, 'update'])->name('sensors.update');
     Route::delete('/sensors/{sensor}', [AdminSensorController::class, 'destroy'])->name('sensors.destroy');
-    
+
     // Projects CRUD
     Route::get('/projects', [AdminProjectController::class, 'index'])->name('projects.index');
     Route::get('/projects/create', [AdminProjectController::class, 'create'])->name('projects.create');
@@ -80,7 +110,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/projects/{project}/edit', [AdminProjectController::class, 'edit'])->name('projects.edit');
     Route::put('/projects/{project}', [AdminProjectController::class, 'update'])->name('projects.update');
     Route::delete('/projects/{project}', [AdminProjectController::class, 'destroy'])->name('projects.destroy');
-    
+
     // Products CRUD
     Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
@@ -88,7 +118,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
     Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
-    
+
     // Videos CRUD
     Route::get('/videos', [AdminVideoController::class, 'index'])->name('videos.index');
     Route::get('/videos/create', [AdminVideoController::class, 'create'])->name('videos.create');
@@ -96,9 +126,63 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/videos/{video}/edit', [AdminVideoController::class, 'edit'])->name('videos.edit');
     Route::put('/videos/{video}', [AdminVideoController::class, 'update'])->name('videos.update');
     Route::delete('/videos/{video}', [AdminVideoController::class, 'destroy'])->name('videos.destroy');
-    
+
     // Suggestions Management
     Route::get('/suggestions', [AdminSuggestionController::class, 'index'])->name('suggestions.index');
     Route::get('/suggestions/{suggestion}', [AdminSuggestionController::class, 'show'])->name('suggestions.show');
     Route::put('/suggestions/{suggestion}/status', [AdminSuggestionController::class, 'updateStatus'])->name('suggestions.status');
+
+    // Comment routes (admin)
+    Route::post('/suggestions/{suggestion}/comment', [AdminSuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
+    Route::put('/suggestions/{suggestion}/comment/{comment}', [AdminSuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
+});
+
+// ─── Super Admin Routes ───────────────────────────────────────────────────────
+Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
+    Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Profile
+    Route::get('/profile', [SuperAdminProfileController::class, 'show'])->name('profile');
+    Route::match(['put', 'post'], '/profile/update', [SuperAdminProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/password', [SuperAdminProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // Users CRUD
+    Route::get('/users', [SuperAdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [SuperAdminUserController::class, 'create'])->name('users.create');
+    Route::post('/users', [SuperAdminUserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}', [SuperAdminUserController::class, 'show'])->name('users.show');
+    Route::get('/users/{user}/edit', [SuperAdminUserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [SuperAdminUserController::class, 'update'])->name('users.update');
+    Route::put('/users/{user}/role', [SuperAdminUserController::class, 'updateRole'])->name('users.role');
+    Route::delete('/users/{user}', [SuperAdminUserController::class, 'destroy'])->name('users.destroy');
+
+    // Suggestions Management
+    Route::get('/suggestions', [SuperAdminSuggestionController::class, 'index'])->name('suggestions.index');
+    Route::get('/suggestions/{suggestion}', [SuperAdminSuggestionController::class, 'show'])->name('suggestions.show');
+    Route::put('/suggestions/{suggestion}/status', [SuperAdminSuggestionController::class, 'updateStatus'])->name('suggestions.status');
+
+    // Comment routes (super-admin)
+    Route::post('/suggestions/{suggestion}/comment', [SuperAdminSuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
+    Route::put('/suggestions/{suggestion}/comment/{comment}', [SuperAdminSuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
+
+    // Content
+    Route::get('/sensors', [SuperAdminContentController::class, 'sensors'])->name('sensors.index');
+    Route::get('/projects', [SuperAdminContentController::class, 'projects'])->name('projects.index');
+    Route::get('/products', [SuperAdminContentController::class, 'products'])->name('products.index');
+    Route::get('/videos', [SuperAdminContentController::class, 'videos'])->name('videos.index');
+    Route::get('/{type}/create', [SuperAdminContentController::class, 'create'])
+        ->whereIn('type', ['sensors', 'projects', 'products', 'videos'])
+        ->name('content.create');
+    Route::post('/{type}', [SuperAdminContentController::class, 'store'])
+        ->whereIn('type', ['sensors', 'projects', 'products', 'videos'])
+        ->name('content.store');
+    Route::get('/{type}/{id}/edit', [SuperAdminContentController::class, 'edit'])
+        ->whereIn('type', ['sensors', 'projects', 'products', 'videos'])
+        ->name('content.edit');
+    Route::put('/{type}/{id}', [SuperAdminContentController::class, 'update'])
+        ->whereIn('type', ['sensors', 'projects', 'products', 'videos'])
+        ->name('content.update');
+    Route::delete('/{type}/{id}', [SuperAdminContentController::class, 'destroy'])
+        ->whereIn('type', ['sensors', 'projects', 'products', 'videos'])
+        ->name('content.destroy');
 });

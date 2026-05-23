@@ -40,12 +40,41 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
         @foreach($products as $product)
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-2">
-            <!-- Product Image -->
+            <!-- Product Image - FIXED VERSION -->
             <div class="h-56 bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center relative">
-                @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                @php
+                    // Debug: Check what's in the database
+                    $imagePath = $product->image;
+                    $fullImageUrl = null;
+                    
+                    if ($imagePath) {
+                        // Try different possible paths
+                        if (file_exists(public_path('storage/' . $imagePath))) {
+                            $fullImageUrl = asset('storage/' . $imagePath);
+                        } elseif (file_exists(public_path($imagePath))) {
+                            $fullImageUrl = asset($imagePath);
+                        } elseif (file_exists(storage_path('app/public/' . $imagePath))) {
+                            $fullImageUrl = asset('storage/' . $imagePath);
+                        } else {
+                            // Image file doesn't exist physically
+                            $fullImageUrl = null;
+                        }
+                    }
+                @endphp
+                
+                @if($fullImageUrl && file_exists(public_path('storage/' . $product->image)))
+                    <img src="{{ $fullImageUrl }}" 
+                         alt="{{ $product->name }}" 
+                         class="w-full h-full object-cover">
                 @else
+                    <!-- Show icon if no image -->
                     <i class="fas fa-box-open text-7xl text-white"></i>
+                    @if($product->image)
+                        <!-- Debug info (remove after fixing) -->
+                        <div class="absolute bottom-1 left-1 bg-red-500 text-white text-xs p-1 rounded">
+                            Missing: {{ $product->image }}
+                        </div>
+                    @endif
                 @endif
                 
                 @if($product->category)
@@ -57,15 +86,12 @@
             
             <!-- Content -->
             <div class="p-6">
-                <!-- Product Name -->
                 <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">{{ $product->name }}</h3>
 
-                <!-- Description -->
                 @if($product->description)
                 <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">{{ Str::limit($product->description, 80) }}</p>
                 @endif
 
-                <!-- Price -->
                 @if($product->price)
                 <div class="mb-4">
                     <span class="text-3xl font-bold text-green-600">${{ number_format($product->price, 2) }}</span>
@@ -76,14 +102,12 @@
                 </div>
                 @endif
 
-                <!-- Buy Now Button -->
                 <a href="{{ $product->link }}" 
                    target="_blank" 
                    class="inline-flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-orange-700 transition shadow-lg">
                     <i class="fas fa-shopping-cart mr-2"></i> Buy Now
                 </a>
                 
-                <!-- Affiliate Notice -->
                 <p class="text-xs text-gray-400 dark:text-gray-500 mt-3 text-center">
                     <i class="fas fa-external-link-alt mr-1"></i> External affiliate link
                 </p>
@@ -92,14 +116,12 @@
         @endforeach
     </div>
 
-    <!-- Pagination -->
     @if($products->hasPages())
     <div class="flex justify-center">
         {{ $products->links() }}
     </div>
     @endif
 
-    <!-- Empty State -->
     @if($products->count() === 0)
     <div class="text-center py-16">
         <i class="fas fa-shopping-cart text-8xl text-gray-300 dark:text-gray-600 mb-4"></i>
@@ -108,22 +130,20 @@
     </div>
     @endif
 
-    <!-- Affiliate Disclaimer -->
     <div class="mt-16 bg-gray-50 dark:bg-gray-800 rounded-lg shadow p-8">
         <div class="flex items-start gap-4">
             <div class="flex-shrink-0">
                 <i class="fas fa-info-circle text-3xl text-primary"></i>
             </div>
             <div>
-                <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">Affiliate Disclaimer</h3>
+                <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">Link Disclaimer</h3>
                 <p class="text-gray-600 dark:text-gray-300">
-                    Some links on this page are affiliate links. This means we may earn a small commission when you make a purchase through these links, at no extra cost to you. This helps support SensorHub and allows us to continue providing free educational content. Thank you for your support!
+                   Some links on this page point to external products and shops that we personally reviewed and selected. While we are not officially affiliated with these sellers, we only link to sources we believe are reliable and relevant for your learning. If you have any concerns about a linked product, feel free to contact us.
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Call to Action -->
     <div class="mt-8 bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg p-8 text-white text-center">
         <h2 class="text-3xl font-bold mb-4">Need Help Choosing Components?</h2>
         <p class="text-lg mb-6 text-green-100">Check out our project guides for recommended parts and kits!</p>
