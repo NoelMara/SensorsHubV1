@@ -33,9 +33,18 @@ class ProfileController extends Controller
         ];
 
         // Handle profile image upload
-        if ($request->hasFile('profile_image')) {
-            $uploadedFile = cloudinary()->upload($request->file('profile_image')->getRealPath());
-            $data['profile_image'] = $uploadedFile->getSecurePath();
+       if ($request->hasFile('profile_image')) {
+            $cloudinary = new \Cloudinary\Cloudinary([
+                'cloud' => [
+                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                    'api_key'    => env('CLOUDINARY_API_KEY'),
+                    'api_secret' => env('CLOUDINARY_API_SECRET'),
+                ],
+                'url' => ['secure' => true],
+            ]);
+
+            $result = $cloudinary->uploadApi()->upload($request->file('profile_image')->getRealPath());
+            $data['profile_image'] = $result['secure_url'];
         }
 
         $user->update($data);
