@@ -65,7 +65,7 @@
 
                 @if($product->price)
                 <div class="mb-4">
-                    <span class="text-3xl font-bold text-green-600">${{ number_format($product->price, 2) }}</span>
+                    <span class="text-3xl font-bold text-green-600">₱{{ number_format($product->price, 2) }}</span>
                 </div>
                 @else
                 <div class="mb-4">
@@ -80,7 +80,7 @@
                 </a>
                 
                 <p class="text-xs text-gray-400 dark:text-gray-500 mt-3 text-center">
-                    <i class="fas fa-external-link-alt mr-1"></i> External affiliate link
+                    <i class="fas fa-external-link-alt mr-1"></i> Reviewed and Recommended
                 </p>
             </div>
         </div>

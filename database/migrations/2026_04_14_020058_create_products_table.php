@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2)->nullable();
-            $table->string('link'); // Affiliate link (Shopee/Lazada)
+            $table->string('link'); 
             $table->string('category')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
