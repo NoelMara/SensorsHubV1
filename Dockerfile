@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libzip-dev \
     zip \
-    default-mysql-client
+    default-mysql-client \
+    libpq-dev
 
 RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip bcmath
 
