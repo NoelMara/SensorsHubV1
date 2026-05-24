@@ -239,21 +239,21 @@ class ContentController extends Controller
             $data['youtube_id'] = $this->extractYouTubeId($data['youtube_link']);
         }
 
-        if (in_array($type, ['sensors', 'products']) && $request->hasFile('image')) {
-            $cloudinary = new \Cloudinary\Cloudinary([
-                'cloud' => [
-                    'cloud_name' => config('cloudinary.cloud_name'),
-                    'api_key'    => config('cloudinary.api_key'),
-                    'api_secret' => config('cloudinary.api_secret'),
-                ],
-                'url' => [
-                    'secure' => true,
-                ],
-            ]);
-
-            $uploadApi = $cloudinary->uploadApi();
-            $result = $uploadApi->upload($request->file('image')->getRealPath());
-            $data['image'] = $result['secure_url'];
+        if (in_array($type, ['sensors', 'products'])) {
+            if ($request->hasFile('image')) {
+                $cloudinary = new \Cloudinary\Cloudinary([
+                    'cloud' => [
+                        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                        'api_key'    => env('CLOUDINARY_API_KEY'),
+                        'api_secret' => env('CLOUDINARY_API_SECRET'),
+                    ],
+                    'url' => ['secure' => true],
+                ]);
+                $result = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath());
+                $data['image'] = $result['secure_url'];
+            } elseif ($item !== null) {
+                $data['image'] = $item->image;
+            }
         }
 
         $data['is_active'] = $request->has('is_active');

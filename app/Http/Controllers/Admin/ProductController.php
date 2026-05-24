@@ -37,8 +37,16 @@ class ProductController extends Controller
 
         // ADDED: Handle image upload
         if ($request->hasFile('image')) {
-            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath());
-            $validated['image'] = $uploadedFile->getSecurePath();
+            $cloudinary = new \Cloudinary\Cloudinary([
+                'cloud' => [
+                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                    'api_key'    => env('CLOUDINARY_API_KEY'),
+                    'api_secret' => env('CLOUDINARY_API_SECRET'),
+                ],
+                'url' => ['secure' => true],
+            ]);
+            $result = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath());
+            $validated['image'] = $result['secure_url'];
         }
 
         Product::create($validated);
@@ -67,9 +75,19 @@ class ProductController extends Controller
         $validated['is_active'] = $request->has('is_active');
 
         // ADDED: Handle image upload
-        if ($request->hasFile('image')) {
-            $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath());
-            $validated['image'] = $uploadedFile->getSecurePath();
+       if ($request->hasFile('image')) {
+            $cloudinary = new \Cloudinary\Cloudinary([
+                'cloud' => [
+                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                    'api_key'    => env('CLOUDINARY_API_KEY'),
+                    'api_secret' => env('CLOUDINARY_API_SECRET'),
+                ],
+                'url' => ['secure' => true],
+            ]);
+            $result = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath());
+            $validated['image'] = $result['secure_url'];
+        } else {
+            unset($validated['image']);
         }
 
         $product->update($validated);
