@@ -50,7 +50,7 @@
                             <div class="flex items-center gap-3 min-w-0">
                                 <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden flex-shrink-0">
                                     @if($user->profile_image && file_exists(public_path($user->profile_image)))
-                                        <img src="{{ asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                         <img src="{{ asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
                                     @else
                                         <i class="fas fa-user text-gray-500"></i>
                                     @endif

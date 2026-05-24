@@ -28,8 +28,8 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mb-6">
         <div class="p-6 flex items-center gap-5 border-b border-gray-200 dark:border-gray-700">
             <div class="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center overflow-hidden flex-shrink-0">
-                @if($user->profile_image && file_exists(public_path($user->profile_image)))
-                    <img src="{{ asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                @if($user->profile_image)
+                    <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
                 @else
                     <i class="fas fa-user text-gray-400 text-3xl"></i>
                 @endif

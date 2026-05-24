@@ -45,8 +45,8 @@
                     <p class="text-lg font-semibold text-gray-800 dark:text-white">{{ $user->email }}</p>
                 </div>
                 <div class="w-14 h-14 bg-purple-100 dark:bg-purple-900 rounded-full overflow-hidden flex items-center justify-center">
-                    @if($user->profile_image && file_exists(public_path($user->profile_image)))
-                        <img src="{{ asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                    @if($user->profile_image)
+                        <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
                     @else
                         <i class="fas fa-user text-purple-600 text-2xl"></i>
                     @endif
@@ -92,7 +92,7 @@
             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg shadow overflow-hidden hover:shadow-lg transition flex flex-col">
                 <div class="h-32 bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center overflow-hidden">
                     @if($sensor->image)
-                        <img src="{{ Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
+                        <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : (Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image)) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
                     @else
                         <i class="fas fa-microchip text-4xl text-white"></i>
                     @endif
