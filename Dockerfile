@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     default-mysql-client
 
-RUN docker-php-ext-install pdo pdo_mysql mbstring zip bcmath
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip bcmath
 
 WORKDIR /app
 
