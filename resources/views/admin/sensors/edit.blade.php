@@ -20,6 +20,14 @@
             @csrf
             @method('PUT')
 
+            @if($sensor->image)
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Image</label>
+                <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : asset($sensor->image) }}" class="h-32 w-32 object-cover rounded-lg mb-2">
+                <p class="text-xs text-gray-500">Image is managed by Super Admin only.</p>
+            </div>
+            @endif
+
             <div class="space-y-6">
 
                 {{-- Sensor Name --}}

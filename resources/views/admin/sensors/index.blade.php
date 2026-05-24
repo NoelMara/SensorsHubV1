@@ -73,18 +73,11 @@
 
                         @foreach($sensors as $sensor)
 
-                            @php
-                                $imagePath = 'images/' . $sensor->name . '.jpeg';
-                                $resolvedImage = file_exists(public_path($imagePath))
-                                    ? asset($imagePath)
-                                    : asset('images/no-image.svg');
-                            @endphp
-
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
 
                                 {{-- IMAGE --}}
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <img src="{{ $resolvedImage }}"
+                                    <img src="{{ $sensor->image ? (Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : asset($sensor->image)) : asset('images/no-image.svg') }}"
                                          alt="{{ $sensor->name }}"
                                          class="h-20 w-20 object-cover rounded-lg shadow">
                                 </td>
