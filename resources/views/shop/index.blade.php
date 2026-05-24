@@ -42,41 +42,12 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-2">
             <!-- Product Image - FIXED VERSION -->
             <div class="h-56 bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center relative">
-                @php
-                    // Debug: Check what's in the database
-                    $imagePath = $product->image;
-                    $fullImageUrl = null;
-                    
-                    if ($imagePath) {
-                        // Try different possible paths
-                        if (file_exists(public_path('storage/' . $imagePath))) {
-                            $fullImageUrl = asset('storage/' . $imagePath);
-                        } elseif (file_exists(public_path($imagePath))) {
-                            $fullImageUrl = asset($imagePath);
-                        } elseif (file_exists(storage_path('app/public/' . $imagePath))) {
-                            $fullImageUrl = asset('storage/' . $imagePath);
-                        } else {
-                            // Image file doesn't exist physically
-                            $fullImageUrl = null;
-                        }
-                    }
-                @endphp
-                
-                @if($fullImageUrl && file_exists(public_path('storage/' . $product->image)))
-                    <img src="{{ $fullImageUrl }}" 
-                         alt="{{ $product->name }}" 
-                         class="w-full h-full object-cover">
+                @if($product->image)
+                    <img src="{{ Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : (Str::startsWith($product->image, ['images/', '/images/']) ? asset($product->image) : asset('storage/' . $product->image)) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
                 @else
-                    <!-- Show icon if no image -->
                     <i class="fas fa-box-open text-7xl text-white"></i>
-                    @if($product->image)
-                        <!-- Debug info (remove after fixing) -->
-                        <div class="absolute bottom-1 left-1 bg-red-500 text-white text-xs p-1 rounded">
-                            Missing: {{ $product->image }}
-                        </div>
-                    @endif
                 @endif
-                
+
                 @if($product->category)
                 <span class="absolute top-3 right-3 bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
                     {{ $product->category }}

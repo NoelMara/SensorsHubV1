@@ -54,8 +54,8 @@
                             <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center overflow-hidden flex-shrink-0">
-                                        @if($user->profile_image && file_exists(public_path($user->profile_image)))
-                                            <img src="{{ asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                        @if($user->profile_image)
+                                            <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
                                         @else
                                             <i class="fas fa-user text-gray-500"></i>
                                         @endif
