@@ -45,8 +45,8 @@
                         </label>
                         <div class="flex items-center gap-4">
                             <div class="w-24 h-24 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
-                                @if($user->profile_image && file_exists(public_path($user->profile_image)))
-                                    <img src="{{ asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                @if($user->profile_image)
+                                    <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
                                 @else
                                     <i class="fas fa-user text-4xl text-gray-400"></i>
                                 @endif

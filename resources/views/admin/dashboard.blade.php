@@ -49,8 +49,8 @@
 
                 <div class="w-16 h-16 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden flex-shrink-0">
 
-                    @if(auth()->user()->profile_image && file_exists(public_path(auth()->user()->profile_image)))
-                        <img src="{{ asset(auth()->user()->profile_image) }}"
+                   @if(auth()->user()->profile_image)
+                            <img src="{{ Str::startsWith(auth()->user()->profile_image, ['http://', 'https://']) ? auth()->user()->profile_image : asset(auth()->user()->profile_image) }}"
                              alt="{{ auth()->user()->name }}"
                              class="w-full h-full object-cover">
                     @else
@@ -232,8 +232,8 @@
 
                                 <div class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center overflow-hidden flex-shrink-0">
 
-                                    @if($user->profile_image && file_exists(public_path($user->profile_image)))
-                                        <img src="{{ asset($user->profile_image) }}"
+                                    @if($user->profile_image)
+                                            <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}"
                                              alt="{{ $user->name }}"
                                              class="w-full h-full object-cover">
                                     @else

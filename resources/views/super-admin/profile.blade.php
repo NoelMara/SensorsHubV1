@@ -46,8 +46,7 @@
             <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-6">
                 <div class="flex items-center gap-4">
                     <div class="h-16 w-16 rounded-lg bg-primary text-white flex items-center justify-center text-2xl overflow-hidden">
-                        @if($user->profile_image && file_exists(public_path($user->profile_image)))
-                            <img src="{{ asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                        @if($user->profile_image) <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
                         @else
                             <i class="fas fa-user-shield"></i>
                         @endif
@@ -86,8 +85,7 @@
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Profile Picture</label>
                             <div class="flex items-center gap-4">
                                 <div class="w-24 h-24 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden flex items-center justify-center">
-                                    @if($user->profile_image && file_exists(public_path($user->profile_image)))
-                                        <img src="{{ asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                    @if($user->profile_image) <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
                                     @else
                                         <i class="fas fa-user-shield text-4xl text-gray-400"></i>
                                     @endif
