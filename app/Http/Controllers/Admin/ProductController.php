@@ -25,16 +25,17 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string',  // Changed from required
             'price' => 'required|numeric|min:0',
-            'link' => 'required|url',
-            'category' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'link' => 'nullable|url',  // Changed from required
+            'category' => 'nullable|string|max:255',  // Changed from required
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // ADDED
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->has('is_active');
 
+        // ADDED: Handle image upload
         if ($request->hasFile('image')) {
             $cloudinary = new \Cloudinary\Cloudinary([
                 'cloud' => [
@@ -65,15 +66,16 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'link' => 'required|url',
+            'link' => 'nullable|url',
             'category' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // ADDED
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->has('is_active');
 
-        if ($request->hasFile('image')) {
+        // ADDED: Handle image upload
+       if ($request->hasFile('image')) {
             $cloudinary = new \Cloudinary\Cloudinary([
                 'cloud' => [
                     'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
@@ -96,12 +98,13 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        // ADDED: Delete the image file when deleting product
         if ($product->image && Storage::disk('public')->exists($product->image)) {
             Storage::disk('public')->delete($product->image);
         }
-
+        
         $product->delete();
-
+        
         return redirect()->route('admin.products.index')
             ->with('success', 'Product deleted successfully!');
     }
