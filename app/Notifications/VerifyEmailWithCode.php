@@ -3,9 +3,8 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Channels\BrevoChannel;
 
 class VerifyEmailWithCode extends Notification
 {
@@ -13,56 +12,40 @@ class VerifyEmailWithCode extends Notification
 
     protected $code;
 
-    /**
-     * Create a new notification instance.
-     */
     public function __construct($code)
     {
         $this->code = $code;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return [BrevoChannel::class];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage)
-            ->subject('Email Verification Code')
-            ->greeting('Hello ' . $notifiable->name . '!')
-            ->line('Thank you for registering with SensorHub. To complete your registration, please use the verification code below:')
-            ->line('')
-            ->line('Your Verification Code:')
-            ->line('')
-            ->line('━━━━━━━━━━━━━━━━━━━━━━━━')
-            ->line('')
-            ->line($this->code)
-            ->line('')
-            ->line('━━━━━━━━━━━━━━━━━━━━━━━━')
-            ->line('')
-            ->line('This code will expire in 10 minutes.')
-            ->line('If you did not create an account, no further action is required.')
-            ->salutation('Best regards, SensorHub Team');
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function toBrevo(object $notifiable): array
     {
         return [
-            //
+            'sender' => [
+                'name'  => config('mail.from.name'),
+                'email' => config('mail.from.address'),
+            ],
+            'to' => [
+                ['email' => $notifiable->email]
+            ],
+            'subject' => 'Email Verification Code',
+            'htmlContent' => '
+                <p>Hello ' . $notifiable->name . '!</p>
+                <p>Thank you for registering with SensorsHub. Use the verification code below:</p>
+                <h2 style="letter-spacing:4px;">' . $this->code . '</h2>
+                <p>This code will expire in 10 minutes.</p>
+                <p>If you did not create an account, no further action is required.</p>
+                <p>Best regards, SensorsHub Team</p>
+            ',
         ];
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        return [];
     }
 }

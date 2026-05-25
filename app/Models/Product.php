@@ -9,11 +9,16 @@ class Product extends Model
     protected $fillable = [
         'name',
         'slug',
+        'image',
         'description',
         'price',
         'link',
         'category',
-        'image',
         'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'price' => 'decimal:2',
     ];
 }
