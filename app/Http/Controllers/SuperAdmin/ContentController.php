@@ -91,10 +91,14 @@ class ContentController extends Controller
     {
         $this->ensureValidType($type);
 
-        return view('super-admin.content.form', [
-            'type' => $type,
-            'title' => $this->labelFor($type),
-            'item' => null,
+        $view = match ($type) {
+            'products' => 'admin.products.create',
+            'sensors' => 'admin.sensors.create',
+            'projects' => 'admin.projects.create',
+            'videos' => 'admin.videos.create',
+        };
+
+        return view($view, [
             'sensors' => $this->needsSensors($type) ? Sensor::where('is_active', true)->orderBy('name')->get() : collect(),
         ]);
     }
@@ -114,13 +118,18 @@ class ContentController extends Controller
     {
         $this->ensureValidType($type);
 
-        return view('super-admin.content.form', [
-            'type' => $type,
-            'title' => $this->labelFor($type),
+        $view = match ($type) {
+            'products' => 'admin.products.edit',
+            'sensors' => 'admin.sensors.edit',
+            'projects' => 'admin.projects.edit',
+            'videos' => 'admin.videos.edit',
+        };
+
+        return view($view, [
             'item' => $this->findItem($type, $id),
             'sensors' => $this->needsSensors($type) ? Sensor::where('is_active', true)->orderBy('name')->get() : collect(),
         ]);
-    }
+    } // ← THIS WAS MISSING - Fixed now!
 
     public function update(Request $request, string $type, int $id)
     {
