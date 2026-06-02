@@ -7,9 +7,20 @@ use Illuminate\Http\Request;
 
 class SensorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sensors = Sensor::where('is_active', true)->latest()->paginate(12);
+        $query = Sensor::where('is_active', true);
+
+        // Search by name or description
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $sensors = $query->latest()->paginate(12)->appends($request->all());
+
         return view('sensors.index', compact('sensors'));
     }
 

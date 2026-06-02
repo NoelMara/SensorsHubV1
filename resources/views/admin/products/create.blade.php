@@ -7,7 +7,7 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
     <div class="mb-8">
-        <a href="{{ route('admin.products.index') }}" class="text-primary hover:underline mb-2 inline-block">
+        <a href="{{ route(($prefix ?? 'admin') . '.products.index') }}" class="text-primary hover:underline mb-2 inline-block">
             <i class="fas fa-arrow-left mr-1"></i>
             Back to Products
         </a>
@@ -16,7 +16,7 @@
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route(($prefix ?? 'admin') . '.products.store') }}" enctype="multipart/form-data">
             @csrf
 
             <div class="space-y-6">
@@ -121,7 +121,7 @@
                     <i class="fas fa-save mr-2"></i>
                     Create Product
                 </button>
-                <a href="{{ route('admin.products.index') }}" class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold text-center">
+                <a href="{{ route(($prefix ?? 'admin') . '.products.index') }}" class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold text-center">
                     Cancel
                 </a>
             </div>

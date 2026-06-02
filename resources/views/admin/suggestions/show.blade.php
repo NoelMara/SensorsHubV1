@@ -40,11 +40,11 @@
         <div class="space-y-4">
             <div>
                 <label class="text-sm font-medium text-gray-700 dark:text-gray-300">User:</label>
-                <p class="mt-1 text-gray-900 dark:text-white">{{ $suggestion->user->name }}</p>
+                <p class="mt-1 text-gray-900 dark:text-white">{{ $suggestion->user?->name ?? 'Deleted user' }}</p>
             </div>
             <div>
                 <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Email:</label>
-                <p class="mt-1 text-gray-900 dark:text-white">{{ $suggestion->user->email }}</p>
+                <p class="mt-1 text-gray-900 dark:text-white">{{ $suggestion->user?->email ?? 'N/A' }}</p>
             </div>
             <div>
                 <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Title:</label>
@@ -100,9 +100,9 @@
                         <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
                             <div class="flex items-center justify-between mb-2">
                                 <div class="flex items-center gap-2">
-                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $comment->user->name }}</span>
+                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $comment->user?->name ?? 'Deleted user' }}</span>
                                     <span class="px-2 py-0.5 text-xs rounded-full
-                                        {{ $comment->user->role === 'super_admin' ? 'bg-purple-100 text-purple-800' : ($comment->user->role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700') }}">
+                                       {{ ($comment->user?->role ?? 'user') === 'super_admin' ? 'bg-purple-100 text-purple-800' : ($comment->user?->role ?? 'user') === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700') }}">
                                         {{ ucfirst(str_replace('_', ' ', $comment->user->role)) }}
                                     </span>
                                 </div>

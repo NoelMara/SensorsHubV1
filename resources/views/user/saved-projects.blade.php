@@ -24,7 +24,7 @@
             <!-- Project Image -->
             <div class="h-48 bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center">
                 @if($saved->project->image)
-                    <img src="{{ Str::startsWith($saved->project->image, ['http://', 'https://']) ? $saved->project->image : asset($saved->project->image) }}"
+                   <img src="{{ Str::startsWith($saved->project->image, ['http://', 'https://']) ? $saved->project->image : asset($saved->project->image) }}" alt="{{ $saved->project->title }}" class="w-full h-full object-cover">
                 @else
                     <i class="fas fa-project-diagram text-6xl text-white"></i>
                 @endif

@@ -11,30 +11,33 @@
     </div>
 
     <!-- Filter Options -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+    <form method="GET" action="{{ route('shop.index') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-                <input type="text" placeholder="Search products..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
             </div>
             <div>
-                <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <select name="category" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
                     <option value="">All Categories</option>
-                    <option value="Microcontrollers">Microcontrollers</option>
-                    <option value="Sensor Kits">Sensor Kits</option>
-                    <option value="Components">Components</option>
-                    <option value="Tools">Tools</option>
+                    <option value="Microcontrollers" {{ request('category') == 'Microcontrollers' ? 'selected' : '' }}>Microcontrollers</option>
+                    <option value="Sensor Kits" {{ request('category') == 'Sensor Kits' ? 'selected' : '' }}>Sensor Kits</option>
+                    <option value="Components" {{ request('category') == 'Components' ? 'selected' : '' }}>Components</option>
+                    <option value="Tools" {{ request('category') == 'Tools' ? 'selected' : '' }}>Tools</option>
                 </select>
             </div>
-            <div>
-                <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                    <option value="">Sort by</option>
-                    <option value="price_low">Price: Low to High</option>
-                    <option value="price_high">Price: High to Low</option>
-                    <option value="name">Name: A-Z</option>
+            <div class="flex gap-2">
+                <select name="sort" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="latest" {{ request('sort', 'latest') == 'latest' ? 'selected' : '' }}>Latest</option>
+                    <option value="price_low" {{ request('sort') == 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
+                    <option value="price_high" {{ request('sort') == 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
+                    <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Name: A-Z</option>
                 </select>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
         </div>
-    </div>
+    </form>
 
     <!-- Products Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">

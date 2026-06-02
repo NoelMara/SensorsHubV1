@@ -109,24 +109,10 @@
                         @enderror
                     </div>
 
-                    {{-- Role dropdown (User/Admin) --}}
-                    <div>
-                        <label for="role" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Account type</label>
-                        <div class="relative mt-2">
-                            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                                <i class="fas fa-id-badge"></i>
-                            </span>
-                            <select id="role" name="role" required
-                                class="auth-input w-full appearance-none rounded-2xl border border-slate-300 bg-white py-3.5 pl-12 pr-12 text-slate-950 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white @error('role') border-red-500 @enderror">
-                                <option value="user" {{ old('role') === 'user' ? 'selected' : '' }}>User</option>
-                            </select>
-                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
-                                <i class="fas fa-chevron-down text-xs"></i>
-                            </span>
-                        </div>
-                        @error('role')
-                            <p class="mt-2 text-sm text-red-600 dark:text-red-400"><i class="fas fa-circle-exclamation mr-1"></i>{{ $message }}</p>
-                        @enderror
+                    {{-- Account type info --}}
+                    <div class="rounded-2xl bg-blue-50 p-4 text-sm text-blue-700 dark:bg-blue-900/30 dark:text-blue-200">
+                        <i class="fas fa-user-circle mr-2"></i>
+                        You are registering as a <strong>User</strong>
                     </div>
 
                     {{-- Password fields (side by side) --}}

@@ -11,29 +11,33 @@
     </div>
 
     <!-- Filter Options -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-                <input type="text" placeholder="Search projects..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
-            </div>
-            <div>
-                <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                    <option value="">All Difficulties</option>
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                </select>
-            </div>
-            <div>
-                <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                    <option value="">All Sensors</option>
-                    @foreach(\App\Models\Sensor::where('is_active', true)->get() as $sensor)
-                        <option value="{{ $sensor->id }}">{{ $sensor->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+    <form method="GET" action="{{ route('projects.index') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search projects..." 
+                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+            <select name="difficulty" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="">All Difficulties</option>
+                <option value="Beginner" {{ request('difficulty') == 'Beginner' ? 'selected' : '' }}>Beginner</option>
+                <option value="Intermediate" {{ request('difficulty') == 'Intermediate' ? 'selected' : '' }}>Intermediate</option>
+                <option value="Advanced" {{ request('difficulty') == 'Advanced' ? 'selected' : '' }}>Advanced</option>
+            </select>
+        </div>
+        <div class="flex gap-2">
+            <select name="sensor_id" class="flex-1 w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <option value="">All Sensors</option>
+                @foreach($sensors as $sensor)
+                    <option value="{{ $sensor->id }}" {{ request('sensor_id') == $sensor->id ? 'selected' : '' }}>{{ $sensor->name }}</option>
+                @endforeach
+            </select>
+            <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
     </div>
+</form>
 
     <!-- Projects Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -60,7 +64,7 @@
                 <h3 class="text-2xl font-bold mb-2 text-gray-800 dark:text-white">{{ $project->title }}</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
                     <i class="fas fa-microchip mr-1 text-primary"></i> 
-                    {{ $project->sensor->name }}
+                    {{ $project->sensor?->name ?? 'General' }}
                 </p>
 
                 <!-- Description -->

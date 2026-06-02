@@ -29,7 +29,7 @@
                                 <span class="text-primary font-bold">{{ strtoupper(substr($suggestion->user->name, 0, 1)) }}</span>
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-900 dark:text-white">{{ $suggestion->user->name }}</p>
+                                <p class="font-semibold text-gray-900 dark:text-white">{{ $suggestion->user?->name ?? 'Deleted user' }}</p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $suggestion->created_at->diffForHumans() }}</p>
                             </div>
                         </div>

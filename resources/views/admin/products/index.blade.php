@@ -13,7 +13,7 @@
             </h1>
         </div>
 
-        <a href="{{ route('admin.products.create') }}"
+        <a href="{{ route(($prefix ?? 'admin') . '.products.create') }}"
            class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
             <i class="fas fa-plus mr-2"></i>
             Add Product
@@ -96,13 +96,13 @@
                             {{-- Actions --}}
                             <td class="px-6 py-4 text-sm font-medium">
 
-                                <a href="{{ route('admin.products.edit', $product) }}"
+                                <a href="{{ route(($prefix ?? 'admin') . '.products.edit', $product) }}"
                                    class="text-blue-600 hover:text-blue-900 mr-3">
                                     <i class="fas fa-edit"></i>
                                     Edit
                                 </a>
 
-                                <form action="{{ route('admin.products.destroy', $product) }}"
+                               <form action="{{ route(($prefix ?? 'admin') . '.products.destroy', $product) }}"
                                       method="POST"
                                       class="inline"
                                       onsubmit="return confirm('Delete?');">
@@ -143,7 +143,7 @@
                 No Products
             </h3>
 
-            <a href="{{ route('admin.products.create') }}"
+           <a href="{{ route(($prefix ?? 'admin') . '.products.create') }}"
                class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition mt-4 inline-block">
                 <i class="fas fa-plus mr-2"></i>
                 Add Product

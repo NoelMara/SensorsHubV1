@@ -19,10 +19,10 @@
         {{-- Author Info --}}
         <div class="flex items-center gap-3 mb-4">
             <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <span class="text-primary font-bold">{{ strtoupper(substr($suggestion->user->name, 0, 1)) }}</span>
+                <span class="text-primary font-bold">{{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}</span>
             </div>
             <div>
-                <p class="font-semibold text-gray-900 dark:text-white">{{ $suggestion->user->name }}</p>
+                <p class="font-semibold text-gray-900 dark:text-white">{{ $suggestion->user?->name ?? 'Deleted user' }}</p>
                 <p class="text-sm text-gray-500 dark:text-gray-400">{{ $suggestion->created_at->format('M d, Y h:i A') }}</p>
             </div>
         </div>
@@ -84,14 +84,14 @@
                             <div class="flex items-center justify-between mb-2">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                        <span class="text-primary font-bold text-sm">{{ strtoupper(substr($comment->user->name, 0, 1)) }}</span>
+                                        <span class="text-primary font-bold text-sm">{{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}</span>
                                     </div>
-                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $comment->user->name }}</span>
+                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $comment->user?->name ?? 'Deleted user' }}</span>
                                     <span class="px-2 py-0.5 text-xs rounded-full
-                                        {{ $comment->user->role === 'super_admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : '' }}
-                                        {{ $comment->user->role === 'admin' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : '' }}
-                                        {{ $comment->user->role === 'user' ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' : '' }}">
-                                        {{ ucfirst(str_replace('_', ' ', $comment->user->role)) }}
+                                        {{ ($comment->user?->role ?? 'user') === 'super_admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : '' }}
+                                        {{ ($comment->user?->role ?? 'user') === 'admin' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : '' }}
+                                        {{ ($comment->user?->role ?? 'user') === 'user' ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' : '' }}">
+                                        {{ ucfirst(str_replace('_', ' ', $comment->user?->role ?? 'user')) }}
                                     </span>
                                 </div>
                                 <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
@@ -127,7 +127,7 @@
                 <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">No comments yet. Be the first to share your thoughts!</p>
             @endif
 
-            {{-- Comment Form: Check if user already commented --}}
+            {{-- Comment Form --}}
             @php
                 $userComment = $suggestion->comments->where('user_id', auth()->id())->first();
             @endphp

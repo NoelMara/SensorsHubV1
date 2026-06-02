@@ -85,14 +85,14 @@
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
                                         @if($type === 'projects')
-                                            <p>{{ $item->sensor->name ?? 'No sensor assigned' }}</p>
+                                            <p>{{ $item->sensor?->name ?? 'No sensor assigned' }}</p>
                                             <p class="text-gray-500 dark:text-gray-400 mt-1">{{ $item->difficulty }}</p>
                                         @elseif($type === 'products')
                                             <p>{{ $item->category ?? 'Uncategorized' }}</p>
                                             <p class="text-gray-500 dark:text-gray-400 mt-1">₱{{ number_format((float) $item->price, 2) }}</p>
                                         @elseif($type === 'videos')
                                             <p>{{ $item->category ?? 'Uncategorized' }}</p>
-                                            <p class="text-gray-500 dark:text-gray-400 mt-1">{{ $item->sensor->name ?? 'No sensor assigned' }}</p>
+                                            <p class="text-gray-500 dark:text-gray-400 mt-1">{{ $item->sensor?->name ?? 'No sensor assigned' }}
                                         @else
                                             <p>{{ Str::limit($item->use_cases ?? 'Sensor catalog item', 72) }}</p>
                                         @endif

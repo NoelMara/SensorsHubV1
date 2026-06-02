@@ -60,7 +60,7 @@
 
                             {{-- User --}}
                             <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                                {{ $suggestion->user->name }}
+                                {{ $suggestion->user?->name ?? 'Deleted user' }}
                             </td>
 
                             {{-- Title --}}

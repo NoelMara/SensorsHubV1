@@ -130,7 +130,7 @@
                         <i class="fas fa-lightbulb w-5"></i> Suggestions
                     </a>
                     <a href="{{ route('super-admin.sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-microchip w-5"></i> Simulation
+                        <i class="fas fa-microchip w-5"></i> Sensors
                     </a>
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-user-shield w-5"></i> Admin Panel

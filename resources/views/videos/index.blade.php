@@ -11,21 +11,24 @@
     </div>
 
     <!-- Filter Options -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+    <<form method="GET" action="{{ route('videos.index') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-                <input type="text" placeholder="Search videos..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search videos..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
             </div>
-            <div>
-                <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+            <div class="flex gap-2">
+                <select name="category" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
                     <option value="">All Categories</option>
-                    <option value="Tutorial">Tutorial</option>
-                    <option value="Project">Project</option>
-                    <option value="Review">Review</option>
+                    <option value="Tutorial" {{ request('category') == 'Tutorial' ? 'selected' : '' }}>Tutorial</option>
+                    <option value="Project" {{ request('category') == 'Project' ? 'selected' : '' }}>Project</option>
+                    <option value="Review" {{ request('category') == 'Review' ? 'selected' : '' }}>Review</option>
                 </select>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
         </div>
-    </div>
+    </form>
 
     <!-- Videos Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">

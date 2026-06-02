@@ -126,7 +126,7 @@
                             {{ $project->difficulty }}
                         </span>
                         <span class="text-gray-500 dark:text-gray-400 text-xs">
-                            <i class="fas fa-microchip mr-1"></i> {{ $project->sensor->name }}
+                            <i class="fas fa-microchip mr-1"></i> {{ $project->sensor?->name ?? 'General' }}
                         </span>
                     </div>
                     <h3 class="text-lg font-bold mb-2 text-gray-800 dark:text-white">{{ $project->title }}</h3>

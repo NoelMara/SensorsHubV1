@@ -83,7 +83,7 @@
                     @forelse($recentSuggestions as $suggestion)
                         <div class="px-6 py-4">
                             <p class="font-semibold text-gray-900 dark:text-white text-sm">{{ Str::limit($suggestion->title, 50) }}</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">by {{ $suggestion->user->name ?? 'Deleted user' }} · {{ $suggestion->created_at->diffForHumans() }}</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">by {{ $suggestion->user?->name ?? 'Deleted user' }} · {{ $suggestion->created_at->diffForHumans() }}</p>
                         </div>
                     @empty
                         <p class="text-gray-500 dark:text-gray-400 text-center py-8 text-sm">All clear! 🎉</p>

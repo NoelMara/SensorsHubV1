@@ -8,7 +8,7 @@
     {{-- Header --}}
     <div class="mb-8">
 
-        <a href="{{ route('admin.projects.index') }}"
+        <a href="{{ route(($prefix ?? 'admin') . '.projects.index') }}"
            class="text-primary hover:underline mb-2 inline-block">
 
             <i class="fas fa-arrow-left mr-1"></i>
@@ -24,7 +24,7 @@
     {{-- Form Card --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
 
-        <form method="POST" action="{{ route('admin.projects.store') }}">
+        <form method="POST" action="{{ route(($prefix ?? 'admin') . '.projects.store') }}">
             @csrf
 
             <div class="space-y-6">
@@ -138,7 +138,7 @@
                     Create
                 </button>
 
-                <a href="{{ route('admin.projects.index') }}"
+                <a href="{{ route(($prefix ?? 'admin') . '.projects.index') }}"
                    class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg text-center">
                     Cancel
                 </a>

@@ -42,7 +42,7 @@
                                 <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $video->title }}</div>
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $video->category }}</td>
-                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $video->sensor->name ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $video->sensor?->name ?? 'N/A' }}</td>
                             <td class="px-6 py-4">
                                 @if($video->is_active)
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>

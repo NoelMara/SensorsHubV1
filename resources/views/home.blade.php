@@ -124,7 +124,7 @@
                             {{ $project->difficulty }}
                         </span>
                         <span class="text-gray-500 dark:text-gray-400 text-xs">
-                            <i class="fas fa-microchip mr-1"></i> {{ $project->sensor->name }}
+                            <i class="fas fa-microchip mr-1"></i> {{ $project->sensor?->name ?? 'General' }}
                         </span>
                     </div>
                     <h3 class="text-lg font-bold mb-2 text-gray-800 dark:text-white">{{ $project->title }}</h3>
@@ -153,11 +153,11 @@
                     <h3 class="font-semibold text-gray-800 dark:text-white">{{ $suggestion->title }}</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ Str::limit($suggestion->description, 100) }}</p>
                     <span class="inline-block mt-2 px-3 py-1 text-xs rounded-full 
-                        @if($suggestion->status == 'approved') bg-green-100 text-green-800
+                        @if($suggestion->status == 'implemented') bg-green-100 text-green-800
                         @elseif($suggestion->status == 'rejected') bg-red-100 text-red-800
-                        @elseif($suggestion->status == 'published') bg-blue-100 text-blue-800
+                        @elseif($suggestion->status == 'reviewed') bg-blue-100 text-blue-800
                         @else bg-yellow-100 text-yellow-800
-                        @endif">
+                        @endif
                         {{ ucfirst($suggestion->status) }}
                     </span>
                 </div>
@@ -278,7 +278,7 @@
                             {{ $project->difficulty }}
                         </span>
                         <span class="text-gray-500 dark:text-gray-400 text-sm">
-                            <i class="fas fa-microchip mr-1"></i> {{ $project->sensor->name }}
+                            <i class="fas fa-microchip mr-1"></i> {{ $project->sensor?->name ?? 'General' }}
                         </span>
                     </div>
                     <h3 class="text-2xl font-bold mb-3 text-gray-800 dark:text-white">{{ $project->title }}</h3>

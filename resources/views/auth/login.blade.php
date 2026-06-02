@@ -77,7 +77,7 @@
                     <div>
                         <div class="grid grid-cols-3 gap-3">
                             <div class="metric-card rounded-2xl p-4">
-                                <p class="text-2xl font-bold">120+</p>
+                                <p class="text-2xl font-bold">{{ ($stats['projects'] ?? 0) }}+</p>
                                 <p class="mt-1 text-xs uppercase tracking-wide text-slate-300">Guides</p>
                             </div>
                             <div class="metric-card rounded-2xl p-4">

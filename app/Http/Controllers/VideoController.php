@@ -7,9 +7,20 @@ use Illuminate\Http\Request;
 
 class VideoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $videos = Video::where('is_active', true)->latest()->paginate(12);
+        $query = Video::where('is_active', true);
+
+        if ($request->filled('search')) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category', $request->category);
+        }
+
+        $videos = $query->latest()->paginate(12)->appends($request->all());
+
         return view('videos.index', compact('videos'));
     }
 }

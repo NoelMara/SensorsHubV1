@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -98,11 +97,6 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        // ADDED: Delete the image file when deleting product
-        if ($product->image && Storage::disk('public')->exists($product->image)) {
-            Storage::disk('public')->delete($product->image);
-        }
-        
         $product->delete();
         
         return redirect()->route('admin.products.index')

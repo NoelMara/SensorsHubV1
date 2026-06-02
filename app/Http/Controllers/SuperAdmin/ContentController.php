@@ -99,6 +99,7 @@ class ContentController extends Controller
         };
 
         return view($view, [
+            'prefix' => 'super-admin',
             'sensors' => $this->needsSensors($type) ? Sensor::where('is_active', true)->orderBy('name')->get() : collect(),
         ]);
     }
@@ -126,10 +127,11 @@ class ContentController extends Controller
         };
 
         return view($view, [
+            'prefix' => 'super-admin',
             'item' => $this->findItem($type, $id),
             'sensors' => $this->needsSensors($type) ? Sensor::where('is_active', true)->orderBy('name')->get() : collect(),
         ]);
-    } // ← THIS WAS MISSING - Fixed now!
+    }
 
     public function update(Request $request, string $type, int $id)
     {

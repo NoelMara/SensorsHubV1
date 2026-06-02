@@ -78,7 +78,7 @@
                     {{ auth()->user()->isSuperAdmin() ? 'Super Administrator' : 'Administrator' }}
                 </span>
 
-                <a href="{{ route('dashboard.profile') }}"
+                <a href="{{ auth()->user()->isSuperAdmin() ? route('super-admin.profile') : route('dashboard.profile') }}"
                    class="inline-flex items-center justify-center bg-primary hover:bg-blue-700 text-white font-semibold px-5 py-3 rounded-lg transition">
                     <i class="fas fa-user-edit mr-2"></i>
                     Edit Profile
@@ -196,7 +196,7 @@
                     @if($stats['pending_suggestions'] > 0)
                         <p class="text-xs text-yellow-600 dark:text-yellow-400 mt-1">
                             <i class="fas fa-clock mr-1"></i>
-                            {{ $stats['pending_suggestions'] }} pending
+                            {{ $stats['pending_suggestions'] ?? 0 }} pending
                         </p>
                     @endif
                 </div>
@@ -286,7 +286,7 @@
                                         {{ Str::limit($suggestion->title, 40) }}
                                     </p>
                                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                                        by {{ $suggestion->user->name }}
+                                        by {{ $suggestion->user?->name ?? 'Deleted user' }}
                                     </p>
                                 </div>
 

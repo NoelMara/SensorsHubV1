@@ -11,22 +11,18 @@
     </div>
 
     <!-- Search & Filter -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
-        <div class="flex flex-col md:flex-row gap-4">
-            <div class="flex-1">
-                <input type="text" placeholder="Search sensors..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
-            </div>
-            <div class="w-full md:w-48">
-                <select class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                    <option value="">All Categories</option>
-                    <option value="temperature">Temperature</option>
-                    <option value="motion">Motion</option>
-                    <option value="gas">Gas</option>
-                    <option value="distance">Distance</option>
-                </select>
-            </div>
+<form method="GET" action="{{ route('sensors.index') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+    <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-1">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search sensors..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+            <button type="submit" class="w-full md:w-auto px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition font-semibold">
+                <i class="fas fa-search mr-2"></i>Search
+            </button>
         </div>
     </div>
+</form>
 
     <!-- Sensors Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">

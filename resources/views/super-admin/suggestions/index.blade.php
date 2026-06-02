@@ -69,12 +69,12 @@
                             @foreach($suggestions as $suggestion)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/60 transition">
                                     <td class="px-6 py-4">
-                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $suggestion->user->name ?? 'Deleted user' }}</p>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $suggestion->user->email ?? 'No email available' }}</p>
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $suggestion->user?->name ?? 'Deleted user' }}</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $suggestion->user?->email ?? 'No email available' }}</p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ Str::limit($suggestion->title, 56) }}</p>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($suggestion->message, 82) }}</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($suggestion->description, 82) }}/p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="inline-flex px-2.5 py-1 text-xs font-semibold rounded-full

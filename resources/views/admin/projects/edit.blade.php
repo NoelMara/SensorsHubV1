@@ -8,7 +8,7 @@
     {{-- Header --}}
     <div class="mb-8">
 
-        <a href="{{ route('admin.projects.index') }}"
+        <a href="{{ route(($prefix ?? 'admin') . '.projects.index') }}"
            class="text-primary hover:underline mb-2 inline-block">
 
             <i class="fas fa-arrow-left mr-1"></i>
@@ -29,7 +29,7 @@
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
 
         <form method="POST"
-              action="{{ route('admin.projects.update', $project) }}">
+              action="{{ route(($prefix ?? 'admin') . '.projects.update', $project) }}">
 
             @csrf
             @method('PUT')
@@ -228,7 +228,7 @@
                     Update Project
                 </button>
 
-                <a href="{{ route('admin.projects.index') }}"
+                <a href="{{ route(($prefix ?? 'admin') . '.projects.index') }}"
                    class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold text-center">
 
                     Cancel

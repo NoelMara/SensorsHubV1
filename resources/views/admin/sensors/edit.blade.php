@@ -16,7 +16,7 @@
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        <form method="POST" action="{{ route('admin.sensors.update', $sensor) }}">
+        <form method="POST" action="{{ route(($prefix ?? 'admin') . '.sensors.update', $sensor) }}">
             @csrf
             @method('PUT')
 
@@ -107,7 +107,7 @@
                     <i class="fas fa-save mr-2"></i>
                     Update Sensor
                 </button>
-                <a href="{{ route('admin.sensors.index') }}" class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold text-center">
+                <a href="{{ route(($prefix ?? 'admin') . '.sensors.index') }}" class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold text-center">
                     Cancel
                 </a>
             </div>

@@ -7,7 +7,7 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
     <div class="mb-8">
-        <a href="{{ route('admin.videos.index') }}" class="text-primary hover:underline mb-2 inline-block">
+        <a href="{{ route(($prefix ?? 'admin') . '.videos.index') }}" class="text-primary hover:underline mb-2 inline-block">
             <i class="fas fa-arrow-left mr-1"></i>
             Back to Videos
         </a>
@@ -115,7 +115,7 @@
                 <button type="submit" class="flex-1 bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition font-semibold">
                     <i class="fas fa-save mr-2"></i>Create Video
                 </button>
-                <a href="{{ route('admin.videos.index') }}" class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold text-center">
+                <a href="{{ route(($prefix ?? 'admin') . '.videos.index') }}" class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold text-center">
                     Cancel
                 </a>
             </div>

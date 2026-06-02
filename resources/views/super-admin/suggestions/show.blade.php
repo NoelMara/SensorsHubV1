@@ -41,11 +41,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
                         <p class="text-sm text-gray-500 dark:text-gray-400">Submitted By</p>
-                        <p class="font-semibold text-gray-900 dark:text-white mt-1">{{ $suggestion->user->name ?? 'Deleted user' }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white mt-1">{{ $suggestion->user?->name ?? 'Deleted user' }}</p>
                     </div>
                     <div class="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
                         <p class="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                        <p class="font-semibold text-gray-900 dark:text-white mt-1">{{ $suggestion->user->email ?? 'No email available' }}</p>
+                        <p class="font-semibold text-gray-900 dark:text-white mt-1">{{ $suggestion->user?->email ?? 'No email available' }}</p>
                     </div>
                     <div class="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
                         <p class="text-sm text-gray-500 dark:text-gray-400">Submitted</p>
@@ -88,10 +88,10 @@
                             <div class="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
                                 <div class="flex items-center justify-between mb-2">
                                     <div class="flex items-center gap-2">
-                                        <span class="font-semibold text-gray-900 dark:text-white">{{ $comment->user->name }}</span>
+                                        <span class="font-semibold text-gray-900 dark:text-white">{{ $comment->user?->name ?? 'Deleted user' }}</span>
                                         <span class="px-2 py-0.5 text-xs rounded-full
-                                            {{ $comment->user->role === 'super_admin' ? 'bg-purple-100 text-purple-800' : ($comment->user->role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700') }}">
-                                            {{ ucfirst(str_replace('_', ' ', $comment->user->role)) }}
+                                           {{ ($comment->user?->role ?? 'user') === 'super_admin' ? 'bg-purple-100 text-purple-800' :($comment->user?->role ?? 'user') === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700') }}">
+                                           {{ ucfirst(str_replace('_', ' ', $comment->user?->role ?? 'user')) }}
                                         </span>
                                     </div>
                                     <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>

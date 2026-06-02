@@ -41,8 +41,8 @@
                     <div class="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
                         <span>
                             <i class="fas fa-microchip mr-1 text-primary"></i> 
-                            <a href="{{ route('sensors.show', $project->sensor->slug) }}" class="text-primary hover:underline">
-                                {{ $project->sensor->name }}
+                            <a href="{{ route('sensors.show', $project->sensor?->slug ?? '#') }}" class="text-primary hover:underline">
+                                {{ $project->sensor?->name ?? 'General' }}
                             </a>
                         </span>
                     </div>
@@ -87,6 +87,7 @@
             @endif
 
             <!-- Sensor Info -->
+            @if($project->sensor)
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
                 <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
                     <i class="fas fa-microchip mr-2 text-primary"></i>Related Sensor
@@ -104,6 +105,7 @@
                     Learn More <i class="fas fa-arrow-right ml-1"></i>
                 </a>
             </div>
+            @endif
 
             <!-- Actions -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
@@ -134,38 +136,40 @@
     </div>
 
     <!-- Related Projects -->
-    @php
-        $relatedProjects = \App\Models\Project::where('sensor_id', $project->sensor->id)
-            ->where('id', '!=', $project->id)
-            ->where('is_active', true)
-            ->limit(3)
-            ->get();
-    @endphp
-    
-    @if($relatedProjects->count() > 0)
-    <div class="mt-16">
-        <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-8">Related Projects</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($relatedProjects as $relatedProject)
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-1">
-                <div class="p-6">
-                    <span class="px-3 py-1 rounded-full text-xs font-semibold
-                        @if($relatedProject->difficulty == 'Beginner') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                        @elseif($relatedProject->difficulty == 'Intermediate') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-                        @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
-                        @endif">
-                        {{ $relatedProject->difficulty }}
-                    </span>
-                    <h3 class="text-xl font-bold mt-3 mb-2 text-gray-800 dark:text-white">{{ $relatedProject->title }}</h3>
-                    <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">{{ Str::limit($relatedProject->description, 100) }}</p>
-                    <a href="{{ route('projects.show', $relatedProject->slug) }}" class="text-primary font-semibold hover:underline text-sm">
-                        View Project <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
+    @if($project->sensor_id)
+        @php
+            $relatedProjects = \App\Models\Project::where('sensor_id', $project->sensor_id)
+                ->where('id', '!=', $project->id)
+                ->where('is_active', true)
+                ->limit(3)
+                ->get();
+        @endphp
+        
+        @if($relatedProjects->count() > 0)
+        <div class="mt-16">
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-white mb-8">Related Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @foreach($relatedProjects as $relatedProject)
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-1">
+                    <div class="p-6">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold
+                            @if($relatedProject->difficulty == 'Beginner') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                            @elseif($relatedProject->difficulty == 'Intermediate') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                            @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                            @endif">
+                            {{ $relatedProject->difficulty }}
+                        </span>
+                        <h3 class="text-xl font-bold mt-3 mb-2 text-gray-800 dark:text-white">{{ $relatedProject->title }}</h3>
+                        <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">{{ Str::limit($relatedProject->description, 100) }}</p>
+                        <a href="{{ route('projects.show', $relatedProject->slug) }}" class="text-primary font-semibold hover:underline text-sm">
+                            View Project <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
-    </div>
+        @endif
     @endif
 </div>
 @endsection
