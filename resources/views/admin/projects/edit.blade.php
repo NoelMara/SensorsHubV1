@@ -28,8 +28,7 @@
     {{-- Form Container --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
 
-        <form method="POST"
-              action="{{ route(($prefix ?? 'admin') . '.projects.update', $project) }}">
+       <form method="POST" action="{{ ($prefix ?? 'admin') === 'super-admin' ? route('super-admin.content.update', ['projects', $project->id]) : route('admin.projects.update', $project) }}">
 
             @csrf
             @method('PUT')

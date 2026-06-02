@@ -28,7 +28,7 @@
     {{-- Form Card --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
 
-        <form method="POST" action="{{ route(($prefix ?? 'admin') . '.sensors.store') }}">
+        <form method="POST" action="{{ ($prefix ?? 'admin') === 'super-admin' ? route('super-admin.content.store', 'sensors') : route('admin.sensors.store') }}" enctype="multipart/form-data">
 
             @csrf
 
@@ -139,6 +139,22 @@
                         <p class="text-red-500 text-xs mt-1">
                             {{ $message }}
                         </p>
+                    @enderror
+                </div>
+
+                {{-- Image Upload --}}
+                <div>
+                    <label for="image"
+                           class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Sensor Image
+                    </label>
+                    <input type="file"
+                           name="image"
+                           id="image"
+                           accept="image/*"
+                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white @error('image') border-red-500 @enderror">
+                    @error('image')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 

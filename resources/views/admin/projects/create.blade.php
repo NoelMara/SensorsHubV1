@@ -24,7 +24,7 @@
     {{-- Form Card --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
 
-        <form method="POST" action="{{ route(($prefix ?? 'admin') . '.projects.store') }}">
+        <form method="POST" action="{{ ($prefix ?? 'admin') === 'super-admin' ? route('super-admin.content.store', 'projects') : route('admin.projects.store') }}">
             @csrf
 
             <div class="space-y-6">

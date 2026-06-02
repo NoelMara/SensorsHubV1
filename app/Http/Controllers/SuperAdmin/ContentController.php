@@ -119,6 +119,9 @@ class ContentController extends Controller
     {
         $this->ensureValidType($type);
 
+        $item = $this->findItem($type, $id);
+        $variableName = Str::singular($type); // sensors -> sensor, products -> product
+
         $view = match ($type) {
             'products' => 'admin.products.edit',
             'sensors' => 'admin.sensors.edit',
@@ -128,7 +131,7 @@ class ContentController extends Controller
 
         return view($view, [
             'prefix' => 'super-admin',
-            'item' => $this->findItem($type, $id),
+            $variableName => $item,
             'sensors' => $this->needsSensors($type) ? Sensor::where('is_active', true)->orderBy('name')->get() : collect(),
         ]);
     }

@@ -16,7 +16,7 @@
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        <form method="POST" action="{{ route(($prefix ?? 'admin') . '.products.store') }}" enctype="multipart/form-data">
+       <form method="POST" action="{{ ($prefix ?? 'admin') === 'super-admin' ? route('super-admin.content.store', 'products') : route('admin.products.store') }}" enctype="multipart/form-data">
             @csrf
 
             <div class="space-y-6">

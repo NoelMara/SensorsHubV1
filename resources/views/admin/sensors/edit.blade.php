@@ -7,7 +7,7 @@
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
     <div class="mb-8">
-        <a href="{{ route('admin.sensors.index') }}" class="text-primary hover:underline mb-2 inline-block">
+        <a href="{{ route(($prefix ?? 'admin') . '.sensors.index') }}" class="text-primary hover:underline mb-2 inline-block">
             <i class="fas fa-arrow-left mr-1"></i>
             Back to Sensors
         </a>
@@ -16,7 +16,7 @@
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        <form method="POST" action="{{ route(($prefix ?? 'admin') . '.sensors.update', $sensor) }}">
+        <form method="POST" action="{{ ($prefix ?? 'admin') === 'super-admin' ? route('super-admin.content.update', ['sensors', $sensor->id]) : route('admin.sensors.update', $sensor) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -24,7 +24,7 @@
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Image</label>
                 <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : asset($sensor->image) }}" class="h-32 w-32 object-cover rounded-lg mb-2">
-                <p class="text-xs text-gray-500">Image is managed by Super Admin only.</p>
+                <p class="text-xs text-gray-500">Upload a new image to replace.</p>
             </div>
             @endif
 
@@ -86,6 +86,18 @@
                     <textarea name="components_needed" id="components_needed" rows="3" required
                               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white @error('components_needed') border-red-500 @enderror">{{ old('components_needed', $sensor->components_needed) }}</textarea>
                     @error('components_needed')
+                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Image Upload --}}
+                <div>
+                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Sensor Image
+                    </label>
+                    <input type="file" name="image" id="image" accept="image/*"
+                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white @error('image') border-red-500 @enderror">
+                    @error('image')
                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>

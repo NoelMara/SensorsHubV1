@@ -16,7 +16,7 @@
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        <form method="POST" action="{{ route('admin.videos.store') }}">
+        <form method="POST" action="{{ ($prefix ?? 'admin') === 'super-admin' ? route('super-admin.content.store', 'videos') : route('admin.videos.store') }}">
             @csrf
 
             <div class="space-y-6">
