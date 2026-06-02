@@ -11,7 +11,7 @@
     </div>
 
     <!-- Filter Options -->
-    <<form method="GET" action="{{ route('videos.index') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+    <form method="GET" action="{{ route('videos.index') }}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search videos..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary">
