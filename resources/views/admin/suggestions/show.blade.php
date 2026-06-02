@@ -102,8 +102,8 @@
                                 <div class="flex items-center gap-2">
                                     <span class="font-semibold text-gray-900 dark:text-white">{{ $comment->user?->name ?? 'Deleted user' }}</span>
                                     <span class="px-2 py-0.5 text-xs rounded-full
-                                       {{ ($comment->user?->role ?? 'user') === 'super_admin' ? 'bg-purple-100 text-purple-800' : ($comment->user?->role ?? 'user') === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700') }}">
-                                        {{ ucfirst(str_replace('_', ' ', $comment->user->role)) }}
+                                       {{ ($comment->user?->role ?? 'user') === 'super_admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : (($comment->user?->role ?? 'user') === 'admin' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300') }}">
+                                        {{ ucfirst(str_replace('_', ' ', $comment->user?->role ?? 'user')) }}
                                     </span>
                                 </div>
                                 <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
