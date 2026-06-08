@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->text('components_needed')->nullable();
             $table->text('instructions')->nullable();
+            $table->text('code')->nullable();
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

@@ -38,6 +38,7 @@ class ProjectController extends Controller
             'sensor_id' => 'required|exists:sensors,id',
             'components_needed' => 'required|string',
             'instructions' => 'required|string',
+             'code' => 'nullable|string',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
@@ -65,6 +66,7 @@ class ProjectController extends Controller
             'sensor_id' => 'required|exists:sensors,id',
             'components_needed' => 'required|string',
             'instructions' => 'required|string',
+            'code' => 'nullable|string',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);

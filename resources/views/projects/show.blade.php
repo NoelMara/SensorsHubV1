@@ -58,38 +58,32 @@
                     </div>
                 </div>
 
-                              <!-- Instructions -->
+                <!-- Instructions -->
                 @if($project->instructions)
-                @php
-                    $allCode = '';
-                    foreach(explode("\n", $project->instructions) as $line) {
-                        if(preg_match('/^\s*(from|import|def|class|while|if|else|for|print|sensor|time|delay|digitalWrite|analogRead|pinMode|const|int|void|setup|loop|Serial|#define|\/\/)\b/i', $line)) {
-                            $allCode .= $line . "\n";
-                        }
-                    }
-                @endphp
                 <div class="p-5 sm:p-8 border-t dark:border-gray-700">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">
                         <i class="fas fa-tasks mr-2 text-primary"></i>Instructions
                     </h2>
-                    @if(trim($allCode) !== '')
-                    <div class="relative group mb-4">
-                        <pre class="bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto"><code>{{ trim($allCode) }}</code></pre>
-                        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent)" class="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white text-xs px-3 py-1.5 rounded opacity-0 group-hover:opacity-100 transition">
-                            <i class="fas fa-copy mr-1"></i>Copy All Code
+                    <div class="prose dark:prose-invert max-w-none">
+                        <div class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{{ $project->instructions }}</div>
+                    </div>
+                </div>
+                @endif
+
+                <!-- Code -->
+                @if($project->code)
+                <div class="p-5 sm:p-8 border-t dark:border-gray-700">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+                            <i class="fas fa-code mr-2 text-green-500"></i>Code
+                        </h2>
+                        <button onclick="navigator.clipboard.writeText(document.getElementById('projectCode').textContent)" 
+                                class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white text-sm px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-copy"></i> Copy Code
                         </button>
                     </div>
-                    @endif
-                    <div class="prose dark:prose-invert max-w-none">
-                        <div class="text-gray-700 dark:text-gray-300 leading-relaxed">
-                            @foreach(explode("\n", $project->instructions) as $line)
-                                @if(trim($line) === '')
-                                    <br>
-                                @elseif(!preg_match('/^\s*(from|import|def|class|while|if|else|for|print|sensor|time|delay|digitalWrite|analogRead|pinMode|const|int|void|setup|loop|Serial|#define|\/\/)\b/i', $line))
-                                    <p class="my-1">{{ $line }}</p>
-                                @endif
-                            @endforeach
-                        </div>
+                    <div class="relative">
+                        <pre id="projectCode" class="bg-gray-950 text-green-400 p-5 rounded-xl text-sm overflow-x-auto border border-gray-700"><code>{{ $project->code }}</code></pre>
                     </div>
                 </div>
                 @endif

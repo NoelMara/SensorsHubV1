@@ -15,6 +15,7 @@ class Project extends Model
         'image',
         'components_needed',
         'instructions',
+        'code',
         'is_featured',
         'is_active',
     ];

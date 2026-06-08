@@ -125,7 +125,17 @@
                     <label class="ml-2 text-sm">
                         Active
                     </label>
+                </div>
 
+                 {{-- Code --}}
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Code <span class="text-gray-400 font-normal">(optional - paste code here)</span>
+                    </label>
+                    <textarea name="code"
+                              rows="10"
+                              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white font-mono text-sm"
+                              placeholder="Paste your code here..."></textarea>
                 </div>
 
             </div>
