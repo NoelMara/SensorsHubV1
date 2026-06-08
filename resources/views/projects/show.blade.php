@@ -65,10 +65,26 @@
                         <i class="fas fa-tasks mr-2 text-primary"></i>Instructions
                     </h2>
                     <div class="prose dark:prose-invert max-w-none">
-                        <div class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{{ $project->instructions }}</div>
+                        <div class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                            @foreach(explode("\n", $project->instructions) as $line)
+                                @if(trim($line) === '')
+                                    <br>
+                                @elseif(preg_match('/^\s*(from|import|def|class|while|if|else|for|print|sensor|time|delay|digitalWrite|analogRead|pinMode|const|int|void|setup|loop)/i', $line))
+                                    <div class="relative group my-2">
+                                        <pre class="bg-gray-900 text-green-400 p-3 rounded-lg text-sm overflow-x-auto"><code>{{ $line }}</code></pre>
+                                        <button onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent)" class="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+                                            <i class="fas fa-copy mr-1"></i>Copy
+                                        </button>
+                                    </div>
+                                @else
+                                    <p class="my-1">{{ $line }}</p>
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
                 </div>
                 @endif
+
             </div>
         </div>
 
