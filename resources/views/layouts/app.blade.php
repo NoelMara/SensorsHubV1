@@ -25,7 +25,6 @@
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-hidden">
     @php
         $homeRoute = 'home';
-
         if (auth()->check()) {
             if (auth()->user()->isSuperAdmin()) {
                 $homeRoute = 'super-admin.dashboard';
@@ -35,10 +34,50 @@
                 $homeRoute = 'dashboard.index';
             }
         }
-        
         $isSuperAdmin = auth()->check() && auth()->user()->isSuperAdmin();
         $isAdmin = auth()->check() && auth()->user()->isAdmin();
     @endphp
+
+    <!-- Toast Notifications -->
+    @if(session('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" 
+            class="fixed top-20 right-4 z-[9999] max-w-sm w-full animate-slide-in">
+            <div class="flex items-center gap-3 bg-white dark:bg-gray-800 border border-green-200 dark:border-green-700 rounded-xl shadow-lg p-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                    <i class="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
+                </div>
+                <p class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{{ session('success') }}</p>
+                <button @click="show = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" 
+            class="fixed top-20 right-4 z-[9999] max-w-sm w-full">
+            <div class="flex items-center gap-3 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-700 rounded-xl shadow-lg p-4">
+                <div class="flex-shrink-0 w-8 h-8 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center">
+                    <i class="fas fa-exclamation text-red-600 dark:text-red-400 text-sm"></i>
+                </div>
+                <p class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{{ session('error') }}</p>
+                <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+        </div>
+    @endif
+
+    <style>
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+    </style>
 
     <!-- Navigation -->
     <nav class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50">
@@ -63,26 +102,26 @@
                     {{-- Super Admin Desktop Menu --}}
                     @if($isSuperAdmin)
                         <div class="relative group">
-                            <button class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold flex items-center gap-1">
+                            <a href="{{ route('super-admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold flex items-center gap-1">
                                 Control Panel <i class="fas fa-chevron-down text-xs"></i>
-                            </button>
+                            </a>
                             <div class="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                                <a href="{{ route('super-admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
+                                <a href="{{ route('super-admin.users.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
                                     <i class="fas fa-users w-4 mr-2"></i> Users
                                 </a>
-                                <a href="{{ route('super-admin.suggestions.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <a href="{{ route('super-admin.suggestions.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-lightbulb w-4 mr-2"></i> Suggestions
                                 </a>
-                                <a href="{{ route('super-admin.sensors.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <a href="{{ route('super-admin.sensors.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-microchip w-4 mr-2"></i> Sensors
                                 </a>
-                                <a href="{{ route('super-admin.projects.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <a href="{{ route('super-admin.projects.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-project-diagram w-4 mr-2"></i> Projects
                                 </a>
-                                <a href="{{ route('super-admin.products.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <a href="{{ route('super-admin.products.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-shopping-cart w-4 mr-2"></i> Products
                                 </a>
-                                <a href="{{ route('super-admin.videos.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg">
+                                <a href="{{ route('super-admin.videos.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg">
                                     <i class="fas fa-video w-4 mr-2"></i> Videos
                                 </a>
                             </div>
@@ -137,7 +176,6 @@
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-800 border-t dark:border-gray-700">
             <div class="px-4 pt-2 pb-4 space-y-1">
-                {{-- Super Admin Mobile Menu --}}
                 @if($isSuperAdmin)
                     <a href="{{ route('super-admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-tachometer-alt w-5"></i> Dashboard
@@ -163,8 +201,6 @@
                     <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-flask w-5"></i> Simulation
                     </a>
-                
-                {{-- Admin Mobile Menu --}}
                 @elseif($isAdmin)
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-tachometer-alt w-5"></i> Dashboard
@@ -187,8 +223,6 @@
                     <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-flask w-5"></i> Simulation
                     </a>
-
-                {{-- User Mobile Menu --}}
                 @else
                     <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-home w-5"></i> Home
@@ -240,30 +274,6 @@
 
     <!-- Main Content -->
     <main>
-        @if(session('success'))
-            <div x-data="{ show: true }" x-show="show" class="max-w-7xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center gap-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 px-5 py-4 rounded-xl shadow-sm">
-                    <i class="fas fa-check-circle text-green-500 text-lg"></i>
-                    <span class="flex-1 text-sm font-medium">{{ session('success') }}</span>
-                    <button onclick="this.closest('.max-w-7xl').remove()" class="text-green-500 hover:text-green-700 dark:hover:text-green-300">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="max-w-7xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center gap-3 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-5 py-4 rounded-xl shadow-sm">
-                    <i class="fas fa-exclamation-circle text-red-500 text-lg"></i>
-                    <span class="flex-1 text-sm font-medium">{{ session('error') }}</span>
-                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:text-red-700 dark:hover:text-red-300">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-        @endif
-
         @yield('content')
     </main>
 
@@ -313,11 +323,7 @@
         const darkModeToggle = document.getElementById('darkModeToggle');
         const mobileDarkModeToggle = document.getElementById('mobileDarkModeToggle');
         const html = document.documentElement;
-
-        if (localStorage.getItem('darkMode') === 'true') {
-            html.classList.add('dark');
-        }
-
+        if (localStorage.getItem('darkMode') === 'true') html.classList.add('dark');
         darkModeToggle?.addEventListener('click', () => {
             html.classList.toggle('dark');
             localStorage.setItem('darkMode', html.classList.contains('dark'));
@@ -326,20 +332,11 @@
             html.classList.toggle('dark');
             localStorage.setItem('darkMode', html.classList.contains('dark'));
         });
-
         const mobileMenuButton = document.getElementById('mobileMenuButton');
         const mobileMenu = document.getElementById('mobileMenu');
-
-        mobileMenuButton?.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        
+        mobileMenuButton?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
         const mobileLinks = mobileMenu?.querySelectorAll('a, button[type="submit"]');
-        mobileLinks?.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
+        mobileLinks?.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
     </script>
     @stack('scripts')
 </body>
