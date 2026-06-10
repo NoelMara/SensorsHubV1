@@ -6,9 +6,6 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
         <div>
-            <a href="{{ route('super-admin.dashboard') }}" class="text-primary hover:underline mb-2 inline-block">
-                <i class="fas fa-arrow-left mr-1"></i>Back to Super Admin
-            </a>
             <h1 class="text-4xl font-bold text-gray-800 dark:text-white">Manage Users</h1>
             <p class="text-gray-600 dark:text-gray-400 mt-2">Remove user and admin accounts, or change account roles.</p>
         </div>
@@ -22,18 +19,6 @@
             </a>
         </div>
     </div>
-
-    @if(session('success'))
-        <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-sm text-green-600 dark:text-green-400">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
-            {{ session('error') }}
-        </div>
-    @endif
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
         <div class="overflow-x-auto">

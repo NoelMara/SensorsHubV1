@@ -58,15 +58,11 @@
                     </a>
                 </div>
 
-                <!-- Desktop Menu - Text only -->
+                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6">
                     {{-- Super Admin Desktop Menu --}}
                     @if($isSuperAdmin)
                         <a href="{{ route('super-admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold">Dashboard</a>
-                        <a href="{{ route('super-admin.users.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Users</a>
-                        <a href="{{ route('super-admin.suggestions.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Suggestions</a>
-                        <a href="{{ route('super-admin.sensors.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sensors</a>
-                        <a href="{{ route('admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Admin Panel</a>
                         <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
                     
                     {{-- Admin Desktop Menu --}}
@@ -100,14 +96,12 @@
                         <a href="{{ route('register') }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Register</a>
                     @endauth
                     
-                    <!-- Dark Mode Toggle -->
                     <button id="darkModeToggle" class="text-gray-700 dark:text-gray-300 hover:text-primary">
                         <i class="fas fa-moon dark:hidden"></i>
                         <i class="fas fa-sun hidden dark:inline"></i>
                     </button>
                 </div>
 
-                <!-- Mobile menu button -->
                 <div class="md:hidden flex items-center">
                     <button id="mobileMenuButton" class="text-gray-700 dark:text-gray-300 p-2 -mr-2">
                         <i class="fas fa-bars text-2xl"></i>
@@ -123,18 +117,6 @@
                 @if($isSuperAdmin)
                     <a href="{{ route('super-admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-tachometer-alt w-5"></i> Dashboard
-                    </a>
-                    <a href="{{ route('super-admin.users.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-users w-5"></i> Users
-                    </a>
-                    <a href="{{ route('super-admin.suggestions.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-lightbulb w-5"></i> Suggestions
-                    </a>
-                    <a href="{{ route('super-admin.sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-microchip w-5"></i> Sensors
-                    </a>
-                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-user-shield w-5"></i> Admin Panel
                     </a>
                     <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-flask w-5"></i> Simulation
@@ -310,7 +292,6 @@
             mobileMenu.classList.toggle('hidden');
         });
         
-        // Close mobile menu when clicking any link
         const mobileLinks = mobileMenu?.querySelectorAll('a, button[type="submit"]');
         mobileLinks?.forEach(link => {
             link.addEventListener('click', () => {

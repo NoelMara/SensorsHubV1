@@ -6,37 +6,102 @@
 <div class="min-h-screen bg-gray-100 dark:bg-gray-950">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- Welcome Header - Clean & Simple -->
+        <!-- Welcome Header -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Welcome back, {{ auth()->user()->name }} 👋</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">Here's what's happening across the platform.</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-1">Manage your entire platform from one place.</p>
         </div>
 
         <!-- Quick Stats Row -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5">
-                <p class="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">{{ $stats['users'] }}</p>
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-indigo-100 dark:bg-indigo-900/50 rounded-lg">
+                        <i class="fas fa-users text-indigo-600 dark:text-indigo-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['users'] }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5">
-                <p class="text-sm text-gray-500 dark:text-gray-400">Admins</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">{{ $stats['admins'] }}</p>
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+                        <i class="fas fa-user-shield text-blue-600 dark:text-blue-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Admins</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['admins'] }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5">
-                <p class="text-sm text-gray-500 dark:text-gray-400">Content Items</p>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">{{ $stats['sensors'] + $stats['projects'] + $stats['products'] + $stats['videos'] }}</p>
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-emerald-100 dark:bg-emerald-900/50 rounded-lg">
+                        <i class="fas fa-layer-group text-emerald-600 dark:text-emerald-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Content Items</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['sensors'] + $stats['projects'] + $stats['products'] + $stats['videos'] }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5">
-                <p class="text-sm text-gray-500 dark:text-gray-400">Pending Reviews</p>
-                <p class="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-2">{{ $stats['pending_suggestions'] }}</p>
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-amber-100 dark:bg-amber-900/50 rounded-lg">
+                        <i class="fas fa-clock text-amber-600 dark:text-amber-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Pending Reviews</p>
+                        <p class="text-2xl font-bold text-amber-600 dark:text-amber-400">{{ $stats['pending_suggestions'] }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Overview - 6 Cards -->
+        <div class="mb-8">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Content Overview</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <a href="{{ route('super-admin.users.index') }}" class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:border-indigo-300 dark:hover:border-indigo-700 hover:shadow-md transition text-center">
+                    <i class="fas fa-users text-2xl text-indigo-500 mb-2"></i>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Users</p>
+                    <p class="text-xl font-bold text-gray-900 dark:text-white mt-1">{{ $stats['users'] }}</p>
+                </a>
+                <a href="{{ route('super-admin.suggestions.index') }}" class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:border-yellow-300 dark:hover:border-yellow-700 hover:shadow-md transition text-center">
+                    <i class="fas fa-lightbulb text-2xl text-yellow-500 mb-2"></i>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Suggestions</p>
+                    <p class="text-xl font-bold text-gray-900 dark:text-white mt-1">{{ $stats['suggestions'] }}</p>
+                </a>
+                <a href="{{ route('super-admin.sensors.index') }}" class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-md transition text-center">
+                    <i class="fas fa-microchip text-2xl text-blue-500 mb-2"></i>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Sensors</p>
+                    <p class="text-xl font-bold text-gray-900 dark:text-white mt-1">{{ $stats['sensors'] }}</p>
+                </a>
+                <a href="{{ route('super-admin.projects.index') }}" class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-md transition text-center">
+                    <i class="fas fa-project-diagram text-2xl text-emerald-500 mb-2"></i>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Projects</p>
+                    <p class="text-xl font-bold text-gray-900 dark:text-white mt-1">{{ $stats['projects'] }}</p>
+                </a>
+                <a href="{{ route('super-admin.products.index') }}" class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:border-purple-300 dark:hover:border-purple-700 hover:shadow-md transition text-center">
+                    <i class="fas fa-shopping-cart text-2xl text-purple-500 mb-2"></i>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Products</p>
+                    <p class="text-xl font-bold text-gray-900 dark:text-white mt-1">{{ $stats['products'] }}</p>
+                </a>
+                <a href="{{ route('super-admin.videos.index') }}" class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 hover:border-red-300 dark:hover:border-red-700 hover:shadow-md transition text-center">
+                    <i class="fas fa-video text-2xl text-red-500 mb-2"></i>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Videos</p>
+                    <p class="text-xl font-bold text-gray-900 dark:text-white mt-1">{{ $stats['videos'] }}</p>
+                </a>
             </div>
         </div>
 
         <!-- Two Column Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
-            <!-- Main Content - Recent Users -->
-            <div class="lg:col-span-2 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+            <!-- Recent Users -->
+            <div class="lg:col-span-2 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
                     <div>
                         <h2 class="text-lg font-bold text-gray-900 dark:text-white">Recent Users</h2>
@@ -73,18 +138,18 @@
                 </div>
             </div>
 
-            <!-- Sidebar - Pending Suggestions -->
-            <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+            <!-- Pending Suggestions -->
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white">Pending Suggestions</h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400">Needs your review</p>
                 </div>
                 <div class="divide-y divide-gray-200 dark:divide-gray-800">
                     @forelse($recentSuggestions as $suggestion)
-                        <div class="px-6 py-4">
+                        <a href="{{ route('super-admin.suggestions.show', $suggestion) }}" class="block px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
                             <p class="font-semibold text-gray-900 dark:text-white text-sm">{{ Str::limit($suggestion->title, 50) }}</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">by {{ $suggestion->user?->name ?? 'Deleted user' }} · {{ $suggestion->created_at->diffForHumans() }}</p>
-                        </div>
+                        </a>
                     @empty
                         <p class="text-gray-500 dark:text-gray-400 text-center py-8 text-sm">All clear! 🎉</p>
                     @endforelse
@@ -96,42 +161,6 @@
                 @endif
             </div>
         </div>
-
-        <!-- Content Overview Cards -->
-        <div class="mt-8">
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Content Overview</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <a href="{{ route('super-admin.sensors.index') }}" class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5 hover:border-blue-300 dark:hover:border-blue-700 transition">
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Sensors</p>
-                        <i class="fas fa-microchip text-blue-500"></i>
-                    </div>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white mt-2">{{ $stats['sensors'] }}</p>
-                </a>
-                <a href="{{ route('super-admin.projects.index') }}" class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5 hover:border-emerald-300 dark:hover:border-emerald-700 transition">
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Projects</p>
-                        <i class="fas fa-project-diagram text-emerald-500"></i>
-                    </div>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white mt-2">{{ $stats['projects'] }}</p>
-                </a>
-                <a href="{{ route('super-admin.products.index') }}" class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5 hover:border-purple-300 dark:hover:border-purple-700 transition">
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Products</p>
-                        <i class="fas fa-shopping-cart text-purple-500"></i>
-                    </div>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white mt-2">{{ $stats['products'] }}</p>
-                </a>
-                <a href="{{ route('super-admin.videos.index') }}" class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5 hover:border-red-300 dark:hover:border-red-700 transition">
-                    <div class="flex items-center justify-between">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Videos</p>
-                        <i class="fas fa-video text-red-500"></i>
-                    </div>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white mt-2">{{ $stats['videos'] }}</p>
-                </a>
-            </div>
-        </div>
-
     </div>
 </div>
 @endsection

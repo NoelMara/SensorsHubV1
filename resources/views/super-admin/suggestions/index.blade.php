@@ -7,9 +7,6 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
             <div>
-                <a href="{{ route('super-admin.dashboard') }}" class="inline-flex items-center text-sm font-semibold text-primary hover:underline mb-4">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Super Admin
-                </a>
                 <p class="text-sm font-semibold text-primary uppercase">Review Center</p>
                 <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-1">User Suggestions</h1>
                 <p class="text-gray-600 dark:text-gray-400 mt-2 max-w-2xl">Review user feedback, track implementation status, and prioritize improvements.</p>
@@ -21,12 +18,6 @@
                 </button>
             </form>
         </div>
-
-        @if(session('success'))
-            <div class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200">
-                <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
-            </div>
-        @endif
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 p-5">
@@ -74,7 +65,7 @@
                                     </td>
                                     <td class="px-6 py-4">
                                         <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ Str::limit($suggestion->title, 56) }}</p>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($suggestion->description, 82) }}/p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($suggestion->description, 82) }}</p>
                                     </td>
                                     <td class="px-6 py-4">
                                         <span class="inline-flex px-2.5 py-1 text-xs font-semibold rounded-full

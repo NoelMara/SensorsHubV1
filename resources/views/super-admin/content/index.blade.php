@@ -7,9 +7,6 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
             <div>
-                <a href="{{ route('super-admin.dashboard') }}" class="inline-flex items-center text-sm font-semibold text-primary hover:underline mb-4">
-                    <i class="fas fa-arrow-left mr-2"></i>Back to Super Admin
-                </a>
                 <p class="text-sm font-semibold text-primary uppercase">Content Oversight</p>
                 <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-1">{{ $title }}</h1>
                 <p class="text-gray-600 dark:text-gray-400 mt-2 max-w-2xl">{{ $description }}</p>
