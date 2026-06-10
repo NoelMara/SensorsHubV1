@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Project;
 use App\Models\Sensor;
@@ -28,7 +29,8 @@ class DashboardController extends Controller
 
         $recentUsers = User::latest()->take(6)->get();
         $recentSuggestions = Suggestion::with('user')->latest()->take(5)->get();
+        $recentComments = Comment::with(['user', 'suggestion'])->latest()->take(5)->get();
 
-        return view('super-admin.dashboard', compact('stats', 'recentUsers', 'recentSuggestions'));
+        return view('super-admin.dashboard', compact('stats', 'recentUsers', 'recentSuggestions', 'recentComments'));
     }
 }

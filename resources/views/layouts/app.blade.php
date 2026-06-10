@@ -62,7 +62,7 @@
                     <i class="fas fa-exclamation text-red-600 dark:text-red-400 text-sm"></i>
                 </div>
                 <p class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{{ session('error') }}</p>
-                <button onclick="this.parentElement.parentElement.remove()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <button @click="show = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                     <i class="fas fa-times text-sm"></i>
                 </button>
             </div>

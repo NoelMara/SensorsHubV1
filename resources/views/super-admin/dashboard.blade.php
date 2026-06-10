@@ -159,8 +159,40 @@
                         <a href="{{ route('super-admin.suggestions.index') }}" class="text-sm font-semibold text-primary hover:underline">Review all →</a>
                     </div>
                 @endif
+                    </div>
+        </div>
+
+        <!-- Latest Comments -->
+        <div class="mt-8">
+            <div class="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">Latest Comments</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Recent discussion activity</p>
+                </div>
+                <div class="divide-y divide-gray-200 dark:divide-gray-800">
+                    @forelse($recentComments as $comment)
+                        <a href="{{ route('super-admin.suggestions.show', $comment->suggestion) }}" class="block px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-user text-gray-500 text-xs"></i>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-semibold text-gray-900 dark:text-white text-sm">{{ $comment->user?->name ?? 'Deleted user' }}</span>
+                                        <span class="text-xs text-gray-400">· {{ $comment->created_at->diffForHumans() }}</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-0.5">{{ Str::limit($comment->body, 80) }}</p>
+                                    <p class="text-xs text-primary mt-1">on: {{ $comment->suggestion?->title ?? 'Deleted suggestion' }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    @empty
+                        <p class="text-gray-500 dark:text-gray-400 text-center py-8">No comments yet</p>
+                    @endforelse
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 @endsection
