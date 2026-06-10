@@ -62,7 +62,31 @@
                 <div class="hidden md:flex items-center space-x-6">
                     {{-- Super Admin Desktop Menu --}}
                     @if($isSuperAdmin)
-                        <a href="{{ route('super-admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold">Dashboard</a>
+                        <div class="relative group">
+                            <button class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold flex items-center gap-1">
+                                Control Panel <i class="fas fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                                <a href="{{ route('super-admin.users.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
+                                    <i class="fas fa-users w-4 mr-2"></i> Users
+                                </a>
+                                <a href="{{ route('super-admin.suggestions.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="fas fa-lightbulb w-4 mr-2"></i> Suggestions
+                                </a>
+                                <a href="{{ route('super-admin.sensors.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="fas fa-microchip w-4 mr-2"></i> Sensors
+                                </a>
+                                <a href="{{ route('super-admin.projects.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="fas fa-project-diagram w-4 mr-2"></i> Projects
+                                </a>
+                                <a href="{{ route('super-admin.products.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="fas fa-shopping-cart w-4 mr-2"></i> Products
+                                </a>
+                                <a href="{{ route('super-admin.videos.index') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg">
+                                    <i class="fas fa-video w-4 mr-2"></i> Videos
+                                </a>
+                            </div>
+                        </div>
                         <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
                     
                     {{-- Admin Desktop Menu --}}
@@ -117,6 +141,24 @@
                 @if($isSuperAdmin)
                     <a href="{{ route('super-admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-tachometer-alt w-5"></i> Dashboard
+                    </a>
+                    <a href="{{ route('super-admin.users.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-users w-5"></i> Users
+                    </a>
+                    <a href="{{ route('super-admin.suggestions.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-lightbulb w-5"></i> Suggestions
+                    </a>
+                    <a href="{{ route('super-admin.sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-microchip w-5"></i> Sensors
+                    </a>
+                    <a href="{{ route('super-admin.projects.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-project-diagram w-5"></i> Projects
+                    </a>
+                    <a href="{{ route('super-admin.products.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-shopping-cart w-5"></i> Products
+                    </a>
+                    <a href="{{ route('super-admin.videos.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-video w-5"></i> Videos
                     </a>
                     <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-flask w-5"></i> Simulation

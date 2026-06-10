@@ -13,12 +13,6 @@
             <p class="text-gray-600 dark:text-gray-400 mt-2">Review the submission and update its status.</p>
         </div>
 
-        @if(session('success'))
-            <div class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200">
-                <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
-            </div>
-        @endif
-
         <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
             <div class="p-6 lg:p-8 border-b border-gray-200 dark:border-gray-800">
                 <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
