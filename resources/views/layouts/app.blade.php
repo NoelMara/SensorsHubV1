@@ -214,23 +214,7 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main>
-        @if(session('success'))
-            <div class="bg-green-100 dark:bg-green-900 border border-green-400 text-green-700 dark:text-green-300 px-4 py-3 rounded relative max-w-7xl mx-auto mt-4" role="alert">
-                <span class="block sm:inline">{{ session('success') }}</span>
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="bg-red-100 dark:bg-red-900 border border-red-400 text-red-700 dark:text-red-300 px-4 py-3 rounded relative max-w-7xl mx-auto mt-4" role="alert">
-                <span class="block sm:inline">{{ session('error') }}</span>
-            </div>
-        @endif
-
-        @yield('content')
-    </main>
-
+    
     <!-- Footer -->
     <footer class="bg-gray-800 dark:bg-gray-950 text-white mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
