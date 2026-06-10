@@ -214,23 +214,29 @@
         </div>
     </nav>
 
-    !-- Main Content -->
+    <!-- Main Content -->
     <main>
         @if(session('success'))
-            <div class="bg-green-100 dark:bg-green-900 border border-green-400 text-green-700 dark:text-green-300 px-4 py-3 rounded relative max-w-7xl mx-auto mt-4" role="alert">
-                <span class="block sm:inline">{{ session('success') }}</span>
-                <button onclick="this.parentElement.remove()" class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                    <i class="fas fa-times"></i>
-                </button>
+            <div x-data="{ show: true }" x-show="show" class="max-w-7xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center gap-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 px-5 py-4 rounded-xl shadow-sm">
+                    <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                    <span class="flex-1 text-sm font-medium">{{ session('success') }}</span>
+                    <button onclick="this.closest('.max-w-7xl').remove()" class="text-green-500 hover:text-green-700 dark:hover:text-green-300">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="bg-red-100 dark:bg-red-900 border border-red-400 text-red-700 dark:text-red-300 px-4 py-3 rounded relative max-w-7xl mx-auto mt-4" role="alert">
-                <span class="block sm:inline">{{ session('error') }}</span>
-                <button onclick="this.parentElement.remove()" class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                    <i class="fas fa-times"></i>
-                </button>
+            <div class="max-w-7xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center gap-3 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-5 py-4 rounded-xl shadow-sm">
+                    <i class="fas fa-exclamation-circle text-red-500 text-lg"></i>
+                    <span class="flex-1 text-sm font-medium">{{ session('error') }}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-red-500 hover:text-red-700 dark:hover:text-red-300">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
         @endif
 

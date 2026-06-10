@@ -27,15 +27,6 @@
 
     </div>
 
-    {{-- SUCCESS MESSAGE --}}
-    @if(session('success'))
-        <div class="bg-green-100 dark:bg-green-900 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-200 px-4 py-3 rounded-lg mb-6">
-
-            {{ session('success') }}
-
-        </div>
-    @endif
-
     {{-- SENSOR TABLE --}}
     @if($sensors->count() > 0)
 

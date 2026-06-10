@@ -63,16 +63,6 @@
 
     </div>
 
-    {{-- Success Message --}}
-    @if(session('success'))
-        <div class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200">
-
-            <i class="fas fa-check-circle mr-2"></i>
-            {{ session('success') }}
-
-        </div>
-    @endif
-
     {{-- Stats Cards --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
 
@@ -173,7 +163,7 @@
 
                                 {{-- Sensor --}}
                                 <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                                    {{ $project->sensor->name ?? 'No sensor assigned' }}
+                                   {{ $project->sensor?->name ?? 'No sensor assigned' }}
                                 </td>
 
                                 {{-- Difficulty --}}
