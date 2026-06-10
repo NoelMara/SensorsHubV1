@@ -223,6 +223,7 @@ class ContentController extends Controller
                 'sensor_id' => 'required|exists:sensors,id',
                 'components_needed' => 'required|string',
                 'instructions' => 'required|string',
+                'code' => 'nullable|string',
             ]),
             'products' => $request->validate([
                 'name' => 'required|string|max:255',
