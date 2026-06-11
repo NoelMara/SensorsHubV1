@@ -14,11 +14,11 @@
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
         <div class="grid grid-cols-1 md:grid-cols-2">
             <!-- Image -->
-            <div class="bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-8 min-h-[350px]">
+            <div class="bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-8 min-h-[400px]">
                 @if($product->image)
                     <img src="{{ Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : (Str::startsWith($product->image, ['images/', '/images/']) ? asset($product->image) : asset('storage/' . $product->image)) }}" 
                         alt="{{ $product->name }}" 
-                        class="max-w-full max-h-80 object-contain rounded-xl">
+                       class="max-w-full max-h-96 object-contain rounded-xl"
                 @else
                     <div class="text-center">
                         <i class="fas fa-box-open text-8xl text-gray-300 dark:text-gray-600 mb-4"></i>
