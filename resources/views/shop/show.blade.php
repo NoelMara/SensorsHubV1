@@ -14,11 +14,13 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
             <!-- Image -->
-            <div class="h-64 md:h-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center p-8 min-h-[300px]">
+            <div class="h-64 md:h-full min-h-[300px] bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                 @if($product->image)
-                    <img src="{{ Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : (Str::startsWith($product->image, ['images/', '/images/']) ? asset($product->image) : asset('storage/' . $product->image)) }}" alt="{{ $product->name }}" class="max-w-full max-h-full object-contain rounded-lg">
+                    <img src="{{ Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : (Str::startsWith($product->image, ['images/', '/images/']) ? asset($product->image) : asset('storage/' . $product->image)) }}" 
+                        alt="{{ $product->name }}" 
+                        class="w-full h-full object-cover">
                 @else
-                    <i class="fas fa-box-open text-8xl text-white/50"></i>
+                    <i class="fas fa-box-open text-8xl text-gray-300 dark:text-gray-500"></i>
                 @endif
             </div>
 
@@ -73,11 +75,11 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             @foreach($relatedProducts as $related)
             <a href="{{ route('shop.show', $related->id) }}" class="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition overflow-hidden group">
-                <div class="h-32 bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                <div class="h-32 bg-gray-100 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
                     @if($related->image)
                         <img src="{{ Str::startsWith($related->image, ['http://', 'https://']) ? $related->image : (Str::startsWith($related->image, ['images/', '/images/']) ? asset($related->image) : asset('storage/' . $related->image)) }}" alt="{{ $related->name }}" class="w-full h-full object-cover">
                     @else
-                        <i class="fas fa-box-open text-4xl text-white/50"></i>
+                        <i class="fas fa-box-open text-4xl text-gray-300 dark:text-gray-500"></i>
                     @endif
                 </div>
                 <div class="p-3">

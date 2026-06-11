@@ -42,21 +42,21 @@
     <!-- Products Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
         @foreach($products as $product)
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-2">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition transform hover:-translate-y-2 flex flex-col">
             <!-- Product Image - FIXED VERSION -->
-            <div class="h-56 bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center relative">
-                @if($product->image)
-                    <img src="{{ Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : (Str::startsWith($product->image, ['images/', '/images/']) ? asset($product->image) : asset('storage/' . $product->image)) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
-                @else
-                    <i class="fas fa-box-open text-7xl text-white"></i>
-                @endif
+            <div class="h-56 bg-gray-100 dark:bg-gray-700 flex items-center justify-center relative overflow-hidden">
+            @if($product->image)
+                <img src="{{ Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : (Str::startsWith($product->image, ['images/', '/images/']) ? asset($product->image) : asset('storage/' . $product->image)) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+            @else
+                <i class="fas fa-box-open text-7xl text-gray-300 dark:text-gray-500"></i>
+            @endif
 
-                @if($product->category)
-                <span class="absolute top-3 right-3 bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
-                    {{ $product->category }}
-                </span>
-                @endif
-            </div>
+            @if($product->category)
+            <span class="absolute top-3 right-3 bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-3 py-1 rounded-full text-xs font-semibold shadow">
+                {{ $product->category }}
+            </span>
+            @endif
+        </div>
             
                        <!-- Content -->
             <div class="p-6 flex flex-col flex-1">
@@ -71,18 +71,18 @@
                 @endif
 
                 @if($product->price)
-                <div class="mb-4">
+                <div class="mb-4 mt-auto">
                     <span class="text-3xl font-bold text-green-600">₱{{ number_format($product->price, 2) }}</span>
                 </div>
                 @else
-                <div class="mb-4">
+                <div class="mb-4 mt-auto">
                     <span class="text-lg font-semibold text-gray-500 dark:text-gray-400">Price varies</span>
                 </div>
                 @endif
 
                 <a href="{{ $product->link }}" 
-                   target="_blank" 
-                   class="inline-flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-orange-700 transition shadow-lg mt-auto">
+                target="_blank" 
+                class="inline-flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-orange-700 transition shadow-lg">
                     <i class="fas fa-shopping-cart mr-2"></i> Buy Now
                 </a>
                 
