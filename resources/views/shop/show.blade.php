@@ -18,7 +18,7 @@
                 @if($product->image)
                     <img src="{{ Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : (Str::startsWith($product->image, ['images/', '/images/']) ? asset($product->image) : asset('storage/' . $product->image)) }}" 
                         alt="{{ $product->name }}" 
-                       class="max-w-full max-h-96 object-contain rounded-xl"
+                       class="max-w-full max-h-96 object-contain rounded-xl">
                 @else
                     <div class="text-center">
                         <i class="fas fa-box-open text-8xl text-gray-300 dark:text-gray-600 mb-4"></i>
@@ -44,7 +44,7 @@
                 @endif
 
                 @if($product->price)
-                <div class="bg-gray-50 dark:bg-gray-900 rounded-xl p-5 mb-6">
+                <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-5 mb-6">
                     <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Price</p>
                     <span class="text-3xl font-bold text-green-600 dark:text-green-400">₱{{ number_format($product->price, 2) }}</span>
                 </div>
