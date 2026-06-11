@@ -22,9 +22,9 @@
         @foreach($savedProjects as $saved)
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
             <!-- Project Image -->
-            <div class="h-48 bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center">
-                @if($saved->project->image)
-                   <img src="{{ Str::startsWith($saved->project->image, ['http://', 'https://']) ? $saved->project->image : asset($saved->project->image) }}" alt="{{ $saved->project->title }}" class="w-full h-full object-cover">
+            <div class="h-48 bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center overflow-hidden">
+                @if($saved->project->sensor && $saved->project->sensor->image)
+                    <img src="{{ Str::startsWith($saved->project->sensor->image, ['http://', 'https://']) ? $saved->project->sensor->image : (Str::startsWith($saved->project->sensor->image, ['images/', '/images/']) ? asset($saved->project->sensor->image) : asset('storage/' . $saved->project->sensor->image)) }}" alt="{{ $saved->project->title }}" class="w-full h-full object-cover">
                 @else
                     <i class="fas fa-project-diagram text-6xl text-white"></i>
                 @endif
