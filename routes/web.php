@@ -34,6 +34,7 @@ Route::get('/projects', [ProjectController::class, 'index'])->name('projects.ind
 Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/shop', [ProductController::class, 'index'])->name('shop.index');
+Route::get('/shop/{id}', [ProductController::class, 'show'])->name('shop.show');
 
 // ─── Community Suggestions (Public - requires auth to comment) ────────────────
 Route::get('/community', [SuggestionController::class, 'community'])->name('suggestions.community');

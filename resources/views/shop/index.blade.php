@@ -58,12 +58,16 @@
                 @endif
             </div>
             
-            <!-- Content -->
-            <div class="p-6">
-                <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">{{ $product->name }}</h3>
+                       <!-- Content -->
+            <div class="p-6 flex flex-col flex-1">
+                <a href="{{ route('shop.show', $product->id) }}">
+                    <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white hover:text-primary transition">{{ $product->name }}</h3>
+                </a>
 
                 @if($product->description)
-                <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm">{{ Str::limit($product->description, 80) }}</p>
+                <p class="text-gray-600 dark:text-gray-300 mb-4 text-sm flex-1">{{ Str::limit($product->description, 80) }}</p>
+                @else
+                <div class="flex-1"></div>
                 @endif
 
                 @if($product->price)
@@ -78,7 +82,7 @@
 
                 <a href="{{ $product->link }}" 
                    target="_blank" 
-                   class="inline-flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-orange-700 transition shadow-lg">
+                   class="inline-flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-orange-600 hover:to-orange-700 transition shadow-lg mt-auto">
                     <i class="fas fa-shopping-cart mr-2"></i> Buy Now
                 </a>
                 
