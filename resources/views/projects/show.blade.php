@@ -77,7 +77,7 @@
                         <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
                             <i class="fas fa-code mr-2 text-green-500"></i>Code
                         </h2>
-                        <button onclick="navigator.clipboard.writeText(document.getElementById('projectCode').textContent)" 
+                        <button onclick="let btn=this; navigator.clipboard.writeText(document.getElementById('projectCode').textContent); btn.innerHTML='<i class=\'fas fa-check\'></i> Copied!'; btn.classList.add('bg-green-600','hover:bg-green-500'); setTimeout(()=>{btn.innerHTML='<i class=\'fas fa-copy\'></i> Copy Code'; btn.classList.remove('bg-green-600','hover:bg-green-500')},2000)" 
                                 class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white text-sm px-4 py-2 rounded-lg transition">
                             <i class="fas fa-copy"></i> Copy Code
                         </button>
