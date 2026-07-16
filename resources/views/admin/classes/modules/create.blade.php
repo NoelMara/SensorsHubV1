@@ -28,7 +28,7 @@
 
                 <div>
                     <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Additional Notes <span class="text-gray-400 font-normal">- optional</span>
+                        Additional Information <span class="text-gray-400 font-normal">- optional</span>
                     </label>
                     <textarea name="content" id="content" rows="8"
                         class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm"

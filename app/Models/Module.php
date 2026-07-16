@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Module extends Model
 {
     protected $fillable = [
-        'class_id',
-        'title',
-        'content',
-        'file_path',
-        'order',
-        'is_published',
+    'class_id',
+    'title',
+    'content',
+    'file_path',
+    'file_name',
+    'order',
+    'is_published',
     ];
 
     protected $casts = [

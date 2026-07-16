@@ -33,6 +33,8 @@ class ModuleController extends Controller
         $validated['is_published'] = $request->has('is_published');
 
         if ($request->hasFile('file')) {
+            $file = $request->file('file');
+
             $cloudinary = new \Cloudinary\Cloudinary([
                 'cloud' => [
                     'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
@@ -42,10 +44,14 @@ class ModuleController extends Controller
                 'url' => ['secure' => true],
             ]);
             $result = $cloudinary->uploadApi()->upload(
-                $request->file('file')->getRealPath(),
-                ['resource_type' => 'auto']
+                $file->getRealPath(),
+                [
+                    'resource_type' => 'raw',
+                    'public_id' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
+                ]
             );
             $validated['file_path'] = $result['secure_url'];
+            $validated['file_name'] = $file->getClientOriginalName();
         }
 
         Module::create($validated);
