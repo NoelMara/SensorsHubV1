@@ -18,6 +18,9 @@
                 @endif
             </div>
             <div class="flex items-center gap-2">
+                <a href="{{ route('admin.classes.modules.index', $class) }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm">
+                    <i class="fas fa-book-open mr-1"></i> Modules
+                </a>
                 <a href="{{ route('admin.classes.edit', $class) }}" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm">
                     <i class="fas fa-edit mr-1"></i> Edit
                 </a>

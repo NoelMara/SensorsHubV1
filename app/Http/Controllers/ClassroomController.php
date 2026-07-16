@@ -126,4 +126,5 @@ class ClassroomController extends Controller
         $class->students()->detach($userId);
         return back()->with('success', 'Student removed!');
     }
+    
 }

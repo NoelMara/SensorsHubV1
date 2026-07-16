@@ -23,11 +23,34 @@
         </form>
     </div>
 
+    @php
+        $approvedClasses = $classes;
+        $pendingClasses = auth()->user()->classes()->wherePivot('status', 'pending')->get();
+    @endphp
+
+    <!-- Pending Approval -->
+    @if($pendingClasses->count() > 0)
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Pending Approval</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            @foreach($pendingClasses as $class)
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl shadow-sm border border-yellow-200 dark:border-yellow-700 p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $class->name }}</h3>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Waiting</span>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <i class="fas fa-user mr-1"></i> {{ $class->instructor->name }}
+                    </p>
+                </div>
+            @endforeach
+        </div>
+    @endif
+
     <!-- Enrolled Classes -->
-    @if($classes->count() > 0)
+    @if($approvedClasses->count() > 0)
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Enrolled Classes</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @foreach($classes as $class)
+            @foreach($approvedClasses as $class)
                 <a href="{{ route('dashboard.classes.show', $class) }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $class->name }}</h3>
@@ -46,7 +69,9 @@
                 </a>
             @endforeach
         </div>
-    @else
+    @endif
+
+    @if($pendingClasses->count() === 0 && $approvedClasses->count() === 0)
         <div class="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
             <i class="fas fa-chalkboard text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
             <h3 class="text-lg font-bold text-gray-600 dark:text-gray-400 mb-2">No Classes Yet</h3>

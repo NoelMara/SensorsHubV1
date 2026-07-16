@@ -28,11 +28,18 @@ class Classroom extends Model
 
     public function students()
     {
-        return $this->belongsToMany(User::class, 'class_student', 'class_id', 'user_id');
+        return $this->belongsToMany(User::class, 'class_student', 'class_id', 'user_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 
     public static function generateCode()
     {
         return strtoupper(substr(md5(uniqid()), 0, 6));
+    }
+
+    public function modules()
+    {
+        return $this->hasMany(Module::class, 'class_id');
     }
 }

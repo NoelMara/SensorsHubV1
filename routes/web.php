@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\Admin\SensorController as AdminSensorController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -89,6 +90,7 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::get('/classes', [ClassroomController::class, 'studentClasses'])->name('classes.index');
     Route::post('/classes/join', [ClassroomController::class, 'join'])->name('classes.join');
     Route::get('/classes/{class}', [ClassroomController::class, 'studentShow'])->name('classes.show');
+    Route::get('/classes/{class}/modules/{module}', [ModuleController::class, 'show'])->name('classes.modules.show');
 });
 
 // ─── Email Verification Routes ────────────────────────────────────────────────
@@ -112,6 +114,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/classes/{class}', [ClassroomController::class, 'destroy'])->name('classes.destroy');
     Route::post('/classes/{class}/approve/{user}', [ClassroomController::class, 'approve'])->name('classes.approve');
     Route::delete('/classes/{class}/reject/{user}', [ClassroomController::class, 'reject'])->name('classes.reject');
+
+    // Modules
+    Route::get('/classes/{class}/modules', [ModuleController::class, 'index'])->name('classes.modules.index');
+    Route::get('/classes/{class}/modules/create', [ModuleController::class, 'create'])->name('classes.modules.create');
+    Route::post('/classes/{class}/modules', [ModuleController::class, 'store'])->name('classes.modules.store');
+    Route::delete('/classes/{class}/modules/{module}', [ModuleController::class, 'destroy'])->name('classes.modules.destroy');
 
     // Sensors CRUD
     Route::get('/sensors', [AdminSensorController::class, 'index'])->name('sensors.index');
