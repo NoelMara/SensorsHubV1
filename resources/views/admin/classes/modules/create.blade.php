@@ -28,12 +28,11 @@
 
                 <div>
                     <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Content
+                        Additional Notes <span class="text-gray-400 font-normal">- optional</span>
                     </label>
-                    <textarea name="content" id="content" rows="12"
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white font-mono text-sm"
-                        placeholder="Paste your module content, instructions, or code here...">{{ old('content') }}</textarea>
-                    <p class="text-xs text-gray-500 mt-1">You can paste text, instructions, or code snippets here.</p>
+                    <textarea name="content" id="content" rows="8"
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm"
+                        placeholder="Any extra instructions or notes for students...">{{ old('content') }}</textarea>
                 </div>
 
                 <div>
