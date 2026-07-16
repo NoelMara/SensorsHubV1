@@ -87,14 +87,14 @@
 
                                     {{-- Delete --}}
                                     @if(!$user->is(auth()->user()) && !$user->isSuperAdmin())
-                                        <form method="POST" action="{{ route('super-admin.users.destroy', $user) }}"
-                                            onsubmit="return confirm('Remove this {{ $user->role === 'super_admin' ? 'Faculty Head' : ($user->role === 'admin' ? 'Instructor' : 'Student') }} account?');"
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-800">
-                                                <i class="fas fa-trash mr-1"></i>Remove
-                                            </button>
-                                        </form>
+                                    <form method="POST" action="{{ route('super-admin.users.destroy', $user) }}"
+                                            onsubmit="return confirm('Remove this {{ $user->role === 'super_admin' ? 'Faculty Head' : ($user->role === 'admin' ? 'Instructor' : 'Student') }} account?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-800">
+                                            <i class="fas fa-trash mr-1"></i>Remove
+                                        </button>
+                                    </form>
                                     @elseif($user->is(auth()->user()))
                                         <span class="text-gray-400">Current account</span>
                                     @else
