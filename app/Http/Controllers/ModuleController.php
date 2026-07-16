@@ -37,23 +37,27 @@ class ModuleController extends Controller
             $file = $request->file('file');
             $fileName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
 
+            $url = env('SUPABASE_URL') . '/storage/v1/object/modules/' . $fileName;
+
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_KEY'),
+                'apikey' => env('SUPABASE_SERVICE_KEY'),
             ])->attach(
-                'file', file_get_contents($file->getRealPath()), $fileName
-            )->post(
-                env('SUPABASE_STORAGE_URL') . '/storage/v1/object/modules/' . $fileName
-            );
+                'file',
+                file_get_contents($file->getRealPath()),
+                $fileName
+            )->post($url);
 
             if ($response->successful()) {
-                $validated['file_path'] = env('SUPABASE_STORAGE_URL') . '/storage/v1/object/public/modules/' . $fileName;
+                $validated['file_path'] = env('SUPABASE_URL') . '/storage/v1/object/public/modules/' . $fileName;
                 $validated['file_name'] = $file->getClientOriginalName();
             }
         }
 
         Module::create($validated);
 
-        return redirect()->route('admin.classes.modules.index', $class)
+        return redirect()
+            ->route('admin.classes.modules.index', $class)
             ->with('success', 'Module created successfully!');
     }
 
@@ -65,6 +69,7 @@ class ModuleController extends Controller
     public function destroy(Classroom $class, Module $module)
     {
         $module->delete();
+
         return back()->with('success', 'Module deleted!');
     }
 }
