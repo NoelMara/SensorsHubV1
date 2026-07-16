@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Classroom;
 use App\Models\Module;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class ModuleController extends Controller
 {
@@ -34,21 +35,20 @@ class ModuleController extends Controller
 
         if ($request->hasFile('file')) {
             $file = $request->file('file');
+            $fileName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
 
-            $cloudinary = new \Cloudinary\Cloudinary([
-                'cloud' => [
-                    'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                    'api_key'    => env('CLOUDINARY_API_KEY'),
-                    'api_secret' => env('CLOUDINARY_API_SECRET'),
-                ],
-                'url' => ['secure' => true],
-            ]);
-            $result = $cloudinary->uploadApi()->upload(
-                $file->getRealPath(),
-                ['resource_type' => 'auto']
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_KEY'),
+            ])->attach(
+                'file', file_get_contents($file->getRealPath()), $fileName
+            )->post(
+                env('SUPABASE_STORAGE_URL') . '/storage/v1/object/modules/' . $fileName
             );
-            $validated['file_path'] = $result['secure_url'];
-            $validated['file_name'] = $file->getClientOriginalName();
+
+            if ($response->successful()) {
+                $validated['file_path'] = env('SUPABASE_STORAGE_URL') . '/storage/v1/object/public/modules/' . $fileName;
+                $validated['file_name'] = $file->getClientOriginalName();
+            }
         }
 
         Module::create($validated);
