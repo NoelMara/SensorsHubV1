@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\Admin\SensorController as AdminSensorController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -57,7 +58,7 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
-// ─── User Dashboard Routes ────────────────────────────────────────────────────
+// ─── Student Dashboard Routes ────────────────────────────────────────────────────
 Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
@@ -83,6 +84,11 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     // Comments (any authenticated user can comment)
     Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [SuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
+
+     // Classes
+    Route::get('/classes', [ClassroomController::class, 'studentClasses'])->name('classes.index');
+    Route::post('/classes/join', [ClassroomController::class, 'join'])->name('classes.join');
+    Route::get('/classes/{class}', [ClassroomController::class, 'studentShow'])->name('classes.show');
 });
 
 // ─── Email Verification Routes ────────────────────────────────────────────────
@@ -92,9 +98,20 @@ Route::middleware('auth')->group(function () {
     Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend');
 });
 
-// ─── Admin Routes ─────────────────────────────────────────────────────────────
+// ─── Instructor Routes ─────────────────────────────────────────────────────────────
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Classes
+    Route::get('/classes', [ClassroomController::class, 'index'])->name('classes.index');
+    Route::get('/classes/create', [ClassroomController::class, 'create'])->name('classes.create');
+    Route::post('/classes', [ClassroomController::class, 'store'])->name('classes.store');
+    Route::get('/classes/{class}', [ClassroomController::class, 'show'])->name('classes.show');
+    Route::get('/classes/{class}/edit', [ClassroomController::class, 'edit'])->name('classes.edit');
+    Route::put('/classes/{class}', [ClassroomController::class, 'update'])->name('classes.update');
+    Route::delete('/classes/{class}', [ClassroomController::class, 'destroy'])->name('classes.destroy');
+    Route::post('/classes/{class}/approve/{user}', [ClassroomController::class, 'approve'])->name('classes.approve');
+    Route::delete('/classes/{class}/reject/{user}', [ClassroomController::class, 'reject'])->name('classes.reject');
 
     // Sensors CRUD
     Route::get('/sensors', [AdminSensorController::class, 'index'])->name('sensors.index');
@@ -133,12 +150,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/suggestions/{suggestion}', [AdminSuggestionController::class, 'show'])->name('suggestions.show');
     Route::put('/suggestions/{suggestion}/status', [AdminSuggestionController::class, 'updateStatus'])->name('suggestions.status');
 
-    // Comment routes (admin)
+    // Comment routes (instructor)
     Route::post('/suggestions/{suggestion}/comment', [AdminSuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [AdminSuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 });
 
-// ─── Super Admin Routes ───────────────────────────────────────────────────────
+// ─── Faculty Head Routes ───────────────────────────────────────────────────────
 Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
 
@@ -162,7 +179,7 @@ Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-a
     Route::get('/suggestions/{suggestion}', [SuperAdminSuggestionController::class, 'show'])->name('suggestions.show');
     Route::put('/suggestions/{suggestion}/status', [SuperAdminSuggestionController::class, 'updateStatus'])->name('suggestions.status');
 
-    // Comment routes (super-admin)
+    // Comment routes (faculty head)
     Route::post('/suggestions/{suggestion}/comment', [SuperAdminSuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [SuperAdminSuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 

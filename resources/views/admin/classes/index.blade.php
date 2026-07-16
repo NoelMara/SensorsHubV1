@@ -1,0 +1,50 @@
+@extends('layouts.app')
+
+@section('title', 'My Classes')
+
+@section('content')
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">My Classes</h1>
+            <p class="text-gray-600 dark:text-gray-400">Manage your classes and share codes with students.</p>
+        </div>
+        <a href="{{ route('admin.classes.create') }}" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
+            <i class="fas fa-plus mr-2"></i> Create Class
+        </a>
+    </div>
+
+    @if($classes->count() > 0)
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach($classes as $class)
+                <a href="{{ route('admin.classes.show', $class) }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition">
+                    <div class="flex items-start justify-between mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $class->name }}</h3>
+                            @if($class->section)
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $class->section }}</p>
+                            @endif
+                        </div>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                            {{ $class->students->count() }} students
+                        </span>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Class Code:</p>
+                        <p class="text-xl font-bold text-primary tracking-wider">{{ $class->code }}</p>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    @else
+        <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <i class="fas fa-chalkboard text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+            <h3 class="text-xl font-bold text-gray-600 dark:text-gray-400 mb-2">No Classes Yet</h3>
+            <p class="text-gray-500 dark:text-gray-400 mb-6">Create your first class and share the code with students!</p>
+            <a href="{{ route('admin.classes.create') }}" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
+                <i class="fas fa-plus mr-2"></i> Create Class
+            </a>
+        </div>
+    @endif
+</div>
+@endsection

@@ -61,6 +61,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(SavedProject::class);
     }
 
+    public function classes()
+    {
+        return $this->belongsToMany(Classroom::class, 'class_student', 'user_id', 'class_id');
+    }
+
     public function isAdmin()
     {
         return $this->role === 'admin';
