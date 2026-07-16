@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Super Admin Dashboard')
+@section('title', 'Faculty Head Dashboard')
 
 @section('content')
 <div class="min-h-screen bg-gray-100 dark:bg-gray-950">
@@ -31,7 +31,7 @@
                         <i class="fas fa-user-shield text-blue-600 dark:text-blue-400"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Admins</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Instructors</p>
                         <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['admins'] }}</p>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                                 {{ $user->role === 'super_admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : '' }}
                                 {{ $user->role === 'admin' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : '' }}
                                 {{ $user->role === 'user' ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200' : '' }}">
-                                {{ ucwords(str_replace('_', ' ', $user->role)) }}
+                                {{ $user->role === 'super_admin' ? 'Faculty Head' : ($user->role === 'admin' ? 'Instructor' : 'Student') }}
                             </span>
                         </div>
                     @empty

@@ -39,7 +39,7 @@
                 <p class="text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
                 <span class="inline-block mt-2 px-3 py-1 text-xs font-medium rounded-full
                     {{ $user->role === 'super_admin' ? 'bg-purple-100 text-purple-800' : ($user->role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700') }}">
-                    {{ ucfirst(str_replace('_', ' ', $user->role)) }}
+                   {{ $user->role === 'super_admin' ? 'Faculty Head' : ($user->role === 'admin' ? 'Instructor' : 'Student') }}
                 </span>
             </div>
         </div>

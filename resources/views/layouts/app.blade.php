@@ -90,9 +90,9 @@
                         <div>
                             <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorHub</span>
                             @if($isSuperAdmin)
-                                <span class="text-xs text-primary font-semibold">Super Admin</span>
+                                <span class="text-xs text-primary font-semibold">Faculty Head</span>
                             @elseif($isAdmin)
-                                <span class="text-xs text-secondary font-semibold">Admin</span>
+                                <span class="text-xs text-secondary font-semibold">Instructor</span>
                             @endif
                         </div>
                     </a>
@@ -129,7 +129,7 @@
                         </div>
                         <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
                     
-                    {{-- Admin Desktop Menu --}}
+                    {{-- Instructor Desktop Menu --}}
                     @elseif($isAdmin)
                         <a href="{{ route('admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold">Dashboard</a>
                         <a href="{{ route('admin.sensors.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sensors</a>

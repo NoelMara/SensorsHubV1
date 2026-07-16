@@ -7,13 +7,13 @@
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
         <div>
             <h1 class="text-4xl font-bold text-gray-800 dark:text-white">Manage Users</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">Remove user and admin accounts, or change account roles.</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">Manage student and instructor accounts, or change account roles.</p>
         </div>
         <div class="flex flex-wrap gap-2">
             <a href="{{ route('super-admin.users.index') }}" class="px-4 py-2 rounded-lg {{ !$role ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">All ({{ $roleCounts['all'] }})</a>
-            <a href="{{ route('super-admin.users.index', ['role' => 'user']) }}" class="px-4 py-2 rounded-lg {{ $role === 'user' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">Users ({{ $roleCounts['user'] }})</a>
-            <a href="{{ route('super-admin.users.index', ['role' => 'admin']) }}" class="px-4 py-2 rounded-lg {{ $role === 'admin' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">Admins ({{ $roleCounts['admin'] }})</a>
-            <a href="{{ route('super-admin.users.index', ['role' => 'super_admin']) }}" class="px-4 py-2 rounded-lg {{ $role === 'super_admin' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">Super Admins ({{ $roleCounts['super_admin'] }})</a>
+            <a href="{{ route('super-admin.users.index', ['role' => 'user']) }}" class="px-4 py-2 rounded-lg {{ $role === 'user' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">Students ({{ $roleCounts['user'] }})</a>
+            <a href="{{ route('super-admin.users.index', ['role' => 'admin']) }}" class="px-4 py-2 rounded-lg {{ $role === 'admin' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">Instructors ({{ $roleCounts['admin'] }})</a>
+            <a href="{{ route('super-admin.users.index', ['role' => 'super_admin']) }}" class="px-4 py-2 rounded-lg {{ $role === 'super_admin' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300' }}">Faculty Head ({{ $roleCounts['super_admin'] }})</a>
             <a href="{{ route('super-admin.users.create') }}" class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 flex items-center gap-2">
                 <i class="fas fa-plus"></i> Add User
             </a>
@@ -54,9 +54,9 @@
                                     @csrf
                                     @method('PUT')
                                     <select name="role" class="rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm">
-                                        <option value="user" @selected($user->role === 'user')>User</option>
-                                        <option value="admin" @selected($user->role === 'admin')>Admin</option>
-                                        <option value="super_admin" @selected($user->role === 'super_admin')>Super Admin</option>
+                                        <option value="user" @selected($user->role === 'user')>Student</option>
+                                        <option value="admin" @selected($user->role === 'admin')>Instructor</option>
+                                        <option value="super_admin" @selected($user->role === 'super_admin')>Faculty Head</option>
                                     </select>
                                     <button type="submit" class="px-3 py-2 bg-primary text-white rounded-lg text-sm hover:bg-blue-600">Save</button>
                                 </form>
@@ -88,7 +88,7 @@
                                     {{-- Delete --}}
                                     @if(!$user->is(auth()->user()) && !$user->isSuperAdmin())
                                         <form method="POST" action="{{ route('super-admin.users.destroy', $user) }}"
-                                            onsubmit="return confirm('Remove this {{ str_replace('_', ' ', $user->role) }} account?');">
+                                            onsubmit="return confirm('Remove this {{ $user->role === 'super_admin' ? 'Faculty Head' : ($user->role === 'admin' ? 'Instructor' : 'Student') }} account?');"
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-red-600 hover:text-red-800">

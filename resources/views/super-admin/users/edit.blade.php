@@ -47,7 +47,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
                     <span class="inline-block mt-1 px-2 py-0.5 text-xs rounded-full
                         {{ $user->role === 'super_admin' ? 'bg-purple-100 text-purple-800' : ($user->role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700') }}">
-                        {{ ucfirst(str_replace('_', ' ', $user->role)) }}
+                        {{ $user->role === 'super_admin' ? 'Faculty Head' : ($user->role === 'admin' ? 'Instructor' : 'Student') }}
                     </span>
                 </div>
             </div>
@@ -69,8 +69,8 @@
                 <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role</label>
                 <select id="role" name="role" required
                     class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary">
-                    <option value="user" @selected(old('role', $user->role) === 'user')>User</option>
-                    <option value="admin" @selected(old('role', $user->role) === 'admin')>Admin</option>
+                    <option value="user" @selected(old('role', $user->role) === 'user')>Student</option>
+                    <option value="admin" @selected(old('role', $user->role) === 'admin')>Instructor</option>
                 </select>
             </div>
             @endif

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Instructor Dashboard')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -8,25 +8,23 @@
     <!-- Header -->
     <div class="mb-8">
         <div>
-            <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">
-                Admin Dashboard
-            </h1>
+            <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">Instructor Dashboard</h1>
             <p class="text-gray-600 dark:text-gray-400">
                 Welcome back! Here's what's happening with your SensorHub platform.
             </p>
         </div>
     </div>
 
-    {{-- Super Admin Section --}}
+   {{-- Faculty Head Section --}}
     @if(auth()->user()->isSuperAdmin())
         <div class="bg-gray-900 rounded-lg shadow p-6 mb-8 text-white">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
                 <div>
-                    <p class="text-sm text-blue-200 mb-1">Super Admin Controls</p>
-                    <h2 class="text-2xl font-bold">Remove admin and user accounts</h2>
+                    <p class="text-sm text-blue-200 mb-1">Faculty Head Controls</p>
+                    <h2 class="text-2xl font-bold">Manage instructor and student accounts</h2>
                     <p class="text-gray-300 mt-2">
-                        Open user management to remove admins or regular users and update account roles.
+                        Open user management to manage instructors, students, and update account roles.
                     </p>
                 </div>
 
@@ -60,7 +58,7 @@
                 </div>
 
                 <div class="min-w-0">
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Admin Profile</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Instructor Profile</p>
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white truncate">
                         {{ auth()->user()->name }}
                     </h2>
@@ -75,7 +73,7 @@
 
                 <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 text-sm font-medium">
                     <i class="fas fa-user-cog mr-2"></i>
-                    {{ auth()->user()->isSuperAdmin() ? 'Super Administrator' : 'Administrator' }}
+                    {{ auth()->user()->isSuperAdmin() ? 'Faculty Head' : 'Instructor' }}
                 </span>
 
                 <a href="{{ auth()->user()->isSuperAdmin() ? route('super-admin.profile') : route('dashboard.profile') }}"

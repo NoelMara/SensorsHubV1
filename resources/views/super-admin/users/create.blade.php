@@ -9,7 +9,7 @@
             <i class="fas fa-arrow-left mr-1"></i>Back to Manage Users
         </a>
         <h1 class="text-4xl font-bold text-gray-800 dark:text-white">Create User</h1>
-        <p class="text-gray-600 dark:text-gray-400 mt-2">Add a new user or admin account.</p>
+        <p class="text-gray-600 dark:text-gray-400 mt-2">Add a new student or instructor account.</p>
     </div>
 
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -42,8 +42,8 @@
                 <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Role</label>
                 <select id="role" name="role" required
                     class="w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary">
-                    <option value="user" @selected(old('role') === 'user')>User</option>
-                    <option value="admin" @selected(old('role') === 'admin')>Admin</option>
+                    <option value="user" @selected(old('role') === 'user')>Student</option>
+                    <option value="admin" @selected(old('role') === 'admin')>Instructor</option>
                 </select>
             </div>
 
