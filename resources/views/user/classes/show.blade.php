@@ -36,11 +36,35 @@
         </div>
     </div>
 
+    <!-- Modules -->
+    @php $modules = $class->modules()->where('is_published', true)->orderBy('order')->get(); @endphp
+    @if($modules->count() > 0)
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Modules</h2>
+        <div class="space-y-3">
+            @foreach($modules as $module)
+                <a href="{{ route('dashboard.classes.modules.show', [$class, $module]) }}" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">{{ $module->order }}. {{ $module->title }}</h3>
+                            @if($module->content)
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($module->content, 80) }}</p>
+                            @endif
+                        </div>
+                        <div class="flex items-center gap-2">
+                            @if($module->file_path)
+                                <i class="fas fa-paperclip text-gray-400"></i>
+                            @endif
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     <div class="text-center">
-        <form action="{{ route('dashboard.classes.join') }}" method="POST" class="inline">
-            @csrf
-            <input type="hidden" name="code" value="{{ $class->code }}">
-        </form>
         <a href="{{ route('dashboard.classes.index') }}" class="text-primary hover:underline">
             <i class="fas fa-arrow-left mr-1"></i> Back to My Classes
         </a>
