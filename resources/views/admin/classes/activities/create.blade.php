@@ -57,7 +57,7 @@
                             Due Date
                         </label>
                         <input type="datetime-local" name="due_date" id="due_date" value="{{ old('due_date') }}"
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white [color-scheme:dark]">
                     </div>
                 </div>
 

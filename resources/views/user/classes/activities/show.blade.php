@@ -38,7 +38,7 @@
             <p class="text-sm text-gray-500">Submitted: {{ $submission->submitted_at->format('M d, Y h:i A') }}</p>
             @if($submission->score !== null)
                 <div class="mt-3 p-3 bg-white dark:bg-gray-800 rounded-lg">
-                    <p class="font-semibold">Score: {{ $submission->score }}/{{ $activity->points }}</p>
+                    <p class="font-semibold text-gray-900 dark:text-white">Score: {{ $submission->score }}/{{ $activity->points }}</p>
                     @if($submission->feedback)
                         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1"><strong>Feedback:</strong> {{ $submission->feedback }}</p>
                     @endif
