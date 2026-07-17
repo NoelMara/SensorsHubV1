@@ -72,4 +72,35 @@ class ModuleController extends Controller
 
         return back()->with('success', 'Module deleted!');
     }
+
+        public function import(Classroom $class)
+    {
+        $otherClasses = Classroom::where('instructor_id', auth()->id())
+            ->where('id', '!=', $class->id)
+            ->get();
+        return view('admin.classes.modules.import', compact('class', 'otherClasses'));
+    }
+
+    public function copyModules(Request $request, Classroom $class)
+    {
+        $request->validate(['from_class' => 'required|exists:classes,id']);
+
+        $sourceClass = Classroom::where('instructor_id', auth()->id())
+            ->findOrFail($request->from_class);
+
+        foreach ($sourceClass->modules as $module) {
+            Module::create([
+                'class_id' => $class->id,
+                'title' => $module->title,
+                'content' => $module->content,
+                'file_path' => $module->file_path,
+                'file_name' => $module->file_name,
+                'order' => $class->modules()->count() + 1,
+                'is_published' => false,
+            ]);
+        }
+
+        return redirect()->route('admin.classes.modules.index', $class)
+            ->with('success', 'Modules imported successfully!');
+    }
 }

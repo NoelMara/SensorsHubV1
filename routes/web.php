@@ -124,6 +124,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/classes/{class}/modules/create', [ModuleController::class, 'create'])->name('classes.modules.create');
     Route::post('/classes/{class}/modules', [ModuleController::class, 'store'])->name('classes.modules.store');
     Route::delete('/classes/{class}/modules/{module}', [ModuleController::class, 'destroy'])->name('classes.modules.destroy');
+    Route::get('/classes/{class}/modules/import', [ModuleController::class, 'import'])->name('classes.modules.import');
+    Route::post('/classes/{class}/modules/import', [ModuleController::class, 'copyModules'])->name('classes.modules.copy');
 
     // Activities
     Route::get('/classes/{class}/activities', [ActivityController::class, 'index'])->name('classes.activities.index');
