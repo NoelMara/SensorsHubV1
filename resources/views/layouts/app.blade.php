@@ -154,9 +154,9 @@
                     @endif
                     
                     @auth
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                        <form method="POST" action="{{ route('logout') }}" class="inline-flex items-center">
                             @csrf
-                            <button type="submit" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Logout</button>
+                            <button type="submit" class="bg-transparent border-0 p-0 m-0 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition cursor-pointer leading-normal">Logout</button>
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Login</a>

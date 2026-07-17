@@ -3,11 +3,11 @@
 @section('title', 'My Classes')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
             <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-2">My Classes</h1>
-            <p class="text-gray-600 dark:text-gray-400">Manage your classes and share codes with students.</p>
+            <p class="text-gray-600 dark:text-gray-400">Manage your classes and sh<div class="max-w-7xlare codes with students.</p>
         </div>
         <a href="{{ route('admin.classes.create') }}" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition whitespace-nowrap">
             <i class="fas fa-plus mr-2"></i> Create Class
@@ -17,7 +17,7 @@
     @if($classes->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             @foreach($classes as $class)
-                {{-- Changed from <a> to <div> so only button is clickable --}}
+                {{-- Changed from <a> to <div> so <div class="max-w-7xlonly button is clickable --}}
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition">
                     <div class="flex items-start justify-between mb-4">
                         <div>
