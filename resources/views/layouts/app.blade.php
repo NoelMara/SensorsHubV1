@@ -24,7 +24,7 @@
     </script>
     @stack('styles')
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-hidden">
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-clip">
     @php
         $homeRoute = 'home';
         if (auth()->check()) {
