@@ -21,6 +21,9 @@
                 <a href="{{ route('admin.classes.modules.index', $class) }}" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs sm:text-sm">
                     <i class="fas fa-book-open mr-1"></i> Modules
                 </a>
+                <a href="{{ route('admin.classes.activities.index', $class) }}" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs sm:text-sm">
+                    <i class="fas fa-tasks mr-1"></i> Activities
+                </a>
                 <a href="{{ route('admin.classes.edit', $class) }}" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-xs sm:text-sm">
                     <i class="fas fa-edit mr-1"></i> Edit
                 </a>

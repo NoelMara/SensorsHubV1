@@ -42,4 +42,9 @@ class Classroom extends Model
     {
         return $this->hasMany(Module::class, 'class_id');
     }
+
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'class_id');
+    }
 }
