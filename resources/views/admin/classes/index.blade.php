@@ -15,7 +15,7 @@
     </div>
 
     @if($classes->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             @foreach($classes as $class)
                 {{-- Changed from <a> to <div> so only button is clickable --}}
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition">
@@ -48,7 +48,7 @@
             @endforeach
         </div>
     @else
-        <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 mb-8">
             <i class="fas fa-chalkboard text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
             <h3 class="text-xl font-bold text-gray-600 dark:text-gray-400 mb-2">No Classes Yet</h3>
             <p class="text-gray-500 dark:text-gray-400 mb-6">Create your first class and share the code with students!</p>
