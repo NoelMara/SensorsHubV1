@@ -106,6 +106,16 @@ class ClassroomController extends Controller
 
     public function studentShow(Classroom $class)
     {
+        $enrollment = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->first();
+            
+        if (!$enrollment) {
+            return redirect()->route('dashboard.classes.index')
+                ->with('error', 'You must be approved to view this class.');
+        }
+        
         return view('user.classes.show', compact('class'));
     }
 
