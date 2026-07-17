@@ -170,4 +170,9 @@ class ModuleController extends Controller
         return redirect()->route('admin.classes.modules.index', $class)
             ->with('success', count($modules) . ' modules imported!');
     }
+        public function studentIndex(Classroom $class)
+    {
+        $modules = $class->modules()->where('is_published', true)->orderBy('order')->paginate(10);
+        return view('user.classes.modules.index', compact('class', 'modules'));
+    }
 }

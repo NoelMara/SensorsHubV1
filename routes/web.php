@@ -109,6 +109,8 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::get('/classes/{class}/activities/{activity}', [ActivityController::class, 'show'])->name('classes.activities.show');
     Route::post('/classes/{class}/activities/{activity}/submit', [ActivityController::class, 'submit'])->name('classes.activities.submit');
     Route::get('/classes/{class}/announcements', [AnnouncementController::class, 'studentIndex'])->name('classes.announcements.index');
+    Route::get('/classes/{class}/modules', [ModuleController::class, 'studentIndex'])->name('classes.modules.index');
+    Route::get('/classes/{class}/activities', [ActivityController::class, 'studentIndex'])->name('classes.activities.index');
 });
 
 // ─── Email Verification Routes ────────────────────────────────────────────────

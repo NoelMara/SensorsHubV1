@@ -194,5 +194,11 @@ public function copyActivities(Request $request, Classroom $class)
 
     return redirect()->route('admin.classes.activities.index', $class)
         ->with('success', count($activities) . ' activities imported!');
-}
+    }
+
+    public function studentIndex(Classroom $class)
+    {
+        $activities = $class->activities()->where('is_published', true)->latest()->paginate(10);
+        return view('user.classes.activities.index', compact('class', 'activities'));
+    }
 }
