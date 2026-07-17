@@ -9,7 +9,10 @@
             <i class="fas fa-arrow-left mr-1"></i> Back to Class
         </a>
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Activities - {{ $class->name }}</h1>
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Activities - {{ $class->name }}</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $activities->total() }} {{ Str::plural('activity', $activities->total()) }}</p>
+            </div>
             <div class="flex items-center gap-2">
                 <a href="{{ route('admin.classes.activities.create', $class) }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm whitespace-nowrap">
                     <i class="fas fa-plus mr-1"></i> Add Activity
@@ -23,36 +26,71 @@
 
     @if($activities->count() > 0)
         <div class="space-y-4">
-            @foreach($activities as $activity)
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $activity->title }}</h3>
-                            <div class="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
+            @foreach($activities as $index => $activity)
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 sm:p-6">
+                    <div class="flex gap-3">
+                        {{-- Activity Number --}}
+                        <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-500 dark:text-gray-400 mt-0.5">
+                            {{ $index + 1 }}
+                        </div>
+
+                        {{-- Activity Info --}}
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap mb-1">
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white truncate" title="{{ $activity->title }}">
+                                    {{ Str::limit($activity->title, 60) }}
+                                </h3>
+                                @if($activity->is_published)
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 flex-shrink-0">Published</span>
+                                @else
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 flex-shrink-0">Draft</span>
+                                @endif
+                                @if($activity->due_date)
+                                    @if($activity->due_date->isPast())
+                                        <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 flex-shrink-0">Overdue</span>
+                                    @elseif($activity->due_date->diffInDays(now()) <= 2)
+                                        <span class="px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 flex-shrink-0">Due Soon</span>
+                                    @endif
+                                @endif
+                            </div>
+                            @if($activity->description)
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1 line-clamp-1">{{ Str::limit($activity->description, 120) }}</p>
+                            @endif
+                            <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                                 <span><i class="fas fa-star text-yellow-500 mr-1"></i> {{ $activity->points }} pts</span>
                                 @if($activity->due_date)
                                     <span><i class="fas fa-clock mr-1"></i> Due: {{ $activity->due_date->format('M d, Y h:i A') }}</span>
+                                @else
+                                    <span class="text-gray-400"><i class="fas fa-clock mr-1"></i> No deadline</span>
                                 @endif
+                                <span><i class="fas fa-users mr-1"></i> {{ $activity->submissions->count() }} submitted</span>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2">
-                            @if($activity->is_published)
-                                <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">Published</span>
-                            @else
-                                <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">Draft</span>
-                            @endif
-                            <a href="{{ route('dashboard.classes.activities.show', [$class, $activity]) }}" class="text-primary hover:text-blue-700 text-sm" title="Preview Activity">
+
+                        {{-- Actions --}}
+                        <div class="flex items-center gap-1 flex-shrink-0">
+                            <a href="{{ route('admin.classes.activities.show', [$class, $activity]) }}" 
+                               class="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
+                               title="Preview Activity">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.classes.activities.edit', [$class, $activity]) }}" class="text-primary hover:text-blue-700 text-sm" title="Edit Activity">
+                            <a href="{{ route('admin.classes.activities.edit', [$class, $activity]) }}" 
+                               class="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
+                               title="Edit Activity">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{{ route('admin.classes.activities.submissions', [$class, $activity]) }}" class="text-primary hover:text-blue-700 text-sm" title="View Submissions">
+                            <a href="{{ route('admin.classes.activities.submissions', [$class, $activity]) }}" 
+                               class="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
+                               title="View Submissions">
                                 <i class="fas fa-users"></i>
                             </a>
-                            <form action="{{ route('admin.classes.activities.destroy', [$class, $activity]) }}" method="POST">
+                            <form action="{{ route('admin.classes.activities.destroy', [$class, $activity]) }}" 
+                                  method="POST"
+                                  onsubmit="return confirm('Are you sure you want to delete this activity?');">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-700 text-sm">
+                                <button type="submit" 
+                                        class="p-2 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition"
+                                        title="Delete Activity">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -73,3 +111,4 @@
         <div class="mt-6 mb-8">{{ $activities->links() }}</div>
     @endif
 </div>
+@endsection

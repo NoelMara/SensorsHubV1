@@ -38,6 +38,11 @@ class Classroom extends Model
         return strtoupper(substr(md5(uniqid()), 0, 6));
     }
 
+    public function announcements()
+    {
+        return $this->hasMany(Announcement::class, 'class_id');
+    }
+
     public function modules()
     {
         return $this->hasMany(Module::class, 'class_id');
@@ -47,4 +52,5 @@ class Classroom extends Model
     {
         return $this->hasMany(Activity::class, 'class_id');
     }
+    
 }

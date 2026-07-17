@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\Admin\SensorController as AdminSensorController;
@@ -105,9 +106,9 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::post('/classes/join', [ClassroomController::class, 'join'])->name('classes.join');
     Route::get('/classes/{class}', [ClassroomController::class, 'studentShow'])->name('classes.show');
     Route::get('/classes/{class}/modules/{module}', [ModuleController::class, 'show'])->name('classes.modules.show');
-
     Route::get('/classes/{class}/activities/{activity}', [ActivityController::class, 'show'])->name('classes.activities.show');
     Route::post('/classes/{class}/activities/{activity}/submit', [ActivityController::class, 'submit'])->name('classes.activities.submit');
+    Route::get('/classes/{class}/announcements', [AnnouncementController::class, 'studentIndex'])->name('classes.announcements.index');
 });
 
 // ─── Email Verification Routes ────────────────────────────────────────────────
@@ -132,6 +133,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/classes/{class}/approve/{user}', [ClassroomController::class, 'approve'])->name('classes.approve');
     Route::delete('/classes/{class}/reject/{user}', [ClassroomController::class, 'reject'])->name('classes.reject');
 
+    // Announcements
+    Route::get('/classes/{class}/announcements', [AnnouncementController::class, 'index'])->name('classes.announcements.index');
+    Route::get('/classes/{class}/announcements/create', [AnnouncementController::class, 'create'])->name('classes.announcements.create');
+    Route::post('/classes/{class}/announcements', [AnnouncementController::class, 'store'])->name('classes.announcements.store');
+    Route::get('/classes/{class}/announcements/{announcement}/edit', [AnnouncementController::class, 'edit'])->name('classes.announcements.edit');
+    Route::put('/classes/{class}/announcements/{announcement}', [AnnouncementController::class, 'update'])->name('classes.announcements.update');
+    Route::delete('/classes/{class}/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('classes.announcements.destroy');
+
     // Modules
     Route::get('/classes/{class}/modules', [ModuleController::class, 'index'])->name('classes.modules.index');
     Route::get('/classes/{class}/modules/create', [ModuleController::class, 'create'])->name('classes.modules.create');
@@ -146,12 +155,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/classes/{class}/activities', [ActivityController::class, 'index'])->name('classes.activities.index');
     Route::get('/classes/{class}/activities/create', [ActivityController::class, 'create'])->name('classes.activities.create');
     Route::post('/classes/{class}/activities', [ActivityController::class, 'store'])->name('classes.activities.store');
+    Route::get('/classes/{class}/activities/import', [ActivityController::class, 'import'])->name('classes.activities.import');
+    Route::post('/classes/{class}/activities/import', [ActivityController::class, 'copyActivities'])->name('classes.activities.copy');
+    Route::get('/classes/{class}/activities/{activity}', [ActivityController::class, 'show'])->name('classes.activities.show');
     Route::get('/classes/{class}/activities/{activity}/edit', [ActivityController::class, 'edit'])->name('classes.activities.edit');
     Route::put('/classes/{class}/activities/{activity}', [ActivityController::class, 'update'])->name('classes.activities.update');
     Route::get('/classes/{class}/activities/{activity}/submissions', [ActivityController::class, 'submissions'])->name('classes.activities.submissions');
     Route::post('/classes/{class}/activities/{activity}/grade/{submission}', [ActivityController::class, 'grade'])->name('classes.activities.grade');
-    Route::get('/classes/{class}/activities/import', [ActivityController::class, 'import'])->name('classes.activities.import');
-    Route::post('/classes/{class}/activities/import', [ActivityController::class, 'copyActivities'])->name('classes.activities.copy');
     Route::delete('/classes/{class}/activities/{activity}', [ActivityController::class, 'destroy'])->name('classes.activities.destroy');
 
     // Sensors CRUD
