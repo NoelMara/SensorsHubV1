@@ -40,7 +40,7 @@ class AnnouncementController extends Controller
         if ($announcement->is_published) {
             NotificationHelper::sendToClass(
                 $class->id,
-                $announcement->title,
+                '📢 ' . $announcement->title,
                 \Str::limit($announcement->content, 100),
                 route('dashboard.classes.announcements.index', $class)
             );

@@ -60,7 +60,7 @@ class ModuleController extends Controller
         if ($module->is_published) {
             NotificationHelper::sendToClass(
                 $class->id,
-                'New Module: ' . $module->title,
+                '📖 New Module: ' . $module->title,
                 'A new module is now available',
                 route('dashboard.classes.modules.show', [$class, $module])
             );

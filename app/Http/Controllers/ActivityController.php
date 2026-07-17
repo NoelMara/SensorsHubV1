@@ -44,7 +44,7 @@ class ActivityController extends Controller
         if ($activity->is_published) {
             NotificationHelper::sendToClass(
                 $class->id,
-                'New Activity: ' . $activity->title,
+                '📋 New Activity: ' . $activity->title,
                 'Due: ' . ($activity->due_date ? $activity->due_date->format('M d, Y') : 'No deadline') . ' | ' . $activity->points . ' points',
                 route('dashboard.classes.activities.show', [$class, $activity])
             );
@@ -145,7 +145,7 @@ class ActivityController extends Controller
 
         NotificationHelper::send(
             $submission->user_id,
-            'Activity Graded: ' . $activity->title,
+            '✅ Activity Graded: ' . $activity->title,
             'You scored ' . $validated['score'] . '/' . $activity->points,
             route('dashboard.classes.activities.show', [$class, $activity])
         );
