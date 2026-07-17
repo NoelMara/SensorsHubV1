@@ -131,6 +131,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/classes/{class}/modules/{module}', [ModuleController::class, 'destroy'])->name('classes.modules.destroy');
     Route::get('/classes/{class}/modules/import', [ModuleController::class, 'import'])->name('classes.modules.import');
     Route::post('/classes/{class}/modules/import', [ModuleController::class, 'copyModules'])->name('classes.modules.copy');
+    Route::get('/classes/{class}/modules/{module}/edit', [ModuleController::class, 'edit'])->name('classes.modules.edit');
+    Route::put('/classes/{class}/modules/{module}', [ModuleController::class, 'update'])->name('classes.modules.update');
 
     // Activities
     Route::get('/classes/{class}/activities', [ActivityController::class, 'index'])->name('classes.activities.index');

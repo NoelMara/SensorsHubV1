@@ -83,6 +83,49 @@ class ModuleController extends Controller
         return back()->with('success', 'Module deleted!');
     }
 
+        public function edit(Classroom $class, Module $module)
+    {
+        return view('admin.classes.modules.edit', compact('class', 'module'));
+    }
+
+    public function update(Request $request, Classroom $class, Module $module)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'is_published' => 'boolean',
+        ]);
+
+        $validated['is_published'] = $request->has('is_published');
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+
+            $url = env('SUPABASE_URL') . '/storage/v1/object/modules/' . $fileName;
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_KEY'),
+                'apikey' => env('SUPABASE_SERVICE_KEY'),
+            ])->attach(
+                'file',
+                file_get_contents($file->getRealPath()),
+                $fileName
+            )->post($url);
+
+            if ($response->successful()) {
+                $validated['file_path'] = env('SUPABASE_URL') . '/storage/v1/object/public/modules/' . $fileName;
+                $validated['file_name'] = $file->getClientOriginalName();
+            }
+        }
+
+        $module->update($validated);
+
+        return redirect()->route('admin.classes.modules.index', $class)
+            ->with('success', 'Module updated!');
+    }
+
         public function import(Classroom $class)
     {
         $otherClasses = Classroom::where('instructor_id', auth()->id())

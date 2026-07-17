@@ -43,6 +43,9 @@
                             <a href="{{ route('dashboard.classes.modules.show', [$class, $module]) }}" class="text-primary hover:text-blue-700 text-sm" title="View Module">
                                 <i class="fas fa-eye"></i>
                             </a>
+                             <a href="{{ route('admin.classes.modules.edit', [$class, $module]) }}" class="text-primary hover:text-blue-700 text-sm" title="Edit Module">
+                                <i class="fas fa-edit"></i>
+                            </a>
                             <form action="{{ route('admin.classes.modules.destroy', [$class, $module]) }}" method="POST">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="text-red-500 hover:text-red-700 text-sm">
