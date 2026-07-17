@@ -23,8 +23,10 @@
     @if($module->file_path)
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Attachment</h2>
-        <a href="{{ $module->file_path }}" target="_blank" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
-            <i class="fas fa-download mr-2"></i> {{ $module->file_name ?? 'Download File' }}
+         <a href="{{ $module->file_path }}" target="_blank" 
+            class="inline-flex items-center gap-2 bg-primary text-white px-4 py-3 rounded-lg hover:bg-blue-600 transition text-sm break-all">
+            <i class="fas fa-download flex-shrink-0"></i> 
+            <span class="text-left">{{ $module->file_name ?? 'Download File' }}</span>
         </a>
     </div>
     @endif
