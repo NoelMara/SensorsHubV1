@@ -56,6 +56,9 @@
                 <i class="fas fa-plus mr-2"></i> Create Class
             </a>
         </div>
+     @endif
+
+    @if($classes->hasPages())
+        <div class="mt-6 mb-8">{{ $classes->links() }}</div>
     @endif
 </div>
-@endsection

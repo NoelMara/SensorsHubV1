@@ -70,6 +70,6 @@
      @endif
 
     @if($activities->hasPages())
-        <div class="mt-6">{{ $activities->links() }}</div>
+        <div class="mt-6 mb-8">{{ $activities->links() }}</div>
     @endif
 </div>

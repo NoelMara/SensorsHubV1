@@ -9,9 +9,10 @@ class ClassroomController extends Controller
 {
     public function index()
     {
-        $classes = Classroom::where('instructor_id', auth()->id())->latest()->get();
+        $classes = Classroom::where('instructor_id', auth()->id())->latest()->paginate(3);
         return view('admin.classes.index', compact('classes'));
     }
+
 
     public function create()
     {
