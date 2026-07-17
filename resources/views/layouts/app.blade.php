@@ -346,7 +346,22 @@
         mobileMenuButton?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
         const mobileLinks = mobileMenu?.querySelectorAll('a, button[type="submit"]');
         mobileLinks?.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+        </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('form').forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    var button = form.querySelector('button[type="submit"]');
+                    if (button && !button.disabled) {
+                        button.disabled = true;
+                        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+                    }
+                });
+            });
+        });
     </script>
+
     @stack('scripts')
 </body>
 </html>
