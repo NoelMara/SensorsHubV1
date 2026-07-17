@@ -13,9 +13,14 @@
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Announcements - {{ $class->name }}</h1>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $announcements->total() }} {{ Str::plural('announcement', $announcements->total()) }}</p>
             </div>
+            <div class="flex items-center gap-2">
+            <a href="{{ route('admin.classes.announcements.import', $class) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm whitespace-nowrap">
+                <i class="fas fa-download mr-1"></i> Import
+            </a>
             <a href="{{ route('admin.classes.announcements.create', $class) }}" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition text-sm whitespace-nowrap">
                 <i class="fas fa-plus mr-1"></i> New Announcement
             </a>
+        </div>
         </div>
     </div>
 

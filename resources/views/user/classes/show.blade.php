@@ -36,6 +36,28 @@
         </div>
     </div>
 
+    <!-- Announcements -->
+    @php $announcements = $class->announcements()->where('is_published', true)->latest()->take(3)->get(); @endphp
+    @if($announcements->count() > 0)
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white">
+                <i class="fas fa-bullhorn text-yellow-500 mr-2"></i>Announcements
+            </h2>
+            <a href="{{ route('dashboard.classes.announcements.index', $class) }}" class="text-sm text-primary hover:underline">View All</a>
+        </div>
+        <div class="space-y-3">
+            @foreach($announcements as $announcement)
+                <div class="p-4 bg-yellow-50 dark:bg-yellow-900/10 rounded-lg">
+                    <h3 class="font-semibold text-gray-900 dark:text-white text-sm">{{ $announcement->title }}</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($announcement->content, 100) }}</p>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">{{ $announcement->created_at->diffForHumans() }}</p>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     <!-- Modules -->
     @php $modules = $class->modules()->where('is_published', true)->orderBy('order')->get(); @endphp
     @if($modules->count() > 0)

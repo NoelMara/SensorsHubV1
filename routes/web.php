@@ -137,6 +137,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/classes/{class}/announcements', [AnnouncementController::class, 'index'])->name('classes.announcements.index');
     Route::get('/classes/{class}/announcements/create', [AnnouncementController::class, 'create'])->name('classes.announcements.create');
     Route::post('/classes/{class}/announcements', [AnnouncementController::class, 'store'])->name('classes.announcements.store');
+    Route::get('/classes/{class}/announcements/import', [AnnouncementController::class, 'import'])->name('classes.announcements.import');
+    Route::post('/classes/{class}/announcements/import', [AnnouncementController::class, 'copyAnnouncements'])->name('classes.announcements.copy');
     Route::get('/classes/{class}/announcements/{announcement}/edit', [AnnouncementController::class, 'edit'])->name('classes.announcements.edit');
     Route::put('/classes/{class}/announcements/{announcement}', [AnnouncementController::class, 'update'])->name('classes.announcements.update');
     Route::delete('/classes/{class}/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('classes.announcements.destroy');
