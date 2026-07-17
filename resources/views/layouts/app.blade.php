@@ -309,6 +309,18 @@
                         <i class="fas fa-user-plus w-5"></i> Register
                     </a>
                 @endauth
+
+                @auth
+                @php $unreadCount = auth()->user()->notifications()->where('is_read', false)->count(); @endphp
+                <a href="{{ route('notifications.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded relative">
+                    <i class="fas fa-bell w-5"></i> Notifications
+                    @if($unreadCount > 0)
+                        <span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            {{ $unreadCount }}
+                        </span>
+                    @endif
+                </a>
+                @endauth
                 
                 <button id="mobileDarkModeToggle" type="button" class="flex items-center gap-3 w-full px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                     <i class="fas fa-moon dark:hidden w-5"></i>

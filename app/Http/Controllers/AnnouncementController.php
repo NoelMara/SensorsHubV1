@@ -81,7 +81,7 @@ class AnnouncementController extends Controller
 
         // If changed to draft, delete related notifications
         if ($announcement->wasChanged('is_published') && !$announcement->is_published) {
-            Notification::where('data->link', route('dashboard.classes.announcements.index', $class))
+            Notification::where('link', route('dashboard.classes.announcements.index', $class))
                 ->delete();
         }
 
@@ -140,12 +140,5 @@ class AnnouncementController extends Controller
 
         return redirect()->route('admin.classes.announcements.index', $class)
             ->with('success', count($announcements) . ' announcements imported!');
-    }
-
-    // JSON for import dropdown
-    public function json(Classroom $class)
-    {
-        $announcements = $class->announcements()->latest()->get(['id', 'title', 'created_at']);
-        return response()->json($announcements);
     }
 }
