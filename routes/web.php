@@ -61,14 +61,17 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
 // Notification Routes
-Route::post('/notifications/{notification}/read', function (\App\Models\Notification $notification) {
-    $notification->update(['is_read' => true]);
-    return response()->json(['success' => true]);
-})->name('notifications.read');
-Route::get('/notifications', function () {
-    $notifications = auth()->user()->notifications()->latest()->paginate(5);
-    return view('notifications.index', compact('notifications'));
-})->name('notifications.index');
+Route::middleware('auth')->group(function () {
+    Route::post('/notifications/{notification}/read', function (\App\Models\Notification $notification) {
+        $notification->update(['is_read' => true]);
+        return response()->json(['success' => true]);
+    })->name('notifications.read');
+
+    Route::get('/notifications', function () {
+        $notifications = auth()->user()->notifications()->latest()->paginate(5);
+        return view('notifications.index', compact('notifications'));
+    })->name('notifications.index');
+});
 
 // ─── Student Dashboard Routes ────────────────────────────────────────────────────
 Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->group(function () {
