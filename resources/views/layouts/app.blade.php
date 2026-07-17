@@ -175,11 +175,11 @@
                             @endif
                         </button>
                         <div x-show="open" @click.outside="open = false" 
-                            class="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-96 overflow-y-auto">
+                            class="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-80 overflow-y-auto">
                             <div class="p-4 border-b border-gray-200 dark:border-gray-700">
                                 <h3 class="font-bold text-gray-900 dark:text-white">Notifications</h3>
                             </div>
-                           @php $notifications = auth()->user()->notifications()->latest()->take(5)->get(); @endphp
+                           @php $notifications = auth()->user()->notifications()->latest()->take(4)->get(); @endphp
                             @if($notifications->count() > 0)
                                 @foreach($notifications as $notification)
                                     <a href="{{ $notification->link ?? '#' }}" 

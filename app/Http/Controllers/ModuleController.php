@@ -12,7 +12,7 @@ class ModuleController extends Controller
 {
     public function index(Classroom $class)
     {
-        $modules = $class->modules()->orderBy('order')->get();
+        $modules = $class->modules()->orderBy('order')->paginate(5);
         return view('admin.classes.modules.index', compact('class', 'modules'));
     }
 

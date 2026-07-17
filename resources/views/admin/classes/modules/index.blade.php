@@ -63,6 +63,10 @@
             <h3 class="text-lg font-bold text-gray-600">No Modules Yet</h3>
             <p class="text-gray-500">Add your first module or import from another class!</p>
         </div>
+     @endif
+
+    @if($modules->hasPages())
+        <div class="mt-6">{{ $modules->links() }}</div>
     @endif
 </div>
 @endsection

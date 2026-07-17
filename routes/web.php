@@ -66,7 +66,7 @@ Route::post('/notifications/{notification}/read', function (\App\Models\Notifica
     return response()->json(['success' => true]);
 })->name('notifications.read');
 Route::get('/notifications', function () {
-    $notifications = auth()->user()->notifications()->latest()->paginate(20);
+    $notifications = auth()->user()->notifications()->latest()->paginate(5);
     return view('notifications.index', compact('notifications'));
 })->name('notifications.index');
 

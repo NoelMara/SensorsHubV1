@@ -13,7 +13,7 @@ class ActivityController extends Controller
     // Show activities for a class (instructor)
     public function index(Classroom $class)
     {
-        $activities = $class->activities()->latest()->get();
+        $activities = $class->activities()->latest()->paginate(5);
         return view('admin.classes.activities.index', compact('class', 'activities'));
     }
 
