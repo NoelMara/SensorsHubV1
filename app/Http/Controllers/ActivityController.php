@@ -81,6 +81,11 @@ class ActivityController extends Controller
     // Student submit
     public function submit(Request $request, Classroom $class, Activity $activity)
     {
+        // Check if past due date
+        if ($activity->due_date && now()->isAfter($activity->due_date)) {
+            return back()->with('error', 'This activity is past the due date.');
+        }
+
         $validated = $request->validate([
             'content' => 'required|string',
         ]);

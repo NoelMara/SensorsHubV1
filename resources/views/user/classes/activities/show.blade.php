@@ -35,7 +35,7 @@
         <div class="bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-700 p-6 mb-6">
             <h2 class="text-lg font-bold text-green-800 dark:text-green-200 mb-3">Your Submission</h2>
             <div class="text-gray-700 dark:text-gray-300 whitespace-pre-line mb-3">{{ $submission->content }}</div>
-            <p class="text-sm text-gray-500">Submitted: {{ $submission->submitted_at->format('M d, Y h:i A') }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Submitted: {{ $submission->submitted_at->format('M d, Y h:i A') }}</p>
             @if($submission->score !== null)
                 <div class="mt-3 p-3 bg-white dark:bg-gray-800 rounded-lg">
                     <p class="font-semibold text-gray-900 dark:text-white">Score: {{ $submission->score }}/{{ $activity->points }}</p>
@@ -45,7 +45,7 @@
                 </div>
             @endif
         </div>
-    @else
+    @elseif(!$activity->due_date || now()->lessThanOrEqualTo($activity->due_date))
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
             <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Submit Your Work</h2>
             <form method="POST" action="{{ route('dashboard.classes.activities.submit', [$class, $activity]) }}">
@@ -57,6 +57,11 @@
                     <i class="fas fa-paper-plane mr-2"></i> Submit Activity
                 </button>
             </form>
+        </div>
+    @else
+        <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-700 p-6">
+            <h2 class="text-lg font-bold text-yellow-800 dark:text-yellow-200 mb-2">Past Due Date</h2>
+            <p class="text-yellow-700 dark:text-yellow-300">This activity is past the due date and no longer accepting submissions.</p>
         </div>
     @endif
 </div>
