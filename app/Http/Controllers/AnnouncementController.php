@@ -13,7 +13,7 @@ class AnnouncementController extends Controller
     // Admin: list all announcements for a class
     public function index(Classroom $class)
     {
-        $announcements = $class->announcements()->latest()->paginate(10);
+        $announcements = $class->announcements()->latest()->paginate(5);
         return view('admin.classes.announcements.index', compact('class', 'announcements'));
     }
 
