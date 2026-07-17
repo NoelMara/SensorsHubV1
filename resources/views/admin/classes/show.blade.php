@@ -82,15 +82,17 @@
                                         <i class="fas fa-check mr-1"></i> Approve
                                     </button>
                                 </form>
-                                <form action="{{ route('admin.classes.reject', [$class, $student->id]) }}" method="POST">
+                                <form action="{{ route('admin.classes.reject', [$class, $student->id]) }}" method="POST"
+                                    onsubmit="return confirm('Remove this student? Their submissions will be kept.')">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="px-2 py-1 sm:px-3 sm:py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-xs">
-                                        <i class="fas fa-times mr-1"></i> Reject
+                                    <button type="submit" class="px-2 py-1 sm:px-3 sm:py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-xs">
+                                        <i class="fas fa-user-minus mr-1"></i> Remove
                                     </button>
                                 </form>
                             @else
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">Approved</span>
-                                <form action="{{ route('admin.classes.reject', [$class, $student->id]) }}" method="POST">
+                                <form action="{{ route('admin.classes.reject', [$class, $student->id]) }}" method="POST"
+                                    onsubmit="return confirm('Remove this student? Their submissions will be kept.')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="px-2 py-1 sm:px-3 sm:py-1 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-xs">
                                         <i class="fas fa-user-minus mr-1"></i> Remove

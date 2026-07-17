@@ -94,8 +94,8 @@ class ClassroomController extends Controller
 
         $class->students()->attach(auth()->id(), ['status' => 'pending']);
 
-        return redirect()->route('dashboard.classes.show', $class)
-            ->with('success', 'Join request sent! Wait for instructor approval.');
+        return redirect()->route('dashboard.classes.index')
+        ->with('success', 'Join request sent! Wait for your instructor to approve.');
     }
 
     public function studentClasses()
