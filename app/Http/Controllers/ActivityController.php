@@ -73,7 +73,17 @@ class ActivityController extends Controller
         ]);
 
         $validated['is_published'] = $request->has('is_published');
-        $activity->update($validated);
+       $activity->update($validated);
+
+        // Send notification if newly published
+        if ($activity->wasChanged('is_published') && $activity->is_published) {
+            NotificationHelper::sendToClass(
+                $class->id,
+                'New Activity: ' . $activity->title,
+                'Due: ' . ($activity->due_date ? $activity->due_date->format('M d, Y') : 'No deadline') . ' | ' . $activity->points . ' points',
+                route('dashboard.classes.activities.show', [$class, $activity])
+            );
+        }
 
         return redirect()->route('admin.classes.activities.index', $class)
             ->with('success', 'Activity updated!');

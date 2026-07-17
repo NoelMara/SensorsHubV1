@@ -122,6 +122,15 @@ class ModuleController extends Controller
 
         $module->update($validated);
 
+        if ($module->wasChanged('is_published') && $module->is_published) {
+            NotificationHelper::sendToClass(
+                $class->id,
+                'New Module: ' . $module->title,
+                'A new module is now available',
+                route('dashboard.classes.modules.show', [$class, $module])
+            );
+        }
+
         return redirect()->route('admin.classes.modules.index', $class)
             ->with('success', 'Module updated!');
     }

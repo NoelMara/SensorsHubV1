@@ -179,7 +179,7 @@
                             <div class="p-4 border-b border-gray-200 dark:border-gray-700">
                                 <h3 class="font-bold text-gray-900 dark:text-white">Notifications</h3>
                             </div>
-                            @php $notifications = auth()->user()->notifications()->latest()->take(10)->get(); @endphp
+                           @php $notifications = auth()->user()->notifications()->latest()->take(5)->get(); @endphp
                             @if($notifications->count() > 0)
                                 @foreach($notifications as $notification)
                                     <a href="{{ $notification->link ?? '#' }}" 
@@ -193,6 +193,9 @@
                             @else
                                 <p class="px-4 py-3 text-sm text-gray-500">No notifications</p>
                             @endif
+                            <div class="p-3 border-t border-gray-200 dark:border-gray-700 text-center">
+                                <a href="{{ route('notifications.index') }}" class="text-sm text-primary hover:underline">View All</a>
+                            </div>
                         </div>
                     </div>
                     @endauth
