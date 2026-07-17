@@ -43,6 +43,31 @@ class ActivityController extends Controller
             ->with('success', 'Activity created!');
     }
 
+    // Show edit form
+    public function edit(Classroom $class, Activity $activity)
+    {
+        return view('admin.classes.activities.edit', compact('class', 'activity'));
+    }
+
+    // Update activity
+    public function update(Request $request, Classroom $class, Activity $activity)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'instructions' => 'nullable|string',
+            'points' => 'required|integer|min:1',
+            'due_date' => 'nullable|date',
+            'is_published' => 'boolean',
+        ]);
+
+        $validated['is_published'] = $request->has('is_published');
+        $activity->update($validated);
+
+        return redirect()->route('admin.classes.activities.index', $class)
+            ->with('success', 'Activity updated!');
+    }
+
     // Show activity for students
     public function show(Classroom $class, Activity $activity)
     {

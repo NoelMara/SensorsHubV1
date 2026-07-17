@@ -125,10 +125,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/classes/{class}/modules', [ModuleController::class, 'store'])->name('classes.modules.store');
     Route::delete('/classes/{class}/modules/{module}', [ModuleController::class, 'destroy'])->name('classes.modules.destroy');
 
-        // Activities
+    // Activities
     Route::get('/classes/{class}/activities', [ActivityController::class, 'index'])->name('classes.activities.index');
     Route::get('/classes/{class}/activities/create', [ActivityController::class, 'create'])->name('classes.activities.create');
     Route::post('/classes/{class}/activities', [ActivityController::class, 'store'])->name('classes.activities.store');
+    Route::get('/classes/{class}/activities/{activity}/edit', [ActivityController::class, 'edit'])->name('classes.activities.edit');
+    Route::put('/classes/{class}/activities/{activity}', [ActivityController::class, 'update'])->name('classes.activities.update');
     Route::get('/classes/{class}/activities/{activity}/submissions', [ActivityController::class, 'submissions'])->name('classes.activities.submissions');
     Route::post('/classes/{class}/activities/{activity}/grade/{submission}', [ActivityController::class, 'grade'])->name('classes.activities.grade');
     Route::delete('/classes/{class}/activities/{activity}', [ActivityController::class, 'destroy'])->name('classes.activities.destroy');

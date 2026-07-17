@@ -36,6 +36,12 @@
                             @else
                                 <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-600">Draft</span>
                             @endif
+                            <a href="{{ route('dashboard.classes.activities.show', [$class, $activity]) }}" class="text-primary hover:text-blue-700 text-sm" title="Preview Activity">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ route('admin.classes.activities.edit', [$class, $activity]) }}" class="text-primary hover:text-blue-700 text-sm" title="Edit Activity">
+                                <i class="fas fa-edit"></i>
+                            </a>
                             <a href="{{ route('admin.classes.activities.submissions', [$class, $activity]) }}" class="text-primary hover:text-blue-700 text-sm" title="View Submissions">
                                 <i class="fas fa-users"></i>
                             </a>
