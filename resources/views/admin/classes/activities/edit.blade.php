@@ -56,7 +56,7 @@
                         </label>
                         <input type="datetime-local" name="due_date" id="due_date" 
     value="{{ old('due_date', $activity->due_date ? $activity->due_date->format('Y-m-d\TH:i') : '') }}"
-    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white [color-scheme:dark]">
+    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
                     </div>
                 </div>
 
