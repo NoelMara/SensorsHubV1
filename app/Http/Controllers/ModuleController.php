@@ -83,12 +83,17 @@ class ModuleController extends Controller
 
     public function copyModules(Request $request, Classroom $class)
     {
-        $request->validate(['from_class' => 'required|exists:classes,id']);
+        $request->validate([
+            'from_class' => 'required|exists:classes,id',
+            'modules' => 'required|array',
+        ]);
 
         $sourceClass = Classroom::where('instructor_id', auth()->id())
             ->findOrFail($request->from_class);
 
-        foreach ($sourceClass->modules as $module) {
+        $modules = $sourceClass->modules()->whereIn('id', $request->modules)->get();
+
+        foreach ($modules as $module) {
             Module::create([
                 'class_id' => $class->id,
                 'title' => $module->title,
@@ -101,6 +106,6 @@ class ModuleController extends Controller
         }
 
         return redirect()->route('admin.classes.modules.index', $class)
-            ->with('success', 'Modules imported successfully!');
+            ->with('success', count($modules) . ' modules imported!');
     }
 }
