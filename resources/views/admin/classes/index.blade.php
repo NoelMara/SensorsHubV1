@@ -4,12 +4,12 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="flex justify-between items-center mb-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-            <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">My Classes</h1>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-2">My Classes</h1>
             <p class="text-gray-600 dark:text-gray-400">Manage your classes and share codes with students.</p>
         </div>
-        <a href="{{ route('admin.classes.create') }}" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition">
+        <a href="{{ route('admin.classes.create') }}" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition whitespace-nowrap">
             <i class="fas fa-plus mr-2"></i> Create Class
         </a>
     </div>

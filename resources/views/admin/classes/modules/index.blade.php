@@ -8,9 +8,9 @@
         <a href="{{ route('admin.classes.show', $class) }}" class="text-primary hover:underline mb-2 inline-block">
             <i class="fas fa-arrow-left mr-1"></i> Back to Class
         </a>
-        <div class="flex items-center justify-between">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Modules - {{ $class->name }}</h1>
-            <a href="{{ route('admin.classes.modules.create', $class) }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Modules - {{ $class->name }}</h1>
+            <a href="{{ route('admin.classes.modules.create', $class) }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm whitespace-nowrap">
                 <i class="fas fa-plus mr-1"></i> Add Module
             </a>
         </div>

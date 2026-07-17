@@ -8,7 +8,7 @@
         <a href="{{ route('admin.classes.modules.index', $class) }}" class="text-primary hover:underline mb-2 inline-block">
             <i class="fas fa-arrow-left mr-1"></i> Back to Modules
         </a>
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Add Module</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-2">Add Module</h1>
         <p class="text-gray-600 dark:text-gray-400">Create a new module for {{ $class->name }}</p>
     </div>
 

@@ -8,7 +8,7 @@
         <a href="{{ route('admin.classes.index') }}" class="text-primary hover:underline mb-2 inline-block">
             <i class="fas fa-arrow-left mr-1"></i> Back to Classes
         </a>
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">Create Class</h1>
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-2">Create Class</h1>
         <p class="text-gray-600 dark:text-gray-400">Create a new class and share the code with your students.</p>
     </div>
 

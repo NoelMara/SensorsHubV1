@@ -5,14 +5,14 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">My Classes</h1>
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-2">My Classes</h1>
         <p class="text-gray-600 dark:text-gray-400">Join a class using the code from your instructor.</p>
     </div>
 
     <!-- Join Class Form -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Join a Class</h2>
-        <form method="POST" action="{{ route('dashboard.classes.join') }}" class="flex gap-3">
+        <form method="POST" action="{{ route('dashboard.classes.join') }}" class="flex flex-col sm:flex-row gap-3">
             @csrf
             <input type="text" name="code" required maxlength="6"
                 class="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-center text-xl font-bold tracking-[0.3em] uppercase"

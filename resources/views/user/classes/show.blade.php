@@ -8,7 +8,7 @@
         <a href="{{ route('dashboard.classes.index') }}" class="text-primary hover:underline mb-2 inline-block">
             <i class="fas fa-arrow-left mr-1"></i> Back to Classes
         </a>
-        <h1 class="text-3xl font-bold text-gray-800 dark:text-white">{{ $class->name }}</h1>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">{{ $class->name }}</h1>
         @if($class->section)
             <span class="inline-block mt-2 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-semibold">
                 Block {{ $class->section }}
