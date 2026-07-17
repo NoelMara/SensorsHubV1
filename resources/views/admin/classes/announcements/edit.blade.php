@@ -30,7 +30,7 @@
             <div class="flex items-center gap-2">
                 <input type="checkbox" name="is_published" id="is_published" value="1" {{ old('is_published', $announcement->is_published) ? 'checked' : '' }}
                     class="rounded border-gray-300 dark:border-gray-600">
-                <label for="is_published" class="text-sm text-gray-700 dark:text-gray-300">Published</label>
+                <label for="is_published" class="text-sm text-gray-700 dark:text-gray-300">Publish immediately (visible to students)</label>
             </div>
             <div class="flex justify-end gap-2">
                 <a href="{{ route('admin.classes.announcements.index', $class) }}" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm">
