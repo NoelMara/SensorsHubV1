@@ -135,6 +135,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/classes/{class}/activities/{activity}', [ActivityController::class, 'update'])->name('classes.activities.update');
     Route::get('/classes/{class}/activities/{activity}/submissions', [ActivityController::class, 'submissions'])->name('classes.activities.submissions');
     Route::post('/classes/{class}/activities/{activity}/grade/{submission}', [ActivityController::class, 'grade'])->name('classes.activities.grade');
+    Route::get('/classes/{class}/activities/import', [ActivityController::class, 'import'])->name('classes.activities.import');
+    Route::post('/classes/{class}/activities/import', [ActivityController::class, 'copyActivities'])->name('classes.activities.copy');
     Route::delete('/classes/{class}/activities/{activity}', [ActivityController::class, 'destroy'])->name('classes.activities.destroy');
 
     // Sensors CRUD

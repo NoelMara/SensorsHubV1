@@ -5,9 +5,15 @@
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8">
-        <a href="{{ route('dashboard.classes.show', $class) }}" class="text-primary hover:underline mb-2 inline-block">
-            <i class="fas fa-arrow-left mr-1"></i> Back to Class
-        </a>
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('admin.classes.modules.index', $class) }}" class="text-primary hover:underline mb-2 inline-block">
+                <i class="fas fa-arrow-left mr-1"></i> Back to Modules
+            </a>
+        @else
+            <a href="{{ route('dashboard.classes.show', $class) }}" class="text-primary hover:underline mb-2 inline-block">
+                <i class="fas fa-arrow-left mr-1"></i> Back to Class
+            </a>
+        @endif
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">{{ $module->title }}</h1>
     </div>
 

@@ -10,9 +10,14 @@
         </a>
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Activities - {{ $class->name }}</h1>
-            <a href="{{ route('admin.classes.activities.create', $class) }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm whitespace-nowrap">
-                <i class="fas fa-plus mr-1"></i> Add Activity
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('admin.classes.activities.create', $class) }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm whitespace-nowrap">
+                    <i class="fas fa-plus mr-1"></i> Add Activity
+                </a>
+                <a href="{{ route('admin.classes.activities.import', $class) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm whitespace-nowrap">
+                    <i class="fas fa-download mr-1"></i> Import
+                </a>
+            </div>
         </div>
     </div>
 
@@ -60,7 +65,7 @@
         <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border">
             <i class="fas fa-tasks text-5xl text-gray-300 mb-4"></i>
             <h3 class="text-lg font-bold text-gray-600">No Activities Yet</h3>
-            <p class="text-gray-500">Add your first activity!</p>
+            <p class="text-gray-500">Add your first activity or import from another class!</p>
         </div>
     @endif
 </div>

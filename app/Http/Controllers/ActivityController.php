@@ -131,4 +131,40 @@ class ActivityController extends Controller
         $activity->delete();
         return back()->with('success', 'Activity deleted!');
     }
+
+    public function import(Classroom $class)
+{
+    $otherClasses = Classroom::where('instructor_id', auth()->id())
+        ->where('id', '!=', $class->id)
+        ->get();
+    return view('admin.classes.activities.import', compact('class', 'otherClasses'));
+}
+
+public function copyActivities(Request $request, Classroom $class)
+{
+    $request->validate([
+        'from_class' => 'required|exists:classes,id',
+        'activities' => 'required|array',
+    ]);
+
+    $sourceClass = Classroom::where('instructor_id', auth()->id())
+        ->findOrFail($request->from_class);
+
+    $activities = $sourceClass->activities()->whereIn('id', $request->activities)->get();
+
+    foreach ($activities as $activity) {
+        Activity::create([
+            'class_id' => $class->id,
+            'title' => $activity->title,
+            'description' => $activity->description,
+            'instructions' => $activity->instructions,
+            'points' => $activity->points,
+            'due_date' => $activity->due_date,
+            'is_published' => false,
+        ]);
+    }
+
+    return redirect()->route('admin.classes.activities.index', $class)
+        ->with('success', count($activities) . ' activities imported!');
+}
 }
