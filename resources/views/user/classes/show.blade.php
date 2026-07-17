@@ -16,8 +16,11 @@
         @endif
     </div>
 
+    <!-- Class Info -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Class Info</h2>
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            <i class="fas fa-info-circle text-blue-500 mr-2"></i>Class Info
+        </h2>
         <div class="space-y-3">
             <div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Instructor</p>
@@ -48,7 +51,7 @@
         </div>
         <div class="space-y-3">
             @foreach($announcements as $announcement)
-                <div class="p-4 bg-yellow-50 dark:bg-yellow-900/10 rounded-lg">
+                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <h3 class="font-semibold text-gray-900 dark:text-white text-sm">{{ $announcement->title }}</h3>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($announcement->content, 100) }}</p>
                     <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">{{ $announcement->created_at->diffForHumans() }}</p>
@@ -59,10 +62,12 @@
     @endif
 
     <!-- Modules -->
-    @php $modules = $class->modules()->where('is_published', true)->orderBy('order')->get(); @endphp
+    @php $modules = $class->modules()->where('is_published', true)->orderBy('order')->take(5)->get(); @endphp
     @if($modules->count() > 0)
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Modules</h2>
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            <i class="fas fa-book-open text-green-500 mr-2"></i>Modules
+        </h2>
         <div class="space-y-3">
             @foreach($modules as $module)
                 <a href="{{ route('dashboard.classes.modules.show', [$class, $module]) }}" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
@@ -87,10 +92,12 @@
     @endif
 
     <!-- Activities -->
-    @php $activities = $class->activities()->where('is_published', true)->latest()->get(); @endphp
+    @php $activities = $class->activities()->where('is_published', true)->latest()->take(5)->get(); @endphp
     @if($activities->count() > 0)
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Activities</h2>
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            <i class="fas fa-tasks text-purple-500 mr-2"></i>Activities
+        </h2>
         <div class="space-y-3">
             @foreach($activities as $activity)
                 @php $sub = $activity->submissions()->where('user_id', auth()->id())->first(); @endphp

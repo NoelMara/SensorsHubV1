@@ -5,8 +5,8 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-2">My Classes</h1>
-        <p class="text-gray-500 dark:text-gray-400 text-sm">Join a class using the code from your instructor.</p>
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white mb-2">My Classes</h1>
+        <p class="text-gray-600 dark:text-gray-400">Join a class using the code from your instructor.</p>
     </div>
 
     <!-- Join Class Form -->
@@ -33,20 +33,14 @@
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Pending Approval</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             @foreach($pendingClasses as $class)
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-yellow-200 dark:border-yellow-700 p-5 sm:p-6">
-                    <div class="flex items-center gap-2 flex-wrap mb-1">
+                <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl shadow-sm border border-yellow-200 dark:border-yellow-700 p-6">
+                    <div class="flex items-center justify-between mb-2">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $class->name }}</h3>
-                        @if($class->section)
-                            <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 flex-shrink-0">Block {{ $class->section }}</span>
-                        @endif
-                        <span class="px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 flex-shrink-0">Pending</span>
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">Waiting</span>
                     </div>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                         <i class="fas fa-user mr-1"></i> {{ $class->instructor->name }}
                     </p>
-                    @if($class->description)
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{{ Str::limit($class->description, 80) }}</p>
-                    @endif
                 </div>
             @endforeach
         </div>
@@ -57,29 +51,40 @@
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Enrolled Classes</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @foreach($approvedClasses as $class)
-                <a href="{{ route('dashboard.classes.show', $class) }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 sm:p-6 hover:shadow-md transition block">
-                    <div class="flex items-center gap-2 flex-wrap mb-1">
+                {{-- Changed from <a> to <div> --}}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition">
+                    <div class="flex items-center justify-between mb-2">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $class->name }}</h3>
                         @if($class->section)
-                            <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 flex-shrink-0">Block {{ $class->section }}</span>
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                Block {{ $class->section }}
+                            </span>
                         @endif
                     </div>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
                         <i class="fas fa-user mr-1"></i> {{ $class->instructor->name }}
                     </p>
                     @if($class->description)
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{{ Str::limit($class->description, 80) }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">{{ Str::limit($class->description, 80) }}</p>
                     @endif
-                </a>
+
+                    {{-- View Button --}}
+                    <div class="flex justify-end mt-4">
+                        <a href="{{ route('dashboard.classes.show', $class) }}"
+                            class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-semibold">
+                            <i class="fas fa-eye mr-1"></i> View Class
+                        </a>
+                    </div>
+                </div>
             @endforeach
         </div>
     @endif
 
     @if($pendingClasses->count() === 0 && $approvedClasses->count() === 0)
-        <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div class="text-center py-12 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
             <i class="fas fa-chalkboard text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
-            <h3 class="text-lg font-bold text-gray-600 dark:text-gray-400">No Classes Yet</h3>
-            <p class="text-gray-500 dark:text-gray-400 text-sm">Enter a class code above to join!</p>
+            <h3 class="text-lg font-bold text-gray-600 dark:text-gray-400 mb-2">No Classes Yet</h3>
+            <p class="text-gray-500 dark:text-gray-400">Enter a class code above to join!</p>
         </div>
     @endif
 </div>
