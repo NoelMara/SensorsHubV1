@@ -60,6 +60,11 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
+Route::post('/notifications/{notification}/read', function (\App\Models\Notification $notification) {
+    $notification->update(['is_read' => true]);
+    return response()->json(['success' => true]);
+})->name('notifications.read');
+
 // ─── Student Dashboard Routes ────────────────────────────────────────────────────
 Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'SensorsHub') - Learn Sensors. Build Projects. Share Ideas.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -160,6 +161,40 @@
                     @else
                         <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Login</a>
                         <a href="{{ route('register') }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Register</a>
+                    @endauth
+
+                    @auth
+                    @php $unreadCount = auth()->user()->notifications()->where('is_read', false)->count(); @endphp
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="text-gray-700 dark:text-gray-300 hover:text-primary relative">
+                            <i class="fas fa-bell"></i>
+                            @if($unreadCount > 0)
+                                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                    {{ $unreadCount }}
+                                </span>
+                            @endif
+                        </button>
+                        <div x-show="open" @click.outside="open = false" 
+                            class="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-96 overflow-y-auto">
+                            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+                                <h3 class="font-bold text-gray-900 dark:text-white">Notifications</h3>
+                            </div>
+                            @php $notifications = auth()->user()->notifications()->latest()->take(10)->get(); @endphp
+                            @if($notifications->count() > 0)
+                                @foreach($notifications as $notification)
+                                    <a href="{{ $notification->link ?? '#' }}" 
+                                        onclick="markAsRead({{ $notification->id }})"
+                                        class="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 {{ $notification->is_read ? '' : 'bg-blue-50 dark:bg-blue-900/20' }}">
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $notification->title }}</p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $notification->message }}</p>
+                                        <p class="text-xs text-gray-400 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
+                                    </a>
+                                @endforeach
+                            @else
+                                <p class="px-4 py-3 text-sm text-gray-500">No notifications</p>
+                            @endif
+                        </div>
+                    </div>
                     @endauth
                     
                     <button id="darkModeToggle" class="text-gray-700 dark:text-gray-300 hover:text-primary">
@@ -360,6 +395,18 @@
                 });
             });
         });
+    </script>
+
+     <script>
+        function markAsRead(id) {
+            fetch('/notifications/' + id + '/read', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json',
+                }
+            });
+        }
     </script>
 
     @stack('scripts')

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classroom;
 use App\Models\Module;
+use App\Helpers\NotificationHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -54,7 +55,16 @@ class ModuleController extends Controller
             }
         }
 
-        Module::create($validated);
+        $module = Module::create($validated);
+
+        if ($module->is_published) {
+            NotificationHelper::sendToClass(
+                $class->id,
+                'New Module: ' . $module->title,
+                'A new module is now available',
+                route('dashboard.classes.modules.show', [$class, $module])
+            );
+        }
 
         return redirect()
             ->route('admin.classes.modules.index', $class)

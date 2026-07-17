@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Activity;
 use App\Models\ActivitySubmission;
 use App\Models\Classroom;
+use App\Helpers\NotificationHelper;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
@@ -37,7 +38,17 @@ class ActivityController extends Controller
         $validated['class_id'] = $class->id;
         $validated['is_published'] = $request->has('is_published');
 
-        Activity::create($validated);
+        $activity = Activity::create($validated);
+
+        // Send notification if published
+        if ($activity->is_published) {
+            NotificationHelper::sendToClass(
+                $class->id,
+                'New Activity: ' . $activity->title,
+                'Due: ' . ($activity->due_date ? $activity->due_date->format('M d, Y') : 'No deadline') . ' | ' . $activity->points . ' points',
+                route('dashboard.classes.activities.show', [$class, $activity])
+            );
+        }
 
         return redirect()->route('admin.classes.activities.index', $class)
             ->with('success', 'Activity created!');
@@ -121,6 +132,13 @@ class ActivityController extends Controller
             'feedback' => $validated['feedback'],
             'status' => 'graded',
         ]);
+
+        NotificationHelper::send(
+            $submission->user_id,
+            'Activity Graded: ' . $activity->title,
+            'You scored ' . $validated['score'] . '/' . $activity->points,
+            route('dashboard.classes.activities.show', [$class, $activity])
+        );
 
         return back()->with('success', 'Submission graded!');
     }

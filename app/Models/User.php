@@ -117,4 +117,8 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->email_verified_at = now();
         $this->save();
     }
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }
