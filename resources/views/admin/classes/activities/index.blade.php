@@ -3,7 +3,7 @@
 @section('title', 'Activities - ' . $class->name)
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
         <a href="{{ route('admin.classes.show', $class) }}" class="text-primary hover:underline mb-2 inline-block">
             <i class="fas fa-arrow-left mr-1"></i> Back to Class
