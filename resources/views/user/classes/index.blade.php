@@ -51,7 +51,8 @@
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Enrolled Classes</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             @foreach($approvedClasses as $class)
-                <a href="{{ route('dashboard.classes.show', $class) }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition">
+                {{-- Changed from <a> to <div> --}}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition">
                     <div class="flex items-center justify-between mb-2">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">{{ $class->name }}</h3>
                         @if($class->section)
@@ -66,7 +67,15 @@
                     @if($class->description)
                         <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">{{ Str::limit($class->description, 80) }}</p>
                     @endif
-                </a>
+
+                    {{-- View Button --}}
+                    <div class="flex justify-end mt-4">
+                        <a href="{{ route('dashboard.classes.show', $class) }}"
+                            class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-semibold">
+                            <i class="fas fa-eye mr-1"></i> View Class
+                        </a>
+                    </div>
+                </div>
             @endforeach
         </div>
     @endif
