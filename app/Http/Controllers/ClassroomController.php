@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classroom;
+use App\Models\ActivitySubmission;
 use Illuminate\Http\Request;
 
 class ClassroomController extends Controller
@@ -136,6 +137,49 @@ class ClassroomController extends Controller
         }
         $class->students()->detach($userId);
         return back()->with('success', 'Student removed!');
+    }
+
+    public function leaderboard(Classroom $class)
+    {
+        $students = $class->students()->wherePivot('status', 'approved')->get();
+        $activities = $class->activities()->where('is_published', true)->get();
+        $totalActivities = $activities->count();
+        
+        $leaderboard = $students->map(function ($student) use ($activities, $totalActivities) {
+            $submissions = ActivitySubmission::where('user_id', $student->id)
+                ->whereIn('activity_id', $activities->pluck('id'))
+                ->get();
+            
+            $totalPoints = $submissions->sum('score');
+            $submitted = $submissions->count();
+            $graded = $submissions->whereNotNull('score')->count();
+            
+            $pending = $activities->filter(function ($activity) use ($student) {
+                return !ActivitySubmission::where('activity_id', $activity->id)
+                    ->where('user_id', $student->id)
+                    ->exists() 
+                    && (!$activity->due_date || now()->lessThanOrEqualTo($activity->due_date));
+            })->count();
+            
+            $overdue = $activities->filter(function ($activity) use ($student) {
+                return !ActivitySubmission::where('activity_id', $activity->id)
+                    ->where('user_id', $student->id)
+                    ->exists() 
+                    && $activity->due_date && now()->isAfter($activity->due_date);
+            })->count();
+            
+            return [
+                'student' => $student,
+                'total_points' => $totalPoints,
+                'submitted' => $submitted,
+                'graded' => $graded,
+                'pending' => $pending,
+                'overdue' => $overdue,
+                'total_activities' => $totalActivities,
+            ];
+        })->sortByDesc('total_points')->values();
+        
+        return view('admin.classes.leaderboard', compact('class', 'leaderboard'));
     }
     
 }

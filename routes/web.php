@@ -168,6 +168,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/classes/{class}/activities/{activity}/grade/{submission}', [ActivityController::class, 'grade'])->name('classes.activities.grade');
     Route::delete('/classes/{class}/activities/{activity}', [ActivityController::class, 'destroy'])->name('classes.activities.destroy');
 
+    // Leaderboard
+    Route::get('/classes/{class}/leaderboard', [ClassroomController::class, 'leaderboard'])->name('classes.leaderboard');
+
     // Sensors CRUD
     Route::get('/sensors', [AdminSensorController::class, 'index'])->name('sensors.index');
     Route::get('/sensors/create', [AdminSensorController::class, 'create'])->name('sensors.create');
