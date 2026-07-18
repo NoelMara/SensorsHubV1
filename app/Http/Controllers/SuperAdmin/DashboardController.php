@@ -42,7 +42,7 @@ class DashboardController extends Controller
     }
     public function logs()
     {
-        $logs = ActivityLog::latest()->paginate(20);
+        $logs = ActivityLog::latest()->paginate(10);
         return view('super-admin.logs', compact('logs'));
     }
 }
