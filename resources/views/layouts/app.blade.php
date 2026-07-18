@@ -398,10 +398,14 @@
         mobileLinks?.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
         </script>
 
-    <script>
+        <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('form').forEach(function(form) {
-                form.addEventListener('submit', function() {
+                form.addEventListener('submit', function(e) {
+                    var onsubmit = form.getAttribute('onsubmit');
+                    if (onsubmit && onsubmit.includes('confirm')) {
+                        return;
+                    }
                     var button = form.querySelector('button[type="submit"]');
                     if (button && !button.disabled) {
                         button.disabled = true;
