@@ -14,12 +14,11 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create Super Admin User - only if not exists
         \App\Models\User::updateOrCreate(
-            ['email' => 'faculty@gmail.com'],
+            ['email' => env('FACULTY_EMAIL', 'davepalola16@gmail.com')],
             [
-                'name' => 'Faculty Head',
-                'password' => Hash::make('faculty123'),
+                'name' => env('FACULTY_NAME', 'Faculty Head'),
+                'password' => Hash::make(env('FACULTY_PASSWORD', 'password123')),
                 'role' => 'super_admin',
                 'email_verified_at' => now(),
             ]
