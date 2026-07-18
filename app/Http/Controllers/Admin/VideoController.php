@@ -30,7 +30,7 @@ class VideoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:videos,title',
             'youtube_link' => 'required|url',
             'category' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -59,7 +59,7 @@ class VideoController extends Controller
     public function update(Request $request, Video $video)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:videos,title,' . $video->id,
             'youtube_link' => 'required|url',
             'category' => 'required|string|max:255',
             'description' => 'nullable|string',

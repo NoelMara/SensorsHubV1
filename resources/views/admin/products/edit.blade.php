@@ -3,138 +3,110 @@
 @section('title', 'Edit Product')
 
 @section('content')
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <a href="{{ route(($prefix ?? 'admin') . '.products.index') }}" class="text-primary hover:underline inline-block text-sm mb-6">
+        <i class="fas fa-arrow-left mr-1"></i> Back to Products
+    </a>
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
+            <h1 class="text-lg font-bold text-gray-900 dark:text-white">Edit Product</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Update the product details.</p>
+        </div>
 
-    <div class="mb-8">
-        <a href="{{ route(($prefix ?? 'admin') . '.products.index') }}" class="text-primary hover:underline mb-2 inline-block">
-            <i class="fas fa-arrow-left mr-1"></i>
-            Back to Products
-        </a>
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-white mb-2">Edit Product</h1>
-        <p class="text-gray-600 dark:text-gray-400">Update product details</p>
-    </div>
+        <div class="p-6">
+            <form method="POST" action="{{ ($prefix ?? 'admin') === 'super-admin' ? route('super-admin.content.update', ['products', $product->id]) : route('admin.products.update', $product) }}" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        <form method="POST" action="{{ ($prefix ?? 'admin') === 'super-admin' ? route('super-admin.content.update', ['products', $product->id]) : route('admin.products.update', $product) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-
-            <div class="space-y-6">
-
-                {{-- Product Name --}}
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Product Name <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="name" id="name" required value="{{ old('name', $product->name) }}"
-                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white @error('name') border-red-500 @enderror">
-                    @error('name')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                @if($product->image)
+                <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl flex items-center gap-4">
+                    <img src="{{ Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : asset('storage/' . $product->image) }}" class="w-16 h-16 rounded-lg object-cover shadow-sm">
+                    <div>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">Current Image</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Upload a new one to replace it.</p>
+                    </div>
                 </div>
+                @endif
 
-                {{-- Slug --}}
-                <div>
-                    <label for="slug" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Slug <span class="text-red-500">*</span>
-                    </label>
-                    <input type="text" name="slug" id="slug" required value="{{ old('slug', $product->slug) }}"
-                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white @error('slug') border-red-500 @enderror">
-                    @error('slug')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                    <div class="md:col-span-2">
+                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Product Name</label>
+                        <input type="text" name="name" id="name" required value="{{ old('name', $product->name) }}"
+                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition @error('name') border-red-500 @enderror">
+                        @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
 
-                {{-- Description --}}
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Description
-                    </label>
-                    <textarea name="description" id="description" rows="4"
-                              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white @error('description') border-red-500 @enderror">{{ old('description', $product->description) }}</textarea>
-                    @error('description')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                    <div class="md:col-span-2">
+                        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Description</label>
+                        <textarea name="description" id="description" rows="3"
+                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none @error('description') border-red-500 @enderror">{{ old('description', $product->description) }}</textarea>
+                        @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
 
-                {{-- Price --}}
-                <div>
-                    <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Price <span class="text-red-500">*</span>
-                    </label>
-                    <input type="number" name="price" id="price" step="0.01" required value="{{ old('price', $product->price) }}"
-                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white @error('price') border-red-500 @enderror">
-                    @error('price')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Price</label>
+                        <input type="number" name="price" id="price" step="0.01" required value="{{ old('price', $product->price) }}"
+                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition @error('price') border-red-500 @enderror">
+                        @error('price') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
 
-                {{-- Category --}}
-                <div>
-                    <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Category
-                    </label>
-                    <input type="text" name="category" id="category" value="{{ old('category', $product->category) }}"
-                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white @error('category') border-red-500 @enderror">
-                    @error('category')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Category</label>
+                        <input type="text" name="category" id="category" value="{{ old('category', $product->category) }}"
+                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition @error('category') border-red-500 @enderror">
+                        @error('category') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
 
-                {{-- Link --}}
-                <div>
-                    <label for="link" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Product Link
-                    </label>
-                    <input type="url" name="link" id="link" value="{{ old('link', $product->link) }}"
-                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white @error('link') border-red-500 @enderror">
-                    @error('link')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
+                    <div class="md:col-span-2">
+                        <label for="link" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Product Link</label>
+                        <input type="url" name="link" id="link" value="{{ old('link', $product->link) }}"
+                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition @error('link') border-red-500 @enderror">
+                        @error('link') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
 
-                {{-- Image --}}
-                <div>
-                    <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Product Image
-                    </label>
-                    @if($product->image)
-                        <div class="mb-2">
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-20 rounded-lg border border-gray-300 dark:border-gray-600">
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Current image. Upload a new one to replace.</p>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Product Image</label>
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-primary/50 dark:hover:border-primary/50 transition cursor-pointer relative"
+                            onclick="document.getElementById('image').click()"
+                            x-data="{ preview: null }">
+                            <div class="space-y-1 text-center" x-show="!preview">
+                                <i class="fas fa-cloud-upload-alt text-2xl text-gray-400"></i>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Click to upload new image</p>
+                                <p class="text-xs text-gray-400 dark:text-gray-500">Leave empty to keep current</p>
+                            </div>
+                            <div x-show="preview" class="relative">
+                                <img :src="preview" class="max-h-32 rounded-lg object-cover">
+                                <button type="button" 
+                                    @click.stop="preview = null; document.getElementById('image').value = ''"
+                                    class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition shadow">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <input type="file" name="image" id="image" accept="image/*" class="hidden"
+                                @change="preview = URL.createObjectURL($event.target.files[0])">
                         </div>
-                    @endif
-                    <input type="file" name="image" id="image"
-                           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white @error('image') border-red-500 @enderror">
-                    @error('image')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                        @error('image') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                    </div>
                 </div>
 
-                {{-- Active Status --}}
-                <div class="flex items-center">
+                <div class="mt-6 flex items-center gap-2">
                     <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }}
-                           class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
-                    <label for="is_active" class="ml-2 block text-sm text-gray-900 dark:text-white">
-                        Active (visible to users)
-                    </label>
+                        class="h-4 w-4 text-primary rounded border-gray-300 focus:ring-primary">
+                    <label for="is_active" class="text-sm text-gray-700 dark:text-gray-300">Active (visible to users)</label>
                 </div>
 
-            </div>
-
-            <div class="mt-8 flex space-x-4">
-                <button type="submit" class="flex-1 bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition font-semibold">
-                    <i class="fas fa-save mr-2"></i>
-                    Update Product
-                </button>
-               <a href="{{ route(($prefix ?? 'admin') . '.products.index') }}" class="flex-1 bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold text-center">
-                    Cancel
-                </a>
-            </div>
-
-        </form>
+                <div class="mt-6 flex items-center gap-3">
+                    <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
+                        <i class="fas fa-save mr-1.5"></i> Update Product
+                    </button>
+                    <a href="{{ route(($prefix ?? 'admin') . '.products.index') }}"
+                        class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
-
 </div>
 @endsection

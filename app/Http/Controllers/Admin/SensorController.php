@@ -29,7 +29,7 @@ class SensorController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:sensors,name',
             'description' => 'required|string',
             'how_it_works' => 'required|string',
             'use_cases' => 'required|string',
@@ -68,7 +68,7 @@ class SensorController extends Controller
     public function update(Request $request, Sensor $sensor)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:sensors,name,' . $sensor->id,
             'description' => 'required|string',
             'how_it_works' => 'required|string',
             'use_cases' => 'required|string',

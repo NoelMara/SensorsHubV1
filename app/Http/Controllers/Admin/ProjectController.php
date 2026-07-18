@@ -32,7 +32,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:projects,title',
             'description' => 'required|string',
             'difficulty' => 'required|in:Beginner,Intermediate,Advanced',
             'sensor_id' => 'required|exists:sensors,id',
@@ -61,7 +61,7 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:projects,title,' . $project->id,
             'description' => 'required|string',
             'difficulty' => 'required|in:Beginner,Intermediate,Advanced',
             'sensor_id' => 'required|exists:sensors,id',
