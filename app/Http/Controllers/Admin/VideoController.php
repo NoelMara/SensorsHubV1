@@ -14,9 +14,13 @@ class VideoController extends Controller
     public function index()
     {
         $videos = Video::with('sensor')->latest()->paginate(10);
-        return view('admin.videos.index', compact('videos'));
+        $stats = [
+            'total' => Video::count(),
+            'active' => Video::where('is_active', true)->count(),
+            'inactive' => Video::where('is_active', false)->count(),
+        ];
+        return view('admin.videos.index', compact('videos', 'stats'));
     }
-
     public function create()
     {
         $sensors = Sensor::where('is_active', true)->get();

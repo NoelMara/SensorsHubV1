@@ -17,10 +17,9 @@ class ProjectController extends Controller
         $stats = [
             'total' => Project::count(),
             'active' => Project::where('is_active', true)->count(),
+            'inactive' => Project::where('is_active', false)->count(),
             'featured' => Project::where('is_featured', true)->count(),
-            'advanced' => Project::where('difficulty', 'Advanced')->count(),
         ];
-
         return view('admin.projects.index', compact('projects', 'stats'));
     }
 

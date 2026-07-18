@@ -13,7 +13,12 @@ class SensorController extends Controller
     public function index()
     {
         $sensors = Sensor::latest()->paginate(10);
-        return view('admin.sensors.index', compact('sensors'));
+        $stats = [
+            'total' => Sensor::count(),
+            'active' => Sensor::where('is_active', true)->count(),
+            'inactive' => Sensor::where('is_active', false)->count(),
+        ];
+        return view('admin.sensors.index', compact('sensors', 'stats'));
     }
 
     public function create()

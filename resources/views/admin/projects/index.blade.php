@@ -1,283 +1,126 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Projects')
+@section('title', 'Projects')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-
-    {{-- Header Section --}}
-    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
-
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-
-            {{-- Faculty Head Back Button --}}
-            @if(auth()->user()->isSuperAdmin())
-                <a href="{{ route('super-admin.dashboard') }}"
-                   class="inline-flex items-center text-sm text-primary hover:underline mb-3">
-
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    Back to Faculty Head
-                </a>
-            @endif
-
-            <p class="text-sm font-semibold text-primary uppercase tracking-wide">
-                Project Library
-            </p>
-
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mt-1">
-                Manage Projects
-            </h1>
-
-            <p class="text-gray-600 dark:text-gray-400 mt-2 max-w-2xl">
-                Review project content, keep tutorials current, and control which builds are visible to learners.
-            </p>
-
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Projects</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Review project tutorials, visibility, and featured content.</p>
         </div>
-
-        {{-- Action Buttons --}}
-        <div class="flex flex-wrap gap-3">
-
-            {{-- Logout (Faculty Head only) --}}
-            @if(auth()->user()->isSuperAdmin())
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <button type="submit"
-                            class="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-
-                        <i class="fas fa-sign-out-alt mr-2"></i>
-                        Logout
-                    </button>
-                </form>
-            @endif
-
-            {{-- Add Project --}}
-            <a href="{{ route('admin.projects.create') }}"
-               class="inline-flex items-center justify-center px-5 py-3 rounded-lg bg-primary text-white font-semibold hover:bg-blue-600 transition shadow-sm">
-
-                <i class="fas fa-plus mr-2"></i>
-                Add Project
-            </a>
-
-        </div>
-
+        <a href="{{ route('admin.projects.create') }}" class="px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium flex-shrink-0">
+            <i class="fas fa-plus mr-1.5"></i> Add Project
+        </a>
     </div>
 
-    {{-- Stats Cards --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
-            <p class="text-sm text-gray-500 dark:text-gray-400">Total Projects</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-                {{ $stats['total'] }}
-            </p>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
-            <p class="text-sm text-gray-500 dark:text-gray-400">Active</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-                {{ $stats['active'] }}
-            </p>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
-            <p class="text-sm text-gray-500 dark:text-gray-400">Featured</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-                {{ $stats['featured'] }}
-            </p>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
-            <p class="text-sm text-gray-500 dark:text-gray-400">Advanced</p>
-            <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-                {{ $stats['advanced'] }}
-            </p>
-        </div>
-
-    </div>
-
-    {{-- Projects Table --}}
-    @if($projects->count() > 0)
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-
-            {{-- Table Header --}}
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-
-                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Project Records
-                </h2>
-
-                <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Latest projects are shown first.
-                </p>
-
+    {{-- Stats --}}
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-layer-group text-blue-600 dark:text-blue-400"></i>
             </div>
+            <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">Total</p>
+                <p class="text-xl font-bold text-gray-900 dark:text-white">{{ $stats['total'] }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-check-circle text-green-600 dark:text-green-400"></i>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">Active</p>
+                <p class="text-xl font-bold text-green-600 dark:text-green-400">{{ $stats['active'] }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-minus-circle text-gray-400 dark:text-gray-500"></i>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">Inactive</p>
+                <p class="text-xl font-bold text-gray-400 dark:text-gray-500">{{ $stats['inactive'] }}</p>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 flex items-center gap-4">
+            <div class="w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-star text-yellow-600 dark:text-yellow-400"></i>
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">Featured</p>
+                <p class="text-xl font-bold text-yellow-600 dark:text-yellow-400">{{ $stats['featured'] }}</p>
+            </div>
+        </div>
+    </div>
 
-            {{-- Table --}}
+    @if($projects->count() > 0)
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="overflow-x-auto">
-
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-
-                    <thead class="bg-gray-50 dark:bg-gray-900/40">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
-
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase">
-                                Project
-                            </th>
-
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase">
-                                Sensor
-                            </th>
-
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase">
-                                Difficulty
-                            </th>
-
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase">
-                                Visibility
-                            </th>
-
-                            <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-300 uppercase">
-                                Actions
-                            </th>
-
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Details</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Created</th>
+                            <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Actions</th>
                         </tr>
                     </thead>
-
-                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-
+                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                         @foreach($projects as $project)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
-
-                                {{-- Project Info --}}
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
                                 <td class="px-6 py-4">
-                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                                        {{ $project->title }}
-                                    </p>
-
-                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                        {{ Str::limit($project->description, 82) }}
-                                    </p>
+                                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $project->title }}</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-1">{{ Str::limit($project->description, 80) }}</p>
                                 </td>
-
-                                {{-- Sensor --}}
-                                <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
-                                   {{ $project->sensor?->name ?? 'No sensor assigned' }}
+                                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                    <p>{{ $project->sensor?->name ?? '—' }}</p>
+                                    <span class="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">{{ $project->difficulty }}</span>
                                 </td>
-
-                                {{-- Difficulty --}}
                                 <td class="px-6 py-4">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold
-                                        @if($project->difficulty === 'Beginner')
-                                            bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                        @elseif($project->difficulty === 'Intermediate')
-                                            bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-                                        @else
-                                            bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200
-                                        @endif">
-
-                                        {{ $project->difficulty }}
-                                    </span>
-                                </td>
-
-                                {{-- Visibility --}}
-                                <td class="px-6 py-4">
-
-                                    <div class="flex flex-wrap gap-2">
-
+                                    <div class="flex flex-wrap gap-1.5">
                                         @if($project->is_active)
-                                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                                Active
-                                            </span>
+                                            <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Active</span>
                                         @else
-                                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200">
-                                                Inactive
-                                            </span>
+                                            <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">Inactive</span>
                                         @endif
-
                                         @if($project->is_featured)
-                                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                                                Featured
+                                            <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">
+                                                <i class="fas fa-star mr-1"></i>Featured
                                             </span>
                                         @endif
-
                                     </div>
-
                                 </td>
-
-                                {{-- Actions --}}
-                                <td class="px-6 py-4 text-right">
-
-                                    <a href="{{ route('admin.projects.edit', $project) }}"
-                                       class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 dark:bg-blue-950 dark:text-blue-200 dark:hover:bg-blue-900 transition">
-
-                                        <i class="fas fa-edit mr-2"></i>
-                                        Edit
+                                <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $project->created_at->format('M d, Y') }}</td>
+                                <td class="px-6 py-4 text-right whitespace-nowrap">
+                                    <a href="{{ route('admin.projects.edit', $project) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 dark:hover:bg-primary/20 transition mr-1">
+                                        <i class="fas fa-pen mr-1"></i> Edit
                                     </a>
-
-                                    <form action="{{ route('admin.projects.destroy', $project) }}"
-                                          method="POST"
-                                          class="inline-block ml-2"
-                                          onsubmit="return confirm('Delete this project?');">
-
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button type="submit"
-                                                class="inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 dark:bg-red-950 dark:text-red-200 dark:hover:bg-red-900 transition">
-
-                                            <i class="fas fa-trash mr-2"></i>
-                                            Delete
+                                    <form method="POST" action="{{ route('admin.projects.destroy', $project) }}" class="inline-block" onsubmit="return confirm('Delete?');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30 transition">
+                                            <i class="fas fa-trash mr-1"></i> Delete
                                         </button>
-
                                     </form>
-
                                 </td>
-
                             </tr>
                         @endforeach
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </div>
-
-        {{-- Pagination --}}
         @if($projects->hasPages())
-            <div class="flex justify-center mt-8">
-                {{ $projects->links() }}
-            </div>
+            <div class="mt-6">{{ $projects->links() }}</div>
         @endif
-
     @else
-
-        {{-- Empty State --}}
-        <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
-
-            <i class="fas fa-project-diagram text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
-
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">
-                No Projects Yet
-            </h2>
-
-            <p class="text-gray-500 dark:text-gray-400 mb-6">
-                Create the first guided build for your SensorHub learners.
-            </p>
-
-            <a href="{{ route('admin.projects.create') }}"
-               class="inline-flex items-center bg-primary text-white px-5 py-3 rounded-lg hover:bg-blue-600 transition font-semibold">
-
-                <i class="fas fa-plus mr-2"></i>
-                Add Project
-            </a>
-
+        <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-project-diagram text-2xl text-gray-400"></i>
+            </div>
+            <h3 class="text-base font-semibold text-gray-600 dark:text-gray-400">No Projects</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Add your first project to get started.</p>
         </div>
-
     @endif
-
 </div>
 @endsection
