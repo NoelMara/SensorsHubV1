@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -47,6 +48,13 @@ class ProfileController extends Controller
 
         $user->update($data);
 
+        $changes = [];
+        if ($user->wasChanged('name')) $changes[] = 'name';
+        if ($user->wasChanged('profile_image')) $changes[] = 'profile picture';
+        if (!empty($changes)) {
+            ActivityLogHelper::log('updated', 'profile', "updated their " . implode(' and ', $changes));
+        }
+
         return back()->with('success', 'Profile updated successfully!');
     }
 
@@ -60,6 +68,7 @@ class ProfileController extends Controller
         Auth::user()->update([
             'password' => Hash::make($request->password),
         ]);
+        ActivityLogHelper::log('changed', 'password', "changed their password");
 
         return back()->with('success', 'Password updated successfully!');
     }

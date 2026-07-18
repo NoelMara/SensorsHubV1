@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Video;
 use App\Models\Sensor;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -38,7 +39,8 @@ class VideoController extends Controller
         $validated['slug'] = Str::slug($validated['title']);
         $validated['is_active'] = $request->has('is_active');
 
-        Video::create($validated);
+        $video = Video::create($validated);
+        ActivityLogHelper::log('created', 'video', "created a new video '{$video->title}'");
 
         return redirect()->route('admin.videos.index')
             ->with('success', 'Video created successfully!');
@@ -75,6 +77,7 @@ class VideoController extends Controller
     public function destroy(Video $video)
     {
         $video->delete();
+        ActivityLogHelper::log('deleted', 'video', "deleted video '{$video->title}'");
         return redirect()->route('admin.videos.index')
             ->with('success', 'Video deleted successfully!');
     }

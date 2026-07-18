@@ -10,6 +10,7 @@ use App\Models\Sensor;
 use App\Models\Suggestion;
 use App\Models\User;
 use App\Models\Video;
+use App\Models\ActivityLog;
 
 class DashboardController extends Controller
 {
@@ -38,5 +39,10 @@ class DashboardController extends Controller
             ->get();
 
         return view('super-admin.dashboard', compact('stats', 'recentUsers', 'recentSuggestions', 'recentComments'));
+    }
+    public function logs()
+    {
+        $logs = ActivityLog::latest()->paginate(20);
+        return view('super-admin.logs', compact('logs'));
     }
 }

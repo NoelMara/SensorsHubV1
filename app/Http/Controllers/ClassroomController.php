@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classroom;
 use App\Models\ActivitySubmission;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 
 class ClassroomController extends Controller
@@ -32,6 +33,7 @@ class ClassroomController extends Controller
         $validated['code'] = Classroom::generateCode();
 
         Classroom::create($validated);
+        ActivityLogHelper::log('created', 'class', "created a new class '{$validated['name']}'");
 
         return redirect()->route('admin.classes.index')
             ->with('success', 'Class created successfully! Code: ' . $validated['code']);
@@ -74,6 +76,7 @@ class ClassroomController extends Controller
             abort(403);
         }
         $class->delete();
+        ActivityLogHelper::log('deleted', 'class', "deleted class '{$class->name}'");
         return redirect()->route('admin.classes.index')
             ->with('success', 'Class deleted successfully!');
     }

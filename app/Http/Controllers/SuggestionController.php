@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Suggestion;
+use App\Helpers\ActivityLogHelper;
 use App\Models\Comment;
 
 class SuggestionController extends Controller
@@ -55,7 +56,8 @@ class SuggestionController extends Controller
             'sensor_type' => 'nullable|string|max:255',
         ]);
 
-        auth()->user()->suggestions()->create($request->only('title', 'description', 'difficulty', 'sensor_type'));
+       $suggestion = auth()->user()->suggestions()->create($request->only('title', 'description', 'difficulty', 'sensor_type'));
+       ActivityLogHelper::log('created', 'suggestion', "submitted a suggestion '{$suggestion->title}'");
 
         return back()->with('success', 'Suggestion submitted successfully! We\'ll review it soon.');
     }

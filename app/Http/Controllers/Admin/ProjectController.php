@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Sensor;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -45,7 +46,8 @@ class ProjectController extends Controller
         $validated['is_featured'] = $request->has('is_featured');
         $validated['is_active'] = $request->has('is_active');
 
-        Project::create($validated);
+        $project = Project::create($validated);
+        ActivityLogHelper::log('created', 'project', "created a new project '{$project->title}'");
 
         return redirect()->route('admin.projects.index')
             ->with('success', 'Project created successfully!');
@@ -82,6 +84,7 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
+        ActivityLogHelper::log('deleted', 'project', "deleted project '{$project->title}'");
         return redirect()->route('admin.projects.index')
             ->with('success', 'Project deleted successfully!');
     }

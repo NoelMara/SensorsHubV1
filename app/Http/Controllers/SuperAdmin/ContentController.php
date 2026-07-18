@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\Sensor;
 use App\Models\Video;
 use Cloudinary\Cloudinary;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -109,7 +110,9 @@ class ContentController extends Controller
         $this->ensureValidType($type);
 
         $data = $this->validatedData($request, $type);
-        $this->modelFor($type)::create($data);
+        $item = $this->modelFor($type)::create($data);
+        $name = $item->title ?? $item->name;
+        ActivityLogHelper::log('created', $type, "created a new {$type} '{$name}'");
 
         return redirect()->route('super-admin.' . $type . '.index')
             ->with('success', $this->singularLabelFor($type) . ' created successfully.');
@@ -147,11 +150,13 @@ class ContentController extends Controller
             ->with('success', $this->singularLabelFor($type) . ' updated successfully.');
     }
 
-    public function destroy(string $type, int $id)
+   public function destroy(string $type, int $id)
     {
         $this->ensureValidType($type);
-
-        $this->findItem($type, $id)->delete();
+        $item = $this->findItem($type, $id);
+        $name = $item->title ?? $item->name;
+        $item->delete();
+        ActivityLogHelper::log('deleted', $type, "deleted {$type} '{$name}'");
 
         return redirect()->route('super-admin.' . $type . '.index')
             ->with('success', $this->singularLabelFor($type) . ' deleted successfully.');

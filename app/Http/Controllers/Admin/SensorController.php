@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Sensor;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -47,7 +48,8 @@ class SensorController extends Controller
             $validated['image'] = $result['secure_url'];
         }
 
-        Sensor::create($validated);
+        $sensor = Sensor::create($validated);
+        ActivityLogHelper::log('created', 'sensor', "created a new sensor '{$sensor->name}'");
 
         return redirect()->route('admin.sensors.index')
             ->with('success', 'Sensor created successfully!');
@@ -96,6 +98,7 @@ class SensorController extends Controller
     public function destroy(Sensor $sensor)
     {
         $sensor->delete();
+        ActivityLogHelper::log('deleted', 'sensor', "deleted sensor '{$sensor->name}'");
         return redirect()->route('admin.sensors.index')
             ->with('success', 'Sensor deleted successfully!');
     }

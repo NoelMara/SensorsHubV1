@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -48,7 +49,8 @@ class ProductController extends Controller
             $validated['image'] = $result['secure_url'];
         }
 
-        Product::create($validated);
+        $product = Product::create($validated);
+        ActivityLogHelper::log('created', 'product', "created a new product '{$product->name}'");
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product created successfully!');
@@ -98,7 +100,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
-        
+        ActivityLogHelper::log('deleted', 'product', "deleted product '{$product->name}'");
         return redirect()->route('admin.products.index')
             ->with('success', 'Product deleted successfully!');
     }

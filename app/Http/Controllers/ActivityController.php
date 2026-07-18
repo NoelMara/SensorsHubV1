@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\ActivitySubmission;
 use App\Models\Classroom;
 use App\Helpers\NotificationHelper;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
@@ -39,6 +40,7 @@ class ActivityController extends Controller
         $validated['is_published'] = $request->has('is_published');
 
         $activity = Activity::create($validated);
+        ActivityLogHelper::log('created', 'activity', "created activity '{$activity->title}' in '{$class->name}'");
 
         // Send notification if published
         if ($activity->is_published) {
@@ -157,6 +159,7 @@ class ActivityController extends Controller
     public function destroy(Classroom $class, Activity $activity)
     {
         $activity->delete();
+        ActivityLogHelper::log('deleted', 'activity', "deleted activity '{$activity->title}'");
         return back()->with('success', 'Activity deleted!');
     }
 

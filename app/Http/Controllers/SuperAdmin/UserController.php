@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Notifications\VerifyEmailWithCode;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -109,6 +110,7 @@ class UserController extends Controller
         }
 
         $user->update(['role' => $validated['role']]);
+        ActivityLogHelper::log('changed', 'user', "changed {$user->name}'s role to " . ($validated['role'] === 'admin' ? 'Instructor' : ($validated['role'] === 'super_admin' ? 'Faculty Head' : 'Student')));
 
         return back()->with('success', 'User role updated successfully.');
     }
@@ -124,6 +126,7 @@ class UserController extends Controller
         }
 
         $user->delete();
+        ActivityLogHelper::log('deleted', 'user', "deleted account '{$user->name}'");
 
         return back()->with('success', 'Account removed successfully.');
     }

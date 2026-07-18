@@ -123,8 +123,11 @@
                                 <a href="{{ route('super-admin.products.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-shopping-cart w-4 mr-2"></i> Products
                                 </a>
-                                <a href="{{ route('super-admin.videos.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg">
+                                <a href="{{ route('super-admin.videos.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-video w-4 mr-2"></i> Videos
+                                </a>
+                                <a href="{{ route('super-admin.logs') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg">
+                                    <i class="fas fa-history w-4 mr-2"></i> Activity Logs
                                 </a>
                             </div>
                         </div>
@@ -238,6 +241,9 @@
                     </a>
                     <a href="{{ route('super-admin.videos.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-video w-5"></i> Videos
+                    </a>
+                    <a href="{{ route('super-admin.logs') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                        <i class="fas fa-history w-5"></i> Activity Logs
                     </a>
                     <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-flask w-5"></i> Simulation

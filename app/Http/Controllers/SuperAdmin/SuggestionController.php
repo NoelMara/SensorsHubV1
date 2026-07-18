@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Models\Suggestion;
 use App\Models\Comment;
+use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 
 class SuggestionController extends Controller
@@ -38,9 +39,10 @@ class SuggestionController extends Controller
         ]);
 
         $suggestion->update($validated);
-
+        ActivityLogHelper::log('changed', 'suggestion', "marked suggestion '{$suggestion->title}' as {$validated['status']}");
         return back()->with('success', 'Suggestion updated successfully.');
     }
+
 
     public function storeComment(Request $request, Suggestion $suggestion)
     {

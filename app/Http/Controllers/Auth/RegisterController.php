@@ -8,9 +8,11 @@ use App\Notifications\VerifyEmailWithCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\ActivityLogHelper;
 
 class RegisterController extends Controller
 {
+
     public function showRegistrationForm()
     {
         return view('auth.register');
@@ -31,6 +33,8 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
             'role'     => 'user', 
         ]);
+
+        ActivityLogHelper::log('created', 'user', 'User registered: ' . $user->name);
 
         $code = $user->generateVerificationCode();
         $user->notify(new VerifyEmailWithCode($code));

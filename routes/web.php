@@ -223,6 +223,9 @@ Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-a
     Route::match(['put', 'post'], '/profile/update', [SuperAdminProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [SuperAdminProfileController::class, 'updatePassword'])->name('profile.password');
 
+    // Activity Logs
+    Route::get('/logs', [SuperAdminDashboardController::class, 'logs'])->name('logs');
+
     // Users CRUD
     Route::get('/users', [SuperAdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [SuperAdminUserController::class, 'create'])->name('users.create');
