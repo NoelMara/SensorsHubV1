@@ -105,11 +105,17 @@ class UserController extends Controller
             ->with('success', 'Account updated successfully.');
     }
 
-    public function updateRole(Request $request, User $user)
+   public function updateRole(Request $request, User $user)
     {
         $validated = $request->validate([
             'role' => ['required', Rule::in(['user', 'admin', 'super_admin'])],
         ]);
+
+        // Protect the original Faculty Head (env account) from being demoted
+        $originalFaculty = User::where('role', 'super_admin')->oldest()->first();
+        if ($user->is($originalFaculty) && $validated['role'] !== 'super_admin') {
+            return back()->with('error', 'The original Faculty Head account cannot be demoted.');
+        }
 
         if ($user->is(auth()->user()) && $validated['role'] !== 'super_admin') {
             return back()->with('error', 'You cannot remove your own Faculty Head access.');
