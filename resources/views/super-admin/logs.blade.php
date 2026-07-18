@@ -10,12 +10,25 @@
     </div>
 
     @if($logs->count() > 0)
-        <div class="space-y-2">
+        @php $currentDate = ''; @endphp
+        <div class="space-y-6">
             @foreach($logs as $log)
+                @php $logDate = $log->created_at->format('F d, Y'); @endphp
+                
+                @if($currentDate !== $logDate)
+                    @php $currentDate = $logDate; @endphp
+                    <div class="flex items-center gap-3 pt-2 first:pt-0">
+                        <span class="text-sm font-semibold text-gray-500 dark:text-gray-400">{{ $logDate }}</span>
+                        <div class="flex-1 h-px bg-gray-200 dark:bg-gray-700"></div>
+                    </div>
+                @endif
+
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-5 py-3 flex items-center gap-3">
                     <div class="flex-shrink-0">
-                        @if($log->type === 'user')
+                        @if($log->type === 'user' && $log->action === 'created')
                             <span class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-sm">👤</span>
+                        @elseif($log->type === 'user' && $log->action === 'deleted')
+                            <span class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-sm">🚫</span>
                         @elseif($log->type === 'class')
                             <span class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-sm">📚</span>
                         @elseif($log->type === 'sensor')
@@ -37,17 +50,16 @@
                     <div class="flex-1 min-w-0">
                         <p class="text-sm text-gray-700 dark:text-gray-300">
                             <span class="font-medium text-gray-900 dark:text-white">{{ $log->user_name }}</span>
-                            <span class="text-gray-400">({{ $log->user_role === 'super_admin' ? 'Faculty Head' : ($log->user_role === 'admin' ? 'Instructor' : 'Student') }})</span>
                             {{ $log->description }}
                         </p>
                     </div>
-                    <span class="text-xs text-gray-400 flex-shrink-0">{{ $log->created_at->diffForHumans() }}</span>
+                    <span class="text-xs text-gray-400 flex-shrink-0">{{ $log->created_at->format('h:i A') }}</span>
                 </div>
             @endforeach
         </div>
 
         @if($logs->hasPages())
-            <div class="mt-6">{{ $logs->links() }}</div>
+            <div class="mt-8">{{ $logs->links() }}</div>
         @endif
     @else
         <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
