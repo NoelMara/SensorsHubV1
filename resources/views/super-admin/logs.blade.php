@@ -50,7 +50,8 @@
                     <div class="flex-1 min-w-0">
                         <p class="text-sm text-gray-700 dark:text-gray-300">
                             <span class="font-medium text-gray-900 dark:text-white">{{ $log->user_name }}</span>
-                            {{ $log->description }}
+                            <span class="text-gray-400 text-xs ml-1">({{ $log->user_role === 'super_admin' ? 'Faculty Head' : ($log->user_role === 'admin' ? 'Instructor' : 'Student') }})</span>
+                            {{ ' ' . $log->description }}
                         </p>
                     </div>
                     <span class="text-xs text-gray-400 flex-shrink-0">{{ $log->created_at->format('h:i A') }}</span>

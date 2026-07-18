@@ -74,7 +74,6 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // Prevent editing another super admin
         if ($user->isSuperAdmin() && !$user->is(auth()->user())) {
             return back()->with('error', 'You cannot edit another super admin account.');
         }
@@ -82,18 +81,25 @@ class UserController extends Controller
         $validated = $request->validate([
             'name'  => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'role'  => ['required', Rule::in(['user', 'admin'])], // super_admin not changeable here
-            // password optional on edit
+            'role'  => ['nullable', Rule::in(['user', 'admin'])], // ← change 'required' to 'nullable'
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $user->update([
+        $updateData = [
             'name'  => $validated['name'],
             'email' => $validated['email'],
-            'role'  => $validated['role'],
-            // only update password if provided
-            ...( $validated['password'] ? ['password' => Hash::make($validated['password'])] : [] ),
-        ]);
+        ];
+
+        // Only update role if provided (not for super admins)
+        if (isset($validated['role'])) {
+            $updateData['role'] = $validated['role'];
+        }
+
+        if ($validated['password']) {
+            $updateData['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($updateData);
 
         return redirect()->route('super-admin.users.index')
             ->with('success', 'Account updated successfully.');
