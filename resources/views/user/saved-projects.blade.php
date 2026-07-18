@@ -10,12 +10,6 @@
         <p class="text-gray-600 dark:text-gray-400">Projects you've bookmarked for later.</p>
     </div>
 
-    @if(session('success'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
-        {{ session('success') }}
-    </div>
-    @endif
-
     <!-- Saved Projects Grid -->
     @if($savedProjects->count() > 0)
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

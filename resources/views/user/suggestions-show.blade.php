@@ -9,12 +9,6 @@
         <i class="fas fa-arrow-left mr-2"></i> Back to My Suggestions
     </a>
 
-    @if(session('success'))
-        <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         {{-- Author Info --}}
         <div class="flex items-center gap-3 mb-4">

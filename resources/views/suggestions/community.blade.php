@@ -11,10 +11,17 @@
             <p class="text-gray-600 dark:text-gray-400">Discover and discuss project ideas from the community</p>
         </div>
         @auth
-            <a href="{{ route('dashboard.suggestions') }}" 
-               class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
-                <i class="fas fa-plus mr-2"></i> Submit Suggestion
-            </a>
+            @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin())
+                <a href="{{ route('admin.suggestions.index') }}" 
+                   class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+                    <i class="fas fa-clipboard-list mr-2"></i> Manage Suggestions
+                </a>
+            @else
+                <a href="{{ route('dashboard.suggestions') }}" 
+                   class="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+                    <i class="fas fa-list mr-2"></i> My Suggestions
+                </a>
+            @endif
         @endauth
     </div>
 
@@ -58,8 +65,8 @@
                     </div>
 
                     <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <a href="{{ route('dashboard.suggestions.show', $suggestion) }}" 
-                           class="inline-flex items-center text-primary hover:underline font-semibold">
+                        <a href="{{ auth()->user() && (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) ? route('admin.suggestions.show', $suggestion) : route('dashboard.suggestions.show', $suggestion) }}" 
+                        class="inline-flex items-center text-primary hover:underline font-semibold">
                             <i class="fas fa-eye mr-2"></i> View Discussion
                         </a>
                     </div>
@@ -67,7 +74,6 @@
             @endforeach
         </div>
 
-        {{-- Pagination --}}
         <div class="mt-8">
             {{ $suggestions->links() }}
         </div>
@@ -77,10 +83,17 @@
             <h3 class="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-2">No Suggestions Yet</h3>
             <p class="text-gray-500 dark:text-gray-500 mb-6">Be the first to share your project idea with the community!</p>
             @auth
-                <a href="{{ route('dashboard.suggestions') }}" 
-                   class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
-                    <i class="fas fa-plus mr-2"></i> Submit Your First Suggestion
-                </a>
+                @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin())
+                    <a href="{{ route('admin.suggestions.index') }}" 
+                       class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+                        <i class="fas fa-clipboard-list mr-2"></i> Manage Suggestions
+                    </a>
+                @else
+                    <a href="{{ route('dashboard.suggestions') }}" 
+                       class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+                        <i class="fas fa-list mr-2"></i> My Suggestions
+                    </a>
+                @endif
             @else
                 <a href="{{ route('login') }}" 
                    class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">

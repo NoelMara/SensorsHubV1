@@ -17,7 +17,7 @@ class AdminUserSeeder extends Seeder
         \App\Models\User::updateOrCreate(
             ['email' => env('FACULTY_EMAIL', 'davepalola16@gmail.com')],
             [
-                'name' => env('FACULTY_NAME', 'Faculty Head'),
+                'name' => env('FACULTY_NAME', 'Faculty_Head'),
                 'password' => Hash::make(env('FACULTY_PASSWORD', 'password123')),
                 'role' => 'super_admin',
                 'email_verified_at' => now(),
