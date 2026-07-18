@@ -181,5 +181,19 @@ class ClassroomController extends Controller
         
         return view('admin.classes.leaderboard', compact('class', 'leaderboard'));
     }
+    public function approveAll(Classroom $class)
+    {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
+        
+        $pendingStudents = $class->students()->wherePivot('status', 'pending')->get();
+        
+        foreach ($pendingStudents as $student) {
+            $class->students()->updateExistingPivot($student->id, ['status' => 'approved']);
+        }
+        
+        return back()->with('success', count($pendingStudents) . ' students approved!');
+    }
     
 }

@@ -92,11 +92,27 @@
 
     {{-- Students List --}}
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-gray-700">
-            <h2 class="text-base font-bold text-gray-900 dark:text-white">Students ({{ $class->students->count() }})</h2>
+        <div class="px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-gray-700 space-y-3">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-bold text-gray-900 dark:text-white">Students ({{ $class->students->count() }})</h2>
+                @if($pending > 0)
+                    <form action="{{ route('admin.classes.approve-all', $class) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium">
+                            <i class="fas fa-check-double mr-1"></i> Approve All ({{ $pending }})
+                        </button>
+                    </form>
+                @endif
+            </div>
+            {{-- Search --}}
+            <div class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                <input type="text" id="studentSearch" placeholder="Search students..." 
+                    class="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+            </div>
         </div>
         @if($class->students->count() > 0)
-            <div class="divide-y divide-gray-100 dark:divide-gray-700">
+            <div class="divide-y divide-gray-100 dark:divide-gray-700" id="studentList">
                 @foreach($class->students as $student)
                     @php
                         $submissions = $student->submissions()
@@ -106,7 +122,7 @@
                         $submittedCount = $submissions->whereNotNull('submitted_at')->count();
                         $totalActivities = $class->activities()->count();
                     @endphp
-                    <div class="px-4 sm:px-6 py-3 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <div class="student-row px-4 sm:px-6 py-3 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition" data-name="{{ strtolower($student->name) }}">
                         {{-- Avatar + Name --}}
                         <div class="flex items-center gap-3 min-w-0 flex-1">
                             <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
@@ -165,4 +181,15 @@
         @endif
     </div>
 </div>
+
+{{-- Search Script --}}
+<script>
+    document.getElementById('studentSearch').addEventListener('input', function() {
+        var query = this.value.toLowerCase();
+        document.querySelectorAll('.student-row').forEach(function(row) {
+            var name = row.getAttribute('data-name');
+            row.style.display = name.includes(query) ? '' : 'none';
+        });
+    });
+</script>
 @endsection
