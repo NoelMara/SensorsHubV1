@@ -108,7 +108,10 @@
             <div class="relative">
                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
                 <input type="text" id="studentSearch" placeholder="Search students..." 
-                    class="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                    class="w-full pl-9 pr-9 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                <button type="button" id="clearSearch" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
             </div>
         </div>
         @if($class->students->count() > 0)
@@ -172,6 +175,11 @@
                     </div>
                 @endforeach
             </div>
+            <div id="noResults" class="hidden py-16 text-center">
+                <i class="fas fa-search text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                <h3 class="text-lg font-bold text-gray-600 dark:text-gray-400">No Students Found</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">No students match your search.</p>
+            </div>
         @else
             <div class="py-16 text-center">
                 <i class="fas fa-users text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
@@ -184,12 +192,37 @@
 
 {{-- Search Script --}}
 <script>
-    document.getElementById('studentSearch').addEventListener('input', function() {
+    var searchInput = document.getElementById('studentSearch');
+    var clearBtn = document.getElementById('clearSearch');
+    
+    searchInput.addEventListener('input', function() {
         var query = this.value.toLowerCase();
+        var found = false;
+        
+        clearBtn.classList.toggle('hidden', query === '');
+        
         document.querySelectorAll('.student-row').forEach(function(row) {
             var name = row.getAttribute('data-name');
-            row.style.display = name.includes(query) ? '' : 'none';
+            var match = name.includes(query);
+            row.style.display = match ? '' : 'none';
+            if (match) found = true;
         });
+        
+        var noResults = document.getElementById('noResults');
+        var studentList = document.getElementById('studentList');
+        if (!found && query !== '') {
+            noResults.classList.remove('hidden');
+            studentList.classList.add('hidden');
+        } else {
+            noResults.classList.add('hidden');
+            studentList.classList.remove('hidden');
+        }
+    });
+    
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+        searchInput.focus();
     });
 </script>
 @endsection
