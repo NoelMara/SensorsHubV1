@@ -11,22 +11,28 @@ use Illuminate\Http\Request;
 
 class ActivityController extends Controller
 {
-    // Show activities for a class (instructor)
     public function index(Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $activities = $class->activities()->latest()->paginate(5);
         return view('admin.classes.activities.index', compact('class', 'activities'));
     }
 
-    // Show create form
     public function create(Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         return view('admin.classes.activities.create', compact('class'));
     }
 
-    // Store activity
     public function store(Request $request, Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -42,7 +48,6 @@ class ActivityController extends Controller
         $activity = Activity::create($validated);
         ActivityLogHelper::log('created', 'activity', "created activity '{$activity->title}' in '{$class->name}'");
 
-        // Send notification if published
         if ($activity->is_published) {
             NotificationHelper::sendToClass(
                 $class->id,
@@ -56,15 +61,19 @@ class ActivityController extends Controller
             ->with('success', 'Activity created!');
     }
 
-    // Show edit form
     public function edit(Classroom $class, Activity $activity)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         return view('admin.classes.activities.edit', compact('class', 'activity'));
     }
 
-    // Update activity
     public function update(Request $request, Classroom $class, Activity $activity)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -75,9 +84,8 @@ class ActivityController extends Controller
         ]);
 
         $validated['is_published'] = $request->has('is_published');
-       $activity->update($validated);
+        $activity->update($validated);
 
-        // Send notification if newly published
         if ($activity->wasChanged('is_published') && $activity->is_published) {
             NotificationHelper::sendToClass(
                 $class->id,
@@ -91,9 +99,26 @@ class ActivityController extends Controller
             ->with('success', 'Activity updated!');
     }
 
-    // Show activity for students
     public function show(Classroom $class, Activity $activity)
     {
+        // Allow instructors to preview
+        if (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) {
+            $submission = ActivitySubmission::where('activity_id', $activity->id)
+                ->where('user_id', auth()->id())
+                ->first();
+            return view('user.classes.activities.show', compact('class', 'activity', 'submission'));
+        }
+        
+        // Students must be enrolled
+        $enrolled = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->exists();
+
+        if (!$enrolled) {
+            abort(403);
+        }
+
         $submission = ActivitySubmission::where('activity_id', $activity->id)
             ->where('user_id', auth()->id())
             ->first();
@@ -101,10 +126,18 @@ class ActivityController extends Controller
         return view('user.classes.activities.show', compact('class', 'activity', 'submission'));
     }
 
-    // Student submit
     public function submit(Request $request, Classroom $class, Activity $activity)
     {
-        // Check if past due date
+            // Students must be enrolled
+        $enrolled = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->exists();
+
+        if (!$enrolled) {
+            abort(403);
+        }
+        
         if ($activity->due_date && now()->isAfter($activity->due_date)) {
             return back()->with('error', 'This activity is past the due date.');
         }
@@ -124,16 +157,20 @@ class ActivityController extends Controller
         return back()->with('success', 'Submission sent!');
     }
 
-    // View submissions (instructor)
     public function submissions(Classroom $class, Activity $activity)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $submissions = $activity->submissions()->with('user')->get();
         return view('admin.classes.activities.submissions', compact('class', 'activity', 'submissions'));
     }
 
-    // Grade submission
     public function grade(Request $request, Classroom $class, Activity $activity, ActivitySubmission $submission)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $validated = $request->validate([
             'score' => 'required|integer|min:0|max:' . $activity->points,
             'feedback' => 'nullable|string',
@@ -155,52 +192,76 @@ class ActivityController extends Controller
         return back()->with('success', 'Submission graded!');
     }
 
-    // Delete activity
     public function destroy(Classroom $class, Activity $activity)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $activity->delete();
         ActivityLogHelper::log('deleted', 'activity', "deleted activity '{$activity->title}'");
         return back()->with('success', 'Activity deleted!');
     }
 
     public function import(Classroom $class)
-{
-    $otherClasses = Classroom::where('instructor_id', auth()->id())
-        ->where('id', '!=', $class->id)
-        ->get();
-    return view('admin.classes.activities.import', compact('class', 'otherClasses'));
-}
-
-public function copyActivities(Request $request, Classroom $class)
-{
-    $request->validate([
-        'from_class' => 'required|exists:classes,id',
-        'activities' => 'required|array',
-    ]);
-
-    $sourceClass = Classroom::where('instructor_id', auth()->id())
-        ->findOrFail($request->from_class);
-
-    $activities = $sourceClass->activities()->whereIn('id', $request->activities)->get();
-
-    foreach ($activities as $activity) {
-        Activity::create([
-            'class_id' => $class->id,
-            'title' => $activity->title,
-            'description' => $activity->description,
-            'instructions' => $activity->instructions,
-            'points' => $activity->points,
-            'due_date' => $activity->due_date,
-            'is_published' => false,
-        ]);
+    {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
+        $otherClasses = Classroom::where('instructor_id', auth()->id())
+            ->where('id', '!=', $class->id)
+            ->get();
+        return view('admin.classes.activities.import', compact('class', 'otherClasses'));
     }
 
-    return redirect()->route('admin.classes.activities.index', $class)
-        ->with('success', count($activities) . ' activities imported!');
+    public function copyActivities(Request $request, Classroom $class)
+    {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
+        $request->validate([
+            'from_class' => 'required|exists:classes,id',
+            'activities' => 'required|array',
+        ]);
+
+        $sourceClass = Classroom::where('instructor_id', auth()->id())
+            ->findOrFail($request->from_class);
+
+        $activities = $sourceClass->activities()->whereIn('id', $request->activities)->get();
+
+        foreach ($activities as $activity) {
+            Activity::create([
+                'class_id' => $class->id,
+                'title' => $activity->title,
+                'description' => $activity->description,
+                'instructions' => $activity->instructions,
+                'points' => $activity->points,
+                'due_date' => $activity->due_date,
+                'is_published' => false,
+            ]);
+        }
+
+        return redirect()->route('admin.classes.activities.index', $class)
+            ->with('success', count($activities) . ' activities imported!');
     }
 
     public function studentIndex(Classroom $class)
     {
+        // Allow instructors to view
+        if (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) {
+            $activities = $class->activities()->where('is_published', true)->latest()->paginate(10);
+            return view('user.classes.activities.index', compact('class', 'activities'));
+        }
+        
+        // Students must be enrolled
+        $enrolled = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->exists();
+
+        if (!$enrolled) {
+            abort(403);
+        }
+
         $activities = $class->activities()->where('is_published', true)->latest()->paginate(10);
         return view('user.classes.activities.index', compact('class', 'activities'));
     }

@@ -41,6 +41,9 @@ class ClassroomController extends Controller
 
     public function show(Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+        abort(403);
+        }
         return view('admin.classes.show', compact('class'));
     }
 
@@ -144,6 +147,9 @@ class ClassroomController extends Controller
 
     public function leaderboard(Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+        abort(403);
+        }
         $students = $class->students()->wherePivot('status', 'approved')->get();
         $activities = $class->activities()->where('is_published', true)->get();
         $totalActivities = $activities->count();

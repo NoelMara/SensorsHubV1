@@ -10,22 +10,28 @@ use Illuminate\Http\Request;
 
 class AnnouncementController extends Controller
 {
-    // Admin: list all announcements for a class
     public function index(Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $announcements = $class->announcements()->latest()->paginate(5);
         return view('admin.classes.announcements.index', compact('class', 'announcements'));
     }
 
-    // Admin: show create form
     public function create(Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         return view('admin.classes.announcements.create', compact('class'));
     }
 
-    // Admin: store
     public function store(Request $request, Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
@@ -51,15 +57,19 @@ class AnnouncementController extends Controller
             ->with('success', 'Announcement posted!');
     }
 
-    // Admin: show edit form
     public function edit(Classroom $class, Announcement $announcement)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         return view('admin.classes.announcements.edit', compact('class', 'announcement'));
     }
 
-    // Admin: update
     public function update(Request $request, Classroom $class, Announcement $announcement)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
@@ -69,7 +79,6 @@ class AnnouncementController extends Controller
         $validated['is_published'] = $request->has('is_published');
         $announcement->update($validated);
 
-        // If changed to published, send notification
         if ($announcement->wasChanged('is_published') && $announcement->is_published) {
             NotificationHelper::sendToClass(
                 $class->id,
@@ -79,7 +88,6 @@ class AnnouncementController extends Controller
             );
         }
 
-        // If changed to draft, delete related notifications
         if ($announcement->wasChanged('is_published') && !$announcement->is_published) {
             Notification::where('link', route('dashboard.classes.announcements.index', $class))
                 ->delete();
@@ -90,16 +98,36 @@ class AnnouncementController extends Controller
             ->with('success', 'Announcement updated!');
     }
 
-    // Admin: delete
     public function destroy(Classroom $class, Announcement $announcement)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $announcement->delete();
         return back()->with('success', 'Announcement deleted!');
     }
 
-    // Student: view announcements
     public function studentIndex(Classroom $class)
     {
+        // Allow instructors to view
+        if (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) {
+            $announcements = $class->announcements()
+                ->where('is_published', true)
+                ->latest()
+                ->paginate(10);
+            return view('user.classes.announcements.index', compact('class', 'announcements'));
+        }
+        
+        // Students must be enrolled
+        $enrolled = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->exists();
+
+        if (!$enrolled) {
+            abort(403);
+        }
+
         $announcements = $class->announcements()
             ->where('is_published', true)
             ->latest()
@@ -107,18 +135,22 @@ class AnnouncementController extends Controller
         return view('user.classes.announcements.index', compact('class', 'announcements'));
     }
 
-        // Admin: import form
     public function import(Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $otherClasses = Classroom::where('instructor_id', auth()->id())
             ->where('id', '!=', $class->id)
             ->get();
         return view('admin.classes.announcements.import', compact('class', 'otherClasses'));
     }
 
-    // Admin: copy announcements
     public function copyAnnouncements(Request $request, Classroom $class)
     {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
         $request->validate([
             'from_class' => 'required|exists:classes,id',
             'announcements' => 'required|array',
