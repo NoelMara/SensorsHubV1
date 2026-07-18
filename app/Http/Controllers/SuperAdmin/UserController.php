@@ -64,9 +64,9 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        // Prevent editing another super admin
+       // Prevent editing another Faculty Head
         if ($user->isSuperAdmin() && !$user->is(auth()->user())) {
-            return back()->with('error', 'You cannot edit another super admin account.');
+            return back()->with('error', 'You cannot edit another Faculty Head account.');
         }
 
         return view('super-admin.users.edit', compact('user'));
@@ -75,7 +75,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         if ($user->isSuperAdmin() && !$user->is(auth()->user())) {
-            return back()->with('error', 'You cannot edit another super admin account.');
+            return back()->with('error', 'You cannot edit another Faculty Head account.');
         }
 
         $validated = $request->validate([
@@ -90,7 +90,7 @@ class UserController extends Controller
             'email' => $validated['email'],
         ];
 
-        // Only update role if provided (not for super admins)
+        // Only update role if provided (not for Faculty Heads)
         if (isset($validated['role'])) {
             $updateData['role'] = $validated['role'];
         }
@@ -128,7 +128,7 @@ class UserController extends Controller
         }
 
         if ($user->isSuperAdmin()) {
-            return back()->with('error', 'Super admin accounts cannot be removed from this screen.');
+            return back()->with('error', 'Faculty Head accounts cannot be removed from this screen.');
         }
 
         $user->delete();

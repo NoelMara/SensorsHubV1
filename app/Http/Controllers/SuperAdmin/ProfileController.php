@@ -59,7 +59,7 @@ class ProfileController extends Controller
             ActivityLogHelper::log('updated', 'profile', "updated their " . implode(' and ', $changes));
         }
 
-        return back()->with('success', 'Super admin profile updated successfully.');
+        return back()->with('success', 'Faculty Head profile updated successfully.');
     }
 
     public function updatePassword(Request $request)
