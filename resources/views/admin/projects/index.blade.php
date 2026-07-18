@@ -10,13 +10,13 @@
 
         <div>
 
-            {{-- Super Admin Back Button --}}
+            {{-- Faculty Head Back Button --}}
             @if(auth()->user()->isSuperAdmin())
                 <a href="{{ route('super-admin.dashboard') }}"
                    class="inline-flex items-center text-sm text-primary hover:underline mb-3">
 
                     <i class="fas fa-arrow-left mr-2"></i>
-                    Back to Super Admin
+                    Back to Faculty Head
                 </a>
             @endif
 
@@ -37,7 +37,7 @@
         {{-- Action Buttons --}}
         <div class="flex flex-wrap gap-3">
 
-            {{-- Logout (Super Admin only) --}}
+            {{-- Logout (Faculty Head only) --}}
             @if(auth()->user()->isSuperAdmin())
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

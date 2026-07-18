@@ -112,7 +112,7 @@ class UserController extends Controller
         ]);
 
         if ($user->is(auth()->user()) && $validated['role'] !== 'super_admin') {
-            return back()->with('error', 'You cannot remove your own super admin access.');
+            return back()->with('error', 'You cannot remove your own Faculty Head access.');
         }
 
         $user->update(['role' => $validated['role']]);

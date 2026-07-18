@@ -101,7 +101,7 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6">
-                    {{-- Super Admin Desktop Menu --}}
+                   {{-- Faculty Head Desktop Menu --}}
                     @if($isSuperAdmin)
                         <div class="relative group">
                             <a href="{{ route('super-admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold flex items-center gap-1">
