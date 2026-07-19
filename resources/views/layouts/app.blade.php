@@ -438,39 +438,46 @@
 
         <script>
         document.addEventListener('DOMContentLoaded', function() {
-            if ('speechSynthesis' in window && !localStorage.getItem('tts_ready')) {
-                // Show a small enable button
-                const btn = document.createElement('button');
-                btn.innerHTML = '<i class="fas fa-volume-up mr-2"></i>Enable Voice';
-                btn.className = 'fixed bottom-4 right-4 z-[9999] bg-primary text-white px-4 py-3 rounded-xl shadow-lg hover:bg-blue-600 transition text-sm font-medium animate-slide-in';
-                btn.onclick = function() {
+            if ('speechSynthesis' in window) {
+                const speak = function() {
                     const msg = new SpeechSynthesisUtterance();
                     @auth
-                        msg.text = "Welcome back, {{ auth()->user()->name }}.";
+                        const hour = new Date().getHours();
+                        let greeting = hour < 12 ? 'Good morning' : (hour < 18 ? 'Good afternoon' : 'Good evening');
+                        msg.text = greeting + ", {{ auth()->user()->name }}. Welcome back to SensorHub. You have {{ auth()->user()->unreadNotifications->count() }} unread notifications. Happy building!";
                     @else
-                        msg.text = "Welcome to SensorHub. Learn sensors, build projects, and share ideas with the community.";
+                        msg.text = "Welcome to SensorHub! Learn sensors, build projects, and share ideas with the community. Sign up to join classes, submit activities, and explore sensor tutorials.";
                     @endauth
                     msg.rate = 0.9;
-                    msg.pitch = 1;
-                    msg.volume = 0.8;
+                    msg.pitch = 1.1;
+                    msg.volume = 0.9;
+                    window.speechSynthesis.cancel();
                     window.speechSynthesis.speak(msg);
-                    btn.remove();
-                    localStorage.setItem('tts_ready', 'true');
                 };
-                document.body.appendChild(btn);
-                // Auto-remove after 15 seconds if not clicked
-                setTimeout(() => { if (btn.parentNode) btn.remove(); }, 15000);
-            } else if ('speechSynthesis' in window && localStorage.getItem('tts_ready')) {
-                // Already enabled - speak immediately
-                const msg = new SpeechSynthesisUtterance();
-                @auth
-                    msg.text = "Welcome back, {{ auth()->user()->name }}.";
-                @else
-                    msg.text = "Welcome to SensorHub.";
-                @endauth
-                msg.rate = 0.9;
-                msg.volume = 0.8;
-                window.speechSynthesis.speak(msg);
+
+                if (!localStorage.getItem('tts_ready')) {
+                    const btn = document.createElement('button');
+                    btn.innerHTML = '<i class="fas fa-volume-up mr-2"></i>Enable Voice';
+                    btn.className = 'fixed bottom-4 right-4 z-[9999] bg-primary text-white px-4 py-3 rounded-xl shadow-lg hover:bg-blue-600 transition text-sm font-medium animate-slide-in';
+                    btn.onclick = function() {
+                        speak();
+                        btn.remove();
+                        localStorage.setItem('tts_ready', 'true');
+                    };
+                    document.body.appendChild(btn);
+                    setTimeout(() => { if (btn.parentNode) btn.remove(); }, 20000);
+                } else {
+                    // Add small replay button
+                    const replay = document.createElement('button');
+                    replay.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    replay.className = 'fixed bottom-4 right-4 z-[9999] bg-gray-800/90 dark:bg-gray-200/90 text-white dark:text-gray-800 w-10 h-10 rounded-full shadow-lg hover:scale-110 transition text-sm';
+                    replay.title = 'Replay welcome';
+                    replay.onclick = function() { speak(); };
+                    document.body.appendChild(replay);
+                    setTimeout(() => { if (replay.parentNode) replay.remove(); }, 10000);
+                    // Auto-speak
+                    speak();
+                }
             }
         });
     </script>
