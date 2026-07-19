@@ -91,8 +91,8 @@
     </div>
 
     {{-- Students List --}}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="px-4 sm:px-6 py-3 border-b border-gray-200 dark:border-gray-700 space-y-3">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700 space-y-3">
             <div class="flex items-center justify-between">
                 <h2 class="text-base font-bold text-gray-900 dark:text-white">Students ({{ $class->students->count() }})</h2>
                 @if($pending > 0)
@@ -104,7 +104,6 @@
                     </form>
                 @endif
             </div>
-            {{-- Search --}}
             <div class="relative">
                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
                 <input type="text" id="studentSearch" placeholder="Search students..." 
@@ -125,18 +124,16 @@
                         $submittedCount = $submissions->whereNotNull('submitted_at')->count();
                         $totalActivities = $class->activities()->count();
                     @endphp
-                    <div class="student-row px-4 sm:px-6 py-3 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition" data-name="{{ strtolower($student->name) }}">
-                        {{-- Avatar + Name --}}
+                    <div class="student-row px-5 py-3 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition" data-name="{{ strtolower($student->name) }}">
                         <div class="flex items-center gap-3 min-w-0 flex-1">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                                <span class="text-xs font-semibold text-gray-500 dark:text-gray-400">{{ strtoupper(substr($student->name, 0, 1)) }}</span>
+                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                {{ strtoupper(substr($student->name, 0, 1)) }}
                             </div>
                             <div class="min-w-0">
                                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $student->name }}</p>
                             </div>
                         </div>
 
-                        {{-- Progress --}}
                         @if($student->pivot->status === 'approved' && $totalActivities > 0)
                             <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
                                 <div class="flex items-center gap-1.5">
@@ -151,10 +148,9 @@
                             <span class="hidden sm:block text-xs text-gray-400 dark:text-gray-500">No activities yet</span>
                         @endif
 
-                        {{-- Status + Actions --}}
                         <div class="flex items-center gap-2 flex-shrink-0">
                             @if($student->pivot->status === 'pending')
-                                <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300">Pending</span>
+                                <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">Pending</span>
                                 <form action="{{ route('admin.classes.approve', [$class, $student->id]) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="p-1.5 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition" title="Approve">
@@ -162,7 +158,7 @@
                                     </button>
                                 </form>
                             @else
-                                <span class="hidden sm:inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300">Approved</span>
+                                <span class="hidden sm:inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Approved</span>
                             @endif
                             <form action="{{ route('admin.classes.reject', [$class, $student->id]) }}" method="POST"
                                 onsubmit="return confirm('Remove this student?');">
@@ -176,14 +172,18 @@
                 @endforeach
             </div>
             <div id="noResults" class="hidden py-16 text-center">
-                <i class="fas fa-search text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
-                <h3 class="text-lg font-bold text-gray-600 dark:text-gray-400">No Students Found</h3>
+                <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-search text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-base font-semibold text-gray-600 dark:text-gray-400">No Students Found</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">No students match your search.</p>
             </div>
         @else
             <div class="py-16 text-center">
-                <i class="fas fa-users text-4xl text-gray-300 dark:text-gray-600 mb-3"></i>
-                <h3 class="text-lg font-bold text-gray-600 dark:text-gray-400">No Students Yet</h3>
+                <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-2xl text-gray-400"></i>
+                </div>
+                <h3 class="text-base font-semibold text-gray-600 dark:text-gray-400">No Students Yet</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Share the class code above to get started!</p>
             </div>
         @endif
