@@ -440,7 +440,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             if ('speechSynthesis' in window) {
                 const speak = function() {
+                    window.speechSynthesis.cancel();
                     const msg = new SpeechSynthesisUtterance();
+                    
+                    // Try to get a better voice
+                    const voices = window.speechSynthesis.getVoices();
+                    const preferred = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel')) || voices[0];
+                    if (preferred) msg.voice = preferred;
+                    
                     @auth
                         const hour = new Date().getHours();
                         let greeting = hour < 12 ? 'Good morning' : (hour < 18 ? 'Good afternoon' : 'Good evening');
@@ -448,11 +455,15 @@
                     @else
                         msg.text = "Welcome to SensorHub! Learn sensors, build projects, and share ideas with the community. Sign up to join classes, submit activities, and explore sensor tutorials.";
                     @endauth
-                    msg.rate = 0.9;
-                    msg.pitch = 1.1;
+                    msg.rate = 0.85;
+                    msg.pitch = 1;
                     msg.volume = 0.9;
-                    window.speechSynthesis.cancel();
                     window.speechSynthesis.speak(msg);
+                };
+
+                // Load voices first
+                window.speechSynthesis.onvoiceschanged = function() {
+                    window.speechSynthesis.getVoices();
                 };
 
                 if (!localStorage.getItem('tts_ready')) {
@@ -467,17 +478,16 @@
                     document.body.appendChild(btn);
                     setTimeout(() => { if (btn.parentNode) btn.remove(); }, 20000);
                 } else {
-                    // Add small replay button
-                    const replay = document.createElement('button');
-                    replay.innerHTML = '<i class="fas fa-volume-up"></i>';
-                    replay.className = 'fixed bottom-4 right-4 z-[9999] bg-gray-800/90 dark:bg-gray-200/90 text-white dark:text-gray-800 w-10 h-10 rounded-full shadow-lg hover:scale-110 transition text-sm';
-                    replay.title = 'Replay welcome';
-                    replay.onclick = function() { speak(); };
-                    document.body.appendChild(replay);
-                    setTimeout(() => { if (replay.parentNode) replay.remove(); }, 10000);
-                    // Auto-speak
                     speak();
                 }
+
+                // Replay on Ctrl+Space
+                document.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey && e.code === 'Space') {
+                        e.preventDefault();
+                        speak();
+                    }
+                });
             }
         });
     </script>
