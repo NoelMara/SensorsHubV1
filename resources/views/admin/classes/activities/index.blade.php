@@ -27,71 +27,65 @@
     @if($activities->count() > 0)
         <div class="space-y-4">
             @foreach($activities as $index => $activity)
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 sm:p-6">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5">
                     <div class="flex gap-3">
-                        {{-- Activity Number --}}
                         <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-500 dark:text-gray-400 mt-0.5">
                             {{ $index + 1 }}
                         </div>
 
-                        {{-- Activity Info --}}
                         <div class="flex-1 min-w-0">
-                            <div class="flex items-center gap-2 flex-wrap mb-1">
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white truncate" title="{{ $activity->title }}">
-                                    {{ Str::limit($activity->title, 60) }}
-                                </h3>
+                            <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white truncate mb-1.5" title="{{ $activity->title }}">
+                                {{ Str::limit($activity->title, 60) }}
+                            </h3>
+                            <div class="flex items-center gap-2 flex-wrap mb-1.5">
                                 @if($activity->is_published)
-                                    <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 flex-shrink-0">Published</span>
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Published</span>
                                 @else
-                                    <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300 flex-shrink-0">Draft</span>
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">Draft</span>
                                 @endif
-                                @if($activity->due_date)
-                                    @if($activity->due_date->isPast())
-                                        <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300 flex-shrink-0">Overdue</span>
-                                    @elseif($activity->due_date->diffInDays(now()) <= 2)
-                                        <span class="px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300 flex-shrink-0">Due Soon</span>
-                                    @endif
+                                @if($activity->due_date && $activity->due_date->isPast())
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300">Overdue</span>
+                                @elseif($activity->due_date && $activity->due_date->diffInDays(now()) <= 2)
+                                    <span class="px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">Due Soon</span>
                                 @endif
                             </div>
                             @if($activity->description)
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1 line-clamp-1">{{ Str::limit($activity->description, 120) }}</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1.5 line-clamp-1">{{ Str::limit($activity->description, 120) }}</p>
                             @endif
-                            <div class="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
-                                <span><i class="fas fa-star text-yellow-500 mr-1"></i> {{ $activity->points }} pts</span>
+                            <div class="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400 flex-wrap">
+                                <span><i class="fas fa-star text-yellow-500 mr-1"></i>{{ $activity->points }} pts</span>
                                 @if($activity->due_date)
-                                    <span><i class="fas fa-clock mr-1"></i> Due: {{ $activity->due_date->format('M d, Y h:i A') }}</span>
+                                    <span><i class="fas fa-clock mr-1"></i>Due: {{ $activity->due_date->format('M d') }}</span>
                                 @else
-                                    <span class="text-gray-400"><i class="fas fa-clock mr-1"></i> No deadline</span>
+                                    <span class="text-gray-400 dark:text-gray-500"><i class="fas fa-clock mr-1"></i>No deadline</span>
                                 @endif
-                                <span><i class="fas fa-users mr-1"></i> {{ $activity->submissions->count() }} submitted</span>
+                                <span><i class="fas fa-users mr-1"></i>{{ $activity->submissions->count() }}</span>
                             </div>
                         </div>
 
-                        {{-- Actions --}}
-                        <div class="flex items-center gap-1 flex-shrink-0">
+                        <div class="flex sm:flex-col items-center gap-0.5 sm:gap-1 flex-shrink-0">
                             <a href="{{ route('admin.classes.activities.show', [$class, $activity]) }}" 
-                               class="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
-                               title="Preview Activity">
-                                <i class="fas fa-eye"></i>
+                               class="p-1.5 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
+                               title="Preview">
+                                <i class="fas fa-eye text-sm"></i>
                             </a>
                             <a href="{{ route('admin.classes.activities.edit', [$class, $activity]) }}" 
-                               class="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
-                               title="Edit Activity">
-                                <i class="fas fa-edit"></i>
+                               class="p-1.5 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
+                               title="Edit">
+                                <i class="fas fa-edit text-sm"></i>
                             </a>
                             <a href="{{ route('admin.classes.activities.submissions', [$class, $activity]) }}" 
-                               class="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
-                               title="View Submissions">
-                                <i class="fas fa-users"></i>
+                               class="p-1.5 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
+                               title="Submissions">
+                                <i class="fas fa-users text-sm"></i>
                             </a>
-                            <form action="{{ route('admin.classes.activities.destroy', [$class, $activity]) }}" 
-                                  method="POST"
-                                  onsubmit="return confirm('Are you sure you want to delete this activity?');">
+                            <form action="{{ route('admin.classes.activities.destroy', [$class, $activity]) }}" method="POST"
+                                onsubmit="return confirm('Delete this activity?');">
                                 @csrf @method('DELETE')
                                 <button type="submit" 
-                                        class="p-2 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition"
-                                        title="Delete Activity">
-                                    <i class="fas fa-trash"></i>
+                                        class="p-1.5 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition"
+                                        title="Delete">
+                                    <i class="fas fa-trash text-sm"></i>
                                 </button>
                             </form>
                         </div>
