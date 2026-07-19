@@ -479,79 +479,78 @@
         }
 
         // ==========================
-        // Audio Button
+        // Audio Button (dimmed, mobile-friendly)
         // ==========================
+        const style = document.createElement('style');
+        style.textContent = `
+            .audio-btn {
+                position:fixed;
+                bottom:16px;
+                right:16px;
+                z-index:9999;
+                background:rgba(59,130,246,0.75);
+                backdrop-filter:blur(8px);
+                color:white;
+                width:40px;
+                height:40px;
+                border-radius:50%;
+                border:1px solid rgba(255,255,255,0.15);
+                cursor:pointer;
+                box-shadow:0 4px 12px rgba(59,130,246,0.3);
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                font-size:14px;
+                transition:all 0.3s ease;
+                opacity:0.5;
+            }
+            .audio-btn:hover, .audio-btn:focus {
+                opacity:1;
+                transform:scale(1.1);
+                box-shadow:0 8px 20px rgba(59,130,246,0.5);
+            }
+            .audio-btn.playing {
+                animation: audioPulse 2s infinite;
+                opacity:1;
+            }
+            @keyframes audioPulse {
+                0%, 100% { box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+                50% { box-shadow: 0 4px 20px rgba(59,130,246,0.7), 0 0 0 6px rgba(59,130,246,0.1); }
+            }
+            @media (max-width: 640px) {
+                .audio-btn {
+                    width: 34px;
+                    height: 34px;
+                    bottom: 12px;
+                    right: 12px;
+                    font-size: 12px;
+                    opacity:0.45;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
         const btn = document.createElement('button');
         btn.className = 'audio-btn';
         btn.innerHTML = '<i class="fas fa-volume-up"></i>';
         btn.title = "Play Welcome Message";
-        
-        btn.style.cssText = `
-            position:fixed;
-            bottom:24px;
-            right:24px;
-            z-index:9999;
-            background:rgba(59,130,246,0.9);
-            backdrop-filter:blur(8px);
-            color:white;
-            width:48px;
-            height:48px;
-            border-radius:50%;
-            border:2px solid rgba(255,255,255,0.2);
-            cursor:pointer;
-            box-shadow:0 8px 24px rgba(59,130,246,0.4);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:18px;
-            transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
-            opacity:1;
-        `;
 
-        // Hover effect
-        btn.onmouseenter = function() { 
-            btn.style.transform = 'scale(1.1)'; 
-            btn.style.boxShadow = '0 12px 28px rgba(59,130,246,0.5)';
-        };
-        btn.onmouseleave = function() { 
-            btn.style.transform = 'scale(1)'; 
-            btn.style.boxShadow = '0 8px 24px rgba(59,130,246,0.4)';
-        };
-
-        // Pulse animation when playing
-        let pulseInterval;
         function startPulse() {
-            btn.style.animation = 'audioPulse 2s infinite';
-            btn.innerHTML = '<i class="fas fa-volume-up"></i><span style="position:absolute;top:-4px;right:-4px;width:12px;height:12px;background:#EF4444;border-radius:50%;border:2px solid white;"></span>';
+            btn.classList.add('playing');
             btn.title = "Stop Audio";
-            btn.style.background = 'rgba(59,130,246,0.9)';
         }
         function stopPulse() {
-            btn.style.animation = '';
-            btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            btn.classList.remove('playing');
             btn.title = "Play Welcome Message";
-            btn.style.background = 'rgba(59,130,246,0.9)';
         }
-
-        // Add pulse keyframe
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes audioPulse {
-                0%, 100% { box-shadow: 0 8px 24px rgba(59,130,246,0.4); }
-                50% { box-shadow: 0 8px 32px rgba(59,130,246,0.7), 0 0 0 8px rgba(59,130,246,0.1); }
-            }
-        `;
-        document.head.appendChild(style);
 
         btn.addEventListener('click', function () {
             if (audio.paused) {
                 audio.currentTime = 0;
                 audio.play();
-                startPulse();
             } else {
                 audio.pause();
                 audio.currentTime = 0;
-                stopPulse();
             }
         });
 
