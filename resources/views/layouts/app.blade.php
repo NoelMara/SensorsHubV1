@@ -435,24 +435,44 @@
     </script>
 
     @stack('scripts')
+
         <script>
-        // Text-to-Speech Welcome - only on first visit
         document.addEventListener('DOMContentLoaded', function() {
-            if ('speechSynthesis' in window && !sessionStorage.getItem('welcomed')) {
+            if ('speechSynthesis' in window && !localStorage.getItem('tts_ready')) {
+                // Show a small enable button
+                const btn = document.createElement('button');
+                btn.innerHTML = '<i class="fas fa-volume-up mr-2"></i>Enable Voice';
+                btn.className = 'fixed bottom-4 right-4 z-[9999] bg-primary text-white px-4 py-3 rounded-xl shadow-lg hover:bg-blue-600 transition text-sm font-medium animate-slide-in';
+                btn.onclick = function() {
+                    const msg = new SpeechSynthesisUtterance();
+                    @auth
+                        msg.text = "Welcome back, {{ auth()->user()->name }}.";
+                    @else
+                        msg.text = "Welcome to SensorHub. Learn sensors, build projects, and share ideas with the community.";
+                    @endauth
+                    msg.rate = 0.9;
+                    msg.pitch = 1;
+                    msg.volume = 0.8;
+                    window.speechSynthesis.speak(msg);
+                    btn.remove();
+                    localStorage.setItem('tts_ready', 'true');
+                };
+                document.body.appendChild(btn);
+                // Auto-remove after 15 seconds if not clicked
+                setTimeout(() => { if (btn.parentNode) btn.remove(); }, 15000);
+            } else if ('speechSynthesis' in window && localStorage.getItem('tts_ready')) {
+                // Already enabled - speak immediately
                 const msg = new SpeechSynthesisUtterance();
                 @auth
                     msg.text = "Welcome back, {{ auth()->user()->name }}.";
                 @else
-                    msg.text = "Welcome to SensorHub. Learn sensors, build projects, and share ideas with the community.";
+                    msg.text = "Welcome to SensorHub.";
                 @endauth
                 msg.rate = 0.9;
-                msg.pitch = 1;
                 msg.volume = 0.8;
                 window.speechSynthesis.speak(msg);
-                sessionStorage.setItem('welcomed', 'true');
             }
         });
     </script>
-    
 </body>
 </html>
