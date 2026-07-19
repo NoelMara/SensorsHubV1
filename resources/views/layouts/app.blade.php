@@ -439,9 +439,17 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        @auth
-            const audioSrc = "{{ asset('audio/welcome-back.mp3') }}";
-            const storageKey = 'welcome_back_played';
+         @auth
+            @if(auth()->user()->isSuperAdmin())
+                const audioSrc = "{{ asset('audio/welcome-faculty.mp3') }}";
+                const storageKey = 'welcome_faculty_played';
+            @elseif(auth()->user()->isAdmin())
+                const audioSrc = "{{ asset('audio/welcome-instructor.mp3') }}";
+                const storageKey = 'welcome_instructor_played';
+            @else
+                const audioSrc = "{{ asset('audio/welcome-back.mp3') }}";
+                const storageKey = 'welcome_back_played';
+            @endif
         @else
             const audioSrc = "{{ asset('audio/welcome-guest.mp3') }}";
             const storageKey = 'welcome_guest_played';
