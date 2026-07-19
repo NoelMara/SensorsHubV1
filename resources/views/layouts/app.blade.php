@@ -447,45 +447,22 @@
         const audio = new Audio(audioSrc);
         audio.volume = 0.8;
 
-        // Create button (hidden initially)
+        // Replay button
         const btn = document.createElement('button');
-        btn.id = 'voiceBtn';
         btn.innerHTML = '<i class="fas fa-volume-up"></i>';
-        btn.title = 'Replay welcome message';
-        btn.className = 'fixed bottom-4 right-4 z-[9999] bg-gray-900/80 dark:bg-white/80 text-white dark:text-gray-800 w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center opacity-0';
-        btn.onclick = function() {
-            if (!audio.paused) {
-                audio.pause();
-                audio.currentTime = 0;
-                btn.classList.add('opacity-0');
-                btn.classList.remove('opacity-100');
-            } else {
-                audio.play().then(() => {
-                    btn.classList.add('opacity-100');
-                    btn.classList.remove('opacity-0');
-                });
-                audio.onended = function() {
-                    btn.classList.add('opacity-0');
-                    btn.classList.remove('opacity-100');
-                };
-            }
+        btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;background:#3B82F6;color:white;width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;';
+        btn.onclick = function() { 
+            audio.currentTime = 0; 
+            audio.play(); 
         };
         document.body.appendChild(btn);
 
-        // Only auto-play if user hasn't heard it this session
+        // Try autoplay once per session
         if (!sessionStorage.getItem('welcome_played')) {
-            audio.play().then(() => {
-                btn.classList.add('opacity-100');
-                btn.classList.remove('opacity-0');
+            audio.play().then(function() {
                 sessionStorage.setItem('welcome_played', 'true');
-                audio.onended = function() {
-                    btn.classList.add('opacity-0');
-                    btn.classList.remove('opacity-100');
-                };
-            }).catch(() => {
-                // If autoplay blocked, show button
-                btn.classList.add('opacity-100');
-                btn.classList.remove('opacity-0');
+            }).catch(function() {
+                console.log('Click the blue button to hear welcome');
             });
         }
     });
