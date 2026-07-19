@@ -436,19 +436,47 @@
 
     @stack('scripts')
 
-    @stack('scripts')
-
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
         @auth
             const audioSrc = "{{ asset('audio/welcome-back.mp3') }}";
+            const storageKey = 'welcome_back_played';
         @else
             const audioSrc = "{{ asset('audio/welcome-guest.mp3') }}";
+            const storageKey = 'welcome_guest_played';
         @endauth
 
         const audio = new Audio(audioSrc);
         audio.volume = 0.8;
+
+        let hasPlayed = false;
+
+        function cleanup() {
+            document.removeEventListener('click', playWelcome);
+            document.removeEventListener('keydown', playWelcome);
+            document.removeEventListener('touchstart', playWelcome);
+        }
+
+        function playWelcome() {
+
+            if (hasPlayed) return;
+
+            hasPlayed = true;
+
+            audio.currentTime = 0;
+
+            audio.play()
+                .then(() => {
+                    sessionStorage.setItem(storageKey, 'true');
+                    cleanup();
+                    console.log("Welcome played.");
+                })
+                .catch(err => {
+                    hasPlayed = false;
+                    console.error(err);
+                });
+        }
 
         // ==========================
         // Replay Button
@@ -484,34 +512,18 @@
         document.body.appendChild(btn);
 
         // ==========================
-        // Play Welcome Once
+        // First-time welcome
         // ==========================
-        if (!sessionStorage.getItem('welcome_played')) {
+        if (!sessionStorage.getItem(storageKey)) {
 
-            function playWelcome() {
-
-                audio.play()
-                    .then(() => {
-                        console.log("Welcome audio played.");
-                        sessionStorage.setItem('welcome_played', 'true');
-
-                        document.removeEventListener('click', playWelcome);
-                        document.removeEventListener('keydown', playWelcome);
-                        document.removeEventListener('touchstart', playWelcome);
-                    })
-                    .catch(err => {
-                        console.log("Playback failed:", err);
-                    });
-            }
-
-            // Try autoplay first
             audio.play()
                 .then(() => {
+                    hasPlayed = true;
+                    sessionStorage.setItem(storageKey, 'true');
                     console.log("Autoplay succeeded.");
-                    sessionStorage.setItem('welcome_played', 'true');
                 })
                 .catch(() => {
-                    console.log("Autoplay blocked. Waiting for user interaction...");
+                    console.log("Autoplay blocked.");
 
                     document.addEventListener('click', playWelcome, { once: true });
                     document.addEventListener('keydown', playWelcome, { once: true });
