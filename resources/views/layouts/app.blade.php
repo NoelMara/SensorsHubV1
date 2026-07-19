@@ -89,7 +89,7 @@
                     <a href="{{ route($homeRoute) }}" class="flex items-center space-x-2 min-w-0">
                         <i class="fas fa-microchip text-2xl sm:text-3xl text-primary shrink-0"></i>
                         <div>
-                            <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorHub</span>
+                            <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorsHub</span>
                             @if($isSuperAdmin)
                                 <span class="text-xs text-primary font-semibold">Faculty Head</span>
                             @elseif($isAdmin)
@@ -348,7 +348,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
                     <h3 class="text-2xl font-bold mb-4 flex items-center">
-                        <i class="fas fa-microchip mr-2"></i> SensorHub
+                        <i class="fas fa-microchip mr-2"></i> SensorsHub
                     </h3>
                     <p class="text-gray-400">Learn Sensors. Build Projects. Share Ideas.</p>
                 </div>
@@ -379,7 +379,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} SensorHub. All rights reserved.</p>
+                <p>&copy; {{ date('Y') }} SensorsHub. All rights reserved.</p>
             </div>
         </div>
     </footer>
