@@ -436,8 +436,6 @@
 
     @stack('scripts')
 
-        @stack('scripts')
-
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         @auth
