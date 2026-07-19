@@ -479,12 +479,11 @@
         }
 
         // ==========================
-        // Replay Button
+        // Smart Audio Button
         // ==========================
         const btn = document.createElement('button');
-        btn.innerHTML = '<i class="fas fa-volume-up"></i>';
-        btn.title = "Replay Welcome";
-
+        btn.title = "Play Welcome";
+        
         btn.style.cssText = `
             position:fixed;
             bottom:20px;
@@ -502,12 +501,35 @@
             align-items:center;
             justify-content:center;
             font-size:16px;
+            transition: all 0.2s;
         `;
 
+        function updateButton() {
+            if (audio.paused) {
+                btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                btn.title = "Play Welcome";
+                btn.style.background = '#3B82F6';
+            } else {
+                btn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                btn.title = "Stop Audio";
+                btn.style.background = '#EF4444';
+            }
+        }
+
         btn.addEventListener('click', function () {
-            audio.currentTime = 0;
-            audio.play();
+            if (audio.paused) {
+                audio.currentTime = 0;
+                audio.play();
+            } else {
+                audio.pause();
+                audio.currentTime = 0;
+            }
+            updateButton();
         });
+
+        audio.addEventListener('play', updateButton);
+        audio.addEventListener('pause', updateButton);
+        audio.addEventListener('ended', updateButton);
 
         document.body.appendChild(btn);
 
