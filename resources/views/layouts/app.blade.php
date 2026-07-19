@@ -436,8 +436,11 @@
 
     @stack('scripts')
 
+    @stack('scripts')
+
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
+
         @auth
             const audioSrc = "{{ asset('audio/welcome-back.mp3') }}";
         @else
@@ -447,24 +450,76 @@
         const audio = new Audio(audioSrc);
         audio.volume = 0.8;
 
-        // Replay button
+        // ==========================
+        // Replay Button
+        // ==========================
         const btn = document.createElement('button');
         btn.innerHTML = '<i class="fas fa-volume-up"></i>';
-        btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;background:#3B82F6;color:white;width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:16px;';
-        btn.onclick = function() { 
-            audio.currentTime = 0; 
-            audio.play(); 
-        };
+        btn.title = "Replay Welcome";
+
+        btn.style.cssText = `
+            position:fixed;
+            bottom:20px;
+            right:20px;
+            z-index:9999;
+            background:#3B82F6;
+            color:white;
+            width:44px;
+            height:44px;
+            border-radius:50%;
+            border:none;
+            cursor:pointer;
+            box-shadow:0 4px 12px rgba(0,0,0,.3);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:16px;
+        `;
+
+        btn.addEventListener('click', function () {
+            audio.currentTime = 0;
+            audio.play();
+        });
+
         document.body.appendChild(btn);
 
-        // Try autoplay once per session
+        // ==========================
+        // Play Welcome Once
+        // ==========================
         if (!sessionStorage.getItem('welcome_played')) {
-            audio.play().then(function() {
-                sessionStorage.setItem('welcome_played', 'true');
-            }).catch(function() {
-                console.log('Click the blue button to hear welcome');
-            });
+
+            function playWelcome() {
+
+                audio.play()
+                    .then(() => {
+                        console.log("Welcome audio played.");
+                        sessionStorage.setItem('welcome_played', 'true');
+
+                        document.removeEventListener('click', playWelcome);
+                        document.removeEventListener('keydown', playWelcome);
+                        document.removeEventListener('touchstart', playWelcome);
+                    })
+                    .catch(err => {
+                        console.log("Playback failed:", err);
+                    });
+            }
+
+            // Try autoplay first
+            audio.play()
+                .then(() => {
+                    console.log("Autoplay succeeded.");
+                    sessionStorage.setItem('welcome_played', 'true');
+                })
+                .catch(() => {
+                    console.log("Autoplay blocked. Waiting for user interaction...");
+
+                    document.addEventListener('click', playWelcome, { once: true });
+                    document.addEventListener('keydown', playWelcome, { once: true });
+                    document.addEventListener('touchstart', playWelcome, { once: true });
+                });
+
         }
+
     });
     </script>
 </body>
