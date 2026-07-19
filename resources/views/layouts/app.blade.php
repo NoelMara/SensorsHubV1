@@ -435,5 +435,24 @@
     </script>
 
     @stack('scripts')
+        <script>
+        // Text-to-Speech Welcome - only on first visit
+        document.addEventListener('DOMContentLoaded', function() {
+            if ('speechSynthesis' in window && !sessionStorage.getItem('welcomed')) {
+                const msg = new SpeechSynthesisUtterance();
+                @auth
+                    msg.text = "Welcome back, {{ auth()->user()->name }}.";
+                @else
+                    msg.text = "Welcome to SensorHub. Learn sensors, build projects, and share ideas with the community.";
+                @endauth
+                msg.rate = 0.9;
+                msg.pitch = 1;
+                msg.volume = 0.8;
+                window.speechSynthesis.speak(msg);
+                sessionStorage.setItem('welcomed', 'true');
+            }
+        });
+    </script>
+    
 </body>
 </html>
