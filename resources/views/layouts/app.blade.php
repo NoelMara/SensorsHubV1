@@ -437,59 +437,50 @@
     @stack('scripts')
 
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if ('speechSynthesis' in window) {
-                const speak = function() {
-                    window.speechSynthesis.cancel();
-                    const msg = new SpeechSynthesisUtterance();
-                    
-                    // Try to get a better voice
-                    const voices = window.speechSynthesis.getVoices();
-                    const preferred = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel')) || voices[0];
-                    if (preferred) msg.voice = preferred;
-                    
-                    @auth
-                        const hour = new Date().getHours();
-                        let greeting = hour < 12 ? 'Good morning' : (hour < 18 ? 'Good afternoon' : 'Good evening');
-                        msg.text = greeting + ", {{ auth()->user()->name }}. Welcome back to SensorHub. You have {{ auth()->user()->unreadNotifications->count() }} unread notifications. Happy building!";
-                    @else
-                        msg.text = "Welcome to SensorHub! Learn sensors, build projects, and share ideas with the community. Sign up to join classes, submit activities, and explore sensor tutorials.";
-                    @endauth
-                    msg.rate = 0.85;
-                    msg.pitch = 1;
-                    msg.volume = 0.9;
-                    window.speechSynthesis.speak(msg);
-                };
+document.addEventListener('DOMContentLoaded', function() {
+    if (!('speechSynthesis' in window)) return;
 
-                // Load voices first
-                window.speechSynthesis.onvoiceschanged = function() {
-                    window.speechSynthesis.getVoices();
-                };
+    const speak = function() {
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance();
 
-                if (!localStorage.getItem('tts_ready')) {
-                    const btn = document.createElement('button');
-                    btn.innerHTML = '<i class="fas fa-volume-up mr-2"></i>Enable Voice';
-                    btn.className = 'fixed bottom-4 right-4 z-[9999] bg-primary text-white px-4 py-3 rounded-xl shadow-lg hover:bg-blue-600 transition text-sm font-medium animate-slide-in';
-                    btn.onclick = function() {
-                        speak();
-                        btn.remove();
-                        localStorage.setItem('tts_ready', 'true');
-                    };
-                    document.body.appendChild(btn);
-                    setTimeout(() => { if (btn.parentNode) btn.remove(); }, 20000);
-                } else {
-                    speak();
-                }
+        const voices = window.speechSynthesis.getVoices();
+        const preferred = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel')) || voices[0];
+        if (preferred) msg.voice = preferred;
 
-                // Replay on Ctrl+Space
-                document.addEventListener('keydown', function(e) {
-                    if (e.ctrlKey && e.code === 'Space') {
-                        e.preventDefault();
-                        speak();
-                    }
-                });
-            }
-        });
-    </script>
+        @auth
+            const hour = new Date().getHours();
+            let greeting = hour < 12 ? 'Good morning' : (hour < 18 ? 'Good afternoon' : 'Good evening');
+            msg.text = greeting + ", {{ auth()->user()->name }}. Welcome back to SensorHub. You have {{ auth()->user()->unreadNotifications->count() }} unread notifications. Happy building!";
+        @else
+            msg.text = "Welcome to SensorHub! Learn sensors, build projects, and share ideas with the community.";
+        @endauth
+
+        msg.rate = 0.85;
+        msg.pitch = 1;
+        msg.volume = 0.9;
+        window.speechSynthesis.speak(msg);
+    };
+
+    window.speechSynthesis.onvoiceschanged = function() {
+        window.speechSynthesis.getVoices();
+    };
+
+    // Always-visible floating voice button — works on desktop AND mobile
+    const btn = document.createElement('button');
+    btn.id = 'voiceBtn';
+    btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    btn.title = 'Play voice greeting';
+    btn.className = 'fixed bottom-4 right-4 z-[9999] bg-primary text-white w-12 h-12 rounded-full shadow-lg hover:bg-blue-600 transition flex items-center justify-center';
+    btn.onclick = function() {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+        } else {
+            speak();
+        }
+    };
+    document.body.appendChild(btn);
+});
+</script>
 </body>
 </html>
