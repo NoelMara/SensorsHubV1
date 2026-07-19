@@ -54,6 +54,7 @@ class ModuleController extends Controller
             if ($response->successful()) {
                 $validated['file_path'] = env('SUPABASE_URL') . '/storage/v1/object/public/modules/' . $fileName;
                 $validated['file_name'] = $file->getClientOriginalName();
+                $validated['file_size'] = $file->getSize();  
             }
         }
 
@@ -125,6 +126,7 @@ class ModuleController extends Controller
             if ($response->successful()) {
                 $validated['file_path'] = env('SUPABASE_URL') . '/storage/v1/object/public/modules/' . $fileName;
                 $validated['file_name'] = $file->getClientOriginalName();
+                $validated['file_size'] = $file->getSize();  
             }
         }
 
@@ -179,12 +181,13 @@ class ModuleController extends Controller
         $modules = $sourceClass->modules()->whereIn('id', $request->modules)->get();
 
         foreach ($modules as $module) {
-            Module::create([
+           Module::create([
                 'class_id' => $class->id,
                 'title' => $module->title,
                 'content' => $module->content,
                 'file_path' => $module->file_path,
                 'file_name' => $module->file_name,
+                'file_size' => $module->file_size, 
                 'order' => $class->modules()->count() + 1,
                 'is_published' => false,
             ]);

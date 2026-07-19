@@ -14,6 +14,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('content')->nullable();
             $table->string('file_path')->nullable();
+            $table->string('file_name')->nullable();
+            $table->bigInteger('file_size')->nullable();
             $table->integer('order')->default(0);
             $table->boolean('is_published')->default(false);
             $table->timestamps();

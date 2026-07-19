@@ -29,12 +29,10 @@
             @foreach($modules as $module)
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 sm:p-6">
                     <div class="flex gap-3">
-                        {{-- Module Order Number --}}
                         <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-500 dark:text-gray-400 mt-0.5">
                             {{ $module->order }}
                         </div>
 
-                        {{-- Module Info --}}
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 flex-wrap mb-1">
                                 <h3 class="text-lg font-bold text-gray-900 dark:text-white truncate" title="{{ $module->title }}">
@@ -57,11 +55,13 @@
                             @if($module->file_name)
                                 <p class="text-xs text-gray-400 dark:text-gray-500">
                                     <i class="fas fa-file mr-1"></i>{{ $module->file_name }}
+                                    @if($module->file_size)
+                                        <span class="ml-1">({{ $module->file_size > 1048576 ? number_format($module->file_size / 1048576, 1) . ' MB' : number_format($module->file_size / 1024, 1) . ' KB' }})</span>
+                                    @endif
                                 </p>
                             @endif
                         </div>
 
-                        {{-- Actions --}}
                         <div class="flex items-center gap-1 flex-shrink-0">
                             <a href="{{ route('dashboard.classes.modules.show', [$class, $module]) }}" 
                                class="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"

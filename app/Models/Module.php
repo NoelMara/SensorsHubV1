@@ -12,6 +12,7 @@ class Module extends Model
     'content',
     'file_path',
     'file_name',
+    'file_size', 
     'order',
     'is_published',
     ];
