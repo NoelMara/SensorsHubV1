@@ -30,17 +30,16 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:products,name',
-            'description' => 'nullable|string',  // Changed from required
+            'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'link' => 'required|url',  // Changed from required
-            'category' => 'nullable|string|max:255',  // Changed from required
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // ADDED
+            'link' => 'required|url',
+            'category' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->has('is_active');
 
-        // ADDED: Handle image upload
         if ($request->hasFile('image')) {
             $cloudinary = new \Cloudinary\Cloudinary([
                 'cloud' => [
@@ -74,14 +73,13 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'link' => 'required|url',
             'category' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',  // ADDED
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->has('is_active');
 
-        // ADDED: Handle image upload
-       if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $cloudinary = new \Cloudinary\Cloudinary([
                 'cloud' => [
                     'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
@@ -90,6 +88,19 @@ class ProductController extends Controller
                 ],
                 'url' => ['secure' => true],
             ]);
+
+            // Delete old image
+            if ($product->image) {
+                $parsed = parse_url($product->image);
+                $path = $parsed['path'] ?? '';
+                $publicId = pathinfo($path, PATHINFO_FILENAME);
+                try {
+                    $cloudinary->uploadApi()->destroy($publicId);
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to delete old product image', ['error' => $e->getMessage()]);
+                }
+            }
+
             $result = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath());
             $validated['image'] = $result['secure_url'];
         } else {

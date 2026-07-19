@@ -79,7 +79,7 @@ class SensorController extends Controller
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->has('is_active');
 
-         if ($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $cloudinary = new \Cloudinary\Cloudinary([
                 'cloud' => [
                     'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
@@ -88,6 +88,19 @@ class SensorController extends Controller
                 ],
                 'url' => ['secure' => true],
             ]);
+
+            // Delete old image
+            if ($sensor->image) {
+                $parsed = parse_url($sensor->image);
+                $path = $parsed['path'] ?? '';
+                $publicId = pathinfo($path, PATHINFO_FILENAME);
+                try {
+                    $cloudinary->uploadApi()->destroy($publicId);
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to delete old sensor image', ['error' => $e->getMessage()]);
+                }
+            }
+
             $result = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath());
             $validated['image'] = $result['secure_url'];
         } else {
