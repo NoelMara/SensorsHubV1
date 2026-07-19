@@ -436,51 +436,61 @@
 
     @stack('scripts')
 
-        <script>
-document.addEventListener('DOMContentLoaded', function() {
-    if (!('speechSynthesis' in window)) return;
+        @stack('scripts')
 
-    const speak = function() {
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance();
-
-        const voices = window.speechSynthesis.getVoices();
-        const preferred = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Daniel')) || voices[0];
-        if (preferred) msg.voice = preferred;
-
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
         @auth
-            const hour = new Date().getHours();
-            let greeting = hour < 12 ? 'Good morning' : (hour < 18 ? 'Good afternoon' : 'Good evening');
-            msg.text = greeting + ", {{ auth()->user()->name }}. Welcome back to SensorHub. You have {{ auth()->user()->unreadNotifications->count() }} unread notifications. Happy building!";
+            const audioSrc = "{{ asset('audio/welcome-back.mp3') }}";
         @else
-            msg.text = "Welcome to SensorHub! Learn sensors, build projects, and share ideas with the community.";
+            const audioSrc = "{{ asset('audio/welcome-guest.mp3') }}";
         @endauth
 
-        msg.rate = 0.85;
-        msg.pitch = 1;
-        msg.volume = 0.9;
-        window.speechSynthesis.speak(msg);
-    };
+        const audio = new Audio(audioSrc);
+        audio.volume = 0.8;
 
-    window.speechSynthesis.onvoiceschanged = function() {
-        window.speechSynthesis.getVoices();
-    };
+        // Create button (hidden initially)
+        const btn = document.createElement('button');
+        btn.id = 'voiceBtn';
+        btn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        btn.title = 'Replay welcome message';
+        btn.className = 'fixed bottom-4 right-4 z-[9999] bg-gray-900/80 dark:bg-white/80 text-white dark:text-gray-800 w-10 h-10 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center opacity-0';
+        btn.onclick = function() {
+            if (!audio.paused) {
+                audio.pause();
+                audio.currentTime = 0;
+                btn.classList.add('opacity-0');
+                btn.classList.remove('opacity-100');
+            } else {
+                audio.play().then(() => {
+                    btn.classList.add('opacity-100');
+                    btn.classList.remove('opacity-0');
+                });
+                audio.onended = function() {
+                    btn.classList.add('opacity-0');
+                    btn.classList.remove('opacity-100');
+                };
+            }
+        };
+        document.body.appendChild(btn);
 
-    // Always-visible floating voice button — works on desktop AND mobile
-    const btn = document.createElement('button');
-    btn.id = 'voiceBtn';
-    btn.innerHTML = '<i class="fas fa-volume-up"></i>';
-    btn.title = 'Play voice greeting';
-    btn.className = 'fixed bottom-4 right-4 z-[9999] bg-primary text-white w-12 h-12 rounded-full shadow-lg hover:bg-blue-600 transition flex items-center justify-center';
-    btn.onclick = function() {
-        if (window.speechSynthesis.speaking) {
-            window.speechSynthesis.cancel();
-        } else {
-            speak();
+        // Only auto-play if user hasn't heard it this session
+        if (!sessionStorage.getItem('welcome_played')) {
+            audio.play().then(() => {
+                btn.classList.add('opacity-100');
+                btn.classList.remove('opacity-0');
+                sessionStorage.setItem('welcome_played', 'true');
+                audio.onended = function() {
+                    btn.classList.add('opacity-0');
+                    btn.classList.remove('opacity-100');
+                };
+            }).catch(() => {
+                // If autoplay blocked, show button
+                btn.classList.add('opacity-100');
+                btn.classList.remove('opacity-0');
+            });
         }
-    };
-    document.body.appendChild(btn);
-});
-</script>
+    });
+    </script>
 </body>
 </html>
