@@ -89,7 +89,9 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
 
     // My Suggestions
     Route::get('/suggestions', [SuggestionController::class, 'mySuggestions'])->name('suggestions');
-    Route::post('/suggestions', [SuggestionController::class, 'store'])->name('suggestions.store');
+    Route::post('/suggestions', [SuggestionController::class, 'store'])
+        ->middleware('throttle:10,5')
+        ->name('suggestions.store');
     Route::get('/suggestions/{suggestion}/edit', [SuggestionController::class, 'edit'])->name('suggestions.edit');
     Route::put('/suggestions/{suggestion}', [SuggestionController::class, 'update'])->name('suggestions.update');
     Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy'])->name('suggestions.destroy');
@@ -98,12 +100,16 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::get('/suggestions/{suggestion}/view', [SuggestionController::class, 'show'])->name('suggestions.show');
 
     // Comments (any authenticated user can comment)
-    Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
+    Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'storeComment'])
+        ->middleware('throttle:10,5')
+        ->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [SuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 
      // Classes
     Route::get('/classes', [ClassroomController::class, 'studentClasses'])->name('classes.index');
-    Route::post('/classes/join', [ClassroomController::class, 'join'])->name('classes.join');
+    Route::post('/classes/join', [ClassroomController::class, 'join'])
+        ->middleware('throttle:5,1')
+        ->name('classes.join');
     Route::get('/classes/{class}', [ClassroomController::class, 'studentShow'])->name('classes.show');
     Route::get('/classes/{class}/modules/{module}', [ModuleController::class, 'show'])->name('classes.modules.show');
     Route::get('/classes/{class}/activities/{activity}', [ActivityController::class, 'show'])->name('classes.activities.show');
