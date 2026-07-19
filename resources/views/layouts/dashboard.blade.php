@@ -74,7 +74,7 @@
                 </div>
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} SensorHub. All rights reserved.</p>
+                <p>&copy; {{ date('Y') }} SensorsHub. All rights reserved.</p>
             </div>
         </div>
     </footer>

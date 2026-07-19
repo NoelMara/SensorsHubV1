@@ -7,7 +7,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Sensors</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Monitor the sensor catalog available across SensorHub.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Monitor the sensor catalog available across SensorsHub.</p>
         </div>
         <a href="{{ route('admin.sensors.create') }}" class="px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium flex-shrink-0">
             <i class="fas fa-plus mr-1.5"></i> Add Sensor

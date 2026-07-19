@@ -63,10 +63,10 @@
                 {{-- Mobile logo link --}}
                 <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200 lg:hidden">
                     <i class="fas fa-microchip text-emerald-500"></i>
-                    SensorHub
+                    SensorsHub
                 </a>
                 <p class="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-300">Create your workspace</p>
-                <h2 class="mt-3 text-3xl font-bold text-slate-950 dark:text-white">Start building with SensorHub</h2>
+                <h2 class="mt-3 text-3xl font-bold text-slate-950 dark:text-white">Start building with SensorsHub</h2>
                 <p class="mt-3 text-slate-600 dark:text-slate-400">Create an account to save projects, follow tutorials, and organize your sensor learning path.</p>
             </div>
 
@@ -171,7 +171,7 @@
 
             {{-- Copyright text --}}
             <p class="mt-8 text-center text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
-                &copy; {{ date('Y') }} SensorHub
+                &copy; {{ date('Y') }} SensorsHub
             </p>
         </section>
 
@@ -184,7 +184,7 @@
                         {{-- Brand logo --}}
                         <a href="{{ route('home') }}" class="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold tracking-wide text-white/90">
                             <i class="fas fa-microchip text-emerald-300"></i>
-                            SensorHub
+                            SensorsHub
                         </a>
 
                         {{-- Hero text --}}

@@ -58,7 +58,7 @@
                     <div>
                         <a href="{{ route('home') }}" class="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold tracking-wide text-white/90">
                             <i class="fas fa-microchip text-emerald-300"></i>
-                            SensorHub
+                            SensorsHub
                         </a>
 
                         <div class="mt-16 max-w-xl">
@@ -66,7 +66,7 @@
                                 {{ $isSuperAdminLogin ? 'Platform command' : 'Project workspace' }}
                             </p>
                             <h1 class="mt-5 text-5xl font-bold leading-tight">
-                                {{ $isSuperAdminLogin ? 'Manage SensorHub with clarity.' : 'Build smarter sensor projects.' }}
+                                {{ $isSuperAdminLogin ? 'Manage SensorsHub with clarity.' : 'Build smarter sensor projects.' }}
                             </h1>
                             <p class="mt-6 text-lg leading-8 text-slate-200">
                                 {{ $isSuperAdminLogin ? 'Review accounts, roles, and platform activity from a secure administrator entry point.' : 'Access guides, save project ideas, and continue learning with a workspace designed for makers.' }}
@@ -113,7 +113,7 @@
             <div class="mb-8 text-center lg:text-left">
                 <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200 lg:hidden">
                     <i class="fas fa-microchip text-emerald-500"></i>
-                    SensorHub
+                    SensorsHub
                 </a>
                 <p class="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-300">
                     {{ session('require_verification') ? 'Email verification' : ($isSuperAdminLogin ? 'Faculty Head access' : 'Welcome back') }}
@@ -122,7 +122,7 @@
                     {{ session('require_verification') ? 'Enter your security code' : ($isSuperAdminLogin ? 'Sign in securely' : 'Sign in to your account') }}
                 </h2>
                 <p class="mt-3 text-slate-600 dark:text-slate-400">
-                    {{ session('require_verification') ? 'We sent a 6-digit code to your email address.' : ($isSuperAdminLogin ? 'Use your authorized SensorHub administrator credentials.' : 'Pick up where you left off with sensors, tutorials, and saved projects.') }}
+                    {{ session('require_verification') ? 'We sent a 6-digit code to your email address.' : ($isSuperAdminLogin ? 'Use your authorized SensorsHub administrator credentials.' : 'Pick up where you left off with sensors, tutorials, and saved projects.') }}
                 </p>
             </div>
 
@@ -261,7 +261,7 @@
                                 User/Admin login
                             </a>
                         @else
-                            New to SensorHub?
+                            New to SensorsHub?
                             <a href="{{ route('register') }}" class="font-semibold text-emerald-700 transition hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200">
                                 Create an account
                             </a>
@@ -271,7 +271,7 @@
             @endif
 
             <p class="mt-8 text-center text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
-                &copy; {{ date('Y') }} SensorHub
+                &copy; {{ date('Y') }} SensorsHub
             </p>
         </section>
     </div>
