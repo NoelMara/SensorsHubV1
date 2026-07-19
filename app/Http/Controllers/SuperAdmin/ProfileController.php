@@ -35,7 +35,7 @@ class ProfileController extends Controller
         ];
 
         // Handle profile image upload
-       if ($request->hasFile('profile_image')) {
+        if ($request->hasFile('profile_image')) {
             $cloudinary = new \Cloudinary\Cloudinary([
                 'cloud' => [
                     'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
@@ -44,6 +44,19 @@ class ProfileController extends Controller
                 ],
                 'url' => ['secure' => true],
             ]);
+
+                        // Delete old image from Cloudinary
+            if ($user->profile_image) {
+                $parsed = parse_url($user->profile_image);
+                $path = $parsed['path'] ?? '';
+                $publicId = pathinfo($path, PATHINFO_FILENAME);
+                
+                try {
+                    $cloudinary->uploadApi()->destroy($publicId);
+                } catch (\Exception $e) {
+                    \Log::warning('Failed to delete old Cloudinary image', ['error' => $e->getMessage()]);
+                }
+            }
 
             $result = $cloudinary->uploadApi()->upload($request->file('profile_image')->getRealPath());
             $data['profile_image'] = $result['secure_url'];
