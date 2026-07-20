@@ -53,20 +53,34 @@ class DashboardController extends Controller
             abort(403);
         }
 
-        $db = config('database.connections.pgsql');
+        $tables = \DB::select("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'");
         
-        $command = sprintf(
-            'PGPASSWORD=%s pg_dump -h %s -p %s -U %s -d %s --no-owner --no-acl',
-            escapeshellarg($db['password']),
-            escapeshellarg($db['host']),
-            escapeshellarg($db['port']),
-            escapeshellarg($db['username']),
-            escapeshellarg($db['database'])
-        );
+        $output = "-- SensorsHub Database Backup\n";
+        $output .= "-- Generated: " . now()->toDateTimeString() . "\n\n";
+        
+        foreach ($tables as $table) {
+            $tableName = $table->tablename;
+            $rows = \DB::table($tableName)->get();
+            
+            if ($rows->isEmpty()) continue;
+            
+            $output .= "-- Table: {$tableName}\n";
+            
+            foreach ($rows as $row) {
+                $values = [];
+                foreach ((array) $row as $value) {
+                    if (is_null($value)) {
+                        $values[] = 'NULL';
+                    } else {
+                        $values[] = "'" . str_replace("'", "''", $value) . "'";
+                    }
+                }
+                $output .= "INSERT INTO {$tableName} VALUES (" . implode(', ', $values) . ");\n";
+            }
+            $output .= "\n";
+        }
         
         $filename = 'sensorshub-backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
-        
-        $output = shell_exec($command);
         
         return response($output)
             ->header('Content-Type', 'text/plain')
