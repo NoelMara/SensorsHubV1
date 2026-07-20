@@ -64,7 +64,7 @@ class DashboardController extends Controller
             escapeshellarg($db['database'])
         );
         
-        $filename = 'sensorhub-backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
+        $filename = 'sensorshub-backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
         
         $output = shell_exec($command);
         
