@@ -53,6 +53,21 @@ class DashboardController extends Controller
             abort(403);
         }
 
+        // Keep only last 5 backups
+        $backupPath = storage_path('app/backups');
+        if (!is_dir($backupPath)) {
+            mkdir($backupPath, 0755, true);
+        }
+        
+        $files = glob($backupPath . '/*.sql');
+        $totalBackups = count($files);
+        
+        if ($totalBackups >= 5) {
+            // Delete oldest
+            unlink($files[0]);
+            $totalBackups = 4;
+        }
+
         $tables = \DB::select("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'");
         
         $output = "-- SensorsHub Database Backup\n";
@@ -80,13 +95,8 @@ class DashboardController extends Controller
             $output .= "\n";
         }
         
-        // Save to server
         $filename = 'sensorshub-backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
-        $path = storage_path('app/backups');
-        if (!is_dir($path)) {
-            mkdir($path, 0755, true);
-        }
-        file_put_contents($path . '/' . $filename, $output);
+        file_put_contents($backupPath . '/' . $filename, $output);
         
         return response($output)
             ->header('Content-Type', 'text/plain')

@@ -18,17 +18,32 @@
             <i class="fas fa-database text-indigo-600 dark:text-indigo-400 text-2xl"></i>
         </div>
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Create New Backup</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">This will download a complete SQL dump and save it on the server.</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Download a complete SQL dump and save it on the server.</p>
+        
+        @php
+            $backupPath = storage_path('app/backups');
+            $totalBackups = is_dir($backupPath) ? count(glob($backupPath . '/*.sql')) : 0;
+            $remaining = 5 - $totalBackups;
+        @endphp
+        
+        @if($remaining <= 2)
+            <div class="flex items-center gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl mb-4 text-left">
+                <i class="fas fa-exclamation-triangle text-amber-600 dark:text-amber-400 flex-shrink-0"></i>
+                <p class="text-xs text-amber-700 dark:text-amber-300">
+                    <strong>{{ $remaining }} slot{{ $remaining != 1 ? 's' : '' }} remaining.</strong> Max 5 backups stored on server. Oldest auto-deletes when full. Always save to your computer.
+                </p>
+            </div>
+        @endif
         
         <a href="{{ route('super-admin.backup.download') }}" 
            class="inline-flex items-center px-5 py-3 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
             <i class="fas fa-download mr-2"></i> Download Backup (.sql)
         </a>
+        <p class="text-xs text-gray-400 mt-2">{{ $totalBackups }}/5 backups stored</p>
     </div>
 
     {{-- Previous Backups --}}
     @php
-        $backupPath = storage_path('app/backups');
         $backups = is_dir($backupPath) ? array_reverse(glob($backupPath . '/*.sql')) : [];
     @endphp
 
