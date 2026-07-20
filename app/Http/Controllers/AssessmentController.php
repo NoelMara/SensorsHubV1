@@ -154,8 +154,8 @@ class AssessmentController extends Controller
         // Notify instructor
         NotificationHelper::send(
             $class->instructor_id,
-            '📥 New Submission: ' . $assessment->title,
-            auth()->user()->name . ' submitted their work.',
+            '📥 ' . $class->name . ($class->section ? ' (Block ' . $class->section . ')' : ''),
+            auth()->user()->name . ' submitted "' . $assessment->title . '"',
             route('admin.classes.assessments.submissions', [$class, $assessment])
         );
 
