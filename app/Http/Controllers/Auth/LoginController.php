@@ -73,7 +73,7 @@ class LoginController extends Controller
             return $this->completeLogin($request, $user);
         }
 
-        RateLimiter::hit($key, 60);
+        RateLimiter::hit($key, 120);
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
@@ -99,7 +99,7 @@ class LoginController extends Controller
         $user = User::where('email', $credentials['email'])->first();
 
         if (!$user || !$user->isAdministrator() || !Hash::check($credentials['password'], $user->password)) {
-            RateLimiter::hit($key, 60);
+            RateLimiter::hit($key, 120);
 
             return back()->withErrors([
                 'email' => 'The provided Administrator credentials do not match our records.',
@@ -130,7 +130,7 @@ class LoginController extends Controller
 
         $key = 'verify-code:' . $request->ip();
 
-        if (RateLimiter::tooManyAttempts($key, 3)) {
+        if (RateLimiter::tooManyAttempts($key, 1)) {
             $seconds = RateLimiter::availableIn($key);
             return back()->withErrors([
                 'verification_code' => "Too many attempts. Please try again in {$seconds} seconds.",
@@ -156,7 +156,7 @@ class LoginController extends Controller
             return $this->completeLogin($request, $user);
         }
 
-        RateLimiter::hit($key, 60);
+        RateLimiter::hit($key, 120);
 
         return back()->withErrors([
             'verification_code' => 'Invalid or expired verification code.',
@@ -174,7 +174,7 @@ class LoginController extends Controller
 
         $key = 'resend-code:' . $request->ip() . ':' . $request->email;
 
-        if (RateLimiter::tooManyAttempts($key, 3)) {
+        if (RateLimiter::tooManyAttempts($key, 1)) {
             $seconds = RateLimiter::availableIn($key);
             return back()->withErrors([
                 'email' => "Too many resend attempts. Please try again in {$seconds} seconds.",
@@ -184,7 +184,7 @@ class LoginController extends Controller
             ]);
         }
 
-        RateLimiter::hit($key, 60);
+        RateLimiter::hit($key, 120);
 
         $user = User::where('email', $request->email)->first();
 
