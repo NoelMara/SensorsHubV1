@@ -124,7 +124,40 @@ class ClassroomController extends Controller
                 ->with('error', 'You must be approved to view this class.');
         }
         
-        return view('user.classes.show', compact('class'));
+        // Progress data
+        $assessments = $class->assessments()->where('is_published', true)->get();
+        $quizzes = $class->quizzes()->where('is_published', true)->get();
+        
+        $assessmentSubmissions = AssessmentSubmission::where('user_id', auth()->id())
+            ->whereIn('assessment_id', $assessments->pluck('id'))
+            ->get()
+            ->keyBy('assessment_id');
+        
+        $quizSubmissions = QuizSubmission::where('user_id', auth()->id())
+            ->whereIn('quiz_id', $quizzes->pluck('id'))
+            ->get()
+            ->keyBy('quiz_id');
+        
+        $assessmentPoints = $assessmentSubmissions->sum('score');
+        $quizPoints = $quizSubmissions->sum('score');
+        $totalAssessmentPoints = $assessments->sum('points');
+        $totalQuizPoints = $quizzes->sum('points');
+        $totalPoints = $assessmentPoints + $quizPoints;
+        $totalPossible = $totalAssessmentPoints + $totalQuizPoints;
+        
+        return view('user.classes.show', compact(
+            'class',
+            'assessments',
+            'quizzes',
+            'assessmentSubmissions',
+            'quizSubmissions',
+            'assessmentPoints',
+            'quizPoints',
+            'totalAssessmentPoints',
+            'totalQuizPoints',
+            'totalPoints',
+            'totalPossible'
+        ));
     }
 
     public function approve(Classroom $class, $userId)
