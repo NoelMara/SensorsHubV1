@@ -16,8 +16,8 @@ class AssessmentController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        $assessments = $class->activities()->latest()->paginate(5);
-        return view('admin.classes.activities.index', compact('class', 'activities'));
+        $assessments = $class->assessments()->latest()->paginate(5);
+        return view('admin.classes.assessments.index', compact('class', 'assessments'));
     }
 
     public function create(Classroom $class)
@@ -25,7 +25,7 @@ class AssessmentController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.activities.create', compact('class'));
+        return view('admin.classes.assessments.create', compact('class'));
     }
 
     public function store(Request $request, Classroom $class)
@@ -46,7 +46,7 @@ class AssessmentController extends Controller
         $validated['is_published'] = $request->has('is_published');
 
         $assessment = Assessment::create($validated);
-        ActivityLogHelper::log('created', 'activity', "created activity '{$assessment->title}' in '{$class->name}'");
+        ActivityLogHelper::log('created', 'assessment', "created assessment '{$assessment->title}' in '{$class->name}'");
 
         if ($assessment->is_published) {
             NotificationHelper::sendToClass(
@@ -57,7 +57,7 @@ class AssessmentController extends Controller
             );
         }
 
-        return redirect()->route('admin.classes.activities.index', $class)
+        return redirect()->route('admin.classes.assessments.index', $class)
             ->with('success', 'Assessment created!');
     }
 
@@ -66,7 +66,7 @@ class AssessmentController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.activities.edit', compact('class', 'assessment'));
+        return view('admin.classes.assessments.edit', compact('class', 'assessment'));
     }
 
     public function update(Request $request, Classroom $class, Assessment $assessment)
@@ -95,13 +95,12 @@ class AssessmentController extends Controller
             );
         }
 
-        return redirect()->route('admin.classes.activities.index', $class)
+        return redirect()->route('admin.classes.assessments.index', $class)
             ->with('success', 'Assessment updated!');
     }
 
     public function show(Classroom $class, Assessment $assessment)
     {
-        // Allow instructors to preview
         if (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) {
             $submission = AssessmentSubmission::where('assessment_id', $assessment->id)
                 ->where('user_id', auth()->id())
@@ -109,7 +108,6 @@ class AssessmentController extends Controller
             return view('user.classes.assessments.show', compact('class', 'assessment', 'submission'));
         }
         
-        // Students must be enrolled
         $enrolled = $class->students()
             ->where('user_id', auth()->id())
             ->wherePivot('status', 'approved')
@@ -128,7 +126,6 @@ class AssessmentController extends Controller
 
     public function submit(Request $request, Classroom $class, Assessment $assessment)
     {
-            // Students must be enrolled
         $enrolled = $class->students()
             ->where('user_id', auth()->id())
             ->wherePivot('status', 'approved')
@@ -198,7 +195,7 @@ class AssessmentController extends Controller
             abort(403);
         }
         $assessment->delete();
-        ActivityLogHelper::log('deleted', 'activity', "deleted activity '{$assessment->title}'");
+        ActivityLogHelper::log('deleted', 'assessment', "deleted assessment '{$assessment->title}'");
         return back()->with('success', 'Assessment deleted!');
     }
 
@@ -210,26 +207,26 @@ class AssessmentController extends Controller
         $otherClasses = Classroom::where('instructor_id', auth()->id())
             ->where('id', '!=', $class->id)
             ->get();
-        return view('admin.classes.activities.import', compact('class', 'otherClasses'));
+        return view('admin.classes.assessments.import', compact('class', 'otherClasses'));
     }
 
-    public function copyActivities(Request $request, Classroom $class)
+    public function copyAssessments(Request $request, Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
         $request->validate([
             'from_class' => 'required|exists:classes,id',
-            'activities' => 'required|array',
+            'assessments' => 'required|array',
         ]);
 
         $sourceClass = Classroom::where('instructor_id', auth()->id())
             ->findOrFail($request->from_class);
 
-        $assessments = $sourceClass->activities()->whereIn('id', $request->activities)->get();
+        $assessments = $sourceClass->assessments()->whereIn('id', $request->assessments)->get();
 
         foreach ($assessments as $assessment) {
-            Asessment::create([
+            Assessment::create([
                 'class_id' => $class->id,
                 'title' => $assessment->title,
                 'description' => $assessment->description,
@@ -240,19 +237,17 @@ class AssessmentController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.classes.activities.index', $class)
-            ->with('success', count($assessments) . ' activities imported!');
+        return redirect()->route('admin.classes.assessments.index', $class)
+            ->with('success', count($assessments) . ' assessments imported!');
     }
 
     public function studentIndex(Classroom $class)
     {
-        // Allow instructors to view
         if (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) {
-            $assessments = $class->activities()->where('is_published', true)->latest()->paginate(10);
-            return view('user.classes.activities.index', compact('class', 'activities'));
+            $assessments = $class->assessments()->where('is_published', true)->latest()->paginate(10);
+            return view('user.classes.assessments.index', compact('class', 'assessments'));
         }
         
-        // Students must be enrolled
         $enrolled = $class->students()
             ->where('user_id', auth()->id())
             ->wherePivot('status', 'approved')
@@ -262,7 +257,7 @@ class AssessmentController extends Controller
             abort(403);
         }
 
-        $assessments = $class->activities()->where('is_published', true)->latest()->paginate(10);
-        return view('user.classes.activities.index', compact('class', 'activities'));
+        $assessments = $class->assessments()->where('is_published', true)->latest()->paginate(10);
+        return view('user.classes.assessments.index', compact('class', 'assessments'));
     }
 }
