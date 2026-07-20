@@ -446,18 +446,18 @@
     document.addEventListener('DOMContentLoaded', function () {
 
          @auth
-            @if(auth()->user()->isSuperAdmin())
+            @if(request()->is('email/verify*'))
+                const audioSrc = null;
+                const storageKey = null;
+            @elseif(auth()->user()->isSuperAdmin())
                 const audioSrc = "{{ asset('audio/welcome-administrator.mp3') }}";
                 const storageKey = 'welcome_administrator_played';
             @elseif(auth()->user()->isAdmin())
                 const audioSrc = "{{ asset('audio/welcome-instructor.mp3') }}";
                 const storageKey = 'welcome_instructor_played';
-            @elseif(auth()->user()->role === 'student')
+            @else
                 const audioSrc = "{{ asset('audio/welcome-back.mp3') }}";
                 const storageKey = 'welcome_back_played';
-            @else
-                const audioSrc = null;
-                const storageKey = null;
             @endif
         @else
             const audioSrc = "{{ asset('audio/welcome-guest.mp3') }}";
