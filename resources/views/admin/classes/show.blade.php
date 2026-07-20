@@ -129,9 +129,12 @@
                         $submissions = $student->submissions()
                             ->whereIn('assessment_id', $class->assessments()->pluck('id'))
                             ->get();
-                        $totalPoints = $submissions->sum('score');
-                        $submittedCount = $submissions->whereNotNull('submitted_at')->count();
-                        $totalAssessments = $class->assessments()->count();
+                        $quizSubmissions = \App\Models\QuizSubmission::where('user_id', $student->id)
+                            ->whereIn('quiz_id', $class->quizzes()->pluck('id'))
+                            ->get();
+                        $totalPoints = $submissions->sum('score') + $quizSubmissions->sum('score');
+                        $submittedCount = $submissions->whereNotNull('submitted_at')->count() + $quizSubmissions->count();
+                        $totalAssessments = $class->assessments()->count() + $class->quizzes()->count();
                     @endphp
                     <div class="student-row px-5 py-3 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition" data-name="{{ strtolower($student->name) }}">
                         <div class="flex items-center gap-3 min-w-0 flex-1">
@@ -154,7 +157,7 @@
                                 <span class="text-xs font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-star text-yellow-500 mr-1"></i>{{ $totalPoints }} pts</span>
                             </div>
                         @elseif($student->pivot->status === 'approved')
-                            <span class="hidden sm:block text-xs text-gray-400 dark:text-gray-500">No assessments yet</span>
+                            <span class="hidden sm:block text-xs text-gray-400 dark:text-gray-500">No submissions yet</span>
                         @endif
 
                         <div class="flex items-center gap-2 flex-shrink-0">
