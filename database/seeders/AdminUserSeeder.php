@@ -15,10 +15,10 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         \App\Models\User::updateOrCreate(
-            ['email' => env('FACULTY_EMAIL', 'davepalola16@gmail.com')],
+            ['email' => env('ADMIN_EMAIL', 'davepalola16@gmail.com')],
             [
-                'name' => env('FACULTY_NAME', 'Faculty_Head'),
-                'password' => Hash::make(env('FACULTY_PASSWORD', 'password123')),
+                'name' => env('ADMIN_NAME', 'Administrator'),
+                'password' => Hash::make(env('ADMIN_PASSWORD', 'password123')),
                 'role' => 'super_admin',
                 'email_verified_at' => now(),
             ]
