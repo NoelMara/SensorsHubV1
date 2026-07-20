@@ -187,6 +187,12 @@
                 for (let i = 0; i < this.questions.length; i++) {
                     if (!this.questions[i].options.some(o => o.isCorrect)) {
                         e.preventDefault();
+                        // Re-enable the submit button
+                        const btn = e.target.querySelector('button[type="submit"]');
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fas fa-save mr-1.5"></i> Update Quiz';
+                        }
                         alert('⚠️ Please mark a correct answer for Question ' + (i + 1) + '.');
                         return;
                     }
