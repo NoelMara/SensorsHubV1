@@ -28,7 +28,7 @@
     @php
         $homeRoute = 'home';
         if (auth()->check()) {
-            if (auth()->user()->isSuperAdmin()) {
+            if (auth()->user()->isAdministrator()) {
                 $homeRoute = 'super-admin.dashboard';
             } elseif (auth()->user()->isInstructor()) {
                 $homeRoute = 'admin.dashboard';
@@ -36,8 +36,8 @@
                 $homeRoute = 'dashboard.index';
             }
         }
-        $isSuperAdmin = auth()->check() && auth()->user()->isSuperAdmin();
-        $isAdmin = auth()->check() && auth()->user()->isInstructor();
+        $isAdministrator = auth()->check() && auth()->user()->isAdministrator();
+        $isInstructor = auth()->check() && auth()->user()->isInstructor();
     @endphp
 
     <!-- Toast Notifications -->
@@ -90,9 +90,9 @@
                         <i class="fas fa-microchip text-2xl sm:text-3xl text-primary shrink-0"></i>
                         <div>
                             <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorsHub</span>
-                            @if($isSuperAdmin)
+                            @if($isAdministrator)
                                 <span class="text-xs text-primary font-semibold">Administrator</span>
-                            @elseif($isAdmin)
+                            @elseif($isInstructor)
                                 <span class="text-xs text-secondary font-semibold">Instructor</span>
                             @endif
                         </div>
@@ -102,7 +102,7 @@
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6">
                    {{-- Administrator Desktop Menu --}}
-                    @if($isSuperAdmin)
+                    @if($isAdministrator)
                         <div class="relative group">
                             <a href="{{ route('super-admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold flex items-center gap-1">
                                 Control Panel <i class="fas fa-chevron-down text-xs"></i>
@@ -137,7 +137,7 @@
                         <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
                     
                     {{-- Instructor Desktop Menu --}}
-                    @elseif($isAdmin)
+                    @elseif($isInstructor)
                         <a href="{{ route('admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold">Dashboard</a>
                         <a href="{{ route('admin.classes.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Classes</a>
                         <a href="{{ route('admin.sensors.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sensors</a>
@@ -223,7 +223,7 @@
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-800 border-t dark:border-gray-700">
             <div class="px-4 pt-2 pb-4 space-y-1">
-                @if($isSuperAdmin)
+                @if($isAdministrator)
                     <a href="{{ route('super-admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-tachometer-alt w-5"></i> Dashboard
                     </a>
@@ -254,7 +254,7 @@
                     <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-flask w-5"></i> Simulation
                     </a>
-                @elseif($isAdmin)
+                @elseif($isInstructor)
                     <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-tachometer-alt w-5"></i> Dashboard
                     </a>
@@ -449,7 +449,7 @@
             @if(request()->is('email/verify*'))
                 const audioSrc = null;
                 const storageKey = null;
-            @elseif(auth()->user()->isSuperAdmin())
+            @elseif(auth()->user()->isAdministrator())
                 const audioSrc = "{{ asset('audio/welcome-administrator.mp3') }}";
                 const storageKey = 'welcome_administrator_played';
             @elseif(auth()->user()->isInstructor())

@@ -76,7 +76,7 @@ class ModuleController extends Controller
     public function show(Classroom $class, Module $module)
     {
         // Allow instructors to preview
-        if (auth()->user()->isInstructor() || auth()->user()->isSuperAdmin()) {
+        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
             return view('user.classes.modules.show', compact('class', 'module'));
         }
         
@@ -200,7 +200,7 @@ class ModuleController extends Controller
     public function studentIndex(Classroom $class)
     {
         // Allow instructors to view
-        if (auth()->user()->isInstructor() || auth()->user()->isSuperAdmin()) {
+        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
             $modules = $class->modules()->where('is_published', true)->orderBy('order')->paginate(10);
             return view('user.classes.modules.index', compact('class', 'modules'));
         }

@@ -49,7 +49,7 @@ class DashboardController extends Controller
 
     public function backup()
     {
-        if (!auth()->user()->isSuperAdmin()) {
+        if (!auth()->user()->isAdministrator()) {
             abort(403);
         }
 
@@ -105,7 +105,7 @@ class DashboardController extends Controller
 
     public function downloadBackup($filename)
     {
-        if (!auth()->user()->isSuperAdmin()) {
+        if (!auth()->user()->isAdministrator()) {
             abort(403);
         }
         
@@ -120,7 +120,7 @@ class DashboardController extends Controller
 
     public function deleteBackup($filename)
     {
-        if (!auth()->user()->isSuperAdmin()) {
+        if (!auth()->user()->isAdministrator()) {
             abort(403);
         }
         

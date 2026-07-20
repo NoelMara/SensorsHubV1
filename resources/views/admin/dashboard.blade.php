@@ -12,7 +12,7 @@
     </div>
 
     {{-- Administrator Section --}}
-    @if(auth()->user()->isSuperAdmin())
+    @if(auth()->user()->isAdministrator())
         <div class="bg-gray-900 dark:bg-gray-950 rounded-xl p-6 mb-8 text-white">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
@@ -41,12 +41,12 @@
                 <div class="flex items-center gap-2 flex-wrap">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white truncate">{{ auth()->user()->name }}</h2>
                     <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                        {{ auth()->user()->isSuperAdmin() ? 'Administrator' : 'Instructor' }}
+                        {{ auth()->user()->isAdministrator() ? 'Administrator' : 'Instructor' }}
                     </span>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ auth()->user()->email }}</p>
             </div>
-            <a href="{{ auth()->user()->isSuperAdmin() ? route('super-admin.profile') : route('dashboard.profile') }}"
+            <a href="{{ auth()->user()->isAdministrator() ? route('super-admin.profile') : route('dashboard.profile') }}"
                class="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition text-xs font-medium flex-shrink-0">
                 <i class="fas fa-user-edit mr-1"></i> Edit Profile
             </a>

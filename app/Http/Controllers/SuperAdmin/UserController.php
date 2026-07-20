@@ -65,7 +65,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
        // Prevent editing another Administrator
-        if ($user->isSuperAdmin() && !$user->is(auth()->user())) {
+        if ($user->isAdministrator() && !$user->is(auth()->user())) {
             return back()->with('error', 'You cannot edit another Administrator account.');
         }
 
@@ -74,7 +74,7 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        if ($user->isSuperAdmin() && !$user->is(auth()->user())) {
+        if ($user->isAdministrator() && !$user->is(auth()->user())) {
             return back()->with('error', 'You cannot edit another Administrator account.');
         }
 
@@ -133,7 +133,7 @@ class UserController extends Controller
             return back()->with('error', 'You cannot delete your own account.');
         }
 
-        if ($user->isSuperAdmin()) {
+        if ($user->isAdministrator()) {
             return back()->with('error', 'Administrator accounts cannot be removed from this screen.');
         }
 

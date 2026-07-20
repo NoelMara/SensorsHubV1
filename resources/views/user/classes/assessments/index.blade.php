@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    @if(auth()->user()->isInstructor() || auth()->user()->isSuperAdmin())
+    @if(auth()->user()->isInstructor() || auth()->user()->isAdministrator())
         <a href="{{ route('admin.classes.assessments.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-6">
             <i class="fas fa-arrow-left mr-1"></i> Back to Assessments
         </a>

@@ -34,13 +34,13 @@
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $user->email }}</p>
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
-                @if(!$user->isSuperAdmin() || $user->is(auth()->user()))
+                @if(!$user->isAdministrator() || $user->is(auth()->user()))
                     <a href="{{ route('super-admin.users.edit', $user) }}"
                         class="px-3 py-2 rounded-lg bg-primary text-white hover:bg-blue-600 transition text-sm font-medium">
                         <i class="fas fa-edit mr-1"></i> Edit
                     </a>
                 @endif
-                @if(!$user->is(auth()->user()) && !$user->isSuperAdmin())
+                @if(!$user->is(auth()->user()) && !$user->isAdministrator())
                     <form method="POST" action="{{ route('super-admin.users.destroy', $user) }}"
                         onsubmit="return confirm('Remove this account?');">
                         @csrf @method('DELETE')

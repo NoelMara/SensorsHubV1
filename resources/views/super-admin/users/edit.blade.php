@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            @if(!$user->isSuperAdmin())
+            @if(!$user->isAdministrator())
             <div>
                 <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Role</label>
                 <select id="role" name="role" required

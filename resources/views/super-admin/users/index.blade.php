@@ -73,12 +73,12 @@
                                     <a href="{{ route('super-admin.users.show', $user) }}" class="p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition" title="View">
                                         <i class="fas fa-eye text-sm"></i>
                                     </a>
-                                    @if(!$user->isSuperAdmin() || $user->is(auth()->user()))
+                                    @if(!$user->isAdministrator() || $user->is(auth()->user()))
                                         <a href="{{ route('super-admin.users.edit', $user) }}" class="p-1.5 text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg transition" title="Edit">
                                             <i class="fas fa-edit text-sm"></i>
                                         </a>
                                     @endif
-                                    @if(!$user->is(auth()->user()) && !$user->isSuperAdmin())
+                                    @if(!$user->is(auth()->user()) && !$user->isAdministrator())
                                         <form method="POST" action="{{ route('super-admin.users.destroy', $user) }}"
                                             onsubmit="return confirm('Remove this user?');">
                                             @csrf @method('DELETE')

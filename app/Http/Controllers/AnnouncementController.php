@@ -110,7 +110,7 @@ class AnnouncementController extends Controller
     public function studentIndex(Classroom $class)
     {
         // Allow instructors to view
-        if (auth()->user()->isInstructor() || auth()->user()->isSuperAdmin()) {
+        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
             $announcements = $class->announcements()
                 ->where('is_published', true)
                 ->latest()

@@ -72,9 +72,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role === 'instructor';
     }
 
-    public function isSuperAdmin()
+    public function isAdministrator()
     {
-       return $this->role === 'super_admin';
+        return $this->role === 'super_admin';
     }
 
     public function canManageAdminArea()

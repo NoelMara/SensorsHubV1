@@ -52,7 +52,7 @@ class LoginController extends Controller
         $user = User::where('email', $credentials['email'])->first();
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
-            if ($user->isSuperAdmin()) {
+            if ($user->isAdministrator()) {
                 return back()->withErrors([
                     'email' => 'These credentials do not match our records.',
                 ])->onlyInput('email');
@@ -98,7 +98,7 @@ class LoginController extends Controller
 
         $user = User::where('email', $credentials['email'])->first();
 
-        if (!$user || !$user->isSuperAdmin() || !Hash::check($credentials['password'], $user->password)) {
+        if (!$user || !$user->isAdministrator() || !Hash::check($credentials['password'], $user->password)) {
             RateLimiter::hit($key, 60);
 
             return back()->withErrors([
@@ -202,7 +202,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        $redirectRoute = Auth::user()?->isSuperAdmin() ? 'super-admin.login' : 'login';
+        $redirectRoute = Auth::user()?->isAdministrator() ? 'super-admin.login' : 'login';
 
         Auth::logout();
         $request->session()->invalidate();
@@ -216,7 +216,7 @@ class LoginController extends Controller
         Auth::login($user, $request->filled('remember'));
         $request->session()->regenerate();
 
-        if ($user->isSuperAdmin()) {
+        if ($user->isAdministrator()) {
             return redirect()->route('super-admin.dashboard');
         }
 
