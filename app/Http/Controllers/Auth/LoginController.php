@@ -130,7 +130,7 @@ class LoginController extends Controller
 
         $key = 'verify-code:' . $request->ip();
 
-        if (RateLimiter::tooManyAttempts($key, 1)) {
+        if (RateLimiter::tooManyAttempts($key, 3)) {
             $seconds = RateLimiter::availableIn($key);
             return back()->withErrors([
                 'verification_code' => "Too many attempts. Please try again in {$seconds} seconds.",
@@ -174,7 +174,7 @@ class LoginController extends Controller
 
         $key = 'resend-code:' . $request->ip() . ':' . $request->email;
 
-        if (RateLimiter::tooManyAttempts($key, 1)) {
+        if (RateLimiter::tooManyAttempts($key, 3)) {
             $seconds = RateLimiter::availableIn($key);
             return back()->withErrors([
                 'email' => "Too many resend attempts. Please try again in {$seconds} seconds.",
