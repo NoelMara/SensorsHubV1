@@ -25,8 +25,8 @@
                 <a href="{{ route('admin.classes.modules.index', $class) }}" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium">
                     <i class="fas fa-book-open mr-1"></i> Modules
                 </a>
-                <a href="{{ route('admin.classes.activities.index', $class) }}" class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs font-medium">
-                    <i class="fas fa-tasks mr-1"></i> Activities
+                <a href="{{ route('admin.classes.assessments.index', $class) }}" class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs font-medium">
+                    <i class="fas fa-tasks mr-1"></i> Assessments
                 </a>
                 <a href="{{ route('admin.classes.leaderboard', $class) }}" class="px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-xs font-medium">
                     <i class="fas fa-trophy mr-1"></i> Leaderboard
@@ -68,8 +68,8 @@
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Modules</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $class->activities()->count() }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Activities</p>
+            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $class->assessments()->count() }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Assessments</p>
         </div>
     </div>
 
@@ -118,11 +118,11 @@
                 @foreach($class->students as $student)
                     @php
                         $submissions = $student->submissions()
-                            ->whereIn('activity_id', $class->activities()->pluck('id'))
+                            ->whereIn('assessment_id', $class->assessments()->pluck('id'))
                             ->get();
                         $totalPoints = $submissions->sum('score');
                         $submittedCount = $submissions->whereNotNull('submitted_at')->count();
-                        $totalActivities = $class->activities()->count();
+                        $totalAssessments = $class->assessments()->count();
                     @endphp
                     <div class="student-row px-5 py-3 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition" data-name="{{ strtolower($student->name) }}">
                         <div class="flex items-center gap-3 min-w-0 flex-1">
@@ -134,18 +134,18 @@
                             </div>
                         </div>
 
-                        @if($student->pivot->status === 'approved' && $totalActivities > 0)
+                        @if($student->pivot->status === 'approved' && $totalAssessments > 0)
                             <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
                                 <div class="flex items-center gap-1.5">
                                     <div class="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                        <div class="bg-green-500 dark:bg-green-400 h-2 rounded-full" style="width: {{ ($submittedCount / $totalActivities) * 100 }}%"></div>
+                                        <div class="bg-green-500 dark:bg-green-400 h-2 rounded-full" style="width: {{ ($submittedCount / $totalAssessments) * 100 }}%"></div>
                                     </div>
-                                    <span class="text-xs text-gray-600 dark:text-gray-400 font-medium">{{ $submittedCount }}/{{ $totalActivities }}</span>
+                                    <span class="text-xs text-gray-600 dark:text-gray-400 font-medium">{{ $submittedCount }}/{{ $totalAssessments }}</span>
                                 </div>
                                 <span class="text-xs font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-star text-yellow-500 mr-1"></i>{{ $totalPoints }} pts</span>
                             </div>
                         @elseif($student->pivot->status === 'approved')
-                            <span class="hidden sm:block text-xs text-gray-400 dark:text-gray-500">No activities yet</span>
+                            <span class="hidden sm:block text-xs text-gray-400 dark:text-gray-500">No assessments yet</span>
                         @endif
 
                         <div class="flex items-center gap-2 flex-shrink-0">

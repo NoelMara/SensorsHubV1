@@ -45,8 +45,8 @@
                             </span>
                             <span class="flex items-center gap-1.5">
                                 <i class="fas fa-tasks text-gray-400"></i>
-                                <span class="font-medium text-gray-700 dark:text-gray-300">{{ $class->activities()->count() }}</span>
-                                activities
+                               <span class="font-medium text-gray-700 dark:text-gray-300">{{ $class->assessments()->count() }}</span>
+                                assessments
                             </span>
                         </div>
 

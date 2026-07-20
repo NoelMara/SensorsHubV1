@@ -61,9 +61,9 @@
                                 <td class="px-3 py-4 text-center">
                                     <div class="flex items-center justify-center gap-1.5">
                                         <div class="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-                                            <div class="bg-green-500 h-1.5 rounded-full" style="width: {{ $row['total_activities'] > 0 ? ($row['graded'] / $row['total_activities']) * 100 : 0 }}%"></div>
+                                            <div class="bg-green-500 h-1.5 rounded-full" style="width: {{ $row['total_assessments'] > 0 ? ($row['graded'] / $row['total_assessments']) * 100 : 0 }}%"></div>
                                         </div>
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ $row['graded'] }}/{{ $row['total_activities'] }}</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ $row['graded'] }}/{{ $row['total_assessments'] }}</span>
                                     </div>
                                 </td>
                                 <td class="px-3 py-4 text-center">

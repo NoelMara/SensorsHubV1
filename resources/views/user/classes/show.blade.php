@@ -94,35 +94,35 @@
     </div>
     @endif
 
-    <!-- Activities -->
-    @php $activities = $class->activities()->where('is_published', true)->latest()->take(3)->get(); @endphp
-    @if($activities->count() > 0)
+    <!-- Assessments -->
+    @php $assessments = $class->assessments()->where('is_published', true)->latest()->take(3)->get(); @endphp
+    @if($assessments->count() > 0)
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-bold text-gray-900 dark:text-white">
-                <i class="fas fa-tasks text-purple-500 mr-2"></i>Activities
+                <i class="fas fa-tasks text-purple-500 mr-2"></i>Assessments
             </h2>
-            <a href="{{ route('dashboard.classes.activities.index', $class) }}" class="text-sm text-primary hover:underline">View All</a>
+            <a href="{{ route('dashboard.classes.assessments.index', $class) }}" class="text-sm text-primary hover:underline">View All</a>
         </div>
         <div class="space-y-3">
-            @foreach($activities as $activity)
-                @php $sub = $activity->submissions()->where('user_id', auth()->id())->first(); @endphp
-                <a href="{{ route('dashboard.classes.activities.show', [$class, $activity]) }}" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+            @foreach($assessments as $assessment)
+                @php $sub = $assessment->submissions()->where('user_id', auth()->id())->first(); @endphp
+                <a href="{{ route('dashboard.classes.assessments.show', [$class, $assessment]) }}" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="font-semibold text-gray-900 dark:text-white">{{ $activity->title }}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $activity->points }} pts 
-                                @if($activity->due_date) · Due: {{ $activity->due_date->format('M d') }} @endif
+                            <h3 class="font-semibold text-gray-900 dark:text-white">{{ $assessment->title }}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $assessment->points }} pts 
+                                @if($assessment->due_date) · Due: {{ $assessment->due_date->format('M d') }} @endif
                             </p>
                         </div>
                         <div class="flex items-center gap-2">
                             @if($sub)
                                 @if($sub->score !== null)
-                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{ $sub->score }}/{{ $activity->points }}</span>
+                                    <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">{{ $sub->score }}/{{ $assessment->points }}</span>
                                 @else
                                     <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Submitted</span>
                                 @endif
-                           @elseif($activity->due_date && now()->isAfter($activity->due_date))
+                           @elseif($assessment->due_date && now()->isAfter($assessment->due_date))
                                 <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">Overdue</span>
                             @else
                                 <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">Pending</span>
