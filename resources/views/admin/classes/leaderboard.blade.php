@@ -24,7 +24,8 @@
                             <th class="pl-5 pr-3 py-3.5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase w-16">Rank</th>
                             <th class="px-3 py-3.5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Student</th>
                             <th class="px-3 py-3.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Points</th>
-                            <th class="px-3 py-3.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Submitted</th>
+                            <th class="px-3 py-3.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Assessments</th>
+                            <th class="px-3 py-3.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Quizzes</th>
                             <th class="px-3 py-3.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Pending</th>
                             <th class="pl-3 pr-5 py-3.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Overdue</th>
                         </tr>
@@ -59,12 +60,10 @@
                                     </span>
                                 </td>
                                 <td class="px-3 py-4 text-center">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <div class="w-16 bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-                                            <div class="bg-green-500 h-1.5 rounded-full" style="width: {{ $row['total_assessments'] > 0 ? ($row['graded'] / $row['total_assessments']) * 100 : 0 }}%"></div>
-                                        </div>
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{ $row['graded'] }}/{{ $row['total_assessments'] }}</span>
-                                    </div>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ $row['graded_assessments'] }}/{{ $row['total_assessments'] }}</span>
+                                </td>
+                                <td class="px-3 py-4 text-center">
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ $row['graded_quizzes'] }}/{{ $row['total_quizzes'] }}</span>
                                 </td>
                                 <td class="px-3 py-4 text-center">
                                     @if($row['pending'] > 0)

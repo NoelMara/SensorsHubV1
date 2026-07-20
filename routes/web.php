@@ -18,6 +18,7 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\AssessmentController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\Admin\SensorController as AdminSensorController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -117,6 +118,9 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::get('/classes/{class}/announcements', [AnnouncementController::class, 'studentIndex'])->name('classes.announcements.index');
     Route::get('/classes/{class}/modules', [ModuleController::class, 'studentIndex'])->name('classes.modules.index');
     Route::get('/classes/{class}/assessments', [AssessmentController::class, 'studentIndex'])->name('classes.assessments.index');
+    Route::get('/classes/{class}/quizzes', [QuizController::class, 'studentIndex'])->name('classes.quizzes.index');
+    Route::get('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'show'])->name('classes.quizzes.show');
+    Route::post('/classes/{class}/quizzes/{quiz}/submit', [QuizController::class, 'submit'])->name('classes.quizzes.submit');
 });
 
 // ─── Email Verification Routes ────────────────────────────────────────────────
@@ -174,6 +178,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/classes/{class}/assessments/{assessment}/submissions', [AssessmentController::class, 'submissions'])->name('classes.assessments.submissions');
     Route::post('/classes/{class}/assessments/{assessment}/grade/{submission}', [AssessmentController::class, 'grade'])->name('classes.assessments.grade');
     Route::delete('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'destroy'])->name('classes.assessments.destroy');
+
+    // Quizzes
+    Route::get('/classes/{class}/quizzes', [QuizController::class, 'index'])->name('classes.quizzes.index');
+    Route::get('/classes/{class}/quizzes/create', [QuizController::class, 'create'])->name('classes.quizzes.create');
+    Route::post('/classes/{class}/quizzes', [QuizController::class, 'store'])->name('classes.quizzes.store');
+    Route::get('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'show'])->name('classes.quizzes.show');
+    Route::get('/classes/{class}/quizzes/{quiz}/edit', [QuizController::class, 'edit'])->name('classes.quizzes.edit');
+    Route::put('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'update'])->name('classes.quizzes.update');
+    Route::delete('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'destroy'])->name('classes.quizzes.destroy');
+    Route::get('/classes/{class}/quizzes/{quiz}/submissions', [QuizController::class, 'submissions'])->name('classes.quizzes.submissions');
 
     // Leaderboard
     Route::get('/classes/{class}/leaderboard', [ClassroomController::class, 'leaderboard'])->name('classes.leaderboard');

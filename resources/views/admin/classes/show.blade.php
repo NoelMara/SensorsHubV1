@@ -28,6 +28,9 @@
                 <a href="{{ route('admin.classes.assessments.index', $class) }}" class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs font-medium">
                     <i class="fas fa-tasks mr-1"></i> Assessments
                 </a>
+                <a href="{{ route('admin.classes.quizzes.index', $class) }}" class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-xs font-medium">
+                    <i class="fas fa-question-circle mr-1"></i> Quizzes
+                </a>
                 <a href="{{ route('admin.classes.leaderboard', $class) }}" class="px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-xs font-medium">
                     <i class="fas fa-trophy mr-1"></i> Leaderboard
                 </a>
@@ -50,7 +53,7 @@
     </div>
 
     {{-- Quick Stats --}}
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
         @php
             $approved = $class->students->where('pivot.status', 'approved')->count();
             $pending = $class->students->where('pivot.status', 'pending')->count();
@@ -70,6 +73,10 @@
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
             <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $class->assessments()->count() }}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Assessments</p>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
+            <p class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $class->quizzes()->count() }}</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quizzes</p>
         </div>
     </div>
 

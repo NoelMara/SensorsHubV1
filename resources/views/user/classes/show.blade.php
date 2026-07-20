@@ -136,6 +136,43 @@
     </div>
     @endif
 
+    <!-- Quizzes -->
+    @php $quizzes = $class->quizzes()->where('is_published', true)->latest()->take(3)->get(); @endphp
+    @if($quizzes->count() > 0)
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-gray-900 dark:text-white">
+                <i class="fas fa-question-circle text-indigo-500 mr-2"></i>Quizzes
+            </h2>
+            <a href="{{ route('dashboard.classes.quizzes.index', $class) }}" class="text-sm text-primary hover:underline">View All</a>
+        </div>
+        <div class="space-y-3">
+            @foreach($quizzes as $quiz)
+                @php $sub = $quiz->submissions()->where('user_id', auth()->id())->first(); @endphp
+                <a href="{{ route('dashboard.classes.quizzes.show', [$class, $quiz]) }}" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-gray-900 dark:text-white">{{ $quiz->title }}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $quiz->points }} pts · {{ $quiz->questions->count() }} questions</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            @if($sub)
+                                @php $percent = ($sub->correct_answers / max($sub->total_questions, 1)) * 100; @endphp
+                                <span class="px-2 py-1 text-xs rounded-full {{ $percent >= $quiz->passing_score ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                    {{ $sub->score }}/{{ $quiz->points }}
+                                </span>
+                            @else
+                                <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Take Quiz</span>
+                            @endif
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    </div>
+    @endif
+    
     <div class="text-center">
         <a href="{{ route('dashboard.classes.index') }}" class="text-primary hover:underline">
             <i class="fas fa-arrow-left mr-1"></i> Back to My Classes

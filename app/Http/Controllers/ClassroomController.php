@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Classroom;
 use App\Models\AssessmentSubmission;
+use App\Models\QuizSubmission;
 use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 
@@ -151,22 +152,38 @@ class ClassroomController extends Controller
         }
         $students = $class->students()->wherePivot('status', 'approved')->get();
         $assessments = $class->assessments()->where('is_published', true)->get();
+        $quizzes = $class->quizzes()->where('is_published', true)->get();
         $totalAssessments = $assessments->count();
+        $totalQuizzes = $quizzes->count();
         
-        $leaderboard = $students->map(function ($student) use ($assessments, $totalAssessments) {
+        $leaderboard = $students->map(function ($student) use ($assessments, $quizzes, $totalAssessments, $totalQuizzes) {
             $submissions = AssessmentSubmission::where('user_id', $student->id)
                 ->whereIn('assessment_id', $assessments->pluck('id'))
                 ->get();
             
-            $totalPoints = $submissions->sum('score');
-            $submitted = $submissions->count();
-            $graded = $submissions->whereNotNull('score')->count();
+            $quizSubmissions = QuizSubmission::where('user_id', $student->id)
+                ->whereIn('quiz_id', $quizzes->pluck('id'))
+                ->get();
+            
+            $assessmentPoints = $submissions->sum('score');
+            $quizPoints = $quizSubmissions->sum('score');
+            $totalPoints = $assessmentPoints + $quizPoints;
+            
+            $submitted = $submissions->count() + $quizSubmissions->count();
+            $graded = $submissions->whereNotNull('score')->count() + $quizSubmissions->count();
             
             $pending = $assessments->filter(function ($assessment) use ($student) {
                 return !AssessmentSubmission::where('assessment_id', $assessment->id)
                     ->where('user_id', $student->id)
                     ->exists() 
                     && (!$assessment->due_date || now()->lessThanOrEqualTo($assessment->due_date));
+            })->count();
+            
+            $pending += $quizzes->filter(function ($quiz) use ($student) {
+                return !QuizSubmission::where('quiz_id', $quiz->id)
+                    ->where('user_id', $student->id)
+                    ->exists() 
+                    && (!$quiz->due_date || now()->lessThanOrEqualTo($quiz->due_date));
             })->count();
             
             $overdue = $assessments->filter(function ($assessment) use ($student) {
@@ -176,14 +193,22 @@ class ClassroomController extends Controller
                     && $assessment->due_date && now()->isAfter($assessment->due_date);
             })->count();
             
+            $overdue += $quizzes->filter(function ($quiz) use ($student) {
+                return !QuizSubmission::where('quiz_id', $quiz->id)
+                    ->where('user_id', $student->id)
+                    ->exists() 
+                    && $quiz->due_date && now()->isAfter($quiz->due_date);
+            })->count();
+            
             return [
                 'student' => $student,
                 'total_points' => $totalPoints,
-                'submitted' => $submitted,
-                'graded' => $graded,
+                'graded_assessments' => $submissions->whereNotNull('score')->count(),
+                'total_assessments' => $totalAssessments,
+                'graded_quizzes' => $quizSubmissions->count(),
+                'total_quizzes' => $totalQuizzes,
                 'pending' => $pending,
                 'overdue' => $overdue,
-                'total_assessments' => $totalAssessments,
             ];
         })->sortByDesc('total_points')->values();
         

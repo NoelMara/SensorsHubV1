@@ -52,5 +52,10 @@ class Classroom extends Model
     {
         return $this->hasMany(Assessment::class, 'class_id');
     }
+
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class, 'class_id');
+    }
     
 }
