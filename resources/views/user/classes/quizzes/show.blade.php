@@ -69,7 +69,8 @@
         </div>
 
     {{-- Not Submitted + Not Overdue --}}
-    @elseif(!$quiz->due_date || now()->lessThanOrEqualTo($quiz->due_date))
+@elseif(!$quiz->due_date || now()->lessThanOrEqualTo($quiz->due_date))
+    @if(!auth()->user()->isAdmin() && !auth()->user()->isSuperAdmin())
         <form method="POST" action="{{ route('dashboard.classes.quizzes.submit', [$class, $quiz]) }}">
             @csrf
             <div class="space-y-4">
@@ -95,6 +96,28 @@
                 <i class="fas fa-paper-plane mr-1.5"></i> Submit Quiz
             </button>
         </form>
+    @else
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 sm:p-6">
+            <div class="space-y-4">
+                @foreach($quiz->questions as $index => $question)
+                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4">
+                        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-2">
+                            Q{{ $index + 1 }}. {{ $question->question }}
+                        </h3>
+                        <div class="space-y-1">
+                            @foreach($question->options as $option)
+                                <div class="flex items-center gap-2 text-sm {{ $option->is_correct ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-gray-500 dark:text-gray-400' }}">
+                                    <span>{{ $option->is_correct ? '✅' : '○' }}</span>
+                                    <span>{{ $option->option_text }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <p class="text-xs text-gray-400 mt-4 text-center">Instructor preview — correct answers shown</p>
+        </div>
+    @endif
 
     {{-- Past Due --}}
     @else

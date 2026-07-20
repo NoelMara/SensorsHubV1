@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ route('admin.classes.quizzes.update', [$class, $quiz]) }}">
+            <form method="POST" action="{{ route('admin.classes.quizzes.update', [$class, $quiz]) }}" x-data="quizEditor({{ json_encode($quiz->questions->map(function($q) { return ['id' => $q->id, 'text' => $q->question, 'options' => $q->options->map(function($o) { return ['id' => $o->id, 'text' => $o->option_text, 'isCorrect' => $o->is_correct]; })->values()]; })->values()) }})">
                 @csrf
                 @method('PUT')
 
@@ -62,6 +62,59 @@
                             class="h-4 w-4 text-primary rounded border-gray-300 focus:ring-primary">
                         <label for="is_published" class="text-sm text-gray-700 dark:text-gray-300">Publish (visible to students)</label>
                     </div>
+
+                    {{-- Questions Section --}}
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-5">
+                        <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">Questions</h2>
+
+                        <template x-for="(question, qIndex) in questions" :key="qIndex">
+                            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 mb-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300" x-text="'Q' + (qIndex + 1)"></span>
+                                    <button type="button" @click="removeQuestion(qIndex)" 
+                                        class="text-red-500 hover:text-red-700 text-xs" x-show="questions.length > 1">
+                                        <i class="fas fa-trash mr-1"></i> Remove
+                                    </button>
+                                </div>
+
+                                <input type="text" :name="'questions[' + qIndex + '][id]'" x-model="question.id" class="hidden">
+                                <input type="text" :name="'questions[' + qIndex + '][question]'" required
+                                    class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm mb-3"
+                                    placeholder="Enter your question..." x-model="question.text">
+
+                                <div class="space-y-2 mb-3">
+                                    <template x-for="(option, oIndex) in question.options" :key="oIndex">
+                                        <div class="flex items-center gap-2">
+                                            <input type="radio" :name="'questions[' + qIndex + '][correct_option]'" 
+                                                :value="oIndex" :checked="option.isCorrect"
+                                                @change="setCorrect(qIndex, oIndex)"
+                                                class="h-4 w-4 text-primary focus:ring-primary flex-shrink-0">
+                                            <input type="text" :name="'questions[' + qIndex + '][options][' + oIndex + '][id]'" x-model="option.id" class="hidden">
+                                            <input type="text" :name="'questions[' + qIndex + '][options][' + oIndex + '][text]'" required
+                                                class="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm"
+                                                :placeholder="'Option ' + (oIndex + 1)" x-model="option.text">
+                                            <input type="hidden" :name="'questions[' + qIndex + '][options][' + oIndex + '][is_correct]'" 
+                                                :value="option.isCorrect ? '1' : '0'">
+                                            <button type="button" @click="removeOption(qIndex, oIndex)" 
+                                                class="text-red-400 hover:text-red-600 text-xs" x-show="question.options.length > 2">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </template>
+                                </div>
+
+                                <button type="button" @click="addOption(qIndex)" 
+                                    class="text-xs text-primary hover:underline" x-show="question.options.length < 6">
+                                    <i class="fas fa-plus mr-1"></i> Add Option
+                                </button>
+                            </div>
+                        </template>
+
+                        <button type="button" @click="addQuestion()" 
+                            class="w-full py-2.5 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl text-sm text-gray-500 dark:text-gray-400 hover:border-primary hover:text-primary transition">
+                            <i class="fas fa-plus mr-1"></i> Add Question
+                        </button>
+                    </div>
                 </div>
 
                 <div class="mt-6 flex items-center gap-3">
@@ -78,3 +131,53 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function quizEditor(existingQuestions) {
+        return {
+            questions: existingQuestions && existingQuestions.length > 0 ? existingQuestions : [{
+                id: null,
+                text: '',
+                options: [
+                    { id: null, text: '', isCorrect: false },
+                    { id: null, text: '', isCorrect: false },
+                    { id: null, text: '', isCorrect: false },
+                    { id: null, text: '', isCorrect: false },
+                ]
+            }],
+
+            addQuestion() {
+                this.questions.push({
+                    id: null,
+                    text: '',
+                    options: [
+                        { id: null, text: '', isCorrect: false },
+                        { id: null, text: '', isCorrect: false },
+                        { id: null, text: '', isCorrect: false },
+                        { id: null, text: '', isCorrect: false },
+                    ]
+                });
+            },
+
+            removeQuestion(index) {
+                this.questions.splice(index, 1);
+            },
+
+            addOption(qIndex) {
+                this.questions[qIndex].options.push({ id: null, text: '', isCorrect: false });
+            },
+
+            removeOption(qIndex, oIndex) {
+                this.questions[qIndex].options.splice(oIndex, 1);
+            },
+
+            setCorrect(qIndex, oIndex) {
+                this.questions[qIndex].options.forEach((opt, i) => {
+                    opt.isCorrect = (i === oIndex);
+                });
+            }
+        }
+    }
+</script>
+@endpush

@@ -105,6 +105,11 @@ class QuizController extends Controller
             'passing_score' => 'required|integer|min:0|max:100',
             'due_date' => 'nullable|date',
             'is_published' => 'boolean',
+            'questions' => 'required|array|min:1',
+            'questions.*.question' => 'required|string',
+            'questions.*.options' => 'required|array|min:2',
+            'questions.*.options.*.text' => 'required|string',
+            'questions.*.options.*.is_correct' => 'nullable|boolean',
         ]);
 
         $quiz->update([
@@ -116,6 +121,25 @@ class QuizController extends Controller
             'due_date' => $validated['due_date'] ?? null,
             'is_published' => $request->has('is_published'),
         ]);
+
+        // Delete old questions and options
+        $quiz->questions()->delete();
+
+        // Create new ones
+        foreach ($validated['questions'] as $qIndex => $qData) {
+            $question = $quiz->questions()->create([
+                'question' => $qData['question'],
+                'order' => $qIndex + 1,
+            ]);
+
+            foreach ($qData['options'] as $oIndex => $oData) {
+                $question->options()->create([
+                    'option_text' => $oData['text'],
+                    'is_correct' => $oData['is_correct'] ?? false,
+                    'order' => $oIndex + 1,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.classes.quizzes.index', $class)->with('success', 'Quiz updated!');
     }
