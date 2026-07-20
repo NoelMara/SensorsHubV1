@@ -23,7 +23,7 @@ class UserController extends Controller
 
         $roleCounts = [
             'all'         => User::count(),
-            'user'        => User::where('role', 'user')->count(),
+            'user'        => User::where('role', 'student')->count(),
             'admin'       => User::where('role', 'admin')->count(),
             'super_admin' => User::where('role', 'super_admin')->count(),
         ];
@@ -41,7 +41,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'role'     => ['required', Rule::in(['user', 'admin'])], // super_admin not allowed here
+            'role'     => ['required', Rule::in(['student', 'admin'])], 
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
@@ -81,7 +81,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name'  => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'role'  => ['nullable', Rule::in(['user', 'admin'])], // ← change 'required' to 'nullable'
+            'role'  => ['nullable', Rule::in(['student', 'admin'])], 
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
@@ -108,7 +108,7 @@ class UserController extends Controller
    public function updateRole(Request $request, User $user)
     {
         $validated = $request->validate([
-            'role' => ['required', Rule::in(['user', 'admin', 'super_admin'])],
+            'role' => ['required', Rule::in(['student', 'admin', 'super_admin'])],
         ]);
 
         // Protect the original Administrator (env account) from being demoted

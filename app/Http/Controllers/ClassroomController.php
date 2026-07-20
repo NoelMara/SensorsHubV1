@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Classroom;
 use App\Models\AssessmentSubmission;
 use App\Models\QuizSubmission;
+use App\Models\User;
 use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 
@@ -166,6 +167,13 @@ class ClassroomController extends Controller
             abort(403);
         }
         $class->students()->updateExistingPivot($userId, ['status' => 'approved']);
+        
+        // Upgrade user to student
+        $user = User::find($userId);
+        if ($user && $user->role === 'user') {
+            $user->update(['role' => 'student']);
+        }
+        
         return back()->with('success', 'Student approved!');
     }
 
@@ -258,6 +266,11 @@ class ClassroomController extends Controller
         
         foreach ($pendingStudents as $student) {
             $class->students()->updateExistingPivot($student->id, ['status' => 'approved']);
+            
+            // Upgrade user to student
+            if ($student->role === 'user') {
+                $student->update(['role' => 'student']);
+            }
         }
         
         return back()->with('success', count($pendingStudents) . ' students approved!');

@@ -17,7 +17,7 @@
     {{-- Filter Tabs --}}
     <div class="flex flex-wrap gap-2 mb-6">
         <a href="{{ route('super-admin.users.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ !$role ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">All ({{ $roleCounts['all'] }})</a>
-        <a href="{{ route('super-admin.users.index', ['role' => 'user']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'user' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Students ({{ $roleCounts['user'] }})</a>
+        <a href="{{ route('super-admin.users.index', ['role' => 'student']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'user' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Students ({{ $roleCounts['user'] }})</a>
         <a href="{{ route('super-admin.users.index', ['role' => 'admin']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'admin' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Instructors ({{ $roleCounts['admin'] }})</a>
         <a href="{{ route('super-admin.users.index', ['role' => 'super_admin']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'super_admin' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Administrator ({{ $roleCounts['super_admin'] }})</a>
     </div>
@@ -53,7 +53,7 @@
                                     @csrf
                                     @method('PUT')
                                     <select name="role" class="text-sm rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-1.5">
-                                        <option value="user" @selected($user->role === 'user')>Student</option>
+                                        <option value="student" @selected($user->role === 'student')>Student</option>
                                         <option value="admin" @selected($user->role === 'admin')>Instructor</option>
                                         <option value="super_admin" @selected($user->role === 'super_admin')>Administrator</option>
                                     </select>

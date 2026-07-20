@@ -17,7 +17,7 @@ class DashboardController extends Controller
     public function index()
     {
         $stats = [
-            'users' => User::where('role', 'user')->count(),
+            'users' => User::where('role', 'student')->count(),
             'admins' => User::where('role', 'admin')->count(),
             'super_admins' => User::where('role', 'super_admin')->count(),
             'sensors' => Sensor::count(),
@@ -32,7 +32,7 @@ class DashboardController extends Controller
         $recentSuggestions = Suggestion::with('user')->latest()->take(5)->get();
         $recentComments = Comment::with(['user', 'suggestion'])
             ->whereHas('user', function($q) {
-                $q->where('role', 'user');
+                $q->where('role', 'student');
             })
             ->latest()
             ->take(5)
