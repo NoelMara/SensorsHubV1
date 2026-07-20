@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin())
+    @if(auth()->user()->isInstructor() || auth()->user()->isSuperAdmin())
         <a href="{{ route('admin.classes.quizzes.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-6">
             <i class="fas fa-arrow-left mr-1"></i> Back to Quizzes
         </a>
@@ -74,7 +74,7 @@
 
     {{-- Not Submitted + Not Overdue --}}
     @elseif(!$quiz->due_date || now()->lessThanOrEqualTo($quiz->due_date))
-        @if(!auth()->user()->isAdmin() && !auth()->user()->isSuperAdmin())
+        @if(!auth()->user()->isInstructor() && !auth()->user()->isSuperAdmin())
             <form method="POST" action="{{ route('dashboard.classes.quizzes.submit', [$class, $quiz]) }}">
                 @csrf
                 <div class="space-y-3 sm:space-y-4">

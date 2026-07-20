@@ -51,6 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+
     public function suggestions()
     {
         return $this->hasMany(Suggestion::class);
@@ -66,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(Classroom::class, 'class_student', 'user_id', 'class_id');
     }
 
-    public function isAdmin()
+    public function isInstructor()
     {
         return $this->role === 'admin';
     }

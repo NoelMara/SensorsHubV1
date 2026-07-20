@@ -101,7 +101,7 @@ class AssessmentController extends Controller
 
     public function show(Classroom $class, Assessment $assessment)
     {
-        if (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) {
+        if (auth()->user()->isInstructor() || auth()->user()->isSuperAdmin()) {
             $submission = AssessmentSubmission::where('assessment_id', $assessment->id)
                 ->where('user_id', auth()->id())
                 ->first();
@@ -251,7 +251,7 @@ class AssessmentController extends Controller
 
     public function studentIndex(Classroom $class)
     {
-        if (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) {
+        if (auth()->user()->isInstructor() || auth()->user()->isSuperAdmin()) {
             $assessments = $class->assessments()->where('is_published', true)->latest()->paginate(10);
             return view('user.classes.assessments.index', compact('class', 'assessments'));
         }

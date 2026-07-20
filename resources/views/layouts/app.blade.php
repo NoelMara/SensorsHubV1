@@ -30,14 +30,14 @@
         if (auth()->check()) {
             if (auth()->user()->isSuperAdmin()) {
                 $homeRoute = 'super-admin.dashboard';
-            } elseif (auth()->user()->isAdmin()) {
+            } elseif (auth()->user()->isInstructor()) {
                 $homeRoute = 'admin.dashboard';
             } else {
                 $homeRoute = 'dashboard.index';
             }
         }
         $isSuperAdmin = auth()->check() && auth()->user()->isSuperAdmin();
-        $isAdmin = auth()->check() && auth()->user()->isAdmin();
+        $isAdmin = auth()->check() && auth()->user()->isInstructor();
     @endphp
 
     <!-- Toast Notifications -->
@@ -452,7 +452,7 @@
             @elseif(auth()->user()->isSuperAdmin())
                 const audioSrc = "{{ asset('audio/welcome-administrator.mp3') }}";
                 const storageKey = 'welcome_administrator_played';
-            @elseif(auth()->user()->isAdmin())
+            @elseif(auth()->user()->isInstructor())
                 const audioSrc = "{{ asset('audio/welcome-instructor.mp3') }}";
                 const storageKey = 'welcome_instructor_played';
             @else

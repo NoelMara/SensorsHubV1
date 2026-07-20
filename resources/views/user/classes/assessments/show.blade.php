@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin())
+    @if(auth()->user()->isInstructor() || auth()->user()->isSuperAdmin())
         <a href="{{ route('admin.classes.assessments.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-8">
             <i class="fas fa-arrow-left mr-1"></i> Back to Assessments
         </a>
@@ -63,7 +63,7 @@
     </div>
 
     {{-- Submission (Students Only) --}}
-    @if(!auth()->user()->isAdmin() && !auth()->user()->isSuperAdmin())
+    @if(!auth()->user()->isInstructor() && !auth()->user()->isSuperAdmin())
         @if($submission)
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-green-200 dark:border-green-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-green-200 dark:border-green-700 flex items-center gap-2">

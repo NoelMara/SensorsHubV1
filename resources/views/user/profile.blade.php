@@ -86,7 +86,7 @@
                             Account Type
                         </label>
                         <input type="text" 
-                              value="{{ $user->isSuperAdmin() ? 'Administrator' : ($user->isAdmin() ? 'Instructor' : 'Student') }}"
+                              value="{{ $user->isSuperAdmin() ? 'Administrator' : ($user->isInstructor() ? 'Instructor' : 'Student') }}"
                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 dark:text-white"
                                disabled>
                     </div>
@@ -180,7 +180,7 @@
 
     <!-- Back to Dashboard -->
     <div class="mt-8">
-        <a href="{{ $user->isAdmin() ? route('admin.dashboard') : route('dashboard.index') }}" class="inline-flex items-center text-primary hover:underline">
+        <a href="{{ $user->isInstructor() ? route('admin.dashboard') : route('dashboard.index') }}" class="inline-flex items-center text-primary hover:underline">
             <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
         </a>
     </div>
