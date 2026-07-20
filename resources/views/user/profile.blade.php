@@ -86,7 +86,7 @@
                             Account Type
                         </label>
                         <input type="text" 
-                              value="{{ $user->isSuperAdmin() ? 'Faculty Head' : ($user->isAdmin() ? 'Instructor' : 'Student') }}"
+                              value="{{ $user->isSuperAdmin() ? 'Administrator' : ($user->isAdmin() ? 'Instructor' : 'Student') }}"
                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-600 dark:text-white"
                                disabled>
                     </div>

@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', $activity->title)
+@section('title', $assessment->title)
 
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     @if(auth()->user()->isAdmin() || auth()->user()->isSuperAdmin())
-        <a href="{{ route('admin.classes.activities.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-8">
-            <i class="fas fa-arrow-left mr-1"></i> Back to Activities
+        <a href="{{ route('admin.classes.assessments.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-8">
+            <i class="fas fa-arrow-left mr-1"></i> Back to Assessments
         </a>
     @else
         <a href="{{ route('dashboard.classes.show', $class) }}" class="text-primary hover:underline inline-block text-sm mb-8">
@@ -25,7 +25,7 @@
                 <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
                     <i class="fas fa-clock text-blue-600 dark:text-blue-400 text-xl"></i>
                 </div>
-            @elseif($activity->due_date && now()->isAfter($activity->due_date))
+            @elseif($assessment->due_date && now()->isAfter($assessment->due_date))
                 <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
                     <i class="fas fa-exclamation-circle text-red-600 dark:text-red-400 text-xl"></i>
                 </div>
@@ -35,11 +35,11 @@
                 </div>
             @endif
             <div>
-                <h1 class="text-xl font-bold text-gray-900 dark:text-white">{{ $activity->title }}</h1>
+                <h1 class="text-xl font-bold text-gray-900 dark:text-white">{{ $assessment->title }}</h1>
                 <div class="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    <span><i class="fas fa-star text-yellow-500 mr-1"></i>{{ $activity->points }} points</span>
-                    @if($activity->due_date)
-                        <span>· Due {{ $activity->due_date->format('M d, Y h:i A') }}</span>
+                    <span><i class="fas fa-star text-yellow-500 mr-1"></i>{{ $assessment->points }} points</span>
+                    @if($assessment->due_date)
+                        <span>· Due {{ $assessment->due_date->format('M d, Y h:i A') }}</span>
                     @else
                         <span>· No deadline</span>
                     @endif
@@ -47,17 +47,17 @@
             </div>
         </div>
 
-        @if($activity->description)
+        @if($assessment->description)
             <div class="mb-6">
                 <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Description</h2>
-                <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{{ $activity->description }}</p>
+                <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{{ $assessment->description }}</p>
             </div>
         @endif
 
-        @if($activity->instructions)
+        @if($assessment->instructions)
             <div>
                 <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Instructions</h2>
-                <div class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ $activity->instructions }}</div>
+                <div class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed whitespace-pre-line">{{ $assessment->instructions }}</div>
             </div>
         @endif
     </div>
@@ -78,7 +78,7 @@
                     @if($submission->score !== null)
                         <div class="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                             <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
-                                <span class="text-sm font-bold text-green-700 dark:text-green-300">{{ $submission->score }}/{{ $activity->points }}</span>
+                                <span class="text-sm font-bold text-green-700 dark:text-green-300">{{ $submission->score }}/{{ $assessment->points }}</span>
                             </div>
                             <div>
                                 <p class="text-sm font-semibold text-gray-900 dark:text-white">Graded</p>
@@ -90,10 +90,10 @@
                     @endif
                 </div>
             </div>
-        @elseif(!$activity->due_date || now()->lessThanOrEqualTo($activity->due_date))
+        @elseif(!$assessment->due_date || now()->lessThanOrEqualTo($assessment->due_date))
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 sm:p-6">
                 <h2 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4">Submit Your Work</h2>
-                <form method="POST" action="{{ route('dashboard.classes.activities.submit', [$class, $activity]) }}">
+                <form method="POST" action="{{ route('dashboard.classes.assessments.submit', [$class, $assessment]) }}">
                     @csrf
                     <textarea name="content" rows="8" required
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none mb-4"
@@ -110,7 +110,7 @@
                 </div>
                 <div>
                     <p class="text-sm font-semibold text-yellow-700 dark:text-yellow-400">Past Due Date</p>
-                    <p class="text-xs text-yellow-600 dark:text-yellow-500 mt-0.5">This activity is no longer accepting submissions.</p>
+                    <p class="text-xs text-yellow-600 dark:text-yellow-500 mt-0.5">This assessment is no longer accepting submissions.</p>
                 </div>
             </div>
         @endif

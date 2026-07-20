@@ -11,12 +11,12 @@
         <p class="text-sm text-gray-500 dark:text-gray-400">Welcome back! Here's what's happening with your platform.</p>
     </div>
 
-    {{-- Faculty Head Section --}}
+    {{-- Administrator Section --}}
     @if(auth()->user()->isSuperAdmin())
         <div class="bg-gray-900 dark:bg-gray-950 rounded-xl p-6 mb-8 text-white">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
-                    <p class="text-sm text-blue-300 mb-1">Faculty Head Controls</p>
+                    <p class="text-sm text-blue-300 mb-1">Administrator Controls</p>
                     <h2 class="text-xl font-bold">Manage instructor and student accounts</h2>
                 </div>
                 <a href="{{ route('super-admin.users.index') }}" class="inline-flex items-center justify-center bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-blue-600 transition text-sm font-medium">
@@ -41,7 +41,7 @@
                 <div class="flex items-center gap-2 flex-wrap">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white truncate">{{ auth()->user()->name }}</h2>
                     <span class="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                        {{ auth()->user()->isSuperAdmin() ? 'Faculty Head' : 'Instructor' }}
+                        {{ auth()->user()->isSuperAdmin() ? 'Administrator' : 'Instructor' }}
                     </span>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ auth()->user()->email }}</p>

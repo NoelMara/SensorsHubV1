@@ -123,6 +123,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function submissions()
     {
-        return $this->hasMany(ActivitySubmission::class);
+        return $this->hasMany(AssessmentSubmission::class);
     }
 }

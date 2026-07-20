@@ -102,7 +102,7 @@ class LoginController extends Controller
             RateLimiter::hit($key, 60);
 
             return back()->withErrors([
-                'email' => 'The provided Faculty Head credentials do not match our records.',
+                'email' => 'The provided Administrator credentials do not match our records.',
             ])->onlyInput('email');
         }
 

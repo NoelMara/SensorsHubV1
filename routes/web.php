@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ModuleController;
-use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\Admin\SensorController as AdminSensorController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
@@ -112,11 +112,11 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
         ->name('classes.join');
     Route::get('/classes/{class}', [ClassroomController::class, 'studentShow'])->name('classes.show');
     Route::get('/classes/{class}/modules/{module}', [ModuleController::class, 'show'])->name('classes.modules.show');
-    Route::get('/classes/{class}/activities/{activity}', [ActivityController::class, 'show'])->name('classes.activities.show');
-    Route::post('/classes/{class}/activities/{activity}/submit', [ActivityController::class, 'submit'])->name('classes.activities.submit');
+    Route::get('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'show'])->name('classes.assessments.show');
+    Route::post('/classes/{class}/assessments/{assessment}/submit', [AssessmentController::class, 'submit'])->name('classes.assessments.submit');
     Route::get('/classes/{class}/announcements', [AnnouncementController::class, 'studentIndex'])->name('classes.announcements.index');
     Route::get('/classes/{class}/modules', [ModuleController::class, 'studentIndex'])->name('classes.modules.index');
-    Route::get('/classes/{class}/activities', [ActivityController::class, 'studentIndex'])->name('classes.activities.index');
+    Route::get('/classes/{class}/assessments', [AssessmentController::class, 'studentIndex'])->name('classes.assessments.index');
 });
 
 // ─── Email Verification Routes ────────────────────────────────────────────────
@@ -162,18 +162,18 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/classes/{class}/modules/{module}/edit', [ModuleController::class, 'edit'])->name('classes.modules.edit');
     Route::put('/classes/{class}/modules/{module}', [ModuleController::class, 'update'])->name('classes.modules.update');
 
-    // Activities
-    Route::get('/classes/{class}/activities', [ActivityController::class, 'index'])->name('classes.activities.index');
-    Route::get('/classes/{class}/activities/create', [ActivityController::class, 'create'])->name('classes.activities.create');
-    Route::post('/classes/{class}/activities', [ActivityController::class, 'store'])->name('classes.activities.store');
-    Route::get('/classes/{class}/activities/import', [ActivityController::class, 'import'])->name('classes.activities.import');
-    Route::post('/classes/{class}/activities/import', [ActivityController::class, 'copyActivities'])->name('classes.activities.copy');
-    Route::get('/classes/{class}/activities/{activity}', [ActivityController::class, 'show'])->name('classes.activities.show');
-    Route::get('/classes/{class}/activities/{activity}/edit', [ActivityController::class, 'edit'])->name('classes.activities.edit');
-    Route::put('/classes/{class}/activities/{activity}', [ActivityController::class, 'update'])->name('classes.activities.update');
-    Route::get('/classes/{class}/activities/{activity}/submissions', [ActivityController::class, 'submissions'])->name('classes.activities.submissions');
-    Route::post('/classes/{class}/activities/{activity}/grade/{submission}', [ActivityController::class, 'grade'])->name('classes.activities.grade');
-    Route::delete('/classes/{class}/activities/{activity}', [ActivityController::class, 'destroy'])->name('classes.activities.destroy');
+    // Assessments
+    Route::get('/classes/{class}/assessments', [AssessmentController::class, 'index'])->name('classes.assessments.index');
+    Route::get('/classes/{class}/assessments/create', [AssessmentController::class, 'create'])->name('classes.assessments.create');
+    Route::post('/classes/{class}/assessments', [AssessmentController::class, 'store'])->name('classes.assessments.store');
+    Route::get('/classes/{class}/assessments/import', [AssessmentController::class, 'import'])->name('classes.assessments.import');
+    Route::post('/classes/{class}/assessments/import', [AssessmentController::class, 'copyAssessments'])->name('classes.assessments.copy');
+    Route::get('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'show'])->name('classes.assessments.show');
+    Route::get('/classes/{class}/assessments/{assessment}/edit', [AssessmentController::class, 'edit'])->name('classes.assessments.edit');
+    Route::put('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'update'])->name('classes.assessments.update');
+    Route::get('/classes/{class}/assessments/{assessment}/submissions', [AssessmentController::class, 'submissions'])->name('classes.assessments.submissions');
+    Route::post('/classes/{class}/assessments/{assessment}/grade/{submission}', [AssessmentController::class, 'grade'])->name('classes.assessments.grade');
+    Route::delete('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'destroy'])->name('classes.assessments.destroy');
 
     // Leaderboard
     Route::get('/classes/{class}/leaderboard', [ClassroomController::class, 'leaderboard'])->name('classes.leaderboard');
@@ -220,7 +220,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/suggestions/{suggestion}/comment/{comment}', [AdminSuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 });
 
-// ─── Faculty Head Routes ───────────────────────────────────────────────────────
+// ─── Administrator Routes ───────────────────────────────────────────────────────
 Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
 
@@ -247,7 +247,7 @@ Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-a
     Route::get('/suggestions/{suggestion}', [SuperAdminSuggestionController::class, 'show'])->name('suggestions.show');
     Route::put('/suggestions/{suggestion}/status', [SuperAdminSuggestionController::class, 'updateStatus'])->name('suggestions.status');
 
-    // Comment routes (faculty head)
+    // Comment routes (administrator)
     Route::post('/suggestions/{suggestion}/comment', [SuperAdminSuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [SuperAdminSuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 

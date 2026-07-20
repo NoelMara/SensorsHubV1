@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Faculty Head Profile')
+@section('title', 'Administrator Profile')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -29,7 +29,7 @@
                     <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ $user->name }}</h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
                     <div class="flex items-center gap-2 mt-2 justify-center sm:justify-start">
-                        <span class="px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">Faculty Head</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">Administrator</span>
                         <span class="text-xs text-gray-400">· Joined {{ $user->created_at->format('M Y') }}</span>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 
 @php($isSuperAdminLogin = ($loginMode ?? 'default') === 'super_admin')
 
-@section('title', $isSuperAdminLogin ? 'Faculty Head Login' : 'Login')
+@section('title', $isSuperAdminLogin ? 'Administrator Login' : 'Login')
 
 @push('styles')
 <style>
@@ -116,7 +116,7 @@
                     SensorsHub
                 </a>
                 <p class="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-300">
-                    {{ session('require_verification') ? 'Email verification' : ($isSuperAdminLogin ? 'Faculty Head access' : 'Welcome back') }}
+                    {{ session('require_verification') ? 'Email verification' : ($isSuperAdminLogin ? 'Administrator access' : 'Welcome back') }}
                 </p>
                 <h2 class="mt-3 text-3xl font-bold text-slate-950 dark:text-white">
                     {{ session('require_verification') ? 'Enter your security code' : ($isSuperAdminLogin ? 'Sign in securely' : 'Sign in to your account') }}
@@ -250,7 +250,7 @@
 
                         <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 py-4 font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400">
                             <i class="fas {{ $isSuperAdminLogin ? 'fa-user-shield' : 'fa-right-to-bracket' }}"></i>
-                            {{ $isSuperAdminLogin ? 'Enter Faculty Head' : 'Sign in' }}
+                            {{ $isSuperAdminLogin ? 'Enter Administrator' : 'Sign in' }}
                         </button>
                     </form>
 

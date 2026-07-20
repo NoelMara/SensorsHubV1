@@ -39,7 +39,7 @@
                     {{ $user->role === 'super_admin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' : '' }}
                     {{ $user->role === 'admin' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : '' }}
                     {{ $user->role === 'user' ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300' : '' }}">
-                    {{ $user->role === 'super_admin' ? 'Faculty Head' : ($user->role === 'admin' ? 'Instructor' : 'Student') }}
+                    {{ $user->role === 'super_admin' ? 'Administrator' : ($user->role === 'admin' ? 'Instructor' : 'Student') }}
                 </span>
             </div>
         </div>

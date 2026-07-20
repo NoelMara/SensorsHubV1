@@ -91,7 +91,7 @@
                         <div>
                             <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorsHub</span>
                             @if($isSuperAdmin)
-                                <span class="text-xs text-primary font-semibold">Faculty Head</span>
+                                <span class="text-xs text-primary font-semibold">Administrator</span>
                             @elseif($isAdmin)
                                 <span class="text-xs text-secondary font-semibold">Instructor</span>
                             @endif
@@ -101,7 +101,7 @@
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6">
-                   {{-- Faculty Head Desktop Menu --}}
+                   {{-- Administrator Desktop Menu --}}
                     @if($isSuperAdmin)
                         <div class="relative group">
                             <a href="{{ route('super-admin.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold flex items-center gap-1">
@@ -441,8 +441,8 @@
 
          @auth
             @if(auth()->user()->isSuperAdmin())
-                const audioSrc = "{{ asset('audio/welcome-faculty.mp3') }}";
-                const storageKey = 'welcome_faculty_played';
+                const audioSrc = "{{ asset('audio/welcome-administrator.mp3') }}";
+                const storageKey = 'welcome_administrator_played';
             @elseif(auth()->user()->isAdmin())
                 const audioSrc = "{{ asset('audio/welcome-instructor.mp3') }}";
                 const storageKey = 'welcome_instructor_played';

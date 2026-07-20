@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classroom;
-use App\Models\ActivitySubmission;
+use App\Models\AssessmentSubmission;
 use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,6 @@ class ClassroomController extends Controller
         $classes = Classroom::where('instructor_id', auth()->id())->latest()->paginate(3);
         return view('admin.classes.index', compact('classes'));
     }
-
 
     public function create()
     {
@@ -42,7 +41,7 @@ class ClassroomController extends Controller
     public function show(Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) {
-        abort(403);
+            abort(403);
         }
         return view('admin.classes.show', compact('class'));
     }
@@ -103,7 +102,7 @@ class ClassroomController extends Controller
         $class->students()->attach(auth()->id(), ['status' => 'pending']);
 
         return redirect()->route('dashboard.classes.index')
-        ->with('success', 'Join request sent! Wait for your instructor to approve.');
+            ->with('success', 'Join request sent! Wait for your instructor to approve.');
     }
 
     public function studentClasses()
@@ -148,33 +147,33 @@ class ClassroomController extends Controller
     public function leaderboard(Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) {
-        abort(403);
+            abort(403);
         }
         $students = $class->students()->wherePivot('status', 'approved')->get();
-        $activities = $class->activities()->where('is_published', true)->get();
-        $totalActivities = $activities->count();
+        $assessments = $class->assessments()->where('is_published', true)->get();
+        $totalAssessments = $assessments->count();
         
-        $leaderboard = $students->map(function ($student) use ($activities, $totalActivities) {
-            $submissions = ActivitySubmission::where('user_id', $student->id)
-                ->whereIn('activity_id', $activities->pluck('id'))
+        $leaderboard = $students->map(function ($student) use ($assessments, $totalAssessments) {
+            $submissions = AssessmentSubmission::where('user_id', $student->id)
+                ->whereIn('assessment_id', $assessments->pluck('id'))
                 ->get();
             
             $totalPoints = $submissions->sum('score');
             $submitted = $submissions->count();
             $graded = $submissions->whereNotNull('score')->count();
             
-            $pending = $activities->filter(function ($activity) use ($student) {
-                return !ActivitySubmission::where('activity_id', $activity->id)
+            $pending = $assessments->filter(function ($assessment) use ($student) {
+                return !AssessmentSubmission::where('assessment_id', $assessment->id)
                     ->where('user_id', $student->id)
                     ->exists() 
-                    && (!$activity->due_date || now()->lessThanOrEqualTo($activity->due_date));
+                    && (!$assessment->due_date || now()->lessThanOrEqualTo($assessment->due_date));
             })->count();
             
-            $overdue = $activities->filter(function ($activity) use ($student) {
-                return !ActivitySubmission::where('activity_id', $activity->id)
+            $overdue = $assessments->filter(function ($assessment) use ($student) {
+                return !AssessmentSubmission::where('assessment_id', $assessment->id)
                     ->where('user_id', $student->id)
                     ->exists() 
-                    && $activity->due_date && now()->isAfter($activity->due_date);
+                    && $assessment->due_date && now()->isAfter($assessment->due_date);
             })->count();
             
             return [
@@ -184,12 +183,13 @@ class ClassroomController extends Controller
                 'graded' => $graded,
                 'pending' => $pending,
                 'overdue' => $overdue,
-                'total_activities' => $totalActivities,
+                'total_assessments' => $totalAssessments,
             ];
         })->sortByDesc('total_points')->values();
         
         return view('admin.classes.leaderboard', compact('class', 'leaderboard'));
     }
+
     public function approveAll(Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) {
@@ -204,5 +204,4 @@ class ClassroomController extends Controller
         
         return back()->with('success', count($pendingStudents) . ' students approved!');
     }
-    
 }

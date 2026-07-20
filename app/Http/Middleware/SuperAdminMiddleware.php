@@ -16,7 +16,7 @@ class SuperAdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->check() || !auth()->user()->isSuperAdmin()) {
-            abort(403, 'Faculty Head access only.');
+            abort(403, 'Administrator access only.');
         }
 
         return $next($request);

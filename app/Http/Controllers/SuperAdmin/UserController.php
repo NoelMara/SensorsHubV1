@@ -64,9 +64,9 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-       // Prevent editing another Faculty Head
+       // Prevent editing another Administrator
         if ($user->isSuperAdmin() && !$user->is(auth()->user())) {
-            return back()->with('error', 'You cannot edit another Faculty Head account.');
+            return back()->with('error', 'You cannot edit another Administrator account.');
         }
 
         return view('super-admin.users.edit', compact('user'));
@@ -75,7 +75,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         if ($user->isSuperAdmin() && !$user->is(auth()->user())) {
-            return back()->with('error', 'You cannot edit another Faculty Head account.');
+            return back()->with('error', 'You cannot edit another Administrator account.');
         }
 
         $validated = $request->validate([
@@ -90,7 +90,7 @@ class UserController extends Controller
             'email' => $validated['email'],
         ];
 
-        // Only update role if provided (not for Faculty Heads)
+        // Only update role if provided (not for Administrators)
         if (isset($validated['role'])) {
             $updateData['role'] = $validated['role'];
         }
@@ -111,18 +111,18 @@ class UserController extends Controller
             'role' => ['required', Rule::in(['user', 'admin', 'super_admin'])],
         ]);
 
-        // Protect the original Faculty Head (env account) from being demoted
+        // Protect the original Administrator (env account) from being demoted
         $originalFaculty = User::where('role', 'super_admin')->oldest()->first();
         if ($user->is($originalFaculty) && $validated['role'] !== 'super_admin') {
-            return back()->with('error', 'The original Faculty Head account cannot be demoted.');
+            return back()->with('error', 'The original Administrator account cannot be demoted.');
         }
 
         if ($user->is(auth()->user()) && $validated['role'] !== 'super_admin') {
-            return back()->with('error', 'You cannot remove your own Faculty Head access.');
+            return back()->with('error', 'You cannot remove your own Administrator access.');
         }
 
         $user->update(['role' => $validated['role']]);
-        ActivityLogHelper::log('changed', 'user', "changed {$user->name}'s role to " . ($validated['role'] === 'admin' ? 'Instructor' : ($validated['role'] === 'super_admin' ? 'Faculty Head' : 'Student')));
+        ActivityLogHelper::log('changed', 'user', "changed {$user->name}'s role to " . ($validated['role'] === 'admin' ? 'Instructor' : ($validated['role'] === 'super_admin' ? 'Administrator' : 'Student')));
 
         return back()->with('success', 'User role updated successfully.');
     }
@@ -134,7 +134,7 @@ class UserController extends Controller
         }
 
         if ($user->isSuperAdmin()) {
-            return back()->with('error', 'Faculty Head accounts cannot be removed from this screen.');
+            return back()->with('error', 'Administrator accounts cannot be removed from this screen.');
         }
 
         $user->delete();

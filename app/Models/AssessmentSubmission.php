@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ActivitySubmission extends Model
+class AssessmentSubmission extends Model
 {
     protected $fillable = [
-        'activity_id',
+        'assessment_id',
         'user_id',
         'content',
         'file_path',
@@ -22,9 +22,9 @@ class ActivitySubmission extends Model
         'submitted_at' => 'datetime',
     ];
 
-    public function activity()
+    public function assessment()
     {
-        return $this->belongsTo(Activity::class);
+        return $this->belongsTo(Assessment::class);
     }
 
     public function user()

@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('activities', function (Blueprint $table) {
+        Schema::create('assessments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
             $table->string('title');
@@ -20,9 +20,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('activity_submissions', function (Blueprint $table) {
+        Schema::create('assessment_submissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('activity_id')->constrained('activities')->onDelete('cascade');
+            $table->foreignId('assessment_id')->constrained('assessments')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('content')->nullable();
             $table->string('file_path')->nullable();
@@ -36,7 +36,7 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('activity_submissions');
-        Schema::dropIfExists('activities');
+        Schema::dropIfExists('assessment_submissions');
+        Schema::dropIfExists('assessments');
     }
 };

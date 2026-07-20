@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Activity;
-use App\Models\ActivitySubmission;
+use App\Models\Assessment;
+use App\Models\AssessmentSubmission;
 use App\Models\Classroom;
 use App\Helpers\NotificationHelper;
 use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
 
-class ActivityController extends Controller
+class AssessmentController extends Controller
 {
     public function index(Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        $activities = $class->activities()->latest()->paginate(5);
+        $assessments = $class->activities()->latest()->paginate(5);
         return view('admin.classes.activities.index', compact('class', 'activities'));
     }
 
@@ -45,31 +45,31 @@ class ActivityController extends Controller
         $validated['class_id'] = $class->id;
         $validated['is_published'] = $request->has('is_published');
 
-        $activity = Activity::create($validated);
-        ActivityLogHelper::log('created', 'activity', "created activity '{$activity->title}' in '{$class->name}'");
+        $assessment = Assessment::create($validated);
+        ActivityLogHelper::log('created', 'activity', "created activity '{$assessment->title}' in '{$class->name}'");
 
-        if ($activity->is_published) {
+        if ($assessment->is_published) {
             NotificationHelper::sendToClass(
                 $class->id,
-                '📋 New Activity: ' . $activity->title,
-                'Due: ' . ($activity->due_date ? $activity->due_date->format('M d, Y') : 'No deadline') . ' | ' . $activity->points . ' points',
-                route('dashboard.classes.activities.show', [$class, $activity])
+                '📋 New Assessment: ' . $assessment->title,
+                'Due: ' . ($assessment->due_date ? $assessment->due_date->format('M d, Y') : 'No deadline') . ' | ' . $assessment->points . ' points',
+                route('dashboard.classes.assessments.show', [$class, $assessment])
             );
         }
 
         return redirect()->route('admin.classes.activities.index', $class)
-            ->with('success', 'Activity created!');
+            ->with('success', 'Assessment created!');
     }
 
-    public function edit(Classroom $class, Activity $activity)
+    public function edit(Classroom $class, Assessment $assessment)
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.activities.edit', compact('class', 'activity'));
+        return view('admin.classes.activities.edit', compact('class', 'assessment'));
     }
 
-    public function update(Request $request, Classroom $class, Activity $activity)
+    public function update(Request $request, Classroom $class, Assessment $assessment)
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
@@ -84,29 +84,29 @@ class ActivityController extends Controller
         ]);
 
         $validated['is_published'] = $request->has('is_published');
-        $activity->update($validated);
+        $assessment->update($validated);
 
-        if ($activity->wasChanged('is_published') && $activity->is_published) {
+        if ($assessment->wasChanged('is_published') && $assessment->is_published) {
             NotificationHelper::sendToClass(
                 $class->id,
-                'New Activity: ' . $activity->title,
-                'Due: ' . ($activity->due_date ? $activity->due_date->format('M d, Y') : 'No deadline') . ' | ' . $activity->points . ' points',
-                route('dashboard.classes.activities.show', [$class, $activity])
+                'New Assessment: ' . $assessment->title,
+                'Due: ' . ($assessment->due_date ? $assessment->due_date->format('M d, Y') : 'No deadline') . ' | ' . $assessment->points . ' points',
+                route('dashboard.classes.assessments.show', [$class, $assessment])
             );
         }
 
         return redirect()->route('admin.classes.activities.index', $class)
-            ->with('success', 'Activity updated!');
+            ->with('success', 'Assessment updated!');
     }
 
-    public function show(Classroom $class, Activity $activity)
+    public function show(Classroom $class, Assessment $assessment)
     {
         // Allow instructors to preview
         if (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) {
-            $submission = ActivitySubmission::where('activity_id', $activity->id)
+            $submission = AssessmentSubmission::where('assessment_id', $assessment->id)
                 ->where('user_id', auth()->id())
                 ->first();
-            return view('user.classes.activities.show', compact('class', 'activity', 'submission'));
+            return view('user.classes.assessments.show', compact('class', 'assessment', 'submission'));
         }
         
         // Students must be enrolled
@@ -119,14 +119,14 @@ class ActivityController extends Controller
             abort(403);
         }
 
-        $submission = ActivitySubmission::where('activity_id', $activity->id)
+        $submission = AssessmentSubmission::where('assessment_id', $assessment->id)
             ->where('user_id', auth()->id())
             ->first();
 
-        return view('user.classes.activities.show', compact('class', 'activity', 'submission'));
+        return view('user.classes.assessments.show', compact('class', 'assessment', 'submission'));
     }
 
-    public function submit(Request $request, Classroom $class, Activity $activity)
+    public function submit(Request $request, Classroom $class, Assessment $assessment)
     {
             // Students must be enrolled
         $enrolled = $class->students()
@@ -138,16 +138,16 @@ class ActivityController extends Controller
             abort(403);
         }
         
-        if ($activity->due_date && now()->isAfter($activity->due_date)) {
-            return back()->with('error', 'This activity is past the due date.');
+        if ($assessment->due_date && now()->isAfter($assessment->due_date)) {
+            return back()->with('error', 'This assessment is past the due date.');
         }
 
         $validated = $request->validate([
             'content' => 'required|string',
         ]);
 
-        ActivitySubmission::create([
-            'activity_id' => $activity->id,
+        AssessmentSubmission::create([
+            'assessment_id' => $assessment->id,
             'user_id' => auth()->id(),
             'content' => $validated['content'],
             'status' => 'submitted',
@@ -157,22 +157,22 @@ class ActivityController extends Controller
         return back()->with('success', 'Submission sent!');
     }
 
-    public function submissions(Classroom $class, Activity $activity)
+    public function submissions(Classroom $class, Assessment $assessment)
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        $submissions = $activity->submissions()->with('user')->get();
-        return view('admin.classes.activities.submissions', compact('class', 'activity', 'submissions'));
+        $submissions = $assessment->submissions()->with('user')->get();
+        return view('admin.classes.assessments.submissions', compact('class', 'assessment', 'submissions'));
     }
 
-    public function grade(Request $request, Classroom $class, Activity $activity, ActivitySubmission $submission)
+    public function grade(Request $request, Classroom $class, Assessment $assessment, AssessmentSubmission $submission)
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
         $validated = $request->validate([
-            'score' => 'required|integer|min:0|max:' . $activity->points,
+            'score' => 'required|integer|min:0|max:' . $assessment->points,
             'feedback' => 'nullable|string',
         ]);
 
@@ -184,22 +184,22 @@ class ActivityController extends Controller
 
         NotificationHelper::send(
             $submission->user_id,
-            '✅ Activity Graded: ' . $activity->title,
-            'You scored ' . $validated['score'] . '/' . $activity->points,
-            route('dashboard.classes.activities.show', [$class, $activity])
+            '✅ Assessment Graded: ' . $assessment->title,
+            'You scored ' . $validated['score'] . '/' . $assessment->points,
+            route('dashboard.classes.assessments.show', [$class, $assessment])
         );
 
         return back()->with('success', 'Submission graded!');
     }
 
-    public function destroy(Classroom $class, Activity $activity)
+    public function destroy(Classroom $class, Assessment $assessment)
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        $activity->delete();
-        ActivityLogHelper::log('deleted', 'activity', "deleted activity '{$activity->title}'");
-        return back()->with('success', 'Activity deleted!');
+        $assessment->delete();
+        ActivityLogHelper::log('deleted', 'activity', "deleted activity '{$assessment->title}'");
+        return back()->with('success', 'Assessment deleted!');
     }
 
     public function import(Classroom $class)
@@ -226,29 +226,29 @@ class ActivityController extends Controller
         $sourceClass = Classroom::where('instructor_id', auth()->id())
             ->findOrFail($request->from_class);
 
-        $activities = $sourceClass->activities()->whereIn('id', $request->activities)->get();
+        $assessments = $sourceClass->activities()->whereIn('id', $request->activities)->get();
 
-        foreach ($activities as $activity) {
-            Activity::create([
+        foreach ($assessments as $assessment) {
+            Asessment::create([
                 'class_id' => $class->id,
-                'title' => $activity->title,
-                'description' => $activity->description,
-                'instructions' => $activity->instructions,
-                'points' => $activity->points,
-                'due_date' => $activity->due_date,
+                'title' => $assessment->title,
+                'description' => $assessment->description,
+                'instructions' => $assessment->instructions,
+                'points' => $assessment->points,
+                'due_date' => $assessment->due_date,
                 'is_published' => false,
             ]);
         }
 
         return redirect()->route('admin.classes.activities.index', $class)
-            ->with('success', count($activities) . ' activities imported!');
+            ->with('success', count($assessments) . ' activities imported!');
     }
 
     public function studentIndex(Classroom $class)
     {
         // Allow instructors to view
         if (auth()->user()->isAdmin() || auth()->user()->isSuperAdmin()) {
-            $activities = $class->activities()->where('is_published', true)->latest()->paginate(10);
+            $assessments = $class->activities()->where('is_published', true)->latest()->paginate(10);
             return view('user.classes.activities.index', compact('class', 'activities'));
         }
         
@@ -262,7 +262,7 @@ class ActivityController extends Controller
             abort(403);
         }
 
-        $activities = $class->activities()->where('is_published', true)->latest()->paginate(10);
+        $assessments = $class->activities()->where('is_published', true)->latest()->paginate(10);
         return view('user.classes.activities.index', compact('class', 'activities'));
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Faculty Head Dashboard')
+@section('title', 'Administrator Dashboard')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -26,7 +26,7 @@
                 <div class="flex items-center gap-2 flex-wrap">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white truncate">{{ auth()->user()->name }}</h2>
                     <span class="px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
-                        Faculty Head
+                        Administrator
                     </span>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ auth()->user()->email }}</p>
@@ -138,7 +138,7 @@
                             {{ $user->role === 'super_admin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300' : '' }}
                             {{ $user->role === 'admin' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : '' }}
                             {{ $user->role === 'user' ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300' : '' }}">
-                            {{ $user->role === 'super_admin' ? 'Faculty Head' : ($user->role === 'admin' ? 'Instructor' : 'Student') }}
+                            {{ $user->role === 'super_admin' ? 'Administrator' : ($user->role === 'admin' ? 'Instructor' : 'Student') }}
                         </span>
                     </div>
                 @empty

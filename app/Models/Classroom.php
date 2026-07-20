@@ -48,9 +48,9 @@ class Classroom extends Model
         return $this->hasMany(Module::class, 'class_id');
     }
 
-    public function activities()
+    public function assessments()
     {
-        return $this->hasMany(Activity::class, 'class_id');
+        return $this->hasMany(Assessment::class, 'class_id');
     }
     
 }

@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
-@section('title', 'Submissions - ' . $activity->title)
+@section('title', 'Submissions - ' . $assessment->title)
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <a href="{{ route('admin.classes.activities.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-6">
-        <i class="fas fa-arrow-left mr-1"></i> Back to Activities
+    <a href="{{ route('admin.classes.assessments.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-6">
+        <i class="fas fa-arrow-left mr-1"></i> Back to Assessments
     </a>
 
     <div class="mb-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Submissions - {{ $activity->title }}</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $submissions->count() }} {{ Str::plural('submission', $submissions->count()) }} · {{ $activity->points }} points</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Submissions - {{ $assessment->title }}</h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $submissions->count() }} {{ Str::plural('submission', $submissions->count()) }} · {{ $assessment->points }} points</p>
     </div>
 
     @if($submissions->count() > 0)
@@ -29,7 +29,7 @@
                         </div>
                         @if($submission->score !== null)
                             <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
-                                {{ $submission->score }}/{{ $activity->points }}
+                                {{ $submission->score }}/{{ $assessment->points }}
                             </span>
                         @else
                             <span class="px-2.5 py-0.5 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">
@@ -43,11 +43,11 @@
                             <pre class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap font-mono">{{ $submission->content }}</pre>
                         </div>
 
-                        <form method="POST" action="{{ route('admin.classes.activities.grade', [$class, $activity, $submission]) }}" class="flex items-end gap-3">
+                        <form method="POST" action="{{ route('admin.classes.assessments.grade', [$class, $assessment, $submission]) }}" class="flex items-end gap-3">
                             @csrf
                             <div>
-                                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Score (max {{ $activity->points }})</label>
-                                <input type="number" name="score" value="{{ $submission->score }}" required min="0" max="{{ $activity->points }}"
+                                <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">Score (max {{ $assessment->points }})</label>
+                                <input type="number" name="score" value="{{ $submission->score }}" required min="0" max="{{ $assessment->points }}"
                                     class="w-20 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition">
                             </div>
                             <div class="flex-1">
