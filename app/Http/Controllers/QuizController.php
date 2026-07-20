@@ -122,6 +122,16 @@ class QuizController extends Controller
             'is_published' => $request->has('is_published'),
         ]);
 
+        // Notify students when quiz gets published
+        if ($quiz->wasChanged('is_published') && $quiz->is_published) {
+            NotificationHelper::sendToClass(
+                $class->id,
+                '📝 New Quiz: ' . $quiz->title,
+                $quiz->points . ' points',
+                route('dashboard.classes.quizzes.show', [$class, $quiz])
+            );
+        }
+
         // Delete old questions and options
         $quiz->questions()->delete();
 
@@ -140,7 +150,6 @@ class QuizController extends Controller
                 ]);
             }
         }
-
         return redirect()->route('admin.classes.quizzes.index', $class)->with('success', 'Quiz updated!');
     }
 
