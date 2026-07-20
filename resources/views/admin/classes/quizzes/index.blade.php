@@ -13,9 +13,14 @@
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Quizzes - {{ $class->name }}</h1>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $quizzes->total() }} {{ Str::plural('quiz', $quizzes->total()) }}</p>
             </div>
-            <a href="{{ route('admin.classes.quizzes.create', $class) }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm whitespace-nowrap">
-                <i class="fas fa-plus mr-1"></i> Add Quiz
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('admin.classes.quizzes.create', $class) }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm whitespace-nowrap">
+                    <i class="fas fa-plus mr-1"></i> Add Quiz
+                </a>
+                <a href="{{ route('admin.classes.quizzes.import', $class) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm whitespace-nowrap">
+                    <i class="fas fa-download mr-1"></i> Import
+                </a>
+            </div>
         </div>
     </div>
 

@@ -202,4 +202,60 @@ class QuizController extends Controller
         $submissions = $quiz->submissions()->with('user')->latest()->get();
         return view('admin.classes.quizzes.submissions', compact('class', 'quiz', 'submissions'));
     }
+    // Instructor: Import Form
+    public function import(Classroom $class)
+    {
+        if ($class->instructor_id !== auth()->id()) abort(403);
+        $otherClasses = Classroom::where('instructor_id', auth()->id())
+            ->where('id', '!=', $class->id)
+            ->get();
+        return view('admin.classes.quizzes.import', compact('class', 'otherClasses'));
+    }
+
+    // Instructor: Copy Quizzes
+    public function copyQuizzes(Request $request, Classroom $class)
+    {
+        if ($class->instructor_id !== auth()->id()) abort(403);
+        
+        $request->validate([
+            'from_class' => 'required|exists:classes,id',
+            'quizzes' => 'required|array',
+        ]);
+
+        $sourceClass = Classroom::where('instructor_id', auth()->id())
+            ->findOrFail($request->from_class);
+
+        $quizzes = $sourceClass->quizzes()->whereIn('id', $request->quizzes)->with('questions.options')->get();
+
+        foreach ($quizzes as $quiz) {
+            $newQuiz = Quiz::create([
+                'class_id' => $class->id,
+                'title' => $quiz->title,
+                'description' => $quiz->description,
+                'instructions' => $quiz->instructions,
+                'points' => $quiz->points,
+                'passing_score' => $quiz->passing_score,
+                'due_date' => null,
+                'is_published' => false,
+            ]);
+
+            foreach ($quiz->questions as $question) {
+                $newQuestion = $newQuiz->questions()->create([
+                    'question' => $question->question,
+                    'order' => $question->order,
+                ]);
+
+                foreach ($question->options as $option) {
+                    $newQuestion->options()->create([
+                        'option_text' => $option->option_text,
+                        'is_correct' => $option->is_correct,
+                        'order' => $option->order,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('admin.classes.quizzes.index', $class)
+            ->with('success', count($quizzes) . ' quizzes imported!');
+    }
 }

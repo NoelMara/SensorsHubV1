@@ -183,6 +183,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/classes/{class}/quizzes', [QuizController::class, 'index'])->name('classes.quizzes.index');
     Route::get('/classes/{class}/quizzes/create', [QuizController::class, 'create'])->name('classes.quizzes.create');
     Route::post('/classes/{class}/quizzes', [QuizController::class, 'store'])->name('classes.quizzes.store');
+    Route::get('/classes/{class}/quizzes/import', [QuizController::class, 'import'])->name('classes.quizzes.import');
+    Route::post('/classes/{class}/quizzes/import', [QuizController::class, 'copyQuizzes'])->name('classes.quizzes.copy');
     Route::get('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'show'])->name('classes.quizzes.show');
     Route::get('/classes/{class}/quizzes/{quiz}/edit', [QuizController::class, 'edit'])->name('classes.quizzes.edit');
     Route::put('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'update'])->name('classes.quizzes.update');
