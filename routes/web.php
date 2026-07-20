@@ -253,6 +253,8 @@ Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-a
         return view('super-admin.backup');
     })->name('backup');
     Route::get('/backup/download', [SuperAdminDashboardController::class, 'backup'])->name('backup.download');
+    Route::get('/backup/download/{filename}', [SuperAdminDashboardController::class, 'downloadBackup'])->name('backup.download-file');
+    Route::delete('/backup/delete/{filename}', [SuperAdminDashboardController::class, 'deleteBackup'])->name('backup.delete');
 
     // Users CRUD
     Route::get('/users', [SuperAdminUserController::class, 'index'])->name('users.index');

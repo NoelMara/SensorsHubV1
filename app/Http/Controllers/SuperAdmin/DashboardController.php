@@ -80,10 +80,46 @@ class DashboardController extends Controller
             $output .= "\n";
         }
         
+        // Save to server
         $filename = 'sensorshub-backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
+        $path = storage_path('app/backups');
+        if (!is_dir($path)) {
+            mkdir($path, 0755, true);
+        }
+        file_put_contents($path . '/' . $filename, $output);
         
         return response($output)
             ->header('Content-Type', 'text/plain')
             ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
+    }
+
+    public function downloadBackup($filename)
+    {
+        if (!auth()->user()->isSuperAdmin()) {
+            abort(403);
+        }
+        
+        $path = storage_path('app/backups/' . $filename);
+        
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        
+        return response()->download($path);
+    }
+
+    public function deleteBackup($filename)
+    {
+        if (!auth()->user()->isSuperAdmin()) {
+            abort(403);
+        }
+        
+        $path = storage_path('app/backups/' . $filename);
+        
+        if (file_exists($path)) {
+            unlink($path);
+        }
+        
+        return back()->with('success', 'Backup deleted.');
     }
 }
