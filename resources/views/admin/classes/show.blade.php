@@ -18,64 +18,66 @@
                     </span>
                 @endif
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
-                <a href="{{ route('admin.classes.announcements.index', $class) }}" class="px-3 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition text-xs font-medium">
-                    <i class="fas fa-bullhorn mr-1"></i> Announcements
-                </a>
-                <a href="{{ route('admin.classes.modules.index', $class) }}" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium">
-                    <i class="fas fa-book-open mr-1"></i> Modules
-                </a>
-                <a href="{{ route('admin.classes.assessments.index', $class) }}" class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs font-medium">
-                    <i class="fas fa-tasks mr-1"></i> Assessments
-                </a>
-                <a href="{{ route('admin.classes.quizzes.index', $class) }}" class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-xs font-medium">
-                    <i class="fas fa-question-circle mr-1"></i> Quizzes
-                </a>
-                <a href="{{ route('admin.classes.leaderboard', $class) }}" class="px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-xs font-medium">
-                    <i class="fas fa-trophy mr-1"></i> Leaderboard
-                </a>
-                <span class="text-gray-300 dark:text-gray-600">|</span>
-                <a href="{{ route('admin.classes.edit', $class) }}" class="px-3 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-xs font-medium">
-                    <i class="fas fa-edit mr-1"></i> Edit
-                </a>
-                <form action="{{ route('admin.classes.destroy', $class) }}" method="POST"
-                    onsubmit="return confirm('Delete this class? This cannot be undone.');">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-xs font-medium">
-                        <i class="fas fa-trash mr-1"></i> Delete
-                    </button>
-                </form>
-            </div>
         </div>
         @if($class->description)
             <p class="text-gray-500 dark:text-gray-400 mt-3 text-sm">{{ $class->description }}</p>
         @endif
     </div>
 
+    {{-- Action Buttons --}}
+    <div class="flex flex-wrap items-center gap-2 mb-8">
+        <a href="{{ route('admin.classes.announcements.index', $class) }}" class="px-3 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition text-xs font-medium">
+            <i class="fas fa-bullhorn mr-1"></i> Announcements
+        </a>
+        <a href="{{ route('admin.classes.modules.index', $class) }}" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium">
+            <i class="fas fa-book-open mr-1"></i> Modules
+        </a>
+        <a href="{{ route('admin.classes.assessments.index', $class) }}" class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs font-medium">
+            <i class="fas fa-tasks mr-1"></i> Assessments
+        </a>
+        <a href="{{ route('admin.classes.quizzes.index', $class) }}" class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-xs font-medium">
+            <i class="fas fa-question-circle mr-1"></i> Quizzes
+        </a>
+        <a href="{{ route('admin.classes.leaderboard', $class) }}" class="px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-xs font-medium">
+            <i class="fas fa-trophy mr-1"></i> Leaderboard
+        </a>
+        <span class="text-gray-300 dark:text-gray-600 px-1">|</span>
+        <a href="{{ route('admin.classes.edit', $class) }}" class="px-3 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-xs font-medium">
+            <i class="fas fa-edit mr-1"></i> Edit
+        </a>
+        <form action="{{ route('admin.classes.destroy', $class) }}" method="POST"
+            onsubmit="return confirm('Delete this class? This cannot be undone.');" class="inline">
+            @csrf @method('DELETE')
+            <button type="submit" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-xs font-medium">
+                <i class="fas fa-trash mr-1"></i> Delete
+            </button>
+        </form>
+    </div>
+
     {{-- Quick Stats --}}
-    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
         @php
             $approved = $class->students->where('pivot.status', 'approved')->count();
             $pending = $class->students->where('pivot.status', 'pending')->count();
         @endphp
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-2xl font-bold text-green-600 dark:text-green-400">{{ $approved }}</p>
+            <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">{{ $approved }}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Approved</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{{ $pending }}</p>
+            <p class="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-400">{{ $pending }}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pending</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ $class->modules()->count() }}</p>
+            <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{{ $class->modules()->count() }}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Modules</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $class->assessments()->count() }}</p>
+            <p class="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $class->assessments()->count() }}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Assessments</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $class->quizzes()->count() }}</p>
+            <p class="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $class->quizzes()->count() }}</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quizzes</p>
         </div>
     </div>

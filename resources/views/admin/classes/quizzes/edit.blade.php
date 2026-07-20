@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ route('admin.classes.quizzes.update', [$class, $quiz]) }}" x-data="quizEditor({{ json_encode($quiz->questions->map(function($q) { return ['id' => $q->id, 'text' => $q->question, 'options' => $q->options->map(function($o) { return ['id' => $o->id, 'text' => $o->option_text, 'isCorrect' => $o->is_correct]; })->values()]; })->values()) }})">
+            <form method="POST" action="{{ route('admin.classes.quizzes.update', [$class, $quiz]) }}" x-data="quizEditor({{ json_encode($quiz->questions->map(function($q) { return ['id' => $q->id, 'text' => $q->question, 'options' => $q->options->map(function($o) { return ['id' => $o->id, 'text' => $o->option_text, 'isCorrect' => $o->is_correct]; })->values()]; })->values()) }})" @submit="checkAnswers($event)">
                 @csrf
                 @method('PUT')
 
@@ -66,6 +66,11 @@
                     {{-- Questions Section --}}
                     <div class="border-t border-gray-200 dark:border-gray-700 pt-5">
                         <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">Questions</h2>
+
+                        <div class="flex items-center gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl mb-4">
+                            <i class="fas fa-info-circle text-amber-600 dark:text-amber-400"></i>
+                            <p class="text-xs text-amber-700 dark:text-amber-300">Select the radio button (●) next to the <strong>correct answer</strong> for each question.</p>
+                        </div>
 
                         <template x-for="(question, qIndex) in questions" :key="qIndex">
                             <div class="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 mb-4">
@@ -176,7 +181,17 @@
                 this.questions[qIndex].options.forEach((opt, i) => {
                     opt.isCorrect = (i === oIndex);
                 });
-            }
+            },
+
+            checkAnswers(e) {
+                for (let i = 0; i < this.questions.length; i++) {
+                    if (!this.questions[i].options.some(o => o.isCorrect)) {
+                        e.preventDefault();
+                        alert('⚠️ Please mark a correct answer for Question ' + (i + 1) + '.');
+                        return;
+                    }
+                }
+            },
         }
     }
 </script>
