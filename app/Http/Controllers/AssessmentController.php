@@ -151,6 +151,14 @@ class AssessmentController extends Controller
             'submitted_at' => now(),
         ]);
 
+        // Notify instructor
+        NotificationHelper::send(
+            $class->instructor_id,
+            '📥 New Submission: ' . $assessment->title,
+            auth()->user()->name . ' submitted their work.',
+            route('admin.classes.assessments.submissions', [$class, $assessment])
+        );
+
         return back()->with('success', 'Submission sent!');
     }
 
