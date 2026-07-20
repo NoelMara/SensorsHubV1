@@ -50,7 +50,7 @@
                     <div class="flex-1 min-w-0">
                         <p class="text-sm text-gray-700 dark:text-gray-300">
                             <span class="font-medium text-gray-900 dark:text-white">{{ $log->user_name }}</span>
-                            <span class="text-gray-400 text-xs ml-1">({{ $log->user_role === 'super_admin' ? 'Administrator' : ($log->user_role === 'instructor' ? 'Instructor' : 'Student') }})</span>
+                            <span class="text-gray-400 text-xs ml-1">({{ $log->user_role === 'administrator' ? 'Administrator' : ($log->user_role === 'instructor' ? 'Instructor' : 'Student') }})</span>
                             {{ ' ' . $log->description }}
                         </p>
                     </div>

@@ -19,7 +19,7 @@
         <a href="{{ route('super-admin.users.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ !$role ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">All ({{ $roleCounts['all'] }})</a>
         <a href="{{ route('super-admin.users.index', ['role' => 'student']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'student' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Students ({{ $roleCounts['student'] }})</a>
         <a href="{{ route('super-admin.users.index', ['role' => 'instructor']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'instructor' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Instructors ({{ $roleCounts['instructor'] }})</a>
-        <a href="{{ route('super-admin.users.index', ['role' => 'super_admin']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'super_admin' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Administrator ({{ $roleCounts['super_admin'] }})</a>
+        <a href="{{ route('super-admin.users.index', ['role' => 'administrator']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'administrator' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Administrator ({{ $roleCounts['administrator'] }})</a>
     </div>
 
     {{-- Users Table --}}
@@ -55,7 +55,7 @@
                                     <select name="role" class="text-sm rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-1.5">
                                         <option value="student" @selected($user->role === 'student')>Student</option>
                                         <option value="instructor" @selected($user->role === 'instructor')>Instructor</option>
-                                        <option value="super_admin" @selected($user->role === 'super_admin')>Administrator</option>
+                                        <option value="administrator" @selected($user->role === 'administrator')>Administrator</option>
                                     </select>
                                     <button type="submit" class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs hover:bg-blue-600 transition">Save</button>
                                 </form>

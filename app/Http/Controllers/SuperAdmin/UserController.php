@@ -25,7 +25,7 @@ class UserController extends Controller
             'all'         => User::count(),
             'student' => User::where('role', 'student')->count(),
             'instructor'       => User::where('role', 'instructor')->count(),
-            'super_admin' => User::where('role', 'super_admin')->count(),
+            'administrator' => User::where('role', 'administrator')->count(),
         ];
 
         return view('super-admin.users.index', compact('users', 'roleCounts', 'role'));
@@ -108,21 +108,21 @@ class UserController extends Controller
    public function updateRole(Request $request, User $user)
     {
         $validated = $request->validate([
-            'role' => ['required', Rule::in(['student', 'instructor', 'super_admin'])],
+            'role' => ['required', Rule::in(['student', 'instructor', 'administrator'])],
         ]);
 
         // Protect the original Administrator (env account) from being demoted
-        $originalFaculty = User::where('role', 'super_admin')->oldest()->first();
-        if ($user->is($originalFaculty) && $validated['role'] !== 'super_admin') {
+        $originalFaculty = User::where('role', 'administrator')->oldest()->first();
+        if ($user->is($originalFaculty) && $validated['role'] !== 'administrator') {
             return back()->with('error', 'The original Administrator account cannot be demoted.');
         }
 
-        if ($user->is(auth()->user()) && $validated['role'] !== 'super_admin') {
+        if ($user->is(auth()->user()) && $validated['role'] !== 'administrator') {
             return back()->with('error', 'You cannot remove your own Administrator access.');
         }
 
         $user->update(['role' => $validated['role']]);
-        ActivityLogHelper::log('changed', 'user', "changed {$user->name}'s role to " . ($validated['role'] === 'instructor' ? 'Instructor' : ($validated['role'] === 'super_admin' ? 'Administrator' : 'Student')));
+        ActivityLogHelper::log('changed', 'user', "changed {$user->name}'s role to " . ($validated['role'] === 'instructor' ? 'Instructor' : ($validated['role'] === 'administrator' ? 'Administrator' : 'Student')));
 
         return back()->with('success', 'User role updated successfully.');
     }

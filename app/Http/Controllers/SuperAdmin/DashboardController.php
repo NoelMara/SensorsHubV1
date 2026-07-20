@@ -19,7 +19,7 @@ class DashboardController extends Controller
         $stats = [
             'users' => User::where('role', 'student')->count(),
             'instructors' => User::where('role', 'instructor')->count(),
-            'super_admins' => User::where('role', 'super_admin')->count(),
+            'administrators' => User::where('role', 'administrator')->count(),
             'sensors' => Sensor::count(),
             'projects' => Project::count(),
             'products' => Product::count(),

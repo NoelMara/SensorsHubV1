@@ -82,7 +82,7 @@
                                     </div>
                                     <span class="font-semibold text-gray-900 dark:text-white">{{ $comment->user?->name ?? 'Deleted user' }}</span>
                                     <span class="px-2 py-0.5 text-xs rounded-full
-                                        {{ ($comment->user?->role ?? 'student') === 'super_admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : '' }}
+                                        {{ ($comment->user?->role ?? 'student') === 'administrator' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : '' }}
                                         {{ ($comment->user?->role ?? 'student') === 'instructor' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : '' }}
                                         {{ ($comment->user?->role ?? 'student') === 'student' ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' : '' }}">
                                         {{ ucfirst(str_replace('_', ' ', $comment->user?->role ?? 'student')) }}

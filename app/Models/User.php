@@ -74,12 +74,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isAdministrator()
     {
-        return $this->role === 'super_admin';
+        return $this->role === 'administrator';
     }
 
     public function canManageAdminArea()
     {
-        return in_array($this->role, ['instructor', 'super_admin'], true);
+        return in_array($this->role, ['instructor', 'administrator'], true);
     }
 
     public function isStudent()
