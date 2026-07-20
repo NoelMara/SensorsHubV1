@@ -452,15 +452,19 @@
             @elseif(auth()->user()->isAdmin())
                 const audioSrc = "{{ asset('audio/welcome-instructor.mp3') }}";
                 const storageKey = 'welcome_instructor_played';
-            @else
+            @elseif(auth()->user()->role === 'student')
                 const audioSrc = "{{ asset('audio/welcome-back.mp3') }}";
                 const storageKey = 'welcome_back_played';
+            @else
+                const audioSrc = null;
+                const storageKey = null;
             @endif
         @else
             const audioSrc = "{{ asset('audio/welcome-guest.mp3') }}";
             const storageKey = 'welcome_guest_played';
         @endauth
 
+        if (!audioSrc) return;
         const audio = new Audio(audioSrc);
         audio.volume = 0.8;
 
