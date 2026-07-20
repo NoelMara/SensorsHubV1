@@ -23,7 +23,7 @@ class DashboardController extends Controller
             'projects' => Project::count(),
             'products' => Product::count(),
             'videos' => Video::count(),
-            'users' => User::where('role', 'student')->count(),
+            'users' => User::whereIn('role', ['user', 'student'])->count(),
             'suggestions' => Suggestion::count(),
             'pending_suggestions' => Suggestion::where('status', 'pending')->count(),
         ];

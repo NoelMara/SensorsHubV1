@@ -137,8 +137,9 @@
                         <span class="px-2 py-0.5 text-xs rounded-full flex-shrink-0
                             {{ $user->role === 'administrator' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300' : '' }}
                             {{ $user->role === 'instructor' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : '' }}
-                            {{ $user->role === 'student' ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300' : '' }}">
-                            {{ $user->role === 'administrator' ? 'Administrator' : ($user->role === 'instructor' ? 'Instructor' : 'Student') }}
+                            {{ $user->role === 'student' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}
+                            {{ $user->role === 'user' ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300' : '' }}">
+                            {{ $user->role === 'administrator' ? 'Administrator' : ($user->role === 'instructor' ? 'Instructor' : ($user->role === 'student' ? 'Student' : 'User')) }}
                         </span>
                     </div>
                 @empty
