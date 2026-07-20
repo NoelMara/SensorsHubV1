@@ -248,6 +248,12 @@ Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-a
     // Activity Logs
     Route::get('/logs', [SuperAdminDashboardController::class, 'logs'])->name('logs');
 
+    // Database Backup 
+    Route::get('/backup', function () {
+        return view('super-admin.backup');
+    })->name('backup');
+    Route::get('/backup/download', [SuperAdminDashboardController::class, 'backup'])->name('backup.download');
+
     // Users CRUD
     Route::get('/users', [SuperAdminUserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [SuperAdminUserController::class, 'create'])->name('users.create');

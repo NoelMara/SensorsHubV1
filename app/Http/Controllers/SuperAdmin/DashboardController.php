@@ -40,9 +40,36 @@ class DashboardController extends Controller
 
         return view('super-admin.dashboard', compact('stats', 'recentUsers', 'recentSuggestions', 'recentComments'));
     }
+
     public function logs()
     {
         $logs = ActivityLog::latest()->paginate(10);
         return view('super-admin.logs', compact('logs'));
+    }
+
+    public function backup()
+    {
+        if (!auth()->user()->isSuperAdmin()) {
+            abort(403);
+        }
+
+        $db = config('database.connections.pgsql');
+        
+        $command = sprintf(
+            'PGPASSWORD=%s pg_dump -h %s -p %s -U %s -d %s --no-owner --no-acl',
+            escapeshellarg($db['password']),
+            escapeshellarg($db['host']),
+            escapeshellarg($db['port']),
+            escapeshellarg($db['username']),
+            escapeshellarg($db['database'])
+        );
+        
+        $filename = 'sensorhub-backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
+        
+        $output = shell_exec($command);
+        
+        return response($output)
+            ->header('Content-Type', 'text/plain')
+            ->header('Content-Disposition', 'attachment; filename="' . $filename . '"');
     }
 }
