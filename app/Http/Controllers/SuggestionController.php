@@ -30,7 +30,7 @@ class SuggestionController extends Controller
     public function show(Suggestion $suggestion)
     {
         // Admins and super_admins can view any suggestion
-        if (in_array(auth()->user()->role, ['admin', 'super_admin'])) {
+        if (in_array(auth()->user()->role, ['instructor', 'super_admin'])) {
             $suggestion->load(['user', 'comments.user']);
             return view('user.suggestions-show', compact('suggestion'));
         }

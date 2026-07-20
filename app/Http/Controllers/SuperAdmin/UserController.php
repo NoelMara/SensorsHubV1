@@ -23,8 +23,8 @@ class UserController extends Controller
 
         $roleCounts = [
             'all'         => User::count(),
-            'user'        => User::where('role', 'student')->count(),
-            'admin'       => User::where('role', 'admin')->count(),
+            'student' => User::where('role', 'student')->count(),
+            'instructor'       => User::where('role', 'instructor')->count(),
             'super_admin' => User::where('role', 'super_admin')->count(),
         ];
 
@@ -41,7 +41,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'role'     => ['required', Rule::in(['student', 'admin'])], 
+            'role'     => ['required', Rule::in(['student', 'instructor'])], 
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
@@ -81,7 +81,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'name'  => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'role'  => ['nullable', Rule::in(['student', 'admin'])], 
+            'role'  => ['nullable', Rule::in(['student', 'instructor'])], 
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
@@ -108,7 +108,7 @@ class UserController extends Controller
    public function updateRole(Request $request, User $user)
     {
         $validated = $request->validate([
-            'role' => ['required', Rule::in(['student', 'admin', 'super_admin'])],
+            'role' => ['required', Rule::in(['student', 'instructor', 'super_admin'])],
         ]);
 
         // Protect the original Administrator (env account) from being demoted
@@ -122,7 +122,7 @@ class UserController extends Controller
         }
 
         $user->update(['role' => $validated['role']]);
-        ActivityLogHelper::log('changed', 'user', "changed {$user->name}'s role to " . ($validated['role'] === 'admin' ? 'Instructor' : ($validated['role'] === 'super_admin' ? 'Administrator' : 'Student')));
+        ActivityLogHelper::log('changed', 'user', "changed {$user->name}'s role to " . ($validated['role'] === 'instructor' ? 'Instructor' : ($validated['role'] === 'super_admin' ? 'Administrator' : 'Student')));
 
         return back()->with('success', 'User role updated successfully.');
     }

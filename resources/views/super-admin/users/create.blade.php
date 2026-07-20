@@ -44,7 +44,7 @@
                 <select id="role" name="role" required
                     class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
                     <option value="student" @selected(old('role') === 'student')>Student</option>
-                    <option value="admin" @selected(old('role') === 'admin')>Instructor</option>
+                    <option value="instructor" @selected(old('role') === 'instructor')>Instructor</option>
                 </select>
             </div>
 

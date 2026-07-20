@@ -56,7 +56,7 @@
                 </div>
                 <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Instructors</p>
             </div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['admins'] }}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['instructors'] }}</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
             <div class="flex items-center gap-3 mb-3">
@@ -136,9 +136,9 @@
                         </div>
                         <span class="px-2 py-0.5 text-xs rounded-full flex-shrink-0
                             {{ $user->role === 'super_admin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300' : '' }}
-                            {{ $user->role === 'admin' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : '' }}
+                            {{ $user->role === 'instructor' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : '' }}
                             {{ $user->role === 'student' ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300' : '' }}">
-                            {{ $user->role === 'super_admin' ? 'Administrator' : ($user->role === 'admin' ? 'Instructor' : 'Student') }}
+                            {{ $user->role === 'super_admin' ? 'Administrator' : ($user->role === 'instructor' ? 'Instructor' : 'Student') }}
                         </span>
                     </div>
                 @empty
