@@ -22,9 +22,10 @@ class UserController extends Controller
             ->withQueryString();
 
         $roleCounts = [
-            'all'         => User::count(),
-            'student' => User::where('role', 'student')->count(),
-            'instructor'       => User::where('role', 'instructor')->count(),
+            'all'           => User::count(),
+            'user'          => User::where('role', 'user')->count(),
+            'student'       => User::where('role', 'student')->count(),
+            'instructor'    => User::where('role', 'instructor')->count(),
             'administrator' => User::where('role', 'administrator')->count(),
         ];
 
