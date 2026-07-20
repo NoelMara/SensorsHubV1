@@ -47,7 +47,7 @@ class EmailVerificationController extends Controller
 
     public function resend(Request $request)
     {
-        $key = 'resend-code:' . $request->ip();
+        $key = 'resend-code:' . $request->ip() . ':' . $request->user()->email;
 
         if (RateLimiter::tooManyAttempts($key, 3)) {
             $seconds = RateLimiter::availableIn($key);
