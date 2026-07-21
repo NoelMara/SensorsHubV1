@@ -92,18 +92,15 @@ Route::post('/api/chat', function (Request $request) {
     ]);
     
     $data = $response->json();
-    // Debug: log the full response
-    \Log::info('Gemini response: ' . json_encode($data));
     
-    $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Sorry, I could not answer that.';
+    if (!$response->successful()) {
+        return response()->json(['reply' => 'API Error: ' . json_encode($data)]);
+    }
+    
+    $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'No reply from AI';
     
     return response()->json(['reply' => $reply]);
 })->middleware('auth')->name('chat.send');
-
-Route::get('/test-key', function () {
-    $key = env('GEMINI_API_KEY');
-    return 'Key exists: ' . (!empty($key) ? 'YES - starts with ' . substr($key, 0, 8) : 'NO - missing!');
-});
 
 // ─── Student Dashboard Routes ────────────────────────────────────────────────────
 Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->group(function () {
