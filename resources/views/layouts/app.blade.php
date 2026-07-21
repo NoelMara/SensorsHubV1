@@ -601,8 +601,8 @@
 
     });
     </script>
-    
-    {{-- ========================== AI Chatbot ========================== --}}
+
+        {{-- ========================== AI Chatbot ========================== --}}
     @auth
     <style>
         .chat-bubble {
@@ -690,7 +690,7 @@
         }
     </style>
 
-    <div x-data="{ open: false, messages: [{role: 'ai', text: 'Hello! Ask me about sensors, projects, or Arduino coding! 🚀'}], input: '', loading: false, sendMessage() { const content = this.input?.trim(); if (!content || this.loading) return; this.messages.push({ role: 'user', text: content }); this.input = ''; this.loading = true; this.$nextTick(() => { const el = this.$refs.messages; el.scrollTop = el.scrollHeight; }); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=\"csrf-token\"]').content }, body: JSON.stringify({ message: content }) }).then(res => res.json()).then(data => { this.messages.push({ role: 'ai', text: data.reply }); this.loading = false; this.$nextTick(() => { const el = this.$refs.messages; el.scrollTop = el.scrollHeight; }); }).catch(() => { this.messages.push({ role: 'ai', text: 'Sorry, something went wrong. Try again!' }); this.loading = false; }); } }">
+    <div x-data="chatBot()">
         <div class="chat-bubble" @click="open = !open">
             <span x-show="!open">💬</span>
             <span x-show="open">✕</span>
@@ -711,6 +711,49 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function chatBot() {
+            return {
+                open: false,
+                messages: [{role: 'ai', text: 'Hello! Ask me about sensors, projects, or Arduino coding! 🚀'}],
+                input: '',
+                loading: false,
+                sendMessage() {
+                    const content = this.input?.trim();
+                    if (!content || this.loading) return;
+                    this.messages.push({ role: 'user', text: content });
+                    this.input = '';
+                    this.loading = true;
+                    this.$nextTick(() => {
+                        this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
+                    });
+                    fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ message: content })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        this.messages.push({ role: 'ai', text: data.reply });
+                        this.loading = false;
+                        this.$nextTick(() => {
+                            this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Chat error:', err);
+                        this.messages.push({ role: 'ai', text: 'Sorry, something went wrong. Try again!' });
+                        this.loading = false;
+                    });
+                }
+            }
+        }
+    </script>
     @endauth
     {{-- ========================== End AI Chatbot ========================== --}}
 
