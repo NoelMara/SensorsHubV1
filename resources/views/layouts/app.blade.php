@@ -602,8 +602,9 @@
     });
     </script>
 
-        {{-- ========================== AI Chatbot ========================== --}}
+     {{-- ========================== AI Chatbot ========================== --}}
     @auth
+    @if(auth()->user()->role === 'student')
     <style>
         .chat-bubble { position:fixed; bottom:70px; right:16px; z-index:9998; width:40px; height:40px; border-radius:50%; background:rgba(59,130,246,0.75); backdrop-filter:blur(8px); color:white; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 12px rgba(59,130,246,0.3); font-size:16px; border:1px solid rgba(255,255,255,0.15); opacity:0.75; }
         .chat-bubble:hover { opacity:1; transform:scale(1.1); }
@@ -649,7 +650,7 @@
                 open: false,
                 messages: [{
                     role: 'ai',
-                    text: "👋 Welcome to SensorsHub AI!\n\nI'm your electronics learning assistant for second-year students.\n\nI can help with:\n• Sensors & modules\n• ESP32 & Raspberry Pi Pico\n• GPIO pins & wiring\n• Electronic components\n• Troubleshooting\n\nWhat would you like to learn today?"
+                    text: "👋 Welcome to SensorsHub AI!\n\nI'm here to help with sensors, ESP32, Pico, wiring, and electronics.\n\nWhat would you like to learn today?"
                 }],
                 input: '',
                 loading: false,
@@ -682,7 +683,9 @@
             }
         }
     </script>
+    @endif
     @endauth
+
 
 </body>
 </html>>

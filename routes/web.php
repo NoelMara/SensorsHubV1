@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\SensorController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\VideoController;
@@ -76,40 +77,9 @@ Route::middleware('auth')->group(function () {
 });
 
 // ─── AI Chat Route ────────────────────────────────────────────────────────────
-Route::post('/api/chat', function (Request $request) {
-    $message = trim($request->input('message'));
-
-    $systemPrompt = "You are SensorsHub AI. Teach second-year IT students about sensors, microcontrollers (ESP32, Arduino, Raspberry Pi Pico), GPIO, wiring, electronic components, and basic electronics. Keep answers clear, beginner-friendly, and concise using bullet points when helpful. Give Arduino or MicroPython code only when requested. If a question is unrelated to electronics, politely redirect the user to electronics topics. If unsure, say you don't know instead of guessing.";
-
-    $response = \Illuminate\Support\Facades\Http::withHeaders([
-        'Content-Type' => 'application/json',
-    ])->post(
-        'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=' . env('GEMINI_API_KEY'),
-        [
-            'contents' => [
-                [
-                    'role' => 'user',
-                    'parts' => [
-                        ['text' => $systemPrompt . "\n\nStudent Question:\n" . $message]
-                    ]
-                ]
-            ]
-        ]
-    );
-
-    $data = $response->json();
-
-    if (!$response->successful()) {
-        return response()->json([
-            'reply' => '⚠️ AI service is temporarily unavailable. Please try again later.'
-        ]);
-    }
-
-    $reply = $data['candidates'][0]['content']['parts'][0]['text']
-        ?? 'Sorry, I could not generate a response.';
-
-    return response()->json(['reply' => $reply]);
-})->middleware('auth')->name('chat.send');
+Route::post('/api/chat', [ChatController::class, 'send'])
+    ->middleware(['auth', 'throttle:5,1'])
+    ->name('chat.send');
 
 // ─── Student Dashboard Routes ────────────────────────────────────────────────────
 Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->group(function () {
