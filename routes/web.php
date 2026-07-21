@@ -75,6 +75,28 @@ Route::middleware('auth')->group(function () {
     })->name('notifications.index');
 });
 
+// ─── AI Chat Route ────────────────────────────────────────────────────────────
+Route::post('/api/chat', function (Request $request) {
+    $message = $request->input('message');
+    
+    $response = \Illuminate\Support\Facades\Http::withHeaders([
+        'Content-Type' => 'application/json',
+    ])->post('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . env('GEMINI_API_KEY'), [
+        'contents' => [
+            [
+                'parts' => [
+                    ['text' => "You are a helpful sensor and electronics tutor. Keep answers short and friendly. Question: " . $message]
+                ]
+            ]
+        ]
+    ]);
+    
+    $data = $response->json();
+    $reply = $data['candidates'][0]['content']['parts'][0]['text'] ?? 'Sorry, I could not answer that.';
+    
+    return response()->json(['reply' => $reply]);
+})->middleware('auth')->name('chat.send');
+
 // ─── Student Dashboard Routes ────────────────────────────────────────────────────
 Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');

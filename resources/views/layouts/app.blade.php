@@ -601,5 +601,118 @@
 
     });
     </script>
+    
+    {{-- ========================== AI Chatbot ========================== --}}
+    @auth
+    <style>
+        .chat-bubble {
+            position: fixed;
+            bottom: 70px;
+            right: 16px;
+            z-index: 9998;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(59,130,246,0.75);
+            backdrop-filter: blur(8px);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+            transition: all 0.3s ease;
+            font-size: 16px;
+            border: 1px solid rgba(255,255,255,0.15);
+            opacity: 0.75;
+        }
+        .chat-bubble:hover { opacity: 1; transform: scale(1.1); }
+        .chat-window {
+            position: fixed;
+            bottom: 120px;
+            right: 16px;
+            z-index: 9999;
+            width: 350px;
+            max-height: 450px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .dark .chat-window { background: #1F2937; border-color: rgba(255,255,255,0.1); }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            max-height: 300px;
+            font-size: 13px;
+        }
+        .chat-message {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+        .chat-user { background: #3B82F6; color: white; margin-left: auto; }
+        .chat-ai { background: #F3F4F6; color: #1F2937; }
+        .dark .chat-ai { background: #374151; color: #E5E7EB; }
+        .chat-input-area {
+            padding: 10px;
+            border-top: 1px solid #E5E7EB;
+            display: flex;
+            gap: 8px;
+        }
+        .dark .chat-input-area { border-color: #374151; }
+        .chat-input-area input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #E5E7EB;
+            border-radius: 20px;
+            font-size: 13px;
+            outline: none;
+        }
+        .dark .chat-input-area input { background: #374151; border-color: #4B5563; color: #E5E7EB; }
+        .chat-input-area button {
+            padding: 8px 14px;
+            background: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        @media (max-width: 640px) {
+            .chat-window { width: 90vw; right: 5vw; }
+            .chat-bubble { bottom: 60px; right: 12px; width: 34px; height: 34px; font-size: 14px; }
+        }
+    </style>
+
+    <div x-data="{ open: false, messages: [{role: 'ai', text: 'Hello! Ask me about sensors, projects, or Arduino coding! 🚀'}], input: '', loading: false, sendMessage() { const content = this.input?.trim(); if (!content || this.loading) return; this.messages.push({ role: 'user', text: content }); this.input = ''; this.loading = true; this.$nextTick(() => { const el = this.$refs.messages; el.scrollTop = el.scrollHeight; }); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=\"csrf-token\"]').content }, body: JSON.stringify({ message: content }) }).then(res => res.json()).then(data => { this.messages.push({ role: 'ai', text: data.reply }); this.loading = false; this.$nextTick(() => { const el = this.$refs.messages; el.scrollTop = el.scrollHeight; }); }).catch(() => { this.messages.push({ role: 'ai', text: 'Sorry, something went wrong. Try again!' }); this.loading = false; }); } }">
+        <div class="chat-bubble" @click="open = !open">
+            <span x-show="!open">💬</span>
+            <span x-show="open">✕</span>
+        </div>
+        <div class="chat-window" x-show="open" x-transition>
+            <div style="padding: 12px 15px; border-bottom: 1px solid #E5E7EB; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 8px;" class="dark:border-gray-700 dark:text-white">
+                <span>🤖</span> SensorsHub AI
+            </div>
+            <div class="chat-messages" x-ref="messages">
+                <template x-for="msg in messages" :key="msg.text">
+                    <div :class="msg.role === 'user' ? 'chat-message chat-user' : 'chat-message chat-ai'" x-text="msg.text"></div>
+                </template>
+                <div x-show="loading" class="chat-message chat-ai" style="opacity:0.6;">Thinking...</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" x-model="input" @keyup.enter="sendMessage()" placeholder="Ask something..." :disabled="loading">
+                <button @click="sendMessage()" :disabled="loading">Send</button>
+            </div>
+        </div>
+    </div>
+    @endauth
+    {{-- ========================== End AI Chatbot ========================== --}}
+
 </body>
-</html>
+</html>>
