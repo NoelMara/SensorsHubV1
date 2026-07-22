@@ -44,29 +44,21 @@
             'doc', 'docx' => 'fa-file-word',
             default => 'fa-file-alt'
         };
-        $color = match($extension) {
-            'pdf' => 'text-red-500 dark:text-red-400',
-            'doc', 'docx' => 'text-blue-500 dark:text-blue-400',
-            default => 'text-blue-500 dark:text-blue-400'
-        };
-        $bg = match($extension) {
-            'pdf' => 'bg-red-50 dark:bg-red-900/20',
-            'doc', 'docx' => 'bg-blue-50 dark:bg-blue-900/20',
-            default => 'bg-gray-50 dark:bg-gray-700/50'
-        };
     @endphp
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden" x-data="{ downloading: false }">
         <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center gap-2">
             <i class="fas fa-paperclip text-gray-400 text-sm"></i>
             <h2 class="text-sm font-semibold text-gray-900 dark:text-white">Attachment</h2>
         </div>
         <a href="{{ $module->file_path }}" download
+           @click="setTimeout(() => downloading = true, 100)"
+           :class="downloading ? 'pointer-events-none opacity-60' : ''"
            class="flex items-center gap-4 px-6 py-5 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition group">
-            <div class="w-12 h-12 rounded-xl {{ $bg }} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
-                <i class="fas {{ $icon }} {{ $color }} text-xl"></i>
+            <div class="w-10 h-10 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <i class="fas {{ $icon }} text-primary text-lg"></i>
             </div>
             <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 dark:text-white group-hover:text-primary transition truncate">
+                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
                     {{ $module->file_name ?? 'Download File' }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
@@ -74,11 +66,14 @@
                         {{ $module->file_size > 1048576 ? number_format($module->file_size / 1048576, 1) . ' MB' : number_format($module->file_size / 1024, 1) . ' KB' }}
                         <span class="mx-1">·</span>
                     @endif
-                    Click to download
+                    <span x-show="!downloading">Click to download</span>
+                    <span x-show="downloading" class="text-green-600 dark:text-green-400 font-medium">Downloading... ✓</span>
                 </p>
             </div>
-            <div class="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0 group-hover:bg-primary transition">
-                <i class="fas fa-arrow-down text-primary group-hover:text-white text-xs"></i>
+            <div class="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0 group-hover:bg-primary transition"
+                 :class="downloading ? '!bg-green-100 dark:!bg-green-900/30' : ''">
+                <i class="fas fa-download text-primary group-hover:text-white text-xs"
+                   :class="downloading ? '!text-green-600 dark:!text-green-400' : ''"></i>
             </div>
         </a>
     </div>
