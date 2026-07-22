@@ -60,7 +60,7 @@
             <i class="fas fa-paperclip text-gray-400 text-sm"></i>
             <h2 class="text-sm font-semibold text-gray-900 dark:text-white">Attachment</h2>
         </div>
-        <a href="{{ $module->file_path }}" target="_blank" 
+        <a href="{{ $module->file_path }}" download
            class="flex items-center gap-4 px-6 py-5 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition group">
             <div class="w-12 h-12 rounded-xl {{ $bg }} flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition">
                 <i class="fas {{ $icon }} {{ $color }} text-xl"></i>
