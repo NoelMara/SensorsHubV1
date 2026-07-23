@@ -342,8 +342,8 @@ class ClassroomController extends Controller
             ];
         }
 
-        // Students at risk - split by type
-        $studentsAtRisk = [];
+        // Student Performance - all students with split averages
+        $studentPerformance = [];
         foreach ($students as $student) {
             $studentAssessmentPct = collect();
             foreach ($assessments as $assessment) {
@@ -363,16 +363,14 @@ class ClassroomController extends Controller
             }
             $studentQuizAvg = $studentQuizPct->count() > 0 ? round($studentQuizPct->avg(), 1) : null;
 
-            // Show if either is below 50%
             $overallAvg = collect([$studentAssessmentAvg, $studentQuizAvg])->filter()->avg();
-            if ($overallAvg !== null && $overallAvg < 50) {
-                $studentsAtRisk[] = [
-                    'name' => $student->name,
-                    'assessment_avg' => $studentAssessmentAvg,
-                    'quiz_avg' => $studentQuizAvg,
-                    'overall' => round($overallAvg, 1),
-                ];
-            }
+
+            $studentPerformance[] = [
+                'name' => $student->name,
+                'assessment_avg' => $studentAssessmentAvg,
+                'quiz_avg' => $studentQuizAvg,
+                'overall' => $overallAvg !== null ? round($overallAvg, 1) : null,
+            ];
         }
 
         return view('admin.classes.analytics', compact(
@@ -385,7 +383,7 @@ class ClassroomController extends Controller
             'assessmentBreakdown',
             'quizBreakdown',
             'submissionTimeline',
-            'studentsAtRisk'
+            'studentPerformance'
         ));
     }
 

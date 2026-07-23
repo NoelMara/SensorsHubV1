@@ -112,32 +112,56 @@
         </div>
     </div>
 
-    {{-- Students at Risk --}}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-red-200 dark:border-red-700 p-5">
-        <h2 class="text-base font-bold text-red-700 dark:text-red-400 mb-4">🚨 Students at Risk (Below 50%)</h2>
-        @if(count($studentsAtRisk) > 0)
-            <div class="space-y-3">
-                @foreach($studentsAtRisk as $student)
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+    {{-- Student Performance --}}
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+        <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">👥 Student Performance</h2>
+        @if(count($studentPerformance) > 0)
+            <div class="space-y-2">
+                @foreach($studentPerformance as $student)
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 bg-gray-50 dark:bg-gray-700/30 rounded-lg">
                         <span class="text-sm font-medium text-gray-800 dark:text-gray-200">{{ $student['name'] }}</span>
                         <div class="flex items-center gap-3 text-xs">
                             @if($student['assessment_avg'] !== null)
-                                <span class="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                                @php
+                                    $aColor = $student['assessment_avg'] >= 75 ? 'green' : ($student['assessment_avg'] >= 50 ? 'yellow' : 'red');
+                                @endphp
+                                <span class="px-2 py-0.5 rounded-full 
+                                    {{ $aColor === 'green' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : '' }}
+                                    {{ $aColor === 'yellow' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300' : '' }}
+                                    {{ $aColor === 'red' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' : '' }}">
                                     Assessments: {{ $student['assessment_avg'] }}%
                                 </span>
-                            @endif
-                            @if($student['quiz_avg'] !== null)
-                                <span class="px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-                                    Quizzes: {{ $student['quiz_avg'] }}%
+                            @else
+                                <span class="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400">
+                                    Assessments: —
                                 </span>
                             @endif
-                            <span class="font-bold text-red-600 dark:text-red-400">{{ $student['overall'] }}%</span>
+
+                            @if($student['quiz_avg'] !== null)
+                                @php
+                                    $qColor = $student['quiz_avg'] >= 75 ? 'green' : ($student['quiz_avg'] >= 50 ? 'yellow' : 'red');
+                                @endphp
+                                <span class="px-2 py-0.5 rounded-full 
+                                    {{ $qColor === 'green' ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300' : '' }}
+                                    {{ $qColor === 'yellow' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300' : '' }}
+                                    {{ $qColor === 'red' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300' : '' }}">
+                                    Quizzes: {{ $student['quiz_avg'] }}%
+                                </span>
+                            @else
+                                <span class="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-600 text-gray-500 dark:text-gray-400">
+                                    Quizzes: —
+                                </span>
+                            @endif
+
+                            @if($student['overall'] !== null)
+                                <span class="font-bold text-gray-700 dark:text-gray-300">{{ $student['overall'] }}%</span>
+                            @endif
                         </div>
                     </div>
                 @endforeach
             </div>
         @else
-            <p class="text-green-600 dark:text-green-400 text-sm">🎉 No students at risk!</p>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">No students enrolled yet.</p>
         @endif
     </div>
 </div>
