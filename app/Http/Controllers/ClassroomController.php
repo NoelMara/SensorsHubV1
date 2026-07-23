@@ -363,7 +363,9 @@ class ClassroomController extends Controller
             }
             $studentQuizAvg = $studentQuizPct->count() > 0 ? round($studentQuizPct->avg(), 1) : null;
 
-            $overallAvg = collect([$studentAssessmentAvg, $studentQuizAvg])->filter()->avg();
+            $overallAvg = collect([$studentAssessmentAvg, $studentQuizAvg])
+            ->filter(function($value) { return $value !== null; })
+            ->avg();
 
             $studentPerformance[] = [
                 'name' => $student->name,
