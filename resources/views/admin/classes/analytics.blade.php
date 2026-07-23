@@ -10,9 +10,7 @@
 
     <div class="flex items-center justify-between mb-8">
         <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
-                <i class="fas fa-chart-bar text-teal-600 dark:text-teal-400 mr-2"></i>Analytics
-            </h1>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Analytics</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $class->name }} · {{ $studentCount }} {{ Str::plural('student', $studentCount) }}</p>
         </div>
     </div>
