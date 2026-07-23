@@ -200,6 +200,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Leaderboard
     Route::get('/classes/{class}/leaderboard', [ClassroomController::class, 'leaderboard'])->name('classes.leaderboard');
 
+    // Analytics
+    Route::get('/classes/{class}/analytics', [ClassroomController::class, 'analytics'])->name('classes.analytics');
+
     // Sensors CRUD
     Route::get('/sensors', [AdminSensorController::class, 'index'])->name('sensors.index');
     Route::get('/sensors/create', [AdminSensorController::class, 'create'])->name('sensors.create');

@@ -256,6 +256,117 @@ class ClassroomController extends Controller
         return view('admin.classes.leaderboard', compact('class', 'leaderboard'));
     }
 
+    public function analytics(Classroom $class)
+    {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Approved students only
+        $students = $class->students()->wherePivot('status', 'approved')->get();
+        $studentCount = $students->count();
+
+        $assessments = $class->assessments()->where('is_published', true)->get();
+        $quizzes = $class->quizzes()->where('is_published', true)->get();
+
+        $assessmentCount = $assessments->count();
+        $quizCount = $quizzes->count();
+
+        // Average score across all submissions
+        $allPercentages = collect();
+
+        foreach ($assessments as $assessment) {
+            foreach ($assessment->submissions as $sub) {
+                if ($sub->score !== null && $assessment->points > 0) {
+                    $allPercentages->push(($sub->score / $assessment->points) * 100);
+                }
+            }
+        }
+
+        foreach ($quizzes as $quiz) {
+            foreach ($quiz->submissions as $sub) {
+                if ($sub->score !== null && $quiz->points > 0) {
+                    $allPercentages->push(($sub->score / $quiz->points) * 100);
+                }
+            }
+        }
+
+        $avgScore = $allPercentages->count() > 0 ? round($allPercentages->avg(), 1) : 0;
+
+        // Assessment breakdown
+        $assessmentBreakdown = [];
+        foreach ($assessments as $assessment) {
+            $submissions = $assessment->submissions()->whereNotNull('score')->get();
+            $submittedCount = $submissions->count();
+            $avg = $submittedCount > 0 ? round($submissions->avg('score') / $assessment->points * 100, 1) : 0;
+
+            $assessmentBreakdown[] = [
+                'title' => $assessment->title,
+                'average' => $avg,
+                'submitted' => $submittedCount,
+                'total' => $studentCount,
+                'submission_rate' => $studentCount > 0 ? round(($submittedCount / $studentCount) * 100) : 0,
+            ];
+        }
+
+        // Submission timeline (last 30 days)
+        $submissionTimeline = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $count = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))
+                ->whereDate('submitted_at', $date)
+                ->count()
+                + QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))
+                ->whereDate('submitted_at', $date)
+                ->count();
+
+            $submissionTimeline[] = [
+                'date' => $date,
+                'count' => $count,
+            ];
+        }
+
+        // Students at risk (below 50%)
+        $studentsAtRisk = [];
+        foreach ($students as $student) {
+            $studentPercentages = collect();
+
+            foreach ($assessments as $assessment) {
+                $sub = $assessment->submissions()->where('user_id', $student->id)->whereNotNull('score')->first();
+                if ($sub && $assessment->points > 0) {
+                    $studentPercentages->push(($sub->score / $assessment->points) * 100);
+                }
+            }
+
+            foreach ($quizzes as $quiz) {
+                $sub = $quiz->submissions()->where('user_id', $student->id)->whereNotNull('score')->first();
+                if ($sub && $quiz->points > 0) {
+                    $studentPercentages->push(($sub->score / $quiz->points) * 100);
+                }
+            }
+
+            $studentAvg = $studentPercentages->count() > 0 ? round($studentPercentages->avg(), 1) : 0;
+
+            if ($studentAvg < 50 && $studentPercentages->count() > 0) {
+                $studentsAtRisk[] = [
+                    'name' => $student->name,
+                    'average' => $studentAvg,
+                ];
+            }
+        }
+
+        return view('admin.classes.analytics', compact(
+            'class',
+            'studentCount',
+            'assessmentCount',
+            'quizCount',
+            'avgScore',
+            'assessmentBreakdown',
+            'submissionTimeline',
+            'studentsAtRisk'
+        ));
+    }
+
     public function approveAll(Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) {
