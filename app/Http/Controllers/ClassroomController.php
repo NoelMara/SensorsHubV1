@@ -262,7 +262,6 @@ class ClassroomController extends Controller
             abort(403);
         }
 
-        // Approved students only
         $students = $class->students()->wherePivot('status', 'approved')->get();
         $studentCount = $students->count();
 
@@ -272,28 +271,28 @@ class ClassroomController extends Controller
         $assessmentCount = $assessments->count();
         $quizCount = $quizzes->count();
 
-        // Average score across all submissions
-        $allPercentages = collect();
-
+        // Separate averages
+        $assessmentPercentages = collect();
         foreach ($assessments as $assessment) {
-            foreach ($assessment->submissions as $sub) {
-                if ($sub->score !== null && $assessment->points > 0) {
-                    $allPercentages->push(($sub->score / $assessment->points) * 100);
+            foreach ($assessment->submissions()->whereNotNull('score')->get() as $sub) {
+                if ($assessment->points > 0) {
+                    $assessmentPercentages->push(($sub->score / $assessment->points) * 100);
                 }
             }
         }
+        $assessmentAvg = $assessmentPercentages->count() > 0 ? round($assessmentPercentages->avg(), 1) : 0;
 
+        $quizPercentages = collect();
         foreach ($quizzes as $quiz) {
-            foreach ($quiz->submissions as $sub) {
-                if ($sub->score !== null && $quiz->points > 0) {
-                    $allPercentages->push(($sub->score / $quiz->points) * 100);
+            foreach ($quiz->submissions()->whereNotNull('score')->get() as $sub) {
+                if ($quiz->points > 0) {
+                    $quizPercentages->push(($sub->score / $quiz->points) * 100);
                 }
             }
         }
+        $quizAvg = $quizPercentages->count() > 0 ? round($quizPercentages->avg(), 1) : 0;
 
-        $avgScore = $allPercentages->count() > 0 ? round($allPercentages->avg(), 1) : 0;
-
-        // Assessment breakdown
+        // Assessment Breakdown
         $assessmentBreakdown = [];
         foreach ($assessments as $assessment) {
             $submissions = $assessment->submissions()->whereNotNull('score')->get();
@@ -309,48 +308,69 @@ class ClassroomController extends Controller
             ];
         }
 
-        // Submission timeline (last 30 days)
+        // Quiz Breakdown
+        $quizBreakdown = [];
+        foreach ($quizzes as $quiz) {
+            $submissions = $quiz->submissions()->whereNotNull('score')->get();
+            $submittedCount = $submissions->count();
+            $avg = $submittedCount > 0 ? round($submissions->avg('score') / $quiz->points * 100, 1) : 0;
+
+            $quizBreakdown[] = [
+                'title' => $quiz->title,
+                'average' => $avg,
+                'submitted' => $submittedCount,
+                'total' => $studentCount,
+                'submission_rate' => $studentCount > 0 ? round(($submittedCount / $studentCount) * 100) : 0,
+            ];
+        }
+
+        // Submission timeline - split by type
         $submissionTimeline = [];
         for ($i = 29; $i >= 0; $i--) {
             $date = now()->subDays($i)->format('Y-m-d');
-            $count = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))
+            $assessmentCount = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))
                 ->whereDate('submitted_at', $date)
-                ->count()
-                + QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))
+                ->count();
+            $quizCount = QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))
                 ->whereDate('submitted_at', $date)
                 ->count();
 
             $submissionTimeline[] = [
                 'date' => $date,
-                'count' => $count,
+                'assessments' => $assessmentCount,
+                'quizzes' => $quizCount,
             ];
         }
 
-        // Students at risk (below 50%)
+        // Students at risk - split by type
         $studentsAtRisk = [];
         foreach ($students as $student) {
-            $studentPercentages = collect();
-
+            $studentAssessmentPct = collect();
             foreach ($assessments as $assessment) {
                 $sub = $assessment->submissions()->where('user_id', $student->id)->whereNotNull('score')->first();
                 if ($sub && $assessment->points > 0) {
-                    $studentPercentages->push(($sub->score / $assessment->points) * 100);
+                    $studentAssessmentPct->push(($sub->score / $assessment->points) * 100);
                 }
             }
+            $studentAssessmentAvg = $studentAssessmentPct->count() > 0 ? round($studentAssessmentPct->avg(), 1) : null;
 
+            $studentQuizPct = collect();
             foreach ($quizzes as $quiz) {
                 $sub = $quiz->submissions()->where('user_id', $student->id)->whereNotNull('score')->first();
                 if ($sub && $quiz->points > 0) {
-                    $studentPercentages->push(($sub->score / $quiz->points) * 100);
+                    $studentQuizPct->push(($sub->score / $quiz->points) * 100);
                 }
             }
+            $studentQuizAvg = $studentQuizPct->count() > 0 ? round($studentQuizPct->avg(), 1) : null;
 
-            $studentAvg = $studentPercentages->count() > 0 ? round($studentPercentages->avg(), 1) : 0;
-
-            if ($studentAvg < 50 && $studentPercentages->count() > 0) {
+            // Show if either is below 50%
+            $overallAvg = collect([$studentAssessmentAvg, $studentQuizAvg])->filter()->avg();
+            if ($overallAvg !== null && $overallAvg < 50) {
                 $studentsAtRisk[] = [
                     'name' => $student->name,
-                    'average' => $studentAvg,
+                    'assessment_avg' => $studentAssessmentAvg,
+                    'quiz_avg' => $studentQuizAvg,
+                    'overall' => round($overallAvg, 1),
                 ];
             }
         }
@@ -360,8 +380,10 @@ class ClassroomController extends Controller
             'studentCount',
             'assessmentCount',
             'quizCount',
-            'avgScore',
+            'assessmentAvg',
+            'quizAvg',
             'assessmentBreakdown',
+            'quizBreakdown',
             'submissionTimeline',
             'studentsAtRisk'
         ));
