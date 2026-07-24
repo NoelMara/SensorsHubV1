@@ -18,5 +18,11 @@ class ActivityLogHelper
             'type' => $type,
             'description' => $description,
         ]);
+
+        // Keep only last 1000 logs
+        $count = ActivityLog::count();
+        if ($count > 1000) {
+            ActivityLog::oldest()->take($count - 1000)->delete();
+        }
     }
 }
