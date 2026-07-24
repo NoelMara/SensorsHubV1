@@ -23,7 +23,7 @@ class LoginController extends Controller
         ]);
     }
 
-    public function administratorLogin()
+    public function showAdministratorLoginForm()
     {
         return view('auth.login', [
             'loginMode' => 'administrator',
@@ -202,7 +202,7 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
-        $redirectRoute = Auth::user()?->isAdministrator() ? 'super-admin.login' : 'login';
+        $redirectRoute = Auth::user()?->isAdministrator() ? 'administrator.login' : 'login';
 
         Auth::logout();
         $request->session()->invalidate();

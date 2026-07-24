@@ -51,7 +51,7 @@ Route::get('/community', [SuggestionController::class, 'community'])->name('sugg
 //       so only FAILED attempts count, not every request.
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::get('/sys/secure-entry', [LoginController::class, 'administratorLogin'])->name('administrator.login');
+    Route::get('/sys/secure-entry', [LoginController::class, 'showAdministratorLoginForm'])->name('administrator.login');
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 
     Route::post('/register', [RegisterController::class, 'register']);
