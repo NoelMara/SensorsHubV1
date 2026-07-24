@@ -48,7 +48,9 @@ class DashboardController extends Controller
         $totalInstructors = User::where('role', 'instructor')->count();
         $totalClasses = Classroom::count();
         $totalContent = Sensor::count() + Project::count() + Product::count() + Video::count();
-        $newThisMonth = User::where('created_at', '>=', now()->subDays(30))->count();
+        $newThisMonth = User::where('created_at', '>=', now()->subDays(30))
+        ->where('role', '!=', 'administrator')
+        ->count();
 
         // User growth chart (last 30 days)
         $userGrowth = [];
