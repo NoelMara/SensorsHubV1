@@ -79,6 +79,7 @@
             <p class="text-xs text-gray-400 mt-0.5">{{ $user->updated_at->diffForHumans() }}</p>
         </div>
     </div>
+
     {{-- Moderation --}}
     @if(!$user->isAdministrator())
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
@@ -98,17 +99,17 @@
                 <span class="text-sm text-gray-600 dark:text-gray-400">Warnings: <strong>{{ $user->warning_count }}</strong>/3</span>
             </div>
             <div class="flex flex-wrap gap-2">
-                <form method="POST" action="{{ route('administrator.users.warn', $user) }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Warning reason:'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
+                <form method="POST" action="{{ route('administrator.users.warn', $user) }}" class="inline">
                     @csrf
                     <input type="hidden" name="reason" value="">
-                    <button type="submit" class="px-3 py-1.5 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700">
+                    <button type="button" class="px-3 py-1.5 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700" onclick="let reason = prompt('Warning reason:'); if(reason) { this.form.querySelector('[name=reason]').value = reason; this.form.submit(); }">
                         <i class="fas fa-exclamation-triangle mr-1"></i> Warn
                     </button>
                 </form>
-                <form method="POST" action="{{ route('administrator.users.ban', $user) }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Ban reason:'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
+                <form method="POST" action="{{ route('administrator.users.ban', $user) }}" class="inline">
                     @csrf
                     <input type="hidden" name="reason" value="">
-                    <button type="submit" class="px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700">
+                    <button type="button" class="px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700" onclick="let reason = prompt('Ban reason:'); if(reason) { this.form.querySelector('[name=reason]').value = reason; this.form.submit(); }">
                         <i class="fas fa-ban mr-1"></i> Ban
                     </button>
                 </form>
