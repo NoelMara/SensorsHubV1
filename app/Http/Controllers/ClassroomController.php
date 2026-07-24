@@ -271,26 +271,17 @@ class ClassroomController extends Controller
         $assessmentCount = $assessments->count();
         $quizCount = $quizzes->count();
 
-        // Separate averages
-        $assessmentPercentages = collect();
-        foreach ($assessments as $assessment) {
-            foreach ($assessment->submissions()->whereNotNull('score')->get() as $sub) {
-                if ($assessment->points > 0) {
-                    $assessmentPercentages->push(($sub->score / $assessment->points) * 100);
-                }
-            }
-        }
-        $assessmentAvg = $assessmentPercentages->count() > 0 ? round($assessmentPercentages->avg(), 1) : 0;
+        // Weighted averages (total earned / total possible * 100)
+        $totalAssessmentPoints = $assessments->sum('points');
+        $totalQuizPoints = $quizzes->sum('points');
 
-        $quizPercentages = collect();
-        foreach ($quizzes as $quiz) {
-            foreach ($quiz->submissions()->whereNotNull('score')->get() as $sub) {
-                if ($quiz->points > 0) {
-                    $quizPercentages->push(($sub->score / $quiz->points) * 100);
-                }
-            }
-        }
-        $quizAvg = $quizPercentages->count() > 0 ? round($quizPercentages->avg(), 1) : 0;
+        $allAssessmentScores = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))
+            ->whereNotNull('score')->sum('score');
+        $allQuizScores = QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))
+            ->whereNotNull('score')->sum('score');
+
+        $assessmentAvg = $totalAssessmentPoints > 0 ? round(($allAssessmentScores / $totalAssessmentPoints) * 100, 1) : 0;
+        $quizAvg = $totalQuizPoints > 0 ? round(($allQuizScores / $totalQuizPoints) * 100, 1) : 0;
 
         // Assessment Breakdown
         $assessmentBreakdown = [];
@@ -342,36 +333,28 @@ class ClassroomController extends Controller
             ];
         }
 
-        // Student Performance - all students with split averages
+        // Student Performance - weighted like student view
         $studentPerformance = [];
         foreach ($students as $student) {
-            $studentAssessmentPct = collect();
-            foreach ($assessments as $assessment) {
-                $sub = $assessment->submissions()->where('user_id', $student->id)->whereNotNull('score')->first();
-                if ($sub && $assessment->points > 0) {
-                    $studentAssessmentPct->push(($sub->score / $assessment->points) * 100);
-                }
-            }
-            $studentAssessmentAvg = $studentAssessmentPct->count() > 0 ? round($studentAssessmentPct->avg(), 1) : null;
+            $studentAssessmentScore = AssessmentSubmission::where('user_id', $student->id)
+                ->whereIn('assessment_id', $assessments->pluck('id'))
+                ->whereNotNull('score')->sum('score');
+            $studentAssessmentAvg = $totalAssessmentPoints > 0 ? round(($studentAssessmentScore / $totalAssessmentPoints) * 100, 1) : null;
 
-            $studentQuizPct = collect();
-            foreach ($quizzes as $quiz) {
-                $sub = $quiz->submissions()->where('user_id', $student->id)->whereNotNull('score')->first();
-                if ($sub && $quiz->points > 0) {
-                    $studentQuizPct->push(($sub->score / $quiz->points) * 100);
-                }
-            }
-            $studentQuizAvg = $studentQuizPct->count() > 0 ? round($studentQuizPct->avg(), 1) : null;
+            $studentQuizScore = QuizSubmission::where('user_id', $student->id)
+                ->whereIn('quiz_id', $quizzes->pluck('id'))
+                ->whereNotNull('score')->sum('score');
+            $studentQuizAvg = $totalQuizPoints > 0 ? round(($studentQuizScore / $totalQuizPoints) * 100, 1) : null;
 
-            $overallAvg = collect([$studentAssessmentAvg, $studentQuizAvg])
-            ->filter(function($value) { return $value !== null; })
-            ->avg();
+            $totalEarned = $studentAssessmentScore + $studentQuizScore;
+            $totalPossible = $totalAssessmentPoints + $totalQuizPoints;
+            $overall = $totalPossible > 0 ? round(($totalEarned / $totalPossible) * 100, 1) : null;
 
             $studentPerformance[] = [
                 'name' => $student->name,
                 'assessment_avg' => $studentAssessmentAvg,
                 'quiz_avg' => $studentQuizAvg,
-                'overall' => $overallAvg !== null ? round($overallAvg, 1) : null,
+                'overall' => $overall,
             ];
         }
 
