@@ -62,7 +62,7 @@
 
                     <div class="flex items-center gap-2 flex-shrink-0 mt-1">
                         @auth
-                            <form method="POST" action="{{ route('report.store') }}" class="inline" onsubmit="return confirm('Report this suggestion?')">
+                            <form method="POST" action="{{ route('report.store') }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
                                 @csrf
                                 <input type="hidden" name="reportable_type" value="suggestion">
                                 <input type="hidden" name="reportable_id" value="{{ $suggestion->id }}">

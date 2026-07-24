@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Report;
+use App\Models\Comment;
 use App\Models\User;
 use App\Helpers\NotificationHelper;
 use Illuminate\Http\Request;
@@ -32,9 +33,14 @@ class ReportController extends Controller
         if ($admin) {
             $itemType = $validated['reportable_type'] === 'suggestion' ? 'suggestion' : 'comment';
             
-            $link = $validated['reportable_type'] === 'suggestion'
-                ? route('administrator.suggestions.show', $validated['reportable_id'])
-                : route('administrator.suggestions.index');
+            if ($validated['reportable_type'] === 'suggestion') {
+                $link = route('administrator.suggestions.show', $validated['reportable_id']);
+            } else {
+                $comment = Comment::find($validated['reportable_id']);
+                $link = $comment 
+                    ? route('administrator.suggestions.show', $comment->suggestion_id) 
+                    : route('administrator.suggestions.index');
+            }
 
             NotificationHelper::send(
                 $admin->id,
