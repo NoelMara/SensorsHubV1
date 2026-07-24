@@ -16,7 +16,7 @@ class AnnouncementController extends Controller
             abort(403);
         }
         $announcements = $class->announcements()->latest()->paginate(5);
-        return view('admin.classes.announcements.index', compact('class', 'announcements'));
+        return view('instructor.classes.announcements.index', compact('class', 'announcements'));
     }
 
     public function create(Classroom $class)
@@ -24,7 +24,7 @@ class AnnouncementController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.announcements.create', compact('class'));
+        return view('instructor.classes.announcements.create', compact('class'));
     }
 
     public function store(Request $request, Classroom $class)
@@ -53,7 +53,7 @@ class AnnouncementController extends Controller
         }
 
         return redirect()
-            ->route('admin.classes.announcements.index', $class)
+            ->route('instructor.classes.announcements.index', $class)
             ->with('success', 'Announcement posted!');
     }
 
@@ -62,7 +62,7 @@ class AnnouncementController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.announcements.edit', compact('class', 'announcement'));
+        return view('instructor.classes.announcements.edit', compact('class', 'announcement'));
     }
 
     public function update(Request $request, Classroom $class, Announcement $announcement)
@@ -94,7 +94,7 @@ class AnnouncementController extends Controller
         }
 
         return redirect()
-            ->route('admin.classes.announcements.index', $class)
+            ->route('instructor.classes.announcements.index', $class)
             ->with('success', 'Announcement updated!');
     }
 
@@ -143,7 +143,7 @@ class AnnouncementController extends Controller
         $otherClasses = Classroom::where('instructor_id', auth()->id())
             ->where('id', '!=', $class->id)
             ->get();
-        return view('admin.classes.announcements.import', compact('class', 'otherClasses'));
+        return view('instructor.classes.announcements.import', compact('class', 'otherClasses'));
     }
 
     public function copyAnnouncements(Request $request, Classroom $class)
@@ -170,7 +170,7 @@ class AnnouncementController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.classes.announcements.index', $class)
+        return redirect()->route('instructor.classes.announcements.index', $class)
             ->with('success', count($announcements) . ' announcements imported!');
     }
 }

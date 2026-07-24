@@ -14,17 +14,17 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\User\DashboardController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Instructor\DashboardController as AdminDashboardController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\QuizController;
-use App\Http\Controllers\Admin\SensorController as AdminSensorController;
-use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
-use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\VideoController as AdminVideoController;
-use App\Http\Controllers\Admin\SuggestionController as AdminSuggestionController;
+use App\Http\Controllers\Instructor\SensorController as AdminSensorController;
+use App\Http\Controllers\Instructor\ProjectController as AdminProjectController;
+use App\Http\Controllers\Instructor\ProductController as AdminProductController;
+use App\Http\Controllers\Instructor\VideoController as AdminVideoController;
+use App\Http\Controllers\Instructor\SuggestionController as AdminSuggestionController;
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
 use App\Http\Controllers\SuperAdmin\UserController as SuperAdminUserController;
 use App\Http\Controllers\SuperAdmin\ProfileController as SuperAdminProfileController;
@@ -137,7 +137,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // ─── Instructor Routes ─────────────────────────────────────────────────────────────
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructor.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Classes

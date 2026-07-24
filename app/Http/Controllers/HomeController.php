@@ -19,7 +19,7 @@ class HomeController extends Controller
                 return redirect()->route('super-admin.dashboard');
             }
             if ($user->isInstructor()) {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('instructor.dashboard');
             }
             return redirect()->route('dashboard.index');
         }

@@ -221,7 +221,7 @@ class LoginController extends Controller
         }
 
         if ($user->isInstructor()) {
-            return redirect()->route('admin.dashboard');
+            return redirect()->route('instructor.dashboard');
         }
 
         return redirect()->route('dashboard.index');

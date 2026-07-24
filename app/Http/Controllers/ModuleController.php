@@ -16,7 +16,7 @@ class ModuleController extends Controller
             abort(403);
         }
         $modules = $class->modules()->orderBy('order')->paginate(5);
-        return view('admin.classes.modules.index', compact('class', 'modules'));
+        return view('instructor.classes.modules.index', compact('class', 'modules'));
     }
 
     public function create(Classroom $class)
@@ -24,7 +24,7 @@ class ModuleController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.modules.create', compact('class'));
+        return view('instructor.classes.modules.create', compact('class'));
     }
 
     public function store(Request $request, Classroom $class)
@@ -69,7 +69,7 @@ class ModuleController extends Controller
             );
         }
 
-        return redirect()->route('admin.classes.modules.index', $class)
+        return redirect()->route('instructor.classes.modules.index', $class)
             ->with('success', 'Module created successfully!');
     }
 
@@ -98,7 +98,7 @@ class ModuleController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.modules.edit', compact('class', 'module'));
+        return view('instructor.classes.modules.edit', compact('class', 'module'));
     }
 
     public function update(Request $request, Classroom $class, Module $module)
@@ -141,7 +141,7 @@ class ModuleController extends Controller
             );
         }
 
-        return redirect()->route('admin.classes.modules.index', $class)
+        return redirect()->route('instructor.classes.modules.index', $class)
             ->with('success', 'Module updated!');
     }
 
@@ -162,7 +162,7 @@ class ModuleController extends Controller
         $otherClasses = Classroom::where('instructor_id', auth()->id())
             ->where('id', '!=', $class->id)
             ->get();
-        return view('admin.classes.modules.import', compact('class', 'otherClasses'));
+        return view('instructor.classes.modules.import', compact('class', 'otherClasses'));
     }
 
     public function copyModules(Request $request, Classroom $class)
@@ -193,7 +193,7 @@ class ModuleController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.classes.modules.index', $class)
+        return redirect()->route('instructor.classes.modules.index', $class)
             ->with('success', count($modules) . ' modules imported!');
     }
 

@@ -14,12 +14,12 @@ class ClassroomController extends Controller
     public function index()
     {
         $classes = Classroom::where('instructor_id', auth()->id())->latest()->paginate(3);
-        return view('admin.classes.index', compact('classes'));
+        return view('instructor.classes.index', compact('classes'));
     }
 
     public function create()
     {
-        return view('admin.classes.create');
+        return view('instructor.classes.create');
     }
 
     public function store(Request $request)
@@ -36,7 +36,7 @@ class ClassroomController extends Controller
         Classroom::create($validated);
         ActivityLogHelper::log('created', 'class', "created a new class '{$validated['name']}'");
 
-        return redirect()->route('admin.classes.index')
+        return redirect()->route('instructor.classes.index')
             ->with('success', 'Class created successfully! Code: ' . $validated['code']);
     }
 
@@ -45,7 +45,7 @@ class ClassroomController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.show', compact('class'));
+        return view('instructor.classes.show', compact('class'));
     }
 
     public function edit(Classroom $class)
@@ -53,7 +53,7 @@ class ClassroomController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.edit', compact('class'));
+        return view('instructor.classes.edit', compact('class'));
     }
 
     public function update(Request $request, Classroom $class)
@@ -70,7 +70,7 @@ class ClassroomController extends Controller
 
         $class->update($validated);
 
-        return redirect()->route('admin.classes.show', $class)
+        return redirect()->route('instructor.classes.show', $class)
             ->with('success', 'Class updated successfully!');
     }
 
@@ -81,7 +81,7 @@ class ClassroomController extends Controller
         }
         $class->delete();
         ActivityLogHelper::log('deleted', 'class', "deleted class '{$class->name}'");
-        return redirect()->route('admin.classes.index')
+        return redirect()->route('instructor.classes.index')
             ->with('success', 'Class deleted successfully!');
     }
 
@@ -253,7 +253,7 @@ class ClassroomController extends Controller
             ];
         })->sortByDesc('total_points')->values();
         
-        return view('admin.classes.leaderboard', compact('class', 'leaderboard'));
+        return view('instructor.classes.leaderboard', compact('class', 'leaderboard'));
     }
 
     public function analytics(Classroom $class)
@@ -358,7 +358,7 @@ class ClassroomController extends Controller
             ];
         }
 
-        return view('admin.classes.analytics', compact(
+        return view('instructor.classes.analytics', compact(
             'class',
             'studentCount',
             'assessmentCount',

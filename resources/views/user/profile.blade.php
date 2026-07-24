@@ -180,7 +180,7 @@
 
     <!-- Back to Dashboard -->
     <div class="mt-8">
-        <a href="{{ $user->isInstructor() ? route('admin.dashboard') : route('dashboard.index') }}" class="inline-flex items-center text-primary hover:underline">
+        <a href="{{ $user->isInstructor() ? route('instructor.dashboard') : route('dashboard.index') }}" class="inline-flex items-center text-primary hover:underline">
             <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
         </a>
     </div>

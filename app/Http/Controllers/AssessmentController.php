@@ -17,7 +17,7 @@ class AssessmentController extends Controller
             abort(403);
         }
         $assessments = $class->assessments()->latest()->paginate(5);
-        return view('admin.classes.assessments.index', compact('class', 'assessments'));
+        return view('instructor.classes.assessments.index', compact('class', 'assessments'));
     }
 
     public function create(Classroom $class)
@@ -25,7 +25,7 @@ class AssessmentController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.assessments.create', compact('class'));
+        return view('instructor.classes.assessments.create', compact('class'));
     }
 
     public function store(Request $request, Classroom $class)
@@ -57,7 +57,7 @@ class AssessmentController extends Controller
             );
         }
 
-        return redirect()->route('admin.classes.assessments.index', $class)
+        return redirect()->route('instructor.classes.assessments.index', $class)
             ->with('success', 'Assessment created!');
     }
 
@@ -66,7 +66,7 @@ class AssessmentController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
-        return view('admin.classes.assessments.edit', compact('class', 'assessment'));
+        return view('instructor.classes.assessments.edit', compact('class', 'assessment'));
     }
 
     public function update(Request $request, Classroom $class, Assessment $assessment)
@@ -95,7 +95,7 @@ class AssessmentController extends Controller
             );
         }
 
-        return redirect()->route('admin.classes.assessments.index', $class)
+        return redirect()->route('instructor.classes.assessments.index', $class)
             ->with('success', 'Assessment updated!');
     }
 
@@ -156,7 +156,7 @@ class AssessmentController extends Controller
             $class->instructor_id,
             '📥 ' . $class->name . ($class->section ? ' (Block ' . $class->section . ')' : ''),
             auth()->user()->name . ' submitted "' . $assessment->title . '"',
-            route('admin.classes.assessments.submissions', [$class, $assessment])
+            route('instructor.classes.assessments.submissions', [$class, $assessment])
         );
 
         return back()->with('success', 'Submission sent!');
@@ -168,7 +168,7 @@ class AssessmentController extends Controller
             abort(403);
         }
         $submissions = $assessment->submissions()->with('user')->get();
-        return view('admin.classes.assessments.submissions', compact('class', 'assessment', 'submissions'));
+        return view('instructor.classes.assessments.submissions', compact('class', 'assessment', 'submissions'));
     }
 
     public function grade(Request $request, Classroom $class, Assessment $assessment, AssessmentSubmission $submission)
@@ -215,7 +215,7 @@ class AssessmentController extends Controller
         $otherClasses = Classroom::where('instructor_id', auth()->id())
             ->where('id', '!=', $class->id)
             ->get();
-        return view('admin.classes.assessments.import', compact('class', 'otherClasses'));
+        return view('instructor.classes.assessments.import', compact('class', 'otherClasses'));
     }
 
     public function copyAssessments(Request $request, Classroom $class)
@@ -245,7 +245,7 @@ class AssessmentController extends Controller
             ]);
         }
 
-        return redirect()->route('admin.classes.assessments.index', $class)
+        return redirect()->route('instructor.classes.assessments.index', $class)
             ->with('success', count($assessments) . ' assessments imported!');
     }
 

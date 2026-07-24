@@ -11,7 +11,7 @@
         </div>
         @auth
             @if(auth()->user()->isInstructor() || auth()->user()->isAdministrator())
-                <a href="{{ route('admin.suggestions.index') }}" class="px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium flex-shrink-0 shadow-sm">
+                <a href="{{ route('instructor.suggestions.index') }}" class="px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium flex-shrink-0 shadow-sm">
                     <i class="fas fa-clipboard-list mr-1.5"></i> Manage Suggestions
                 </a>
             @else
@@ -25,7 +25,7 @@
     @if($suggestions->count() > 0)
         <div class="space-y-4">
             @foreach($suggestions as $suggestion)
-                <a href="{{ auth()->user() && (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) ? route('admin.suggestions.show', $suggestion) : route('dashboard.suggestions.show', $suggestion) }}" 
+                <a href="{{ auth()->user() && (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) ? route('instructor.suggestions.show', $suggestion) : route('dashboard.suggestions.show', $suggestion) }}" 
                    class="flex items-start gap-5 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 sm:p-6 hover:shadow-md hover:border-primary/30 dark:hover:border-primary/30 transition group">
                     
                     <div class="w-12 h-12 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -75,7 +75,7 @@
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6">Be the first to share your project idea with the community!</p>
             @auth
                 @if(auth()->user()->isInstructor() || auth()->user()->isAdministrator())
-                    <a href="{{ route('admin.suggestions.index') }}" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
+                    <a href="{{ route('instructor.suggestions.index') }}" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
                         <i class="fas fa-clipboard-list mr-1.5"></i> Manage Suggestions
                     </a>
                 @else

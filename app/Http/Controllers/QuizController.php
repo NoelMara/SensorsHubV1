@@ -19,14 +19,14 @@ class QuizController extends Controller
     {
         if ($class->instructor_id !== auth()->id()) abort(403);
         $quizzes = $class->quizzes()->latest()->paginate(5);
-        return view('admin.classes.quizzes.index', compact('class', 'quizzes'));
+        return view('instructor.classes.quizzes.index', compact('class', 'quizzes'));
     }
 
     // Instructor: Create Form
     public function create(Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) abort(403);
-        return view('admin.classes.quizzes.create', compact('class'));
+        return view('instructor.classes.quizzes.create', compact('class'));
     }
 
     // Instructor: Store Quiz
@@ -81,7 +81,7 @@ class QuizController extends Controller
             NotificationHelper::sendToClass($class->id, '📝 New Quiz: ' . $quiz->title, $quiz->points . ' points', route('dashboard.classes.quizzes.show', [$class, $quiz]));
         }
 
-        return redirect()->route('admin.classes.quizzes.index', $class)->with('success', 'Quiz created!');
+        return redirect()->route('instructor.classes.quizzes.index', $class)->with('success', 'Quiz created!');
     }
 
     // Instructor: Edit Form
@@ -89,7 +89,7 @@ class QuizController extends Controller
     {
         if ($class->instructor_id !== auth()->id()) abort(403);
         $quiz->load('questions.options');
-        return view('admin.classes.quizzes.edit', compact('class', 'quiz'));
+        return view('instructor.classes.quizzes.edit', compact('class', 'quiz'));
     }
 
     // Instructor: Update Quiz
@@ -150,7 +150,7 @@ class QuizController extends Controller
                 ]);
             }
         }
-        return redirect()->route('admin.classes.quizzes.index', $class)->with('success', 'Quiz updated!');
+        return redirect()->route('instructor.classes.quizzes.index', $class)->with('success', 'Quiz updated!');
     }
 
     // Instructor: Delete Quiz
@@ -233,7 +233,7 @@ class QuizController extends Controller
     {
         if ($class->instructor_id !== auth()->id()) abort(403);
         $submissions = $quiz->submissions()->with('user')->latest()->get();
-        return view('admin.classes.quizzes.submissions', compact('class', 'quiz', 'submissions'));
+        return view('instructor.classes.quizzes.submissions', compact('class', 'quiz', 'submissions'));
     }
     // Instructor: Import Form
     public function import(Classroom $class)
@@ -242,7 +242,7 @@ class QuizController extends Controller
         $otherClasses = Classroom::where('instructor_id', auth()->id())
             ->where('id', '!=', $class->id)
             ->get();
-        return view('admin.classes.quizzes.import', compact('class', 'otherClasses'));
+        return view('instructor.classes.quizzes.import', compact('class', 'otherClasses'));
     }
 
     // Instructor: Copy Quizzes
@@ -288,7 +288,7 @@ class QuizController extends Controller
             }
         }
 
-        return redirect()->route('admin.classes.quizzes.index', $class)
+        return redirect()->route('instructor.classes.quizzes.index', $class)
             ->with('success', count($quizzes) . ' quizzes imported!');
     }
 }

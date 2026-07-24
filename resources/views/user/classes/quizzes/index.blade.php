@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     @if(auth()->user()->isInstructor() || auth()->user()->isAdministrator())
-        <a href="{{ route('admin.classes.quizzes.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-6">
+        <a href="{{ route('instructor.classes.quizzes.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-6">
             <i class="fas fa-arrow-left mr-1"></i> Back to Quizzes
         </a>
     @else
