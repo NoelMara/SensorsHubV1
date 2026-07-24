@@ -93,10 +93,10 @@ class ContentController extends Controller
         $this->ensureValidType($type);
 
         $view = match ($type) {
-            'products' => 'admin.products.create',
-            'sensors' => 'admin.sensors.create',
-            'projects' => 'admin.projects.create',
-            'videos' => 'admin.videos.create',
+            'products' => 'instructor.products.create',
+            'sensors' => 'instructor.sensors.create',
+            'projects' => 'instructor.projects.create',
+            'videos' => 'instructor.videos.create',
         };
 
         return view($view, [
@@ -126,10 +126,10 @@ class ContentController extends Controller
         $variableName = Str::singular($type); // sensors -> sensor, products -> product
 
         $view = match ($type) {
-            'products' => 'admin.products.edit',
-            'sensors' => 'admin.sensors.edit',
-            'projects' => 'admin.projects.edit',
-            'videos' => 'admin.videos.edit',
+            'products' => 'instructor.products.edit',
+            'sensors' => 'instructor.sensors.edit',
+            'projects' => 'instructor.projects.edit',
+            'videos' => 'instructor.videos.edit',
         };
 
         return view($view, [
