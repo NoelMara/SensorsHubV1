@@ -29,6 +29,8 @@
                             <span class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-sm">👤</span>
                         @elseif($log->type === 'user' && $log->action === 'deleted')
                             <span class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-sm">🚫</span>
+                       @elseif($log->type === 'user' && $log->action === 'changed')
+                            <span class="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-sm">👔</span>
                         @elseif($log->type === 'class')
                             <span class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-sm">📚</span>
                         @elseif($log->type === 'sensor')
