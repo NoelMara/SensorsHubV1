@@ -30,15 +30,21 @@
         </div>
 
         <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
-            <form method="POST" action="{{ route('administrator.suggestions.status', $suggestion) }}" class="flex items-center gap-3">
+            <form method="POST" action="{{ route('administrator.suggestions.status', $suggestion) }}" class="space-y-4">
                 @csrf @method('PUT')
-                <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Status:</label>
-                <select name="status" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
-                    <option value="pending" {{ $suggestion->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="reviewed" {{ $suggestion->status === 'reviewed' ? 'selected' : '' }}>Reviewed</option>
-                    <option value="implemented" {{ $suggestion->status === 'implemented' ? 'selected' : '' }}>Implemented</option>
-                    <option value="rejected" {{ $suggestion->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
-                </select>
+                <div class="flex items-center gap-3">
+                    <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Status:</label>
+                    <select name="status" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                        <option value="pending" {{ $suggestion->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="reviewed" {{ $suggestion->status === 'reviewed' ? 'selected' : '' }}>Reviewed</option>
+                        <option value="implemented" {{ $suggestion->status === 'implemented' ? 'selected' : '' }}>Implemented</option>
+                        <option value="rejected" {{ $suggestion->status === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-600 dark:text-gray-400 block mb-1">Administrator Notes:</label>
+                    <textarea name="admin_notes" rows="3" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm resize-none">{{ $suggestion->admin_notes }}</textarea>
+                </div>
                 <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium">Update Status</button>
             </form>
         </div>
