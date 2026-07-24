@@ -79,6 +79,43 @@
             <p class="text-xs text-gray-400 mt-0.5">{{ $user->updated_at->diffForHumans() }}</p>
         </div>
     </div>
+    {{-- Moderation --}}
+    @if(!$user->isAdministrator())
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
+        <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">Moderation</h2>
+        
+        @if($user->isBanned())
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 mb-4">
+                <p class="text-sm font-semibold text-red-700 dark:text-red-400">⚠️ This user is banned</p>
+                <p class="text-xs text-red-600 dark:text-red-300 mt-1">{{ $user->ban_reason }}</p>
+                <form method="POST" action="{{ route('administrator.users.unban', $user) }}" class="mt-3">
+                    @csrf
+                    <button type="submit" class="px-4 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">Unban User</button>
+                </form>
+            </div>
+        @else
+            <div class="flex items-center gap-2 mb-3">
+                <span class="text-sm text-gray-600 dark:text-gray-400">Warnings: <strong>{{ $user->warning_count }}</strong>/3</span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <form method="POST" action="{{ route('administrator.users.warn', $user) }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Warning reason:'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
+                    @csrf
+                    <input type="hidden" name="reason" value="">
+                    <button type="submit" class="px-3 py-1.5 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> Warn
+                    </button>
+                </form>
+                <form method="POST" action="{{ route('administrator.users.ban', $user) }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Ban reason:'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
+                    @csrf
+                    <input type="hidden" name="reason" value="">
+                    <button type="submit" class="px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700">
+                        <i class="fas fa-ban mr-1"></i> Ban
+                    </button>
+                </form>
+            </div>
+        @endif
+    </div>
+    @endif
 
     {{-- Back Link --}}
     <div class="text-center">

@@ -143,4 +143,41 @@ class UserController extends Controller
 
         return back()->with('success', 'Account removed successfully.');
     }
+    public function warn(Request $request, User $user)
+        {
+            $request->validate(['reason' => 'required|string|max:255']);
+            
+            $user->addWarning($request->reason);
+            
+            ActivityLogHelper::log('warned', 'user', "warned {$user->name}: {$request->reason}");
+            
+            $msg = $user->isBanned() 
+                ? 'User has been warned and auto-banned (3 warnings).' 
+                : 'Warning issued. User now has ' . $user->warning_count . ' warning(s).';
+            
+            return back()->with($user->isBanned() ? 'error' : 'success', $msg);
+    }
+
+    public function ban(Request $request, User $user)
+    {
+        $request->validate([
+            'reason' => 'required|string|max:255',
+            'ban_until' => 'nullable|date',
+        ]);
+        
+        $user->ban($request->reason, $request->ban_until);
+        
+        ActivityLogHelper::log('banned', 'user', "banned {$user->name}: {$request->reason}");
+        
+        return back()->with('success', 'User has been banned.');
+    }
+
+    public function unban(User $user)
+    {
+        $user->unban();
+        
+        ActivityLogHelper::log('unbanned', 'user', "unbanned {$user->name}");
+        
+        return back()->with('success', 'User has been unbanned.');
+    }
 }

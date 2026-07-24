@@ -50,6 +50,12 @@ class LoginController extends Controller
         }
 
         $user = User::where('email', $credentials['email'])->first();
+        if ($user && $user->isBanned()) {
+            $banMsg = $user->ban_until 
+                ? 'Your account is banned until ' . $user->ban_until->format('M d, Y') . '.'
+                : 'Your account has been permanently banned.';
+            return back()->withErrors(['email' => $banMsg])->onlyInput('email');
+        }
 
         if ($user && Hash::check($credentials['password'], $user->password)) {
             if ($user->isAdministrator()) {
@@ -97,6 +103,12 @@ class LoginController extends Controller
         }
 
         $user = User::where('email', $credentials['email'])->first();
+        if ($user && $user->isBanned()) {
+            $banMsg = $user->ban_until 
+                ? 'Your account is banned until ' . $user->ban_until->format('M d, Y') . '.'
+                : 'Your account has been permanently banned.';
+            return back()->withErrors(['email' => $banMsg])->onlyInput('email');
+        }
 
         if (!$user || !$user->isAdministrator() || !Hash::check($credentials['password'], $user->password)) {
             RateLimiter::hit($key, 120);

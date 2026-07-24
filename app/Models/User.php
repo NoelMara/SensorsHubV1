@@ -19,13 +19,17 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'profile_image',
-        'verification_code',
-        'verification_code_expires_at',
+    'name',
+    'email',
+    'password',
+    'role',
+    'profile_image',
+    'verification_code',
+    'verification_code_expires_at',
+    'banned_at',
+    'ban_reason',
+    'ban_until',
+    'warning_count',
     ];
 
     /**
@@ -45,9 +49,11 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected function casts(): array
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+         return [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'banned_at' => 'datetime',
+        'ban_until' => 'datetime',
         ];
     }
 
@@ -130,5 +136,44 @@ class User extends Authenticatable implements MustVerifyEmail
     public function submissions()
     {
         return $this->hasMany(AssessmentSubmission::class);
+    }
+    public function isBanned(): bool
+    {
+        if ($this->ban_until && now()->lt($this->ban_until)) {
+            return true;
+        }
+        return $this->banned_at !== null && $this->ban_until === null;
+    }
+
+    public function addWarning(string $reason): void
+    {
+        $this->increment('warning_count');
+        
+        if ($this->warning_count >= 3) {
+            $this->update([
+                'banned_at' => now(),
+                'ban_reason' => 'Auto-banned after 3 warnings. Last warning: ' . $reason,
+                'ban_until' => null,
+            ]);
+        }
+    }
+
+    public function ban(string $reason, $until = null): void
+    {
+        $this->update([
+            'banned_at' => now(),
+            'ban_reason' => $reason,
+            'ban_until' => $until,
+        ]);
+    }
+
+    public function unban(): void
+    {
+        $this->update([
+            'banned_at' => null,
+            'ban_reason' => null,
+            'ban_until' => null,
+            'warning_count' => 0,
+        ]);
     }
 }

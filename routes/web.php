@@ -283,6 +283,9 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
     Route::put('/users/{user}', [AdministratorUserController::class, 'update'])->name('users.update');
     Route::put('/users/{user}/role', [AdministratorUserController::class, 'updateRole'])->name('users.role');
     Route::delete('/users/{user}', [AdministratorUserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/{user}/warn', [AdministratorUserController::class, 'warn'])->name('users.warn');
+    Route::post('/users/{user}/ban', [AdministratorUserController::class, 'ban'])->name('users.ban');
+    Route::post('/users/{user}/unban', [AdministratorUserController::class, 'unban'])->name('users.unban');
 
     // Suggestions Management
     Route::get('/suggestions', [AdministratorSuggestionController::class, 'index'])->name('suggestions.index');
