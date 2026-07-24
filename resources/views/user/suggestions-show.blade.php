@@ -60,7 +60,7 @@
 
         @if($suggestion->admin_notes)
         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
-            <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Admin Notes:</p>
+            <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Administrator Notes:</p>
             <p class="text-sm text-gray-600 dark:text-gray-400">{{ $suggestion->admin_notes }}</p>
         </div>
         @endif

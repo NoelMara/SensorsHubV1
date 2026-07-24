@@ -34,7 +34,6 @@ class SuggestionController extends Controller
     {
         $validated = $request->validate([
             'status'      => 'required|in:pending,reviewed,implemented,rejected',
-            'admin_notes' => 'nullable|string|max:1000',
         ]);
 
         $suggestion->update($validated);
