@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <a href="{{ route(($prefix ?? 'admin') . '.videos.index') }}" class="text-primary hover:underline inline-block text-sm mb-6">
+    <a href="{{ route(($prefix ?? 'instructor') . '.videos.index') }}" class="text-primary hover:underline inline-block text-sm mb-6">
         <i class="fas fa-arrow-left mr-1"></i> Back to Videos
     </a>
 
@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ ($prefix ?? 'admin') === 'super-admin' ? route('super-admin.content.store', 'videos') : route('instructor.videos.store') }}">
+            <form method="POST" action="{{ ($prefix ?? 'instructor') === 'super-admin' ? route('super-admin.content.store', 'videos') : route('instructor.videos.store') }}">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
@@ -70,7 +70,7 @@
                     <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
                         <i class="fas fa-save mr-1.5"></i> Create Video
                     </button>
-                    <a href="{{ route(($prefix ?? 'admin') . '.videos.index') }}"
+                    <a href="{{ route(($prefix ?? 'instructor') . '.videos.index') }}"
                         class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
                         Cancel
                     </a>
