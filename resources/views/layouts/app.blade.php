@@ -108,7 +108,10 @@
                                 Control Panel <i class="fas fa-chevron-down text-xs"></i>
                             </a>
                             <div class="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                                <a href="{{ route('super-admin.users.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
+                                <a href="{{ route('super-admin.analytics') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
+                                    <i class="fas fa-chart-bar w-4 mr-2"></i> Analytics
+                                </a>
+                                <a href="{{ route('super-admin.users.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <i class="fas fa-users w-4 mr-2"></i> Users
                                 </a>
                                 <a href="{{ route('super-admin.suggestions.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -224,9 +227,12 @@
         <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-800 border-t dark:border-gray-700">
             <div class="px-4 pt-2 pb-4 space-y-1">
                 @if($isAdministrator)
-                    <a href="{{ route('super-admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-tachometer-alt w-5"></i> Dashboard
-                    </a>
+                <a href="{{ route('super-admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                    <i class="fas fa-tachometer-alt w-5"></i> Dashboard
+                </a>
+                <a href="{{ route('super-admin.analytics') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+                   <i class="fas fa-chart-bar w-5"></i> Analytics
+               </a>
                     <a href="{{ route('super-admin.users.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
                         <i class="fas fa-users w-5"></i> Users
                     </a>

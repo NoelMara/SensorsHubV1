@@ -248,6 +248,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 // ─── Administrator Routes ───────────────────────────────────────────────────────
 Route::middleware(['auth', 'super_admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+   
+    // Analytics
+    Route::get('/analytics', [SuperAdminDashboardController::class, 'analytics'])->name('analytics');
 
     // Profile
     Route::get('/profile', [SuperAdminProfileController::class, 'show'])->name('profile');

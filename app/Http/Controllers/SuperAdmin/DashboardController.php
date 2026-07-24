@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classroom;
 use App\Models\Comment;
 use App\Models\Product;
 use App\Models\Project;
@@ -39,6 +40,75 @@ class DashboardController extends Controller
             ->get();
 
         return view('super-admin.dashboard', compact('stats', 'recentUsers', 'recentSuggestions', 'recentComments'));
+    }
+
+    public function analytics()
+    {
+        $totalUsers = User::whereIn('role', ['user', 'student'])->count();
+        $totalInstructors = User::where('role', 'instructor')->count();
+        $totalClasses = Classroom::count();
+        $totalContent = Sensor::count() + Project::count() + Product::count() + Video::count();
+        $newThisMonth = User::where('created_at', '>=', now()->subDays(30))->count();
+
+        // User growth chart (last 30 days)
+        $userGrowth = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $userGrowth[] = [
+                'date' => $date,
+                'count' => User::whereDate('created_at', $date)->count(),
+            ];
+        }
+
+        // Top classes (by student count + average score)
+        $topClasses = Classroom::withCount('students')
+            ->with(['assessments', 'quizzes'])
+            ->get()
+            ->map(function ($class) {
+                $totalPoints = 0;
+                $totalPossible = 0;
+
+                foreach ($class->assessments as $assessment) {
+                    $totalPossible += $assessment->points;
+                    $totalPoints += $assessment->submissions()->whereNotNull('score')->sum('score');
+                }
+                foreach ($class->quizzes as $quiz) {
+                    $totalPossible += $quiz->points;
+                    $totalPoints += $quiz->submissions()->whereNotNull('score')->sum('score');
+                }
+
+                $avgScore = $totalPossible > 0 ? round(($totalPoints / $totalPossible) * 100, 1) : 0;
+
+                return [
+                    'name' => $class->name,
+                    'section' => $class->section,
+                    'instructor' => $class->instructor->name ?? 'Unknown',
+                    'students_count' => $class->students_count,
+                    'avg_score' => $avgScore,
+                ];
+            })
+            ->sortByDesc('students_count')
+            ->take(5)
+            ->values();
+
+        // Content breakdown
+        $contentBreakdown = [
+            'sensors' => Sensor::count(),
+            'projects' => Project::count(),
+            'videos' => Video::count(),
+            'products' => Product::count(),
+        ];
+
+        return view('super-admin.analytics', compact(
+            'totalUsers',
+            'totalInstructors',
+            'totalClasses',
+            'totalContent',
+            'newThisMonth',
+            'userGrowth',
+            'topClasses',
+            'contentBreakdown'
+        ));
     }
 
     public function logs()
