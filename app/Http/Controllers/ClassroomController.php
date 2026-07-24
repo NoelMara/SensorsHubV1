@@ -91,7 +91,7 @@ class ClassroomController extends Controller
             'code' => 'required|string|size:6',
         ]);
 
-        $class = Classroom::where('code', $request->code)->first();
+        $class = Classroom::whereRaw('UPPER(code) = ?', [strtoupper($request->code)])->first();
 
         if (!$class) {
             return back()->with('error', 'Invalid class code. Please check and try again.');
