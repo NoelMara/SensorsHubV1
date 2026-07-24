@@ -24,7 +24,7 @@ class ContentController extends Controller
             'inactive' => Sensor::where('is_active', false)->count(),
         ];
 
-        return view('super-admin.content.index', [
+        return view('administrator.content.index', [
             'items' => $items,
             'stats' => $stats,
             'type' => 'sensors',
@@ -43,7 +43,7 @@ class ContentController extends Controller
             'featured' => Project::where('is_featured', true)->count(),
         ];
 
-        return view('super-admin.content.index', [
+        return view('administrator.content.index', [
             'items' => $items,
             'stats' => $stats,
             'type' => 'projects',
@@ -61,7 +61,7 @@ class ContentController extends Controller
             'inactive' => Product::where('is_active', false)->count(),
         ];
 
-        return view('super-admin.content.index', [
+        return view('administrator.content.index', [
             'items' => $items,
             'stats' => $stats,
             'type' => 'products',
@@ -79,7 +79,7 @@ class ContentController extends Controller
             'inactive' => Video::where('is_active', false)->count(),
         ];
 
-        return view('super-admin.content.index', [
+        return view('administrator.content.index', [
             'items' => $items,
             'stats' => $stats,
             'type' => 'videos',
@@ -100,7 +100,7 @@ class ContentController extends Controller
         };
 
         return view($view, [
-            'prefix' => 'super-admin',
+            'prefix' => 'administrator',
             'sensors' => $this->needsSensors($type) ? Sensor::where('is_active', true)->orderBy('name')->get() : collect(),
         ]);
     }
@@ -133,7 +133,7 @@ class ContentController extends Controller
         };
 
         return view($view, [
-            'prefix' => 'super-admin',
+            'prefix' => 'administrator',
             $variableName => $item,
             'sensors' => $this->needsSensors($type) ? Sensor::where('is_active', true)->orderBy('name')->get() : collect(),
         ]);

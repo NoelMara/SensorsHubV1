@@ -21,14 +21,14 @@ class SuggestionController extends Controller
             'rejected'    => Suggestion::where('status', 'rejected')->count(),
         ];
 
-        return view('super-admin.suggestions.index', compact('suggestions', 'stats'));
+        return view('administrator.suggestions.index', compact('suggestions', 'stats'));
     }
 
     public function show(Suggestion $suggestion)
     {
         $suggestion->load(['user', 'comments.user']);
 
-        return view('super-admin.suggestions.show', compact('suggestion'));
+        return view('administrator.suggestions.show', compact('suggestion'));
     }
 
     public function updateStatus(Request $request, Suggestion $suggestion)

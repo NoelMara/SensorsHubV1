@@ -29,12 +29,12 @@ class UserController extends Controller
             'administrator' => User::where('role', 'administrator')->count(),
         ];
 
-        return view('super-admin.users.index', compact('users', 'roleCounts', 'role'));
+        return view('administrator.users.index', compact('users', 'roleCounts', 'role'));
     }
 
     public function create()
     {
-        return view('super-admin.users.create');
+        return view('administrator.users.create');
     }
 
     public function store(Request $request)
@@ -60,7 +60,7 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return view('super-admin.users.show', compact('user'));
+        return view('administrator.users.show', compact('user'));
     }
 
     public function edit(User $user)
@@ -70,7 +70,7 @@ class UserController extends Controller
             return back()->with('error', 'You cannot edit another Administrator account.');
         }
 
-        return view('super-admin.users.edit', compact('user'));
+        return view('administrator.users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)

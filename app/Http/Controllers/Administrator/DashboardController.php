@@ -39,7 +39,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        return view('super-admin.dashboard', compact('stats', 'recentUsers', 'recentSuggestions', 'recentComments'));
+        return view('administrator.dashboard', compact('stats', 'recentUsers', 'recentSuggestions', 'recentComments'));
     }
 
     public function analytics()
@@ -101,7 +101,7 @@ class DashboardController extends Controller
             'products' => Product::count(),
         ];
 
-        return view('super-admin.analytics', compact(
+        return view('administrator.analytics', compact(
             'totalUsers',
             'totalInstructors',
             'totalClasses',
@@ -116,7 +116,7 @@ class DashboardController extends Controller
     public function logs()
     {
         $logs = ActivityLog::latest()->paginate(10);
-        return view('super-admin.logs', compact('logs'));
+        return view('administrator.logs', compact('logs'));
     }
 
     public function backup()
