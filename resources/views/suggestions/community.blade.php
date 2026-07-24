@@ -62,6 +62,7 @@
 
                     <div class="flex items-center gap-2 flex-shrink-0 mt-1">
                         @auth
+                            @if(auth()->id() !== $suggestion->user_id)
                             <form method="POST" action="{{ route('report.store') }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
                                 @csrf
                                 <input type="hidden" name="reportable_type" value="suggestion">
@@ -71,6 +72,7 @@
                                     <i class="fas fa-flag text-xs"></i>
                                 </button>
                             </form>
+                            @endif
                         @endauth
                         <i class="fas fa-chevron-right text-gray-300 dark:text-gray-600 group-hover:text-primary transition"></i>
                     </div>

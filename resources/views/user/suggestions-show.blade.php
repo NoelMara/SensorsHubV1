@@ -91,7 +91,7 @@
                                 </div>
                                     <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
                                     @auth
-                                        @if(!in_array($comment->user?->role, ['administrator', 'instructor']))
+                                        @if(!in_array($comment->user?->role, ['administrator', 'instructor']) && auth()->id() !== $comment->user_id)
                                             <form method="POST" action="{{ route('report.store') }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
                                                 @csrf
                                                 <input type="hidden" name="reportable_type" value="comment">
