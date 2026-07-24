@@ -17,27 +17,30 @@ class ReportController extends Controller
             'reason' => 'required|string|max:255',
         ]);
 
-        // Map to full model path
         $type = $validated['reportable_type'] === 'suggestion' 
             ? 'App\Models\Suggestion' 
             : 'App\Models\Comment';
 
-        $report = Report::create([
+        Report::create([
             'reporter_id' => auth()->id(),
             'reportable_type' => $type,
             'reportable_id' => $validated['reportable_id'],
             'reason' => $validated['reason'],
         ]);
 
-        // Notify administrator
         $admin = User::where('role', 'administrator')->first();
         if ($admin) {
             $itemType = $validated['reportable_type'] === 'suggestion' ? 'suggestion' : 'comment';
+            
+            $link = $validated['reportable_type'] === 'suggestion'
+                ? route('administrator.suggestions.show', $validated['reportable_id'])
+                : route('administrator.suggestions.index');
+
             NotificationHelper::send(
                 $admin->id,
                 '🚩 New Report',
                 auth()->user()->name . ' reported a ' . $itemType . ' - ' . $validated['reason'],
-                route('administrator.suggestions.index')
+                $link
             );
         }
 

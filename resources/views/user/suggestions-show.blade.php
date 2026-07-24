@@ -90,6 +90,17 @@
                                     </span>
                                 </div>
                                 <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
+                                @auth
+                                    <form method="POST" action="{{ route('report.store') }}" class="inline" onsubmit="return confirm('Report this comment?')">
+                                        @csrf
+                                        <input type="hidden" name="reportable_type" value="comment">
+                                        <input type="hidden" name="reportable_id" value="{{ $comment->id }}">
+                                        <input type="hidden" name="reason" value="inappropriate">
+                                        <button type="submit" class="text-gray-400 hover:text-red-500 transition ml-2" title="Report">
+                                            <i class="fas fa-flag text-xs"></i>
+                                        </button>
+                                    </form>
+                                @endauth
                             </div>
                             <p class="text-gray-700 dark:text-gray-300 whitespace-pre-line">{{ $comment->body }}</p>
                             @if($comment->created_at != $comment->updated_at)
