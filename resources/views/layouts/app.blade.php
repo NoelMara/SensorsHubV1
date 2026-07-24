@@ -31,7 +31,7 @@
             if (auth()->user()->isAdministrator()) {
                 $homeRoute = 'super-admin.dashboard';
             } elseif (auth()->user()->isInstructor()) {
-                $homeRoute = 'admin.dashboard';
+                $homeRoute = 'instructor.dashboard';
             } else {
                 $homeRoute = 'dashboard.index';
             }

@@ -14,7 +14,7 @@ use App\Models\Suggestion;
 class DashboardController extends Controller
 {
     /**
-     * Display the admin dashboard
+     * Display the instructor dashboard
      */
     public function index()
     {
