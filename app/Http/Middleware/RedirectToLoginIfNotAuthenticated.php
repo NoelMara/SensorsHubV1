@@ -26,7 +26,7 @@ class RedirectToLoginIfNotAuthenticated
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             
-            return redirect()->route('login')->with('error', 'Your account has been banned. Reason: ' . $reason);
+            return redirect()->route('login')->with('error', 'Account banned: ' . $reason);
         }
 
         return $next($request);
