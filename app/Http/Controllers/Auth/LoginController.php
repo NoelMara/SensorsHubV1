@@ -23,10 +23,10 @@ class LoginController extends Controller
         ]);
     }
 
-    public function showSuperAdminLoginForm()
+    public function administratorLogin()
     {
         return view('auth.login', [
-            'loginMode' => 'super_admin',
+            'loginMode' => 'administrator',
             'stats' => [
                 'projects' => Project::count(),
             ],
@@ -80,7 +80,7 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 
-    public function superAdminLogin(Request $request)
+    public function administratorLogin(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -217,7 +217,7 @@ class LoginController extends Controller
         $request->session()->regenerate();
 
         if ($user->isAdministrator()) {
-            return redirect()->route('super-admin.dashboard');
+            return redirect()->route('administrator.dashboard');
         }
 
         if ($user->isInstructor()) {

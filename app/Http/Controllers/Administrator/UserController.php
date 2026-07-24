@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -54,7 +54,7 @@ class UserController extends Controller
             'email_verified_at' => now(), // admin created accounts are pre-verified
         ]);
 
-        return redirect()->route('super-admin.users.index')
+        return redirect()->route('administrator.users.index')
             ->with('success', 'Account created successfully.');
     }
 
@@ -102,7 +102,7 @@ class UserController extends Controller
 
         $user->update($updateData);
 
-        return redirect()->route('super-admin.users.index')
+        return redirect()->route('administrator.users.index')
             ->with('success', 'Account updated successfully.');
     }
 

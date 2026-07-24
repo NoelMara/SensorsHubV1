@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ ($prefix ?? 'instructor') === 'super-admin' ? route('super-admin.content.store', 'products') : route('instructor.products.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ ($prefix ?? 'instructor') === 'super-admin' ? route('administrator.content.store', 'products') : route('instructor.products.store') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">

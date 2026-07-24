@@ -16,7 +16,7 @@ class HomeController extends Controller
             
             // Redirect based on role
             if ($user->isAdministrator()) {
-                return redirect()->route('super-admin.dashboard');
+                return redirect()->route('administrator.dashboard');
             }
             if ($user->isInstructor()) {
                 return redirect()->route('instructor.dashboard');

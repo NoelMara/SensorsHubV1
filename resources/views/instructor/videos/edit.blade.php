@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ ($prefix ?? 'instructor') === 'super-admin' ? route('super-admin.content.update', ['videos', $video->id]) : route('instructor.videos.update', $video) }}">
+            <form method="POST" action="{{ ($prefix ?? 'instructor') === 'super-admin' ? route('administrator.content.update', ['videos', $video->id]) : route('instructor.videos.update', $video) }}">
                 @csrf
                 @method('PUT')
 

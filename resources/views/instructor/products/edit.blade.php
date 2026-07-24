@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ ($prefix ?? 'instructor') === 'super-admin' ? route('super-admin.content.update', ['products', $product->id]) : route('instructor.products.update', $product) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ ($prefix ?? 'instructor') === 'super-admin' ? route('administrator.content.update', ['products', $product->id]) : route('instructor.products.update', $product) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 

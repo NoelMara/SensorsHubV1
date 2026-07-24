@@ -9,7 +9,7 @@
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">{{ $title }}</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $description }}</p>
         </div>
-        <a href="{{ route('super-admin.content.create', $type) }}" class="px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium flex-shrink-0">
+        <a href="{{ route('administrator.content.create', $type) }}" class="px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium flex-shrink-0">
             <i class="fas fa-plus mr-1.5"></i> Add {{ Str::singular($title) }}
         </a>
     </div>
@@ -124,10 +124,10 @@
                                     {{ $item->created_at->format('M d, Y') }}
                                 </td>
                                 <td class="px-6 py-4 text-right whitespace-nowrap">
-                                    <a href="{{ route('super-admin.content.edit', [$type, $item->id]) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 dark:hover:bg-primary/20 transition mr-1">
+                                    <a href="{{ route('administrator.content.edit', [$type, $item->id]) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 dark:hover:bg-primary/20 transition mr-1">
                                         <i class="fas fa-pen mr-1"></i> Edit
                                     </a>
-                                    <form method="POST" action="{{ route('super-admin.content.destroy', [$type, $item->id]) }}" class="inline-block" onsubmit="return confirm('Delete?');">
+                                    <form method="POST" action="{{ route('administrator.content.destroy', [$type, $item->id]) }}" class="inline-block" onsubmit="return confirm('Delete?');">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30 transition">
                                             <i class="fas fa-trash mr-1"></i> Delete

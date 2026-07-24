@@ -9,18 +9,18 @@
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Manage Users</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage student and instructor accounts.</p>
         </div>
-        <a href="{{ route('super-admin.users.create') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-medium">
+        <a href="{{ route('administrator.users.create') }}" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-medium">
             <i class="fas fa-plus mr-1"></i> Add User
         </a>
     </div>
 
     {{-- Filter Tabs --}}
     <div class="flex flex-wrap gap-2 mb-6">
-        <a href="{{ route('super-admin.users.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ !$role ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">All ({{ $roleCounts['all'] }})</a>
-        <a href="{{ route('super-admin.users.index', ['role' => 'user']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'user' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Users ({{ $roleCounts['user'] }})</a>
-        <a href="{{ route('super-admin.users.index', ['role' => 'student']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'student' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Students ({{ $roleCounts['student'] }})</a>
-        <a href="{{ route('super-admin.users.index', ['role' => 'instructor']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'instructor' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Instructors ({{ $roleCounts['instructor'] }})</a>
-        <a href="{{ route('super-admin.users.index', ['role' => 'administrator']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'administrator' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Administrator ({{ $roleCounts['administrator'] }})</a>
+        <a href="{{ route('administrator.users.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ !$role ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">All ({{ $roleCounts['all'] }})</a>
+        <a href="{{ route('administrator.users.index', ['role' => 'user']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'user' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Users ({{ $roleCounts['user'] }})</a>
+        <a href="{{ route('administrator.users.index', ['role' => 'student']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'student' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Students ({{ $roleCounts['student'] }})</a>
+        <a href="{{ route('administrator.users.index', ['role' => 'instructor']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'instructor' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Instructors ({{ $roleCounts['instructor'] }})</a>
+        <a href="{{ route('administrator.users.index', ['role' => 'administrator']) }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ $role === 'administrator' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">Administrator ({{ $roleCounts['administrator'] }})</a>
     </div>
 
     {{-- Users Table --}}
@@ -50,7 +50,7 @@
                             </td>
                             <td class="px-5 py-3 text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</td>
                             <td class="px-5 py-3">
-                                <form method="POST" action="{{ route('super-admin.users.role', $user) }}" class="flex items-center gap-2">
+                                <form method="POST" action="{{ route('administrator.users.role', $user) }}" class="flex items-center gap-2">
                                     @csrf
                                     @method('PUT')
                                     <select name="role" class="text-sm rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white py-1.5">
@@ -71,16 +71,16 @@
                             <td class="px-5 py-3 text-sm text-gray-500 dark:text-gray-400">{{ $user->created_at->format('M d, Y') }}</td>
                             <td class="px-5 py-3">
                                 <div class="flex items-center gap-2">
-                                    <a href="{{ route('super-admin.users.show', $user) }}" class="p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition" title="View">
+                                    <a href="{{ route('administrator.users.show', $user) }}" class="p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition" title="View">
                                         <i class="fas fa-eye text-sm"></i>
                                     </a>
                                     @if(!$user->isAdministrator() || $user->is(auth()->user()))
-                                        <a href="{{ route('super-admin.users.edit', $user) }}" class="p-1.5 text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg transition" title="Edit">
+                                        <a href="{{ route('administrator.users.edit', $user) }}" class="p-1.5 text-yellow-500 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 rounded-lg transition" title="Edit">
                                             <i class="fas fa-edit text-sm"></i>
                                         </a>
                                     @endif
                                     @if(!$user->is(auth()->user()) && !$user->isAdministrator())
-                                        <form method="POST" action="{{ route('super-admin.users.destroy', $user) }}"
+                                        <form method="POST" action="{{ route('administrator.users.destroy', $user) }}"
                                             onsubmit="return confirm('Remove this user?');">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition" title="Remove">

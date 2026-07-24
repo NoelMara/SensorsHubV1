@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <a href="{{ route('super-admin.suggestions.index') }}" class="text-primary hover:underline inline-block text-sm mb-8">
+    <a href="{{ route('administrator.suggestions.index') }}" class="text-primary hover:underline inline-block text-sm mb-8">
         <i class="fas fa-arrow-left mr-1"></i> Back to Suggestions
     </a>
 
@@ -30,7 +30,7 @@
         </div>
 
         <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
-            <form method="POST" action="{{ route('super-admin.suggestions.status', $suggestion) }}" class="flex items-center gap-3">
+            <form method="POST" action="{{ route('administrator.suggestions.status', $suggestion) }}" class="flex items-center gap-3">
                 @csrf @method('PUT')
                 <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Status:</label>
                 <select name="status" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
@@ -70,7 +70,7 @@
                             @if(auth()->id() === $comment->user_id)
                                 <button onclick="document.getElementById('edit-{{ $comment->id }}').classList.toggle('hidden')" class="text-xs text-primary hover:underline mt-2">Edit</button>
                                 <form id="edit-{{ $comment->id }}" method="POST"
-                                    action="{{ route('super-admin.suggestions.comment.update', [$suggestion, $comment]) }}"
+                                    action="{{ route('administrator.suggestions.comment.update', [$suggestion, $comment]) }}"
                                     class="mt-3 hidden">
                                     @csrf @method('PUT')
                                     <textarea name="body" rows="2" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm mb-2">{{ $comment->body }}</textarea>
@@ -93,7 +93,7 @@
                 You've already commented. 
                 <button onclick="document.getElementById('edit-my-comment').classList.toggle('hidden')" class="text-primary hover:underline font-medium">Edit your comment</button>
                 <form id="edit-my-comment" method="POST"
-                    action="{{ route('super-admin.suggestions.comment.update', [$suggestion, $userComment]) }}"
+                    action="{{ route('administrator.suggestions.comment.update', [$suggestion, $userComment]) }}"
                     class="mt-3 hidden">
                     @csrf @method('PUT')
                     <textarea name="body" rows="2" required class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm mb-2">{{ $userComment->body }}</textarea>
@@ -101,7 +101,7 @@
                 </form>
             </div>
         @else
-            <form method="POST" action="{{ route('super-admin.suggestions.comment.store', $suggestion) }}">
+            <form method="POST" action="{{ route('administrator.suggestions.comment.store', $suggestion) }}">
                 @csrf
                 <textarea name="body" rows="3" required placeholder="Write your comment..." class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm mb-3 resize-none"></textarea>
                 <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium">

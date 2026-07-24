@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8">
-        <a href="{{ route('super-admin.users.index') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
+        <a href="{{ route('administrator.users.index') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
             <i class="fas fa-arrow-left mr-1"></i> Back to Users
         </a>
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">User Details</h1>
@@ -35,13 +35,13 @@
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
                 @if(!$user->isAdministrator() || $user->is(auth()->user()))
-                    <a href="{{ route('super-admin.users.edit', $user) }}"
+                    <a href="{{ route('administrator.users.edit', $user) }}"
                         class="px-3 py-2 rounded-lg bg-primary text-white hover:bg-blue-600 transition text-sm font-medium">
                         <i class="fas fa-edit mr-1"></i> Edit
                     </a>
                 @endif
                 @if(!$user->is(auth()->user()) && !$user->isAdministrator())
-                    <form method="POST" action="{{ route('super-admin.users.destroy', $user) }}"
+                    <form method="POST" action="{{ route('administrator.users.destroy', $user) }}"
                         onsubmit="return confirm('Remove this account?');">
                         @csrf @method('DELETE')
                         <button type="submit"
@@ -82,7 +82,7 @@
 
     {{-- Back Link --}}
     <div class="text-center">
-        <a href="{{ route('super-admin.users.index') }}" class="text-sm text-primary hover:underline">
+        <a href="{{ route('administrator.users.index') }}" class="text-sm text-primary hover:underline">
             <i class="fas fa-arrow-left mr-1"></i> Back to Users
         </a>
     </div>

@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@php($isSuperAdminLogin = ($loginMode ?? 'default') === 'super_admin')
+@php($isAdministratorLogin = ($loginMode ?? 'default') === 'administrator')
 
-@section('title', $isSuperAdminLogin ? 'Administrator Login' : 'Login')
+@section('title', $isAdministratorLogin ? 'Administrator Login' : 'Login')
 
 @push('styles')
 <style>
@@ -63,13 +63,13 @@
 
                         <div class="mt-16 max-w-xl">
                             <p class="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-200">
-                                {{ $isSuperAdminLogin ? 'Platform command' : 'Project workspace' }}
+                                {{ $isAdministratorLogin ? 'Platform command' : 'Project workspace' }}
                             </p>
                             <h1 class="mt-5 text-5xl font-bold leading-tight">
-                                {{ $isSuperAdminLogin ? 'Manage SensorsHub with clarity.' : 'Build smarter sensor projects.' }}
+                                {{ $isAdministratorLogin ? 'Manage SensorsHub with clarity.' : 'Build smarter sensor projects.' }}
                             </h1>
                             <p class="mt-6 text-lg leading-8 text-slate-200">
-                                {{ $isSuperAdminLogin ? 'Review accounts, roles, and platform activity from a secure administrator entry point.' : 'Access guides, save project ideas, and continue learning with a workspace designed for makers.' }}
+                                {{ $isAdministratorLogin ? 'Review accounts, roles, and platform activity from a secure administrator entry point.' : 'Access guides, save project ideas, and continue learning with a workspace designed for makers.' }}
                             </p>
                         </div>
                     </div>
@@ -95,13 +95,13 @@
                                 <span class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-200">
                                     <i class="fas fa-check"></i>
                                 </span>
-                                <span>{{ $isSuperAdminLogin ? 'Protected access for elevated accounts' : 'Continue saved builds and learning paths' }}</span>
+                                <span>{{ $isAdministratorLogin ? 'Protected access for elevated accounts' : 'Continue saved builds and learning paths' }}</span>
                             </div>
                             <div class="flex items-center gap-3">
                                 <span class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-400/15 text-blue-200">
                                     <i class="fas fa-chart-line"></i>
                                 </span>
-                                <span>{{ $isSuperAdminLogin ? 'Monitor users and content activity' : 'Find sensor references faster' }}</span>
+                                <span>{{ $isAdministratorLogin ? 'Monitor users and content activity' : 'Find sensor references faster' }}</span>
                             </div>
                         </div>
                     </div>
@@ -116,13 +116,13 @@
                     SensorsHub
                 </a>
                 <p class="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-300">
-                    {{ session('require_verification') ? 'Email verification' : ($isSuperAdminLogin ? 'Administrator access' : 'Welcome back') }}
+                    {{ session('require_verification') ? 'Email verification' : ($isAdministratorLogin ? 'Administrator access' : 'Welcome back') }}
                 </p>
                 <h2 class="mt-3 text-3xl font-bold text-slate-950 dark:text-white">
-                    {{ session('require_verification') ? 'Enter your security code' : ($isSuperAdminLogin ? 'Sign in securely' : 'Sign in to your account') }}
+                    {{ session('require_verification') ? 'Enter your security code' : ($isAdministratorLogin ? 'Sign in securely' : 'Sign in to your account') }}
                 </h2>
                 <p class="mt-3 text-slate-600 dark:text-slate-400">
-                    {{ session('require_verification') ? 'We sent a 6-digit code to your email address.' : ($isSuperAdminLogin ? 'Use your authorized SensorsHub administrator credentials.' : 'Pick up where you left off with sensors, tutorials, and saved projects.') }}
+                    {{ session('require_verification') ? 'We sent a 6-digit code to your email address.' : ($isAdministratorLogin ? 'Use your authorized SensorsHub administrator credentials.' : 'Pick up where you left off with sensors, tutorials, and saved projects.') }}
                 </p>
             </div>
 
@@ -193,14 +193,14 @@
                                 <i class="fas fa-rotate-right mr-1"></i>Resend code
                             </button>
                         </form>
-                        <a href="{{ $isSuperAdminLogin ? route('super-admin.login') : route('login') }}" class="font-semibold text-slate-500 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
+                        <a href="{{ $isAdministratorLogin ? route('administrator.login') : route('login') }}" class="font-semibold text-slate-500 transition hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">
                             Back to login
                         </a>
                     </div>
                 </div>
             @else
                 <div class="auth-panel rounded-3xl p-7 sm:p-8">
-                    <form method="POST" action="{{ $isSuperAdminLogin ? route('super-admin.login.submit') : route('login') }}" class="space-y-5">
+                    <form method="POST" action="{{ $isAdministratorLogin ? route('administrator.login.submit') : route('login') }}" class="space-y-5">
                         @csrf
 
                         <div>
@@ -249,16 +249,16 @@
                         </div>
 
                         <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 py-4 font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400">
-                            <i class="fas {{ $isSuperAdminLogin ? 'fa-user-shield' : 'fa-right-to-bracket' }}"></i>
-                            {{ $isSuperAdminLogin ? 'Enter Administrator' : 'Sign in' }}
+                            <i class="fas {{ $isAdministratorLogin ? 'fa-user-shield' : 'fa-right-to-bracket' }}"></i>
+                            {{ $isAdministratorLogin ? 'Enter Administrator' : 'Sign in' }}
                         </button>
                     </form>
 
                     <div class="mt-7 border-t border-slate-200 pt-6 text-center text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
-                        @if($isSuperAdminLogin)
+                        @if($isAdministratorLogin)
                             Need a regular account?
                             <a href="{{ route('login') }}" class="font-semibold text-emerald-700 transition hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200">
-                                User/Admin login
+                                User/Instructor login
                             </a>
                         @else
                             New to SensorsHub?

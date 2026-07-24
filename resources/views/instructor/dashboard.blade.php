@@ -19,7 +19,7 @@
                     <p class="text-sm text-blue-300 mb-1">Administrator Controls</p>
                     <h2 class="text-xl font-bold">Manage instructor and student accounts</h2>
                 </div>
-                <a href="{{ route('super-admin.users.index') }}" class="inline-flex items-center justify-center bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-blue-600 transition text-sm font-medium">
+                <a href="{{ route('administrator.users.index') }}" class="inline-flex items-center justify-center bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-blue-600 transition text-sm font-medium">
                     <i class="fas fa-users-cog mr-2"></i> Manage Accounts
                 </a>
             </div>
@@ -46,7 +46,7 @@
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ auth()->user()->email }}</p>
             </div>
-            <a href="{{ auth()->user()->isAdministrator() ? route('super-admin.profile') : route('dashboard.profile') }}"
+            <a href="{{ auth()->user()->isAdministrator() ? route('administrator.profile') : route('dashboard.profile') }}"
                class="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition text-xs font-medium flex-shrink-0">
                 <i class="fas fa-user-edit mr-1"></i> Edit Profile
             </a>

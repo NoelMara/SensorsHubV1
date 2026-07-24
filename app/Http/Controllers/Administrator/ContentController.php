@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\SuperAdmin;
+namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
@@ -114,7 +114,7 @@ class ContentController extends Controller
         $name = $item->title ?? $item->name;
         ActivityLogHelper::log('created', $type, "created a new {$type} '{$name}'");
 
-        return redirect()->route('super-admin.' . $type . '.index')
+        return redirect()->route('administrator.' . $type . '.index')
             ->with('success', $this->singularLabelFor($type) . ' created successfully.');
     }
 
@@ -146,7 +146,7 @@ class ContentController extends Controller
         $item = $this->findItem($type, $id);
         $item->update($this->validatedData($request, $type, $item));
 
-        return redirect()->route('super-admin.' . $type . '.index')
+        return redirect()->route('administrator.' . $type . '.index')
             ->with('success', $this->singularLabelFor($type) . ' updated successfully.');
     }
 
@@ -158,7 +158,7 @@ class ContentController extends Controller
         $item->delete();
         ActivityLogHelper::log('deleted', $type, "deleted {$type} '{$name}'");
 
-        return redirect()->route('super-admin.' . $type . '.index')
+        return redirect()->route('administrator.' . $type . '.index')
             ->with('success', $this->singularLabelFor($type) . ' deleted successfully.');
     }
 

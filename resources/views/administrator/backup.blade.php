@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8">
-        <a href="{{ route('super-admin.dashboard') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
+        <a href="{{ route('administrator.dashboard') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
             <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
         </a>
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Database Backup</h1>
@@ -35,7 +35,7 @@
             </div>
         @endif
         
-        <a href="{{ route('super-admin.backup.download') }}" 
+        <a href="{{ route('administrator.backup.download') }}" 
            class="inline-flex items-center px-5 py-3 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
             <i class="fas fa-download mr-2"></i> Download Backup (.sql)
         </a>
@@ -68,11 +68,11 @@
                         </p>
                     </div>
                     <div class="flex items-center gap-1 flex-shrink-0">
-                        <a href="{{ route('super-admin.backup.download-file', $name) }}" 
+                        <a href="{{ route('administrator.backup.download-file', $name) }}" 
                            class="p-1.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition" title="Download">
                             <i class="fas fa-download text-sm"></i>
                         </a>
-                        <form action="{{ route('super-admin.backup.delete', $name) }}" method="POST"
+                        <form action="{{ route('administrator.backup.delete', $name) }}" method="POST"
                             onsubmit="return confirm('Delete this backup?');">
                             @csrf @method('DELETE')
                             <button type="submit" class="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition" title="Delete">

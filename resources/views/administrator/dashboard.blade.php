@@ -31,7 +31,7 @@
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ auth()->user()->email }}</p>
             </div>
-            <a href="{{ route('super-admin.profile') }}"
+            <a href="{{ route('administrator.profile') }}"
                class="px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition text-xs font-medium flex-shrink-0">
                 <i class="fas fa-user-edit mr-1"></i> Edit Profile
             </a>
@@ -82,32 +82,32 @@
     <div class="mb-8">
         <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Quick Links</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <a href="{{ route('super-admin.users.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md transition text-center">
+            <a href="{{ route('administrator.users.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-indigo-300 dark:hover:border-indigo-600 hover:shadow-md transition text-center">
                 <i class="fas fa-users text-xl text-indigo-500 mb-2"></i>
                 <p class="text-xs text-gray-500 dark:text-gray-400">Users</p>
                 <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $stats['users'] }}</p>
             </a>
-            <a href="{{ route('super-admin.suggestions.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-yellow-300 dark:hover:border-yellow-600 hover:shadow-md transition text-center">
+            <a href="{{ route('administrator.suggestions.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-yellow-300 dark:hover:border-yellow-600 hover:shadow-md transition text-center">
                 <i class="fas fa-lightbulb text-xl text-yellow-500 mb-2"></i>
                 <p class="text-xs text-gray-500 dark:text-gray-400">Suggestions</p>
                 <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $stats['suggestions'] }}</p>
             </a>
-            <a href="{{ route('super-admin.sensors.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition text-center">
+            <a href="{{ route('administrator.sensors.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition text-center">
                 <i class="fas fa-microchip text-xl text-blue-500 mb-2"></i>
                 <p class="text-xs text-gray-500 dark:text-gray-400">Sensors</p>
                 <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $stats['sensors'] }}</p>
             </a>
-            <a href="{{ route('super-admin.projects.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-md transition text-center">
+            <a href="{{ route('administrator.projects.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-md transition text-center">
                 <i class="fas fa-project-diagram text-xl text-emerald-500 mb-2"></i>
                 <p class="text-xs text-gray-500 dark:text-gray-400">Projects</p>
                 <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $stats['projects'] }}</p>
             </a>
-            <a href="{{ route('super-admin.products.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-md transition text-center">
+            <a href="{{ route('administrator.products.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-md transition text-center">
                 <i class="fas fa-shopping-cart text-xl text-purple-500 mb-2"></i>
                 <p class="text-xs text-gray-500 dark:text-gray-400">Products</p>
                 <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $stats['products'] }}</p>
             </a>
-            <a href="{{ route('super-admin.videos.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-red-300 dark:hover:border-red-600 hover:shadow-md transition text-center">
+            <a href="{{ route('administrator.videos.index') }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 hover:border-red-300 dark:hover:border-red-600 hover:shadow-md transition text-center">
                 <i class="fas fa-video text-xl text-red-500 mb-2"></i>
                 <p class="text-xs text-gray-500 dark:text-gray-400">Videos</p>
                 <p class="text-lg font-bold text-gray-900 dark:text-white">{{ $stats['videos'] }}</p>
@@ -120,7 +120,7 @@
         <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
             <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <h2 class="text-base font-bold text-gray-900 dark:text-white">Recent Users</h2>
-                <a href="{{ route('super-admin.users.index') }}" class="text-xs text-primary hover:underline">View all →</a>
+                <a href="{{ route('administrator.users.index') }}" class="text-xs text-primary hover:underline">View all →</a>
             </div>
             <div class="divide-y divide-gray-100 dark:divide-gray-700">
                 @forelse($recentUsers as $user)
@@ -154,7 +154,7 @@
             </div>
             <div class="divide-y divide-gray-100 dark:divide-gray-700">
                 @forelse($recentSuggestions as $suggestion)
-                    <a href="{{ route('super-admin.suggestions.show', $suggestion) }}" class="block px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                    <a href="{{ route('administrator.suggestions.show', $suggestion) }}" class="block px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                         <p class="font-medium text-gray-900 dark:text-white text-sm">{{ Str::limit($suggestion->title, 50) }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">by {{ $suggestion->user?->name ?? 'Deleted user' }} · {{ $suggestion->created_at->diffForHumans() }}</p>
                     </a>
@@ -164,7 +164,7 @@
             </div>
             @if($recentSuggestions->count() > 0)
                 <div class="px-5 py-3 border-t border-gray-200 dark:border-gray-700">
-                    <a href="{{ route('super-admin.suggestions.index') }}" class="text-xs text-primary hover:underline">Review all →</a>
+                    <a href="{{ route('administrator.suggestions.index') }}" class="text-xs text-primary hover:underline">Review all →</a>
                 </div>
             @endif
         </div>
@@ -177,7 +177,7 @@
         </div>
         <div class="divide-y divide-gray-100 dark:divide-gray-700">
             @forelse($recentComments as $comment)
-                <a href="{{ route('super-admin.suggestions.show', $comment->suggestion) }}" class="block px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                <a href="{{ route('administrator.suggestions.show', $comment->suggestion) }}" class="block px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                     <div class="flex items-start gap-3">
                         <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-gray-500">
                             {{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}

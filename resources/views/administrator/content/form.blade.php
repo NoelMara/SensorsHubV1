@@ -11,7 +11,7 @@
 <div class="min-h-screen bg-gray-100 dark:bg-gray-950">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="mb-8">
-            <a href="{{ route('super-admin.' . $type . '.index') }}" class="inline-flex items-center text-sm font-semibold text-primary hover:underline mb-4">
+            <a href="{{ route('administrator.' . $type . '.index') }}" class="inline-flex items-center text-sm font-semibold text-primary hover:underline mb-4">
                 <i class="fas fa-arrow-left mr-2"></i>Back to {{ $title }}
             </a>
             <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">{{ $isEdit ? 'Edit' : 'Add' }} {{ $resourceName }}</h1>
@@ -29,7 +29,7 @@
         @endif
 
         <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-6 lg:p-8">
-            <form method="POST" action="{{ $isEdit ? route('super-admin.content.update', [$type, $item->id]) : route('super-admin.content.store', $type) }}" enctype="multipart/form-data" class="space-y-6">
+            <form method="POST" action="{{ $isEdit ? route('administrator.content.update', [$type, $item->id]) : route('administrator.content.store', $type) }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @if($isEdit)
                     @method('PUT')
@@ -152,7 +152,7 @@
                     <button type="submit" class="inline-flex items-center justify-center bg-primary hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition">
                         <i class="fas fa-save mr-2"></i>{{ $isEdit ? 'Update' : 'Create' }} {{ $resourceName }}
                     </button>
-                    <a href="{{ route('super-admin.' . $type . '.index') }}" class="inline-flex items-center justify-center bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 font-semibold py-3 px-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <a href="{{ route('administrator.' . $type . '.index') }}" class="inline-flex items-center justify-center bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 font-semibold py-3 px-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                         Cancel
                     </a>
                 </div>

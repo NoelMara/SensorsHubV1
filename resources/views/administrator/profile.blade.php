@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8">
-        <a href="{{ route('super-admin.dashboard') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
+        <a href="{{ route('administrator.dashboard') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
             <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
         </a>
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Account Settings</h1>
@@ -39,7 +39,7 @@
         {{-- Profile Form --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
             <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-6">Profile Information</h2>
-            <form action="{{ route('super-admin.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+            <form action="{{ route('administrator.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                 @csrf
                 @method('PUT')
                 
@@ -74,7 +74,7 @@
         {{-- Password Form --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
             <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-6">Change Password</h2>
-            <form action="{{ route('super-admin.profile.password') }}" method="POST" class="space-y-4">
+            <form action="{{ route('administrator.profile.password') }}" method="POST" class="space-y-4">
                 @csrf
                 <div>
                     <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Current Password</label>

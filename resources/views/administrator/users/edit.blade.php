@@ -5,7 +5,7 @@
 @section('content')
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-8">
-        <a href="{{ route('super-admin.users.index') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
+        <a href="{{ route('administrator.users.index') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
             <i class="fas fa-arrow-left mr-1"></i> Back to Users
         </a>
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Edit User</h1>
@@ -44,7 +44,7 @@
             </div>
         </div>
 
-        <form method="POST" action="{{ route('super-admin.users.update', $user) }}" class="space-y-5">
+        <form method="POST" action="{{ route('administrator.users.update', $user) }}" class="space-y-5">
             @csrf
             @method('PUT')
 
@@ -88,7 +88,7 @@
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-2">
-                <a href="{{ route('super-admin.users.index') }}"
+                <a href="{{ route('administrator.users.index') }}"
                     class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm">
                     Cancel
                 </a>
