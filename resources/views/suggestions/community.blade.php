@@ -60,7 +60,20 @@
                         </div>
                     </div>
 
-                    <i class="fas fa-chevron-right text-gray-300 dark:text-gray-600 group-hover:text-primary transition flex-shrink-0 mt-1"></i>
+                    <div class="flex items-center gap-2 flex-shrink-0 mt-1">
+                        @auth
+                            <form method="POST" action="{{ route('report.store') }}" class="inline" onsubmit="return confirm('Report this suggestion?')">
+                                @csrf
+                                <input type="hidden" name="reportable_type" value="suggestion">
+                                <input type="hidden" name="reportable_id" value="{{ $suggestion->id }}">
+                                <input type="hidden" name="reason" value="inappropriate">
+                                <button type="submit" class="text-gray-400 hover:text-red-500 transition" title="Report">
+                                    <i class="fas fa-flag text-xs"></i>
+                                </button>
+                            </form>
+                        @endauth
+                        <i class="fas fa-chevron-right text-gray-300 dark:text-gray-600 group-hover:text-primary transition"></i>
+                    </div>
                 </a>
             @endforeach
         </div>

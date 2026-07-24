@@ -10,6 +10,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\VideoController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SuggestionController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ProfileController;
@@ -75,6 +76,11 @@ Route::middleware('auth')->group(function () {
         return view('notifications.index', compact('notifications'));
     })->name('notifications.index');
 });
+
+// Report Routes
+Route::post('/report', [App\Http\Controllers\ReportController::class, 'store'])
+    ->middleware('auth')
+    ->name('report.store');
 
 // ─── AI Chat Route ────────────────────────────────────────────────────────────
 Route::post('/api/chat', [ChatController::class, 'send'])
