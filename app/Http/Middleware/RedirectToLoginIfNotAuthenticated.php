@@ -20,6 +20,15 @@ class RedirectToLoginIfNotAuthenticated
             return redirect()->route('login');
         }
 
+        if (Auth::user()->isBanned()) {
+            $reason = Auth::user()->ban_reason;
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            return redirect()->route('login')->with('error', 'Your account has been banned. Reason: ' . $reason);
+        }
+
         return $next($request);
     }
 }
