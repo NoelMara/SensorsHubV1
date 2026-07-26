@@ -4,9 +4,20 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Activity Logs</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $logs->total() }} total entries</p>
+    <div class="mb-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Activity Logs</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $logs->total() }} total entries</p>
+        </div>
+        @if($logs->count() > 0)
+            <form method="POST" action="{{ route('administrator.logs.clear') }}" onsubmit="return confirm('Delete ALL activity logs? This cannot be undone.');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium">
+                    <i class="fas fa-trash mr-1"></i> Clear All Logs
+                </button>
+            </form>
+        @endif
     </div>
 
     @if($logs->count() > 0)

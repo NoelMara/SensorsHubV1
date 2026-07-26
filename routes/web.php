@@ -265,6 +265,7 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
 
     // Activity Logs
     Route::get('/logs', [AdministratorDashboardController::class, 'logs'])->name('logs');
+    Route::delete('/logs/clear', [AdministratorDashboardController::class, 'clearLogs'])->name('logs.clear');
 
     // Database Backup 
     Route::get('/backup', function () {

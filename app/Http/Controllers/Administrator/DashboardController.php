@@ -204,4 +204,10 @@ class DashboardController extends Controller
         
         return back()->with('success', 'Backup deleted.');
     }
+
+    public function clearLogs()
+    {
+        \App\Models\ActivityLog::truncate();
+        return back()->with('success', 'All activity logs have been cleared.');
+    }
 }
