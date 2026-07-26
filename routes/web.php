@@ -209,6 +209,11 @@ Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructo
     // Analytics
     Route::get('/classes/{class}/analytics', [ClassroomController::class, 'analytics'])->name('classes.analytics');
 
+    // Resources
+    Route::get('/classes/{class}/resources', [ClassroomController::class, 'resources'])->name('classes.resources');
+    Route::post('/classes/{class}/resources', [ClassroomController::class, 'storeResource'])->name('classes.resources.store');
+    Route::delete('/classes/{class}/resources/{resource}', [ClassroomController::class, 'destroyResource'])->name('classes.resources.destroy');
+
     // Sensors CRUD
     Route::get('/sensors', [AdminSensorController::class, 'index'])->name('sensors.index');
     Route::get('/sensors/create', [AdminSensorController::class, 'create'])->name('sensors.create');

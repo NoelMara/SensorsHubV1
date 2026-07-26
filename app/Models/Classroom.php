@@ -57,5 +57,9 @@ class Classroom extends Model
     {
         return $this->hasMany(Quiz::class, 'class_id');
     }
+    public function resources()
+    {
+        return $this->hasMany(ClassResource::class, 'class_id');
+    }
     
 }

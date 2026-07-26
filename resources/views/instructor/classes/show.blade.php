@@ -44,6 +44,9 @@
         <a href="{{ route('instructor.classes.analytics', $class) }}" class="px-3 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition text-xs font-medium">
             <i class="fas fa-chart-bar mr-1"></i> Analytics
         </a>
+        <a href="{{ route('instructor.classes.resources', $class) }}" class="px-3 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition text-xs font-medium">
+            <i class="fas fa-book mr-1"></i> Resources
+        </a>
         <span class="text-gray-300 dark:text-gray-600 px-1">|</span>
         <a href="{{ route('instructor.classes.edit', $class) }}" class="px-3 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-xs font-medium">
             <i class="fas fa-edit mr-1"></i> Edit

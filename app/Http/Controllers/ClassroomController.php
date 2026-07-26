@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Classroom;
 use App\Models\AssessmentSubmission;
 use App\Models\QuizSubmission;
+use App\Models\ClassResource;
 use App\Models\User;
 use App\Helpers\ActivityLogHelper;
 use Illuminate\Http\Request;
@@ -370,6 +371,57 @@ class ClassroomController extends Controller
             'submissionTimeline',
             'studentPerformance'
         ));
+    }
+
+    public function resources(Classroom $class)
+    {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
+        
+        $resources = $class->resources()->get();
+        $sensors = \App\Models\Sensor::where('is_active', true)->get();
+        $projects = \App\Models\Project::where('is_active', true)->get();
+        $videos = \App\Models\Video::where('is_active', true)->get();
+        
+        return view('instructor.classes.resources', compact('class', 'resources', 'sensors', 'projects', 'videos'));
+    }
+
+    public function storeResource(Request $request, Classroom $class)
+    {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
+        
+        $validated = $request->validate([
+            'resource_type' => 'required|in:sensor,project,video',
+            'resource_id' => 'required|integer',
+        ]);
+        
+        // Check if already added
+        $exists = $class->resources()
+            ->where('resource_type', $validated['resource_type'])
+            ->where('resource_id', $validated['resource_id'])
+            ->exists();
+        
+        if (!$exists) {
+            $class->resources()->create([
+                'resource_type' => $validated['resource_type'],
+                'resource_id' => $validated['resource_id'],
+            ]);
+        }
+        
+        return back()->with('success', 'Resource added!');
+    }
+
+    public function destroyResource(Classroom $class, ClassResource $resource)
+    {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
+        
+        $resource->delete();
+        return back()->with('success', 'Resource removed.');
     }
 
     public function approveAll(Classroom $class)
