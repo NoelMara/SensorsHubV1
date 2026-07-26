@@ -148,6 +148,46 @@
     </div>
     @endif
 
+    {{-- 📚 Recommended Resources --}}
+    @php $resources = $class->resources()->get(); @endphp
+    @if($resources->count() > 0)
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
+            <i class="fas fa-book text-cyan-500 mr-2"></i>Instructor Recommended
+        </h2>
+        <div class="space-y-2">
+            @foreach($resources as $resource)
+                @php
+                    $item = null;
+                    $link = '#';
+                    if ($resource->resource_type === 'sensor') {
+                        $item = \App\Models\Sensor::find($resource->resource_id);
+                        $link = $item ? route('sensors.show', $item->slug) : '#';
+                    } elseif ($resource->resource_type === 'project') {
+                        $item = \App\Models\Project::find($resource->resource_id);
+                        $link = $item ? route('projects.show', $item->slug) : '#';
+                    } elseif ($resource->resource_type === 'video') {
+                        $item = \App\Models\Video::find($resource->resource_id);
+                        $link = '#';
+                    }
+                @endphp
+                @if($item)
+                    <a href="{{ $link }}" target="_blank" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                        <span class="text-xs px-2 py-0.5 rounded-full
+                            {{ $resource->resource_type === 'sensor' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : '' }}
+                            {{ $resource->resource_type === 'project' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}
+                            {{ $resource->resource_type === 'video' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' : '' }}">
+                            {{ ucfirst($resource->resource_type) }}
+                        </span>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $item->title ?? $item->name }}</span>
+                        <i class="fas fa-external-link-alt text-gray-400 text-xs ml-auto"></i>
+                    </a>
+                @endif
+            @endforeach
+        </div>
+    </div>
+    @endif
+
     <!-- Announcements -->
     @php $announcements = $class->announcements()->where('is_published', true)->latest()->take(3)->get(); @endphp
     @if($announcements->count() > 0)

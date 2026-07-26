@@ -22,4 +22,3 @@ return new class extends Migration
         Schema::dropIfExists('class_resource');
     }
 };
-// Updated migration with correct columns
