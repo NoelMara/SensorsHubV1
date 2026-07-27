@@ -24,40 +24,60 @@
         @endif
     </div>
 
-    {{-- Action Buttons --}}
-    <div class="flex flex-wrap items-center gap-2 mb-8">
-        <a href="{{ route('instructor.classes.announcements.index', $class) }}" class="px-3 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition text-xs font-medium">
-            <i class="fas fa-bullhorn mr-1"></i> Announcements
-        </a>
-        <a href="{{ route('instructor.classes.modules.index', $class) }}" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium">
-            <i class="fas fa-book-open mr-1"></i> Modules
-        </a>
-        <a href="{{ route('instructor.classes.assessments.index', $class) }}" class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs font-medium">
-            <i class="fas fa-tasks mr-1"></i> Assessments
-        </a>
-        <a href="{{ route('instructor.classes.quizzes.index', $class) }}" class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-xs font-medium">
-            <i class="fas fa-question-circle mr-1"></i> Quizzes
-        </a>
-        <a href="{{ route('instructor.classes.leaderboard', $class) }}" class="px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-xs font-medium">
-            <i class="fas fa-trophy mr-1"></i> Leaderboard
-        </a>
-        <a href="{{ route('instructor.classes.analytics', $class) }}" class="px-3 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition text-xs font-medium">
-            <i class="fas fa-chart-bar mr-1"></i> Analytics
-        </a>
-        <a href="{{ route('instructor.classes.resources', $class) }}" class="px-3 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition text-xs font-medium">
-            <i class="fas fa-book mr-1"></i> Resources
-        </a>
-        <span class="text-gray-300 dark:text-gray-600 px-1">|</span>
-        <a href="{{ route('instructor.classes.edit', $class) }}" class="px-3 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-xs font-medium">
-            <i class="fas fa-edit mr-1"></i> Edit
-        </a>
-        <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
-            onsubmit="return confirm('Delete this class? This cannot be undone.');" class="inline">
-            @csrf @method('DELETE')
-            <button type="submit" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-xs font-medium">
-                <i class="fas fa-trash mr-1"></i> Delete
-            </button>
-        </form>
+        {{-- Action Buttons --}}
+    <div class="space-y-3 mb-8">
+        {{-- Teaching --}}
+        <div>
+            <span class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider ml-1">📢 Teaching</span>
+            <div class="flex flex-wrap items-center gap-2 mt-1">
+                <a href="{{ route('instructor.classes.announcements.index', $class) }}" class="px-3 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition text-xs font-medium">
+                    <i class="fas fa-bullhorn mr-1"></i> Announcements
+                </a>
+                <a href="{{ route('instructor.classes.modules.index', $class) }}" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium">
+                    <i class="fas fa-book-open mr-1"></i> Modules
+                </a>
+                <a href="{{ route('instructor.classes.resources', $class) }}" class="px-3 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition text-xs font-medium">
+                    <i class="fas fa-book mr-1"></i> Resources
+                </a>
+            </div>
+        </div>
+
+        {{-- Evaluation --}}
+        <div>
+            <span class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider ml-1">📝 Evaluation</span>
+            <div class="flex flex-wrap items-center gap-2 mt-1">
+                <a href="{{ route('instructor.classes.assessments.index', $class) }}" class="px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-xs font-medium">
+                    <i class="fas fa-tasks mr-1"></i> Assessments
+                </a>
+                <a href="{{ route('instructor.classes.quizzes.index', $class) }}" class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-xs font-medium">
+                    <i class="fas fa-question-circle mr-1"></i> Quizzes
+                </a>
+            </div>
+        </div>
+
+        {{-- Insights + Settings --}}
+        <div>
+            <span class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider ml-1">📊 Insights</span>
+            <div class="flex flex-wrap items-center gap-2 mt-1">
+                <a href="{{ route('instructor.classes.leaderboard', $class) }}" class="px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition text-xs font-medium">
+                    <i class="fas fa-trophy mr-1"></i> Leaderboard
+                </a>
+                <a href="{{ route('instructor.classes.analytics', $class) }}" class="px-3 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition text-xs font-medium">
+                    <i class="fas fa-chart-bar mr-1"></i> Analytics
+                </a>
+                <span class="text-gray-300 dark:text-gray-600 px-1">|</span>
+                <a href="{{ route('instructor.classes.edit', $class) }}" class="px-3 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-xs font-medium">
+                    <i class="fas fa-edit mr-1"></i> Edit
+                </a>
+                <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
+                    onsubmit="return confirm('Delete this class? This cannot be undone.');" class="inline">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-xs font-medium">
+                        <i class="fas fa-trash mr-1"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     {{-- Quick Stats --}}
