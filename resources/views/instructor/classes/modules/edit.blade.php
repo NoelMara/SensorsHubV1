@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ route('instructor.classes.modules.update', [$class, $module]) }}" enctype="multipart/form-data" onsubmit="const f = document.getElementById('file').files[0]; if(f && f.size > 10485760) { document.getElementById('fileSizeError').classList.remove('hidden'); return false; } const btn = this.querySelector('button[type=submit]'); btn.disabled = true; btn.innerHTML = '<i class=\"fas fa-spinner fa-spin mr-2\"></i> Processing...';">
+            <form method="POST" action="{{ route('instructor.classes.modules.update', [$class, $module]) }}" enctype="multipart/form-data" onsubmit="const f=document.getElementById('file').files[0];if(f&&f.size>10485760){document.getElementById('fileSizeError').classList.remove('hidden');return false;}const b=this.querySelector('button[type=submit]');b.disabled=true;b.innerHTML='Processing...';">
                 @csrf
                 @method('PUT')
 
