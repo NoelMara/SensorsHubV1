@@ -65,7 +65,7 @@
                             </div>
                             <div class="text-center" x-show="fileName" x-cloak>
                                 <i class="fas fa-file-alt text-2xl text-blue-500 mb-1"></i>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white" x-text="fileName"></p>
+                                <p class="text-sm font-medium text-gray-900 dark:text-white break-all" x-text="fileName"></p>
                                 <p class="text-xs text-gray-500 dark:text-gray-400" x-text="fileSize + ' KB'"></p>
                                 <button type="button" 
                                     @click.stop="fileName = null; fileSize = null; document.getElementById('file').value = ''"

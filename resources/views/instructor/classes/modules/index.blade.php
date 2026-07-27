@@ -53,7 +53,7 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1 line-clamp-2">{{ Str::limit($module->content, 150) }}</p>
                             @endif
                             @if($module->file_name)
-                                <p class="text-xs text-gray-400 dark:text-gray-500">
+                                <p class="text-xs text-gray-400 dark:text-gray-500 truncate">
                                     <i class="fas fa-file mr-1"></i>{{ $module->file_name }}
                                     @if($module->file_size)
                                         <span class="ml-1">({{ $module->file_size > 1048576 ? number_format($module->file_size / 1048576, 1) . ' MB' : number_format($module->file_size / 1024, 1) . ' KB' }})</span>
