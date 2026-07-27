@@ -41,11 +41,11 @@
             </a>
             
             {{-- More Dropdown --}}
-            <div class="relative group">
-                <button class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition">
+            <div class="relative" x-data="{ open: false }">
+                <button @click="open = !open" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition">
                     <i class="fas fa-ellipsis-h mr-1"></i> More
                 </button>
-                <div class="absolute left-0 top-full mt-1 w-44 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <div x-show="open" @click.outside="open = false" class="absolute left-0 top-full mt-1 w-44 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                     <a href="{{ route('instructor.classes.leaderboard', $class) }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
                         <i class="fas fa-trophy mr-2"></i> Leaderboard
                     </a>
