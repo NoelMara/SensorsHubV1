@@ -40,15 +40,19 @@
     </div>
 
     {{-- Submission Timeline Chart --}}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-8">
-        <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5 mb-8">
+        <h2 class="text-sm sm:text-base font-bold text-gray-900 dark:text-white mb-1">
             <i class="fas fa-chart-line text-blue-600 dark:text-blue-400 mr-2"></i>Submission Timeline
-            <span class="text-xs font-normal text-gray-500 ml-4">
-                <span class="inline-block w-3 h-3 bg-blue-500 rounded-full mr-1"></span> Assessments
-                <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-1 ml-3"></span> Quizzes
-            </span>
         </h2>
-        <div class="relative" style="height: 250px;">
+        <div class="flex items-center gap-4 mb-3">
+            <span class="text-xs text-gray-500">
+                <span class="inline-block w-3 h-3 bg-blue-500 rounded-full mr-1"></span> Assessments
+            </span>
+            <span class="text-xs text-gray-500">
+                <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-1"></span> Quizzes
+            </span>
+        </div>
+        <div class="relative h-48 sm:h-64">
             <canvas id="submissionChart"></canvas>
         </div>
     </div>
@@ -199,11 +203,12 @@
 document.addEventListener('DOMContentLoaded', function () {
     const ctx = document.getElementById('submissionChart').getContext('2d');
     const timelineData = @json($submissionTimeline);
+    const isMobile = window.innerWidth < 640;
 
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: timelineData.map(item => item.date),
+            labels: timelineData.map(item => isMobile ? item.date.slice(5) : item.date),
             datasets: [
                 {
                     label: 'Assessments',
@@ -212,8 +217,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     fill: true,
                     tension: 0.3,
-                    pointRadius: 2,
-                    pointHoverRadius: 5,
+                    pointRadius: isMobile ? 4 : 2,
+                    pointHoverRadius: isMobile ? 8 : 5,
                 },
                 {
                     label: 'Quizzes',
@@ -222,8 +227,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     backgroundColor: 'rgba(168, 85, 247, 0.1)',
                     fill: true,
                     tension: 0.3,
-                    pointRadius: 2,
-                    pointHoverRadius: 5,
+                    pointRadius: isMobile ? 4 : 2,
+                    pointHoverRadius: isMobile ? 8 : 5,
                 }
             ]
         },
@@ -234,6 +239,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 legend: { display: false }
             },
             scales: {
+                x: {
+                    ticks: {
+                        maxTicksLimit: isMobile ? 6 : 15,
+                        maxRotation: 45,
+                    }
+                },
                 y: {
                     beginAtZero: true,
                     ticks: { stepSize: 1 }
