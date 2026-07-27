@@ -55,11 +55,15 @@
         <div class="relative h-48 sm:h-64">
             <canvas id="submissionChart"></canvas>
         </div>
+        <div class="flex items-center justify-center gap-3 mt-3">
+            <button id="prevBtn" class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition disabled:opacity-30">← Prev</button>
+            <span id="pageLabel" class="text-xs text-gray-500 dark:text-gray-400"></span>
+            <button id="nextBtn" class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition disabled:opacity-30">Next →</button>
+        </div>
     </div>
 
     {{-- Breakdown Tables --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {{-- Assessment Breakdown --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
             <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">
                 <i class="fas fa-tasks text-purple-600 dark:text-purple-400 mr-2"></i>Assessment Breakdown
@@ -85,8 +89,6 @@
                 <p class="text-gray-500 dark:text-gray-400 text-sm">No assessments published yet.</p>
             @endif
         </div>
-
-        {{-- Quiz Breakdown --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
             <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">
                 <i class="fas fa-question-circle text-indigo-600 dark:text-indigo-400 mr-2"></i>Quiz Breakdown
@@ -145,9 +147,7 @@
                                 </td>
                                 <td class="px-3 py-3 text-center">
                                     @if($student['assessment_avg'] !== null)
-                                        @php
-                                            $aColor = $student['assessment_avg'] >= 75 ? 'green' : ($student['assessment_avg'] >= 50 ? 'yellow' : 'red');
-                                        @endphp
+                                        @php $aColor = $student['assessment_avg'] >= 75 ? 'green' : ($student['assessment_avg'] >= 50 ? 'yellow' : 'red'); @endphp
                                         <span class="px-2 py-0.5 text-xs font-medium rounded-full 
                                             {{ $aColor === 'green' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}
                                             {{ $aColor === 'yellow' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' : '' }}
@@ -160,9 +160,7 @@
                                 </td>
                                 <td class="px-3 py-3 text-center">
                                     @if($student['quiz_avg'] !== null)
-                                        @php
-                                            $qColor = $student['quiz_avg'] >= 75 ? 'green' : ($student['quiz_avg'] >= 50 ? 'yellow' : 'red');
-                                        @endphp
+                                        @php $qColor = $student['quiz_avg'] >= 75 ? 'green' : ($student['quiz_avg'] >= 50 ? 'yellow' : 'red'); @endphp
                                         <span class="px-2 py-0.5 text-xs font-medium rounded-full 
                                             {{ $qColor === 'green' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}
                                             {{ $qColor === 'yellow' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' : '' }}
@@ -202,56 +200,73 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const ctx = document.getElementById('submissionChart').getContext('2d');
-    const timelineData = @json($submissionTimeline);
-    const isMobile = window.innerWidth < 640;
+    const allData = @json($submissionTimeline);
+    const daysPerPage = 7;
+    const totalPages = Math.ceil(allData.length / daysPerPage);
+    let currentPage = totalPages - 1; // Start at most recent week
 
-    new Chart(ctx, {
+    function getPageData(page) {
+        const start = page * daysPerPage;
+        return allData.slice(start, start + daysPerPage);
+    }
+
+    const chart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: timelineData.map(item => isMobile ? item.date.slice(5) : item.date),
+            labels: [],
             datasets: [
                 {
                     label: 'Assessments',
-                    data: timelineData.map(item => item.assessments),
+                    data: [],
                     borderColor: '#3B82F6',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     fill: true,
                     tension: 0.3,
-                    pointRadius: isMobile ? 4 : 2,
-                    pointHoverRadius: isMobile ? 8 : 5,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
                 },
                 {
                     label: 'Quizzes',
-                    data: timelineData.map(item => item.quizzes),
+                    data: [],
                     borderColor: '#A855F7',
                     backgroundColor: 'rgba(168, 85, 247, 0.1)',
                     fill: true,
                     tension: 0.3,
-                    pointRadius: isMobile ? 4 : 2,
-                    pointHoverRadius: isMobile ? 8 : 5,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            },
+            plugins: { legend: { display: false } },
             scales: {
-                x: {
-                    ticks: {
-                        maxTicksLimit: isMobile ? 6 : 15,
-                        maxRotation: 45,
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 1 }
-                }
+                y: { beginAtZero: true, ticks: { stepSize: 1 } }
             }
         }
     });
+
+    function updateChart(page) {
+        const pageData = getPageData(page);
+        chart.data.labels = pageData.map(d => d.date.slice(5));
+        chart.data.datasets[0].data = pageData.map(d => d.assessments);
+        chart.data.datasets[1].data = pageData.map(d => d.quizzes);
+        chart.update();
+
+        document.getElementById('pageLabel').textContent = `Week ${page + 1} of ${totalPages}`;
+        document.getElementById('prevBtn').disabled = page === 0;
+        document.getElementById('nextBtn').disabled = page === totalPages - 1;
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentPage > 0) { currentPage--; updateChart(currentPage); }
+    });
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (currentPage < totalPages - 1) { currentPage++; updateChart(currentPage); }
+    });
+
+    updateChart(currentPage);
 });
 </script>
 @endpush
