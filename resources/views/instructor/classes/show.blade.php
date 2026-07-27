@@ -66,7 +66,7 @@
             <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
                 onsubmit="return confirm('Delete this class? This cannot be undone.');" class="inline">
                 @csrf @method('DELETE')
-                <button type="submit" class="px-3 py-2 text-xs font-medium text-red-500 hover:text-red-700 transition">
+                <button type="submit" class="px-3 py-2 text-sm font-medium text-red-500 hover:text-red-700 transition">
                     <i class="fas fa-trash mr-1"></i> Delete
                 </button>
             </form>
