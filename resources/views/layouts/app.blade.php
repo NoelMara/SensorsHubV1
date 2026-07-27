@@ -421,7 +421,6 @@
             document.querySelectorAll('form').forEach(function(form) {
                 form.addEventListener('submit', function(e) {
                     var onsubmit = form.getAttribute('onsubmit');
-                    if (onsubmit && onsubmit.includes('fileSizeError')) return;
                     if (onsubmit && onsubmit.includes('confirm')) {
                         return;
                     }
