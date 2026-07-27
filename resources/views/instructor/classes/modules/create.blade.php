@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ route('instructor.classes.modules.store', $class) }}" enctype="multipart/form-data" onsubmit="const f = document.getElementById('file').files[0]; if(f && f.size > 10485760) { document.getElementById('fileSizeError').classList.remove('hidden'); event.submitter.disabled = false; return false; }">
+            <form method="POST" action="{{ route('instructor.classes.modules.store', $class) }}" enctype="multipart/form-data" onsubmit="const f = document.getElementById('file').files[0]; if(f && f.size > 10485760) { document.getElementById('fileSizeError').classList.remove('hidden'); return false; }">
                 @csrf
 
                 <div class="space-y-5">
