@@ -250,19 +250,28 @@ class ClassroomController extends Controller
         $totalAssessmentPoints = $assessments->sum('points');
         $totalQuizPoints = $quizzes->sum('points');
 
-        $allAssessmentScores = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))
-            ->whereNotNull('score')->sum('score');
-        $allQuizScores = QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))
-            ->whereNotNull('score')->sum('score');
+        $assessmentIds = $assessments->pluck('id');
+        $quizIds = $quizzes->pluck('id');
+        $studentIds = $students->pluck('id');
 
-        $assessmentAvg = $totalAssessmentPoints > 0 ? round(($allAssessmentScores / $totalAssessmentPoints) * 100, 1) : 0;
-        $quizAvg = $totalQuizPoints > 0 ? round(($allQuizScores / $totalQuizPoints) * 100, 1) : 0;
+        // Load ALL submissions once
+        $allAssessmentSubs = AssessmentSubmission::whereIn('assessment_id', $assessmentIds)
+            ->whereNotNull('score')->get();
+        $allQuizSubs = QuizSubmission::whereIn('quiz_id', $quizIds)
+            ->whereNotNull('score')->get();
 
+        // Averages
+        $assessmentAvg = $totalAssessmentPoints > 0 
+            ? round(($allAssessmentSubs->sum('score') / $totalAssessmentPoints) * 100, 1) : 0;
+        $quizAvg = $totalQuizPoints > 0 
+            ? round(($allQuizSubs->sum('score') / $totalQuizPoints) * 100, 1) : 0;
+
+        // Assessment Breakdown
         $assessmentBreakdown = [];
         foreach ($assessments as $assessment) {
-            $submissions = $assessment->submissions()->whereNotNull('score')->get();
-            $submittedCount = $submissions->count();
-            $avg = $submittedCount > 0 ? round($submissions->avg('score') / $assessment->points * 100, 1) : 0;
+            $subs = $allAssessmentSubs->where('assessment_id', $assessment->id);
+            $submittedCount = $subs->count();
+            $avg = $submittedCount > 0 ? round($subs->avg('score') / $assessment->points * 100, 1) : 0;
             $assessmentBreakdown[] = [
                 'title' => $assessment->title, 'average' => $avg,
                 'submitted' => $submittedCount, 'total' => $studentCount,
@@ -270,11 +279,12 @@ class ClassroomController extends Controller
             ];
         }
 
+        // Quiz Breakdown
         $quizBreakdown = [];
         foreach ($quizzes as $quiz) {
-            $submissions = $quiz->submissions()->whereNotNull('score')->get();
-            $submittedCount = $submissions->count();
-            $avg = $submittedCount > 0 ? round($submissions->avg('score') / $quiz->points * 100, 1) : 0;
+            $subs = $allQuizSubs->where('quiz_id', $quiz->id);
+            $submittedCount = $subs->count();
+            $avg = $submittedCount > 0 ? round($subs->avg('score') / $quiz->points * 100, 1) : 0;
             $quizBreakdown[] = [
                 'title' => $quiz->title, 'average' => $avg,
                 'submitted' => $submittedCount, 'total' => $studentCount,
@@ -282,20 +292,28 @@ class ClassroomController extends Controller
             ];
         }
 
+        // Timeline - group by date in memory
+        $assessmentByDate = $allAssessmentSubs->groupBy(fn($s) => $s->submitted_at->format('Y-m-d'));
+        $quizByDate = $allQuizSubs->groupBy(fn($s) => $s->submitted_at->format('Y-m-d'));
+        
         $submissionTimeline = [];
         for ($i = 29; $i >= 0; $i--) {
             $date = now()->subDays($i)->format('Y-m-d');
             $submissionTimeline[] = [
                 'date' => $date,
-                'assessments' => AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))->whereDate('submitted_at', $date)->count(),
-                'quizzes' => QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))->whereDate('submitted_at', $date)->count(),
+                'assessments' => $assessmentByDate->get($date, collect())->count(),
+                'quizzes' => $quizByDate->get($date, collect())->count(),
             ];
         }
 
+        // Student Performance - group by student in memory
+        $assessByStudent = $allAssessmentSubs->groupBy('user_id');
+        $quizByStudent = $allQuizSubs->groupBy('user_id');
+
         $studentPerformance = [];
         foreach ($students as $student) {
-            $sa = AssessmentSubmission::where('user_id', $student->id)->whereIn('assessment_id', $assessments->pluck('id'))->whereNotNull('score')->sum('score');
-            $sq = QuizSubmission::where('user_id', $student->id)->whereIn('quiz_id', $quizzes->pluck('id'))->whereNotNull('score')->sum('score');
+            $sa = $assessByStudent->get($student->id, collect())->sum('score');
+            $sq = $quizByStudent->get($student->id, collect())->sum('score');
             $studentPerformance[] = [
                 'name' => $student->name,
                 'assessment_avg' => $totalAssessmentPoints > 0 ? round(($sa / $totalAssessmentPoints) * 100, 1) : null,
