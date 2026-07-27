@@ -49,8 +49,9 @@ class DashboardController extends Controller
         $totalClasses = Classroom::count();
         $totalContent = Sensor::count() + Project::count() + Product::count() + Video::count();
         $newThisMonth = User::where('created_at', '>=', now()->subDays(30))
-        ->where('role', '!=', 'administrator')
-        ->count();
+            ->where('role', '!=', 'administrator')
+            ->count();
+        $bannedCount = User::whereNotNull('banned_at')->count();
 
         // User growth chart (last 30 days)
         $userGrowth = [];
@@ -58,7 +59,9 @@ class DashboardController extends Controller
             $date = now()->subDays($i)->format('Y-m-d');
             $userGrowth[] = [
                 'date' => $date,
-                'count' => User::whereDate('created_at', $date)->count(),
+                'count' => User::whereDate('created_at', $date)
+                    ->where('role', '!=', 'administrator')
+                    ->count(),
             ];
         }
 
@@ -102,14 +105,8 @@ class DashboardController extends Controller
         ];
 
         return view('administrator.analytics', compact(
-            'totalUsers',
-            'totalInstructors',
-            'totalClasses',
-            'totalContent',
-            'newThisMonth',
-            'userGrowth',
-            'topClasses',
-            'contentBreakdown'
+            'totalUsers', 'totalInstructors', 'totalClasses', 'totalContent',
+            'newThisMonth', 'bannedCount', 'userGrowth', 'topClasses', 'contentBreakdown'
         ));
     }
 
@@ -125,7 +122,6 @@ class DashboardController extends Controller
             abort(403);
         }
 
-        // Keep only last 5 backups
         $backupPath = storage_path('app/backups');
         if (!is_dir($backupPath)) {
             mkdir($backupPath, 0755, true);
@@ -135,7 +131,6 @@ class DashboardController extends Controller
         $totalBackups = count($files);
         
         if ($totalBackups >= 5) {
-            // Delete oldest
             unlink($files[0]);
             $totalBackups = 4;
         }
