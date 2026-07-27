@@ -27,32 +27,32 @@
         {{-- Tab Navigation --}}
     <div class="mb-8">
         <div class="flex flex-wrap items-center gap-1 border-b border-gray-200 dark:border-gray-700 pb-2">
-            <a href="{{ route('instructor.classes.announcements.index', $class) }}" class="px-3 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
+            <a href="{{ route('instructor.classes.announcements.index', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
                 <i class="fas fa-bullhorn mr-1"></i> Announcements
             </a>
-            <a href="{{ route('instructor.classes.modules.index', $class) }}" class="px-3 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
+            <a href="{{ route('instructor.classes.modules.index', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
                 <i class="fas fa-book-open mr-1"></i> Modules
             </a>
-            <a href="{{ route('instructor.classes.assessments.index', $class) }}" class="px-3 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
+            <a href="{{ route('instructor.classes.assessments.index', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
                 <i class="fas fa-tasks mr-1"></i> Assessments
             </a>
-            <a href="{{ route('instructor.classes.quizzes.index', $class) }}" class="px-3 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
+            <a href="{{ route('instructor.classes.quizzes.index', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
                 <i class="fas fa-question-circle mr-1"></i> Quizzes
             </a>
             
             {{-- More Dropdown --}}
             <div class="relative group">
-                <button class="px-3 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition">
+                <button class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition">
                     <i class="fas fa-ellipsis-h mr-1"></i> More
                 </button>
                 <div class="absolute left-0 top-full mt-1 w-44 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                    <a href="{{ route('instructor.classes.leaderboard', $class) }}" class="block px-4 py-2.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
+                    <a href="{{ route('instructor.classes.leaderboard', $class) }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
                         <i class="fas fa-trophy mr-2"></i> Leaderboard
                     </a>
-                    <a href="{{ route('instructor.classes.analytics', $class) }}" class="block px-4 py-2.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <a href="{{ route('instructor.classes.analytics', $class) }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <i class="fas fa-chart-bar mr-2"></i> Analytics
                     </a>
-                    <a href="{{ route('instructor.classes.resources', $class) }}" class="block px-4 py-2.5 text-xs text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg">
+                    <a href="{{ route('instructor.classes.resources', $class) }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg">
                         <i class="fas fa-book mr-2"></i> Resources
                     </a>
                 </div>
@@ -60,7 +60,7 @@
 
             <span class="text-gray-300 dark:text-gray-600 px-2">|</span>
             
-            <a href="{{ route('instructor.classes.edit', $class) }}" class="px-3 py-2 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-primary transition">
+            <a href="{{ route('instructor.classes.edit', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary transition">
                 <i class="fas fa-edit mr-1"></i> Edit
             </a>
             <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
