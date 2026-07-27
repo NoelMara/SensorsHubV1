@@ -35,7 +35,7 @@ class ModuleController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
-            'file' => 'nullable|file|max:10240',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
             'is_published' => 'boolean',
         ]);
 
@@ -109,7 +109,7 @@ class ModuleController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
-            'file' => 'nullable|file|max:10240',
+            'file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
             'is_published' => 'boolean',
         ]);
 
