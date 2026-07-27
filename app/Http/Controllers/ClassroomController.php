@@ -238,53 +238,77 @@ class ClassroomController extends Controller
             abort(403);
         }
 
-        $cacheKey = "class_analytics_{$class->id}";
+        $students = $class->students()->wherePivot('status', 'approved')->get();
+        $studentCount = $students->count();
 
-        return cache()->remember($cacheKey, 900, function () use ($class) {
-            $students = $class->students()->wherePivot('status', 'approved')->get();
-            $studentCount = $students->count();
-            $assessments = $class->assessments()->where('is_published', true)->get();
-            $quizzes = $class->quizzes()->where('is_published', true)->get();
-            $assessmentCount = $assessments->count();
-            $quizCount = $quizzes->count();
-            $totalAssessmentPoints = $assessments->sum('points');
-            $totalQuizPoints = $quizzes->sum('points');
-            $allAssessmentScores = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))->whereNotNull('score')->sum('score');
-            $allQuizScores = QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))->whereNotNull('score')->sum('score');
-            $assessmentAvg = $totalAssessmentPoints > 0 ? round(($allAssessmentScores / $totalAssessmentPoints) * 100, 1) : 0;
-            $quizAvg = $totalQuizPoints > 0 ? round(($allQuizScores / $totalQuizPoints) * 100, 1) : 0;
+        $assessments = $class->assessments()->where('is_published', true)->get();
+        $quizzes = $class->quizzes()->where('is_published', true)->get();
 
-            $assessmentBreakdown = [];
-            foreach ($assessments as $assessment) {
-                $submissions = $assessment->submissions()->whereNotNull('score')->get();
-                $submittedCount = $submissions->count();
-                $avg = $submittedCount > 0 ? round($submissions->avg('score') / $assessment->points * 100, 1) : 0;
-                $assessmentBreakdown[] = ['title' => $assessment->title, 'average' => $avg, 'submitted' => $submittedCount, 'total' => $studentCount, 'submission_rate' => $studentCount > 0 ? round(($submittedCount / $studentCount) * 100) : 0];
-            }
+        $assessmentCount = $assessments->count();
+        $quizCount = $quizzes->count();
 
-            $quizBreakdown = [];
-            foreach ($quizzes as $quiz) {
-                $submissions = $quiz->submissions()->whereNotNull('score')->get();
-                $submittedCount = $submissions->count();
-                $avg = $submittedCount > 0 ? round($submissions->avg('score') / $quiz->points * 100, 1) : 0;
-                $quizBreakdown[] = ['title' => $quiz->title, 'average' => $avg, 'submitted' => $submittedCount, 'total' => $studentCount, 'submission_rate' => $studentCount > 0 ? round(($submittedCount / $studentCount) * 100) : 0];
-            }
+        $totalAssessmentPoints = $assessments->sum('points');
+        $totalQuizPoints = $quizzes->sum('points');
 
-            $submissionTimeline = [];
-            for ($i = 29; $i >= 0; $i--) {
-                $date = now()->subDays($i)->format('Y-m-d');
-                $submissionTimeline[] = ['date' => $date, 'assessments' => AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))->whereDate('submitted_at', $date)->count(), 'quizzes' => QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))->whereDate('submitted_at', $date)->count()];
-            }
+        $allAssessmentScores = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))
+            ->whereNotNull('score')->sum('score');
+        $allQuizScores = QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))
+            ->whereNotNull('score')->sum('score');
 
-            $studentPerformance = [];
-            foreach ($students as $student) {
-                $sa = AssessmentSubmission::where('user_id', $student->id)->whereIn('assessment_id', $assessments->pluck('id'))->whereNotNull('score')->sum('score');
-                $sq = QuizSubmission::where('user_id', $student->id)->whereIn('quiz_id', $quizzes->pluck('id'))->whereNotNull('score')->sum('score');
-                $studentPerformance[] = ['name' => $student->name, 'assessment_avg' => $totalAssessmentPoints > 0 ? round(($sa / $totalAssessmentPoints) * 100, 1) : null, 'quiz_avg' => $totalQuizPoints > 0 ? round(($sq / $totalQuizPoints) * 100, 1) : null, 'overall' => ($totalAssessmentPoints + $totalQuizPoints) > 0 ? round((($sa + $sq) / ($totalAssessmentPoints + $totalQuizPoints)) * 100, 1) : null];
-            }
+        $assessmentAvg = $totalAssessmentPoints > 0 ? round(($allAssessmentScores / $totalAssessmentPoints) * 100, 1) : 0;
+        $quizAvg = $totalQuizPoints > 0 ? round(($allQuizScores / $totalQuizPoints) * 100, 1) : 0;
 
-            return view('instructor.classes.analytics', compact('class', 'studentCount', 'assessmentCount', 'quizCount', 'assessmentAvg', 'quizAvg', 'assessmentBreakdown', 'quizBreakdown', 'submissionTimeline', 'studentPerformance'));
-        });
+        $assessmentBreakdown = [];
+        foreach ($assessments as $assessment) {
+            $submissions = $assessment->submissions()->whereNotNull('score')->get();
+            $submittedCount = $submissions->count();
+            $avg = $submittedCount > 0 ? round($submissions->avg('score') / $assessment->points * 100, 1) : 0;
+            $assessmentBreakdown[] = [
+                'title' => $assessment->title, 'average' => $avg,
+                'submitted' => $submittedCount, 'total' => $studentCount,
+                'submission_rate' => $studentCount > 0 ? round(($submittedCount / $studentCount) * 100) : 0,
+            ];
+        }
+
+        $quizBreakdown = [];
+        foreach ($quizzes as $quiz) {
+            $submissions = $quiz->submissions()->whereNotNull('score')->get();
+            $submittedCount = $submissions->count();
+            $avg = $submittedCount > 0 ? round($submissions->avg('score') / $quiz->points * 100, 1) : 0;
+            $quizBreakdown[] = [
+                'title' => $quiz->title, 'average' => $avg,
+                'submitted' => $submittedCount, 'total' => $studentCount,
+                'submission_rate' => $studentCount > 0 ? round(($submittedCount / $studentCount) * 100) : 0,
+            ];
+        }
+
+        $submissionTimeline = [];
+        for ($i = 29; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $submissionTimeline[] = [
+                'date' => $date,
+                'assessments' => AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))->whereDate('submitted_at', $date)->count(),
+                'quizzes' => QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))->whereDate('submitted_at', $date)->count(),
+            ];
+        }
+
+        $studentPerformance = [];
+        foreach ($students as $student) {
+            $sa = AssessmentSubmission::where('user_id', $student->id)->whereIn('assessment_id', $assessments->pluck('id'))->whereNotNull('score')->sum('score');
+            $sq = QuizSubmission::where('user_id', $student->id)->whereIn('quiz_id', $quizzes->pluck('id'))->whereNotNull('score')->sum('score');
+            $studentPerformance[] = [
+                'name' => $student->name,
+                'assessment_avg' => $totalAssessmentPoints > 0 ? round(($sa / $totalAssessmentPoints) * 100, 1) : null,
+                'quiz_avg' => $totalQuizPoints > 0 ? round(($sq / $totalQuizPoints) * 100, 1) : null,
+                'overall' => ($totalAssessmentPoints + $totalQuizPoints) > 0 ? round((($sa + $sq) / ($totalAssessmentPoints + $totalQuizPoints)) * 100, 1) : null,
+            ];
+        }
+
+        return view('instructor.classes.analytics', compact(
+            'class', 'studentCount', 'assessmentCount', 'quizCount',
+            'assessmentAvg', 'quizAvg', 'assessmentBreakdown', 'quizBreakdown',
+            'submissionTimeline', 'studentPerformance'
+        ));
     }
 
     public function resources(Classroom $class)
