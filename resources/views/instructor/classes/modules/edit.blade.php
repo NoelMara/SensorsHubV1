@@ -71,7 +71,7 @@
                                     @click.stop="fileName = null; fileSize = null; document.getElementById('file').value = ''"
                                     class="mt-2 text-xs text-red-500 hover:underline">Remove</button>
                             </div>
-                            <input type="file" name="file" id="file" accept=".pdf,.doc,.docx" class="hidden"
+                           <input type="file" name="file" id="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="hidden"
                                 @change="fileName = $event.target.files[0]?.name; fileSize = Math.round($event.target.files[0]?.size / 1024)">
                         </div>
                         @error('file') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
