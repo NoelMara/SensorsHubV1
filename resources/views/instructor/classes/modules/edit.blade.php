@@ -15,15 +15,15 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ route('instructor.classes.modules.update', [$class, $module]) }}" enctype="multipart/form-data" onsubmit="const f = document.getElementById('file').files[0]; if(f && f.size > 10485760) { alert('File too large! Maximum is 10MB.'); return false; }">
+            <form method="POST" action="{{ route('instructor.classes.modules.update', [$class, $module]) }}" enctype="multipart/form-data" onsubmit="const f = document.getElementById('file').files[0]; if(f && f.size > 10485760) { document.getElementById('fileSizeError').classList.remove('hidden'); return false; }">
                 @csrf
                 @method('PUT')
 
                 @if($module->file_name)
                 <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl flex items-center gap-4">
-                    <i class="fas fa-file-alt text-2xl text-blue-500"></i>
-                    <div>
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">Current File: {{ $module->file_name }}</p>
+                    <i class="fas fa-file-alt text-2xl text-blue-500 flex-shrink-0"></i>
+                    <div class="min-w-0">
+                        <p class="text-sm font-medium text-gray-900 dark:text-white truncate">Current File: {{ $module->file_name }}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">Upload a new one to replace it.</p>
                     </div>
                 </div>
@@ -75,6 +75,7 @@
                                 @change="fileName = $event.target.files[0]?.name; fileSize = Math.round($event.target.files[0]?.size / 1024)">
                         </div>
                         @error('file') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        <p id="fileSizeError" class="text-red-500 text-xs mt-1 hidden">File too large! Maximum is 10MB.</p>
                     </div>
 
                     <div class="flex items-center gap-2">

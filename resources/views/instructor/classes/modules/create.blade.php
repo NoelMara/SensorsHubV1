@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ route('instructor.classes.modules.store', $class) }}" enctype="multipart/form-data" onsubmit="const f = document.getElementById('file').files[0]; if(f && f.size > 10485760) { alert('File too large! Maximum is 10MB.'); return false; }">
+            <form method="POST" action="{{ route('instructor.classes.modules.store', $class) }}" enctype="multipart/form-data" onsubmit="const f = document.getElementById('file').files[0]; if(f && f.size > 10485760) { document.getElementById('fileSizeError').classList.remove('hidden'); return false; }">
                 @csrf
 
                 <div class="space-y-5">
@@ -65,6 +65,7 @@
                                 @change="fileName = $event.target.files[0]?.name; fileSize = Math.round($event.target.files[0]?.size / 1024)">
                         </div>
                         @error('file') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                        <p id="fileSizeError" class="text-red-500 text-xs mt-1 hidden">File too large! Maximum is 10MB.</p>
                     </div>
 
                     <div class="flex items-center gap-2">
