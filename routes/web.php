@@ -21,10 +21,6 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\QuizController;
-use App\Http\Controllers\Instructor\SensorController as AdminSensorController;
-use App\Http\Controllers\Instructor\ProjectController as AdminProjectController;
-use App\Http\Controllers\Instructor\ProductController as AdminProductController;
-use App\Http\Controllers\Instructor\VideoController as AdminVideoController;
 use App\Http\Controllers\Instructor\SuggestionController as AdminSuggestionController;
 use App\Http\Controllers\Administrator\DashboardController as AdministratorDashboardController;
 use App\Http\Controllers\Administrator\UserController as AdministratorUserController;
@@ -214,37 +210,6 @@ Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructo
     Route::post('/classes/{class}/resources', [ClassroomController::class, 'storeResource'])->name('classes.resources.store');
     Route::delete('/classes/{class}/resources/{resource}', [ClassroomController::class, 'destroyResource'])->name('classes.resources.destroy');
 
-    // Sensors CRUD
-    Route::get('/sensors', [AdminSensorController::class, 'index'])->name('sensors.index');
-    Route::get('/sensors/create', [AdminSensorController::class, 'create'])->name('sensors.create');
-    Route::post('/sensors', [AdminSensorController::class, 'store'])->name('sensors.store');
-    Route::get('/sensors/{sensor}/edit', [AdminSensorController::class, 'edit'])->name('sensors.edit');
-    Route::put('/sensors/{sensor}', [AdminSensorController::class, 'update'])->name('sensors.update');
-    Route::delete('/sensors/{sensor}', [AdminSensorController::class, 'destroy'])->name('sensors.destroy');
-
-    // Projects CRUD
-    Route::get('/projects', [AdminProjectController::class, 'index'])->name('projects.index');
-    Route::get('/projects/create', [AdminProjectController::class, 'create'])->name('projects.create');
-    Route::post('/projects', [AdminProjectController::class, 'store'])->name('projects.store');
-    Route::get('/projects/{project}/edit', [AdminProjectController::class, 'edit'])->name('projects.edit');
-    Route::put('/projects/{project}', [AdminProjectController::class, 'update'])->name('projects.update');
-    Route::delete('/projects/{project}', [AdminProjectController::class, 'destroy'])->name('projects.destroy');
-
-    // Products CRUD
-    Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
-    Route::post('/products', [AdminProductController::class, 'store'])->name('products.store');
-    Route::get('/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
-    Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
-
-    // Videos CRUD
-    Route::get('/videos', [AdminVideoController::class, 'index'])->name('videos.index');
-    Route::get('/videos/create', [AdminVideoController::class, 'create'])->name('videos.create');
-    Route::post('/videos', [AdminVideoController::class, 'store'])->name('videos.store');
-    Route::get('/videos/{video}/edit', [AdminVideoController::class, 'edit'])->name('videos.edit');
-    Route::put('/videos/{video}', [AdminVideoController::class, 'update'])->name('videos.update');
-    Route::delete('/videos/{video}', [AdminVideoController::class, 'destroy'])->name('videos.destroy');
 
     // Suggestions Management
     Route::get('/suggestions', [AdminSuggestionController::class, 'index'])->name('suggestions.index');

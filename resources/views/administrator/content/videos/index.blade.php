@@ -9,7 +9,7 @@
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Videos</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Review tutorial videos and their linked sensor coverage.</p>
         </div>
-        <a href="{{ route('instructor.videos.create') }}" class="px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium flex-shrink-0">
+        <a href="{{ route('administrator.content.videos.create') }}" class="px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium flex-shrink-0">
             <i class="fas fa-plus mr-1.5"></i> Add Video
         </a>
     </div>
@@ -79,7 +79,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{{ $video->created_at->format('M d, Y') }}</td>
                                 <td class="px-6 py-4 text-right whitespace-nowrap">
-                                    <a href="{{ route('instructor.videos.edit', $video) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 dark:hover:bg-primary/20 transition mr-1">
+                                    <a href="{{ route('administrator.content.videos.edit', $video) }}" class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20 dark:hover:bg-primary/20 transition mr-1">
                                         <i class="fas fa-pen mr-1"></i> Edit
                                     </a>
                                     <form method="POST" action="{{ route('instructor.videos.destroy', $video) }}" class="inline-block" onsubmit="return confirm('Delete?');">
