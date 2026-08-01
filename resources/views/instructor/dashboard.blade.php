@@ -53,46 +53,6 @@
         </div>
     </div>
 
-    {{-- Stats Grid --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                    <i class="fas fa-microchip text-blue-600 dark:text-blue-400"></i>
-                </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Sensors</p>
-            </div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['sensors'] }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                    <i class="fas fa-project-diagram text-green-600 dark:text-green-400"></i>
-                </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Projects</p>
-            </div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['projects'] }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                    <i class="fas fa-shopping-cart text-purple-600 dark:text-purple-400"></i>
-                </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Products</p>
-            </div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['products'] }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-            <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                    <i class="fas fa-video text-red-600 dark:text-red-400"></i>
-                </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">Videos</p>
-            </div>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $stats['videos'] }}</p>
-        </div>
-    </div>
-
     {{-- Second Row --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
