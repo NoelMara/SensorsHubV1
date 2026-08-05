@@ -172,7 +172,7 @@
                     }
                 @endphp
                 @if($item)
-                    <a href="{{ $link }}" target="_blank" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                    <a href="{{ $link }}" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
                         <span class="text-xs px-2 py-0.5 rounded-full
                             {{ $resource->resource_type === 'sensor' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : '' }}
                             {{ $resource->resource_type === 'project' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}
