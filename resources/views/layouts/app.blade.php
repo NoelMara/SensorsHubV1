@@ -596,21 +596,77 @@
      {{-- ========================== AI Chatbot ========================== --}}
     @auth
     @if(auth()->user()->role === 'student')
-    <style>
-        .chat-bubble { position:fixed; bottom:70px; right:16px; z-index:9998; width:40px; height:40px; border-radius:50%; background:rgba(59,130,246,0.75); backdrop-filter:blur(8px); color:white; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 12px rgba(59,130,246,0.3); font-size:16px; border:1px solid rgba(255,255,255,0.15); opacity:0.75; }
-        .chat-bubble:hover { opacity:1; transform:scale(1.1); }
-        .chat-window { position:fixed; bottom:120px; right:16px; z-index:9999; width:350px; max-height:450px; background:white; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.2); display:flex; flex-direction:column; }
-        .dark .chat-window { background:#1F2937; }
-        .chat-messages { flex:1; overflow-y:auto; padding:15px; max-height:300px; font-size:13px; }
-        .chat-user { background:#3B82F6; color:white; margin-left:auto; padding:8px 12px; border-radius:12px; max-width:80%; margin-bottom:8px; }
-        .chat-ai { background:#F3F4F6; color:#1F2937; padding:8px 12px; border-radius:12px; max-width:80%; margin-bottom:8px; }
+        <style>
+        .chat-bubble {
+            position:fixed; bottom:70px; right:16px; z-index:9998;
+            width:48px; height:48px; border-radius:50%;
+            background:#3B82F6; color:white;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; font-size:18px;
+            box-shadow:0 4px 16px rgba(59,130,246,0.35);
+            transition:all 0.2s ease;
+            border:none;
+        }
+        .chat-bubble:hover { transform:scale(1.08); box-shadow:0 6px 24px rgba(59,130,246,0.5); }
+        .dark .chat-bubble { background:#3B82F6; }
+        .chat-window {
+            position:fixed; bottom:130px; right:16px; z-index:9999;
+            width:360px; max-height:480px;
+            background:white; border-radius:16px;
+            box-shadow:0 8px 40px rgba(0,0,0,0.15);
+            border:1px solid #E5E7EB;
+            display:flex; flex-direction:column;
+            overflow:hidden;
+        }
+        .dark .chat-window { background:#1F2937; border-color:#374151; }
+        .chat-header {
+            padding:14px 16px; font-weight:600; font-size:14px;
+            color:#1F2937; border-bottom:1px solid #F3F4F6;
+            display:flex; align-items:center; gap:8px;
+        }
+        .dark .chat-header { color:#F9FAFB; border-color:#374151; }
+        .chat-messages {
+            flex:1; overflow-y:auto; padding:16px;
+            max-height:320px; font-size:13px;
+            display:flex; flex-direction:column; gap:10px;
+        }
+        .chat-user {
+            background:#3B82F6; color:white;
+            margin-left:auto; padding:10px 14px;
+            border-radius:16px 16px 4px 16px;
+            max-width:80%; font-size:13px; line-height:1.5;
+        }
+        .chat-ai {
+            background:#F3F4F6; color:#1F2937;
+            padding:10px 14px;
+            border-radius:16px 16px 16px 4px;
+            max-width:80%; font-size:13px; line-height:1.5;
+        }
         .dark .chat-ai { background:#374151; color:#E5E7EB; }
-        .chat-input-area { padding:10px; border-top:1px solid #E5E7EB; display:flex; gap:8px; }
+        .chat-input-area {
+            padding:12px 16px; border-top:1px solid #F3F4F6;
+            display:flex; gap:8px; align-items:center;
+        }
         .dark .chat-input-area { border-color:#374151; }
-        .chat-input-area input { flex:1; padding:8px 12px; border:1px solid #E5E7EB; border-radius:20px; font-size:13px; outline:none; }
+        .chat-input-area input {
+            flex:1; padding:10px 14px;
+            border:1px solid #E5E7EB; border-radius:24px;
+            font-size:13px; outline:none; background:#F9FAFB;
+            transition:border-color 0.2s;
+        }
+        .chat-input-area input:focus { border-color:#3B82F6; }
         .dark .chat-input-area input { background:#374151; border-color:#4B5563; color:#E5E7EB; }
-        .chat-input-area button { padding:8px 14px; background:#3B82F6; color:white; border:none; border-radius:20px; cursor:pointer; font-size:13px; }
-        @media (max-width:640px) { .chat-window { width:90vw; right:5vw; } .chat-bubble { bottom:60px; right:12px; width:34px; height:34px; font-size:14px; } }
+        .chat-input-area button {
+            padding:10px 16px; background:#3B82F6; color:white;
+            border:none; border-radius:24px; cursor:pointer;
+            font-size:13px; font-weight:500;
+            transition:background 0.2s;
+        }
+        .chat-input-area button:hover { background:#2563EB; }
+        @media (max-width:640px) {
+            .chat-window { width:92vw; right:4vw; bottom:120px; }
+            .chat-bubble { bottom:60px; right:12px; width:42px; height:42px; font-size:16px; }
+        }
     </style>
 
     <div x-data="chatBot()">
@@ -619,7 +675,7 @@
             <span x-show="open">✕</span>
         </div>
         <div class="chat-window" x-show="open" x-transition>
-            <div style="padding:12px 15px;border-bottom:1px solid #E5E7EB;font-weight:bold;font-size:14px;" class="dark:border-gray-700 dark:text-white">
+            <div class="chat-header">
                 🤖 SensorsHub AI
             </div>
             <div class="chat-messages" x-ref="messages">
@@ -641,7 +697,7 @@
                 open: false,
                 messages: [{
                     role: 'ai',
-                    text: "👋 Welcome to SensorsHub AI!\n\nI'm here to help with sensors, ESP32, Pico, wiring, and electronics.\n\nWhat would you like to learn today?"
+                    text: "👋 Hey! Ask me anything about sensors, Arduino, or electronics."
                 }],
                 input: '',
                 loading: false,

@@ -18,15 +18,7 @@ class ChatController extends Controller
 
         $message = trim($request->input('message'));
 
-        $systemPrompt = "You are SensorsHub AI, a tutor for second-year IT students learning sensors, microcontrollers (ESP32, Arduino, Raspberry Pi Pico), GPIO, wiring, and basic electronics.
-
-Rules:
-- Keep replies SHORT: 2-4 sentences or a short bullet list max, unless the student explicitly asks for more detail.
-- Focus on ONE concept per reply. Do not list every topic you can help with.
-- For simple greetings like 'hello', just greet back briefly and ask what they want to learn — do not dump a topic overview.
-- Only give Arduino/MicroPython code when specifically requested.
-- If a question is unrelated to electronics, politely redirect to electronics topics.
-- If unsure, say so instead of guessing.";
+        $systemPrompt = "You are SensorsHub AI. Be BRIEF — 1-3 sentences max. Only give code when asked. For greetings, just say hi and ask what they want to learn. If unrelated to electronics/sensors, politely redirect.";
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -42,7 +34,7 @@ Rules:
                     ]
                 ],
                 'generationConfig' => [
-                    'maxOutputTokens' => 200,
+                    'maxOutputTokens' => 150,
                 ],
             ]
         );
