@@ -593,30 +593,25 @@
     });
     </script>
 
-         {{-- ========================== AI Chatbot ========================== --}}
+    {{-- ========================== AI Chatbot ========================== --}}
     @auth
     @if(auth()->user()->role === 'student')
     <style>
         .chat-bubble {
-            position:fixed; bottom:24px; right:24px; z-index:9998;
-            width:52px; height:52px; border-radius:50%;
-            background:linear-gradient(135deg,#3B82F6,#2563EB);
+            position:fixed; bottom:80px; right:16px; z-index:9998;
+            width:40px; height:40px; border-radius:50%;
+            background:rgba(59,130,246,0.75); backdrop-filter:blur(8px);
             color:white; display:flex; align-items:center; justify-content:center;
-            cursor:pointer; font-size:20px;
-            box-shadow:0 4px 20px rgba(59,130,246,0.4);
-            transition:all 0.25s ease; border:none;
+            cursor:pointer; font-size:16px;
+            box-shadow:0 4px 12px rgba(59,130,246,0.3);
+            transition:all 0.3s ease; border:1px solid rgba(255,255,255,0.15);
+            opacity:0.75;
         }
-        .chat-bubble:hover { transform:scale(1.08); box-shadow:0 8px 30px rgba(59,130,246,0.55); }
-        .chat-bubble::after {
-            content:''; position:absolute; bottom:2px; right:2px;
-            width:12px; height:12px; background:#10B981;
-            border:2px solid white; border-radius:50%;
-        }
-        .dark .chat-bubble::after { border-color:#1F2937; }
+        .chat-bubble:hover { opacity:1; transform:scale(1.1); }
         .chat-window {
-            position:fixed; bottom:90px; right:24px; z-index:9999;
-            width:380px; max-height:520px;
-            background:white; border-radius:20px;
+            position:fixed; bottom:130px; right:16px; z-index:9999;
+            width:360px; max-height:480px;
+            background:white; border-radius:16px;
             box-shadow:0 12px 50px rgba(0,0,0,0.18);
             border:1px solid #E5E7EB;
             display:flex; flex-direction:column; overflow:hidden;
@@ -641,8 +636,8 @@
         }
         .chat-messages {
             flex:1; overflow-y:auto; padding:16px;
-            max-height:340px; font-size:13px;
-            display:flex; flex-direction:column; gap:12px;
+            max-height:320px; font-size:13px;
+            display:flex; flex-direction:column; gap:10px;
             background:#F9FAFB;
         }
         .dark .chat-messages { background:#1F2937; }
@@ -700,18 +695,9 @@
         }
         .chat-input-area button:hover { transform:scale(1.05); box-shadow:0 4px 12px rgba(59,130,246,0.4); }
         .chat-input-area button:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
-        .suggested-questions { display:flex; flex-wrap:wrap; gap:6px; padding:8px 16px 4px; }
-        .suggested-questions button {
-            padding:6px 12px; border-radius:16px; font-size:11px;
-            border:1px solid #E5E7EB; background:#F9FAFB;
-            color:#6B7280; cursor:pointer; transition:all 0.2s; white-space:nowrap;
-        }
-        .suggested-questions button:hover { border-color:#3B82F6; color:#3B82F6; background:#EFF6FF; }
-        .dark .suggested-questions button { background:#374151; border-color:#4B5563; color:#9CA3AF; }
-        .dark .suggested-questions button:hover { border-color:#3B82F6; color:#60A5FA; background:#1E3A5F; }
         @media (max-width:640px) {
-            .chat-window { width:94vw; right:3vw; bottom:80px; max-height:60vh; }
-            .chat-bubble { bottom:16px; right:16px; width:46px; height:46px; font-size:18px; }
+            .chat-window { width:92vw; right:4vw; bottom:120px; max-height:60vh; }
+            .chat-bubble { bottom:60px; right:12px; width:34px; height:34px; font-size:14px; }
             .chat-messages { max-height:40vh; }
         }
     </style>
@@ -730,12 +716,6 @@
                 </div>
                 <span class="status-dot"></span>
                 <button @click="open = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-lg leading-none">&times;</button>
-            </div>
-
-            <div class="suggested-questions" x-show="messages.length === 1">
-                <button @click="input='ESP32 ultrasonic sensor code'; sendMessage()">ESP32 ultrasonic code</button>
-                <button @click="input='How do I wire an HC-SR04?'; sendMessage()">How to wire HC-SR04?</button>
-                <button @click="input='Fix my Arduino sensor code'; sendMessage()">Fix my sensor code</button>
             </div>
 
             <div class="chat-messages" x-ref="messages">
@@ -773,7 +753,7 @@
                 open: false,
                 messages: [{
                     role: 'ai',
-                    text: "👋 Hi! I'm SensorsHub AI!\n\nI can help with ESP32, Arduino, sensors, wiring, and troubleshooting.\n\nTry one of the quick questions below or ask me anything!"
+                    text: "👋 Hey! Ask me anything about sensors, Arduino, or electronics."
                 }],
                 input: '',
                 loading: false,
