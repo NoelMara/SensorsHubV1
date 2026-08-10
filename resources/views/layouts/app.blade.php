@@ -726,7 +726,7 @@
                         </div>
                         <div class="chat-message-wrapper" x-show="msg.role === 'ai'">
                             <div class="chat-ai-avatar">🤖</div>
-                            <div class="chat-ai" x-text="msg.text"></div>
+                            <div class="chat-ai" x-html="msg.text.replace(/\n/g,'<br>').replace(/```(\w*)\n?([\s\S]*?)```/g, '<pre class=\"bg-gray-800 text-green-400 p-3 rounded-lg text-xs overflow-x-auto my-2\"><code>$2</code></pre>')"></div>
                         </div>
                     </div>
                 </template>
