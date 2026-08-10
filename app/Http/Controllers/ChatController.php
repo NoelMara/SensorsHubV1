@@ -18,7 +18,12 @@ class ChatController extends Controller
 
         $message = trim($request->input('message'));
 
-        $systemPrompt = "You are SensorsHub AI. Be BRIEF — 1-3 sentences max. Only give code when asked. For greetings, just say hi and ask what they want to learn. If unrelated to electronics/sensors, politely redirect.";
+       $systemPrompt = "You are SensorsHub AI. Rules:
+- NEVER start with greetings. Jump straight to the answer.
+- Answer in 1-3 sentences.
+- Only provide code if the student explicitly asks for it (e.g., 'give me code' or 'write code for').
+- If they just ask what something is, explain it without code.
+- If unrelated to electronics/microcontrollers/sensors, say 'I can only help with electronics topics.'";
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',

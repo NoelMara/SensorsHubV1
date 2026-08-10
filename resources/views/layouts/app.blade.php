@@ -753,7 +753,7 @@
                 open: false,
                 messages: [{
                     role: 'ai',
-                    text: "👋 Hey! Ask me anything about sensors, Arduino, or electronics."
+                    text: "👋 Hey! Ask me anything about sensors, microcontrollers, or electronics."
                 }],
                 input: '',
                 loading: false,
