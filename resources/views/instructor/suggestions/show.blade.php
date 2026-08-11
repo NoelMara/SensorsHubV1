@@ -62,20 +62,31 @@
                                 <div class="flex items-center gap-2 flex-wrap mb-1">
                                     <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $comment->user?->name ?? 'Deleted user' }}</span>
                                     <span class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
-                                    @if($comment->created_at != $comment->updated_at)
-                                        <span class="text-xs text-gray-400">· edited</span>
-                                    @endif
+                                @if($comment->created_at != $comment->updated_at)
+                                    <span class="text-xs text-gray-400">· edited</span>
+                                @endif
+                                @if(!auth()->user()->isAdministrator() && auth()->id() !== $comment->user_id)
+                                    <form method="POST" action="{{ route('report.store') }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
+                                        @csrf
+                                        <input type="hidden" name="reportable_type" value="comment">
+                                        <input type="hidden" name="reportable_id" value="{{ $comment->id }}">
+                                        <input type="hidden" name="reason" value="inappropriate">
+                                        <button type="submit" class="text-gray-400 hover:text-red-500 transition ml-1" title="Report">
+                                            <i class="fas fa-flag text-xs"></i>
+                                        </button>
+                                    </form>
+                                @endif
                                 </div>
-                                <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line">{{ $comment->body }}</p>
-                                @if(auth()->id() === $comment->user_id)
-                                    <button onclick="document.getElementById('edit-{{ $comment->id }}').classList.toggle('hidden')" class="text-xs text-primary hover:underline mt-1">Edit</button>
-                                    <form id="edit-{{ $comment->id }}" method="POST"
-                                        action="{{ route('instructor.suggestions.comment.update', [$suggestion, $comment]) }}"
-                                        class="mt-2 hidden space-y-2">
-                                        @csrf @method('PUT')
-                                        <textarea name="body" rows="2" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">{{ $comment->body }}</textarea>
-                                        <div class="flex gap-2">
-                                            <button type="submit" class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs">Save</button>
+                            <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line">{{ $comment->body }}</p>
+                            @if(auth()->id() === $comment->user_id)
+                                <button onclick="document.getElementById('edit-{{ $comment->id }}').classList.toggle('hidden')" class="text-xs text-primary hover:underline mt-1">Edit</button>
+                                <form id="edit-{{ $comment->id }}" method="POST"
+                                    action="{{ route('instructor.suggestions.comment.update', [$suggestion, $comment]) }}"
+                                    class="mt-2 hidden space-y-2">
+                                    @csrf @method('PUT')
+                                    <textarea name="body" rows="2" required class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">{{ $comment->body }}</textarea>
+                                    <div class="flex gap-2">
+                                        <button type="submit" class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs">Save</button>
                                             <button type="button" onclick="document.getElementById('edit-{{ $comment->id }}').classList.add('hidden')" class="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg text-xs text-gray-600 dark:text-gray-400">Cancel</button>
                                         </div>
                                     </form>
