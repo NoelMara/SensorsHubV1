@@ -24,7 +24,7 @@
     </script>
     @stack('styles')
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-clip" x-data="layoutManager()">
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-clip min-h-screen flex flex-col">
     @php
         $homeRoute = 'home';
         if (auth()->check()) {
@@ -119,31 +119,48 @@
                 <a href="{{ route('shop.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-store w-5"></i> Shop</a>
                 <a href="{{ route('login') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-key w-5"></i> Login</a>
                 <a href="{{ route('register') }}" class="flex items-center gap-3 px-3 py-2 text-primary font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-user-plus w-5"></i> Register</a>
+                <button id="mobileDarkModeToggle" class="flex items-center gap-3 w-full px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-moon dark:hidden w-5"></i><i class="fas fa-sun hidden dark:inline w-5"></i> Dark Mode</button>
             </div>
         </div>
     </nav>
     @endguest
 
     @auth
-    {{-- Mobile Hamburger Button --}}
-    <button @click="mobileSidebarOpen = !mobileSidebarOpen" 
-            class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-        <i class="fas fa-bars text-xl text-gray-700 dark:text-gray-300"></i>
-    </button>
+    {{-- Top Nav for Logged-in Users (Mobile) + Sidebar for Desktop --}}
+    
+    {{-- Mobile Top Bar --}}
+    <nav class="lg:hidden bg-white dark:bg-gray-800 shadow-lg fixed top-0 left-0 right-0 z-50">
+        <div class="px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="{{ route($homeRoute) }}" class="flex items-center space-x-2">
+                    <i class="fas fa-microchip text-2xl text-primary shrink-0"></i>
+                    <span class="text-xl font-bold text-gray-800 dark:text-white">SensorsHub</span>
+                </a>
+                <button id="mobileSidebarToggle" class="text-gray-700 dark:text-gray-300 p-2 -mr-2">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-    {{-- Mobile Overlay --}}
-    <div x-show="mobileSidebarOpen" @click="mobileSidebarOpen = false" 
-         class="lg:hidden fixed inset-0 bg-black/50 z-40" x-transition.opacity>
-    </div>
+    {{-- Mobile Sidebar Overlay --}}
+    <div id="mobileSidebarOverlay" class="hidden lg:hidden fixed inset-0 bg-black/50 z-40"></div>
 
-    {{-- Sidebar for Logged-in Users --}}
-    <aside class="fixed left-0 top-0 h-full w-60 bg-white dark:bg-gray-800 shadow-lg z-40 flex flex-col overflow-y-auto
-                -translate-x-full lg:translate-x-0 transition-transform duration-300"
-         :class="{ 'translate-x-0': mobileSidebarOpen }">
-        {{-- Logo --}}
-        <div class="h-16 flex items-center gap-3 px-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+    {{-- Sidebar (Desktop always visible, Mobile slides in) --}}
+    <aside id="sidebar" class="fixed left-0 top-0 h-full w-60 bg-white dark:bg-gray-800 shadow-lg z-40 flex flex-col overflow-y-auto
+                -translate-x-full lg:translate-x-0 transition-transform duration-300">
+        {{-- Logo (Desktop) --}}
+        <div class="h-16 hidden lg:flex items-center gap-3 px-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
             <i class="fas fa-microchip text-xl text-primary shrink-0"></i>
             <span class="text-lg font-bold text-gray-800 dark:text-white truncate">SensorsHub</span>
+        </div>
+
+        {{-- Mobile sidebar header with close button --}}
+        <div class="h-16 lg:hidden flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+            <span class="text-lg font-bold text-gray-800 dark:text-white">Menu</span>
+            <button id="mobileSidebarClose" class="text-gray-500 dark:text-gray-400 p-1">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
 
         {{-- Role Badge --}}
@@ -197,7 +214,7 @@
             </a>
 
             {{-- Dark Mode --}}
-            <button id="darkModeToggle" class="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <button id="sidebarDarkModeToggle" class="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 <i class="fas fa-moon dark:hidden w-5 shrink-0"></i><i class="fas fa-sun hidden dark:inline w-5 shrink-0"></i><span>Dark Mode</span>
             </button>
 
@@ -213,12 +230,12 @@
     @endauth
 
     <!-- Main Content -->
-    <main class="@auth lg:ml-60 @else pt-16 @endauth transition-all duration-300">
+    <main class="flex-1 @auth lg:ml-60 pt-16 lg:pt-0 @else pt-16 @endauth transition-all duration-300">
     @yield('content')
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 dark:bg-gray-950 text-white mt-16 @auth lg:ml-60 @endauth">
+    <footer class="bg-gray-800 dark:bg-gray-950 text-white @auth lg:ml-60 @endauth">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
@@ -260,49 +277,75 @@
     </footer>
 
     <script>
-        // Layout manager for mobile sidebar
-        function layoutManager() {
-            return {
-                mobileSidebarOpen: false,
-                init() {
-                    // Close mobile sidebar on window resize to desktop
-                    window.addEventListener('resize', () => {
-                        if (window.innerWidth >= 1024) {
-                            this.mobileSidebarOpen = false;
-                        }
-                    });
-                }
-            }
-        }
-
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const mobileDarkModeToggle = document.getElementById('mobileDarkModeToggle');
+        // ===== Dark Mode Toggles =====
         const html = document.documentElement;
         if (localStorage.getItem('darkMode') === 'true') html.classList.add('dark');
-        darkModeToggle?.addEventListener('click', () => {
+
+        function toggleDarkMode() {
             html.classList.toggle('dark');
             localStorage.setItem('darkMode', html.classList.contains('dark'));
-        });
-        mobileDarkModeToggle?.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            localStorage.setItem('darkMode', html.classList.contains('dark'));
-        });
+        }
+
+        document.getElementById('darkModeToggle')?.addEventListener('click', toggleDarkMode);
+        document.getElementById('mobileDarkModeToggle')?.addEventListener('click', toggleDarkMode);
+        document.getElementById('sidebarDarkModeToggle')?.addEventListener('click', toggleDarkMode);
+
+        // ===== Guest Mobile Menu =====
         const mobileMenuButton = document.getElementById('mobileMenuButton');
         const mobileMenu = document.getElementById('mobileMenu');
         mobileMenuButton?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-        const mobileLinks = mobileMenu?.querySelectorAll('a, button[type="submit"]');
-        mobileLinks?.forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
-        </script>
+        mobileMenu?.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
 
-        <script>
+        // ===== Auth Mobile Sidebar =====
+        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+        const mobileSidebarClose = document.getElementById('mobileSidebarClose');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobileSidebarOverlay');
+
+        function openSidebar() {
+            sidebar?.classList.add('translate-x-0');
+            sidebar?.classList.remove('-translate-x-full');
+            overlay?.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar?.classList.remove('translate-x-0');
+            sidebar?.classList.add('-translate-x-full');
+            overlay?.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        mobileSidebarToggle?.addEventListener('click', openSidebar);
+        mobileSidebarClose?.addEventListener('click', closeSidebar);
+        overlay?.addEventListener('click', closeSidebar);
+
+        // Close sidebar when clicking a link on mobile
+        sidebar?.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        // Close sidebar on window resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                closeSidebar();
+            }
+        });
+    </script>
+
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('form').forEach(function(form) {
                 form.addEventListener('submit', function(e) {
                     var onsubmit = form.getAttribute('onsubmit');
                     if (onsubmit && onsubmit.includes('fileSizeError')) return;
-                    if (onsubmit && onsubmit.includes('confirm')) {
-                        return;
-                    }
+                    if (onsubmit && onsubmit.includes('confirm')) return;
                     var button = form.querySelector('button[type="submit"]');
                     if (button && !button.disabled) {
                         button.disabled = true;
@@ -313,7 +356,7 @@
         });
     </script>
 
-     <script>
+    <script>
         function markAsRead(id) {
             fetch('/notifications/' + id + '/read', {
                 method: 'POST',
@@ -362,73 +405,38 @@
         }
 
         function playWelcome() {
-
             if (hasPlayed) return;
-
             hasPlayed = true;
-
             audio.currentTime = 0;
-
             audio.play()
                 .then(() => {
                     sessionStorage.setItem(storageKey, 'true');
                     cleanup();
-                    console.log("Welcome played.");
                 })
                 .catch(err => {
                     hasPlayed = false;
-                    console.error(err);
                 });
         }
 
-        // ==========================
-        // Audio Button (dimmed, mobile-friendly)
-        // ==========================
         const style = document.createElement('style');
         style.textContent = `
             .audio-btn {
-                position:fixed;
-                bottom:16px;
-                right:16px;
-                z-index:9999;
-                background:rgba(59,130,246,0.75);
-                backdrop-filter:blur(8px);
-                color:white;
-                width:40px;
-                height:40px;
-                border-radius:50%;
-                border:1px solid rgba(255,255,255,0.15);
-                cursor:pointer;
+                position:fixed; bottom:16px; right:16px; z-index:9999;
+                background:rgba(59,130,246,0.75); backdrop-filter:blur(8px);
+                color:white; width:40px; height:40px; border-radius:50%;
+                border:1px solid rgba(255,255,255,0.15); cursor:pointer;
                 box-shadow:0 4px 12px rgba(59,130,246,0.3);
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                font-size:14px;
-                transition:all 0.3s ease;
-                opacity:0.5;
+                display:flex; align-items:center; justify-content:center;
+                font-size:14px; transition:all 0.3s ease; opacity:0.5;
             }
-            .audio-btn:hover, .audio-btn:focus {
-                opacity:1;
-                transform:scale(1.1);
-                box-shadow:0 8px 20px rgba(59,130,246,0.5);
-            }
-            .audio-btn.playing {
-                animation: audioPulse 2s infinite;
-                opacity:1;
-            }
+            .audio-btn:hover, .audio-btn:focus { opacity:1; transform:scale(1.1); box-shadow:0 8px 20px rgba(59,130,246,0.5); }
+            .audio-btn.playing { animation: audioPulse 2s infinite; opacity:1; }
             @keyframes audioPulse {
                 0%, 100% { box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
                 50% { box-shadow: 0 4px 20px rgba(59,130,246,0.7), 0 0 0 6px rgba(59,130,246,0.1); }
             }
             @media (max-width: 640px) {
-                .audio-btn {
-                    width: 34px;
-                    height: 34px;
-                    bottom: 12px;
-                    right: 12px;
-                    font-size: 12px;
-                    opacity:0.45;
-                }
+                .audio-btn { width:34px; height:34px; bottom:12px; right:12px; font-size:12px; opacity:0.45; }
             }
         `;
         document.head.appendChild(style);
@@ -438,52 +446,28 @@
         btn.innerHTML = '<i class="fas fa-volume-up"></i>';
         btn.title = "Play Welcome Message";
 
-        function startPulse() {
-            btn.classList.add('playing');
-            btn.title = "Stop Audio";
-        }
-        function stopPulse() {
-            btn.classList.remove('playing');
-            btn.title = "Play Welcome Message";
-        }
+        function startPulse() { btn.classList.add('playing'); btn.title = "Stop Audio"; }
+        function stopPulse() { btn.classList.remove('playing'); btn.title = "Play Welcome Message"; }
 
         btn.addEventListener('click', function () {
-            if (audio.paused) {
-                audio.currentTime = 0;
-                audio.play();
-            } else {
-                audio.pause();
-                audio.currentTime = 0;
-            }
+            if (audio.paused) { audio.currentTime = 0; audio.play(); }
+            else { audio.pause(); audio.currentTime = 0; }
         });
 
         audio.addEventListener('play', startPulse);
         audio.addEventListener('pause', stopPulse);
         audio.addEventListener('ended', stopPulse);
-
         document.body.appendChild(btn);
 
-        // ==========================
-        // First-time welcome
-        // ==========================
         if (!sessionStorage.getItem(storageKey)) {
-
             audio.play()
-                .then(() => {
-                    hasPlayed = true;
-                    sessionStorage.setItem(storageKey, 'true');
-                    console.log("Autoplay succeeded.");
-                })
+                .then(() => { hasPlayed = true; sessionStorage.setItem(storageKey, 'true'); })
                 .catch(() => {
-                    console.log("Autoplay blocked.");
-
                     document.addEventListener('click', playWelcome, { once: true });
                     document.addEventListener('keydown', playWelcome, { once: true });
                     document.addEventListener('touchstart', playWelcome, { once: true });
                 });
-
         }
-
     });
     </script>
 
@@ -645,10 +629,7 @@
         function chatBot() {
             return {
                 open: false,
-                messages: [{
-                    role: 'ai',
-                    text: "👋 Hey! Ask me anything about sensors, microcontrollers, or electronics."
-                }],
+                messages: [{ role: 'ai', text: "👋 Hey! Ask me anything about sensors, microcontrollers, or electronics." }],
                 input: '',
                 loading: false,
                 sendMessage() {
