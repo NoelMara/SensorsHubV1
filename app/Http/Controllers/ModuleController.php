@@ -35,7 +35,7 @@ class ModuleController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
-            'file' => 'nullable|file|mimes:pdf,doc,docx|max:10240',
+            'file' => 'nullable|file|max:51200',
             'is_published' => 'boolean',
         ]);
 
@@ -109,7 +109,7 @@ class ModuleController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
-            'file' => 'nullable|file|mimes:pdf,doc,docx|max:51200',
+            'file' => 'nullable|file|max:51200',
             'is_published' => 'boolean',
         ]);
 
@@ -150,7 +150,26 @@ class ModuleController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+        
+        $filePath = $module->file_path;
         $module->delete();
+        
+        // Mark imported copies as draft so they can be updated
+        if ($filePath) {
+            Module::where('file_path', $filePath)->update(['is_published' => false]);
+            
+            // Delete file from Supabase if no other published module uses it
+            $publishedCount = Module::where('file_path', $filePath)
+                ->where('is_published', true)->count();
+            if ($publishedCount === 0) {
+                $fileName = basename(parse_url($filePath, PHP_URL_PATH));
+                Http::withHeaders([
+                    'Authorization' => 'Bearer ' . env('SUPABASE_SERVICE_KEY'),
+                    'apikey' => env('SUPABASE_SERVICE_KEY'),
+                ])->delete(env('SUPABASE_URL') . '/storage/v1/object/modules/' . $fileName);
+            }
+        }
+        
         return back()->with('success', 'Module deleted!');
     }
 
