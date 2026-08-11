@@ -15,7 +15,7 @@
         </div>
 
         <div class="p-6">
-            <form method="POST" action="{{ route('instructor.classes.modules.store', $class) }}" enctype="multipart/form-data" onsubmit="const f=document.getElementById('file').files[0];if(f&&f.size>10485760){document.getElementById('fileSizeError').classList.remove('hidden');return false;}const b=this.querySelector('button[type=submit]');b.disabled=true;b.innerHTML='Processing...';">
+            <form method="POST" action="{{ route('instructor.classes.modules.store', $class) }}" enctype="multipart/form-data" onsubmit="const f=document.getElementById('file').files[0];if(f&&f.size>52428800){document.getElementById('fileSizeError').classList.remove('hidden');return false;}const b=this.querySelector('button[type=submit]');b.disabled=true;b.innerHTML='Processing...';">
                 @csrf
 
                 <div class="space-y-5">
@@ -39,7 +39,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                            Attachment <span class="text-gray-400 font-normal">(optional, PDF/Word, max 10MB)</span>
+                            Attachment <span class="text-gray-400 font-normal">(optional, PDF/Word, max 50MB)</span>
                         </label>
                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-primary/50 dark:hover:border-primary/50 transition cursor-pointer"
                             x-data="{ fileName: null, fileSize: null, dragging: false }"
@@ -51,7 +51,7 @@
                             <div class="space-y-1 text-center" x-show="!fileName">
                                 <i class="fas fa-cloud-upload-alt text-2xl text-gray-400"></i>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Click to upload or drag and drop</p>
-                                <p class="text-xs text-gray-400 dark:text-gray-500">PDF, DOC, DOCX up to 10MB</p>
+                                <p class="text-xs text-gray-400 dark:text-gray-500">PDF, DOC, DOCX up to 50MB</p>
                             </div>
                             <div class="text-center" x-show="fileName" x-cloak>
                                 <i class="fas fa-file-alt text-2xl text-blue-500 mb-1"></i>
@@ -65,7 +65,7 @@
                                 @change="fileName = $event.target.files[0]?.name; fileSize = Math.round($event.target.files[0]?.size / 1024)">
                         </div>
                         @error('file') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                        <p id="fileSizeError" class="text-red-500 text-xs mt-1 hidden">File too large! Maximum is 10MB.</p>
+                        <p id="fileSizeError" class="text-red-500 text-xs mt-1 hidden">File too large! Maximum is 50MB.</p>
                     </div>
 
                     <div class="flex items-center gap-2">
