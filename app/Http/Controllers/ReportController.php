@@ -18,6 +18,11 @@ class ReportController extends Controller
             'reason' => 'required|string|max:255',
         ]);
 
+         // Block admins from reporting
+        if (auth()->user()->isAdministrator()) {
+            return back()->with('error', 'Administrators cannot submit reports.');
+        }
+
         $type = $validated['reportable_type'] === 'suggestion' 
             ? 'App\Models\Suggestion' 
             : 'App\Models\Comment';
