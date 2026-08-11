@@ -24,7 +24,7 @@
     </script>
     @stack('styles')
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-clip">
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-clip" x-data="layoutManager()">
     @php
         $homeRoute = 'home';
         if (auth()->check()) {
@@ -125,16 +125,29 @@
     @endguest
 
     @auth
+    {{-- Mobile Hamburger Button --}}
+    <button @click="mobileSidebarOpen = !mobileSidebarOpen" 
+            class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+        <i class="fas fa-bars text-xl text-gray-700 dark:text-gray-300"></i>
+    </button>
+
+    {{-- Mobile Overlay --}}
+    <div x-show="mobileSidebarOpen" @click="mobileSidebarOpen = false" 
+         class="lg:hidden fixed inset-0 bg-black/50 z-40" x-transition.opacity>
+    </div>
+
     {{-- Sidebar for Logged-in Users --}}
-    <aside class="fixed left-0 top-0 h-full w-60 bg-white dark:bg-gray-800 shadow-lg z-40 flex flex-col transition-all duration-300 overflow-y-auto" x-data="{ collapsed: false }" :class="collapsed ? 'w-16' : 'w-60'">
+    <aside class="fixed left-0 top-0 h-full w-60 bg-white dark:bg-gray-800 shadow-lg z-40 flex flex-col overflow-y-auto
+                -translate-x-full lg:translate-x-0 transition-transform duration-300"
+         :class="{ 'translate-x-0': mobileSidebarOpen }">
         {{-- Logo --}}
         <div class="h-16 flex items-center gap-3 px-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
             <i class="fas fa-microchip text-xl text-primary shrink-0"></i>
-            <span class="text-lg font-bold text-gray-800 dark:text-white truncate" x-show="!collapsed">SensorsHub</span>
+            <span class="text-lg font-bold text-gray-800 dark:text-white truncate">SensorsHub</span>
         </div>
 
         {{-- Role Badge --}}
-        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700" x-show="!collapsed">
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
             <span class="px-2 py-0.5 text-xs rounded-full
                 {{ $isAdministrator ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' : '' }}
                 {{ $isInstructor ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : '' }}
@@ -146,32 +159,32 @@
         {{-- Nav Links --}}
         <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
             @if($isAdministrator)
-                <a href="{{ route('administrator.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-tachometer-alt w-5 shrink-0"></i><span x-show="!collapsed">Dashboard</span></a>
-                <a href="{{ route('administrator.analytics') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.analytics') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chart-bar w-5 shrink-0"></i><span x-show="!collapsed">Analytics</span></a>
-                <a href="{{ route('administrator.users.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.users.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-users w-5 shrink-0"></i><span x-show="!collapsed">Users</span></a>
-                <a href="{{ route('administrator.suggestions.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.suggestions.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-lightbulb w-5 shrink-0"></i><span x-show="!collapsed">Suggestions</span></a>
-                <a href="{{ route('administrator.sensors.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.sensors.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-microchip w-5 shrink-0"></i><span x-show="!collapsed">Sensors</span></a>
-                <a href="{{ route('administrator.projects.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.projects.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-project-diagram w-5 shrink-0"></i><span x-show="!collapsed">Projects</span></a>
-                <a href="{{ route('administrator.products.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.products.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-shopping-cart w-5 shrink-0"></i><span x-show="!collapsed">Products</span></a>
-                <a href="{{ route('administrator.videos.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.videos.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-video w-5 shrink-0"></i><span x-show="!collapsed">Videos</span></a>
-                <a href="{{ route('administrator.logs') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.logs') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-history w-5 shrink-0"></i><span x-show="!collapsed">Activity Logs</span></a>
-                <a href="{{ route('administrator.backup') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.backup*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-database w-5 shrink-0"></i><span x-show="!collapsed">Backup</span></a>
+                <a href="{{ route('administrator.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-tachometer-alt w-5 shrink-0"></i><span>Dashboard</span></a>
+                <a href="{{ route('administrator.analytics') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.analytics') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chart-bar w-5 shrink-0"></i><span>Analytics</span></a>
+                <a href="{{ route('administrator.users.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.users.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-users w-5 shrink-0"></i><span>Users</span></a>
+                <a href="{{ route('administrator.suggestions.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.suggestions.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-lightbulb w-5 shrink-0"></i><span>Suggestions</span></a>
+                <a href="{{ route('administrator.sensors.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.sensors.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-microchip w-5 shrink-0"></i><span>Sensors</span></a>
+                <a href="{{ route('administrator.projects.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.projects.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-project-diagram w-5 shrink-0"></i><span>Projects</span></a>
+                <a href="{{ route('administrator.products.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.products.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-shopping-cart w-5 shrink-0"></i><span>Products</span></a>
+                <a href="{{ route('administrator.videos.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.videos.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-video w-5 shrink-0"></i><span>Videos</span></a>
+                <a href="{{ route('administrator.logs') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.logs') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-history w-5 shrink-0"></i><span>Activity Logs</span></a>
+                <a href="{{ route('administrator.backup') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.backup*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-database w-5 shrink-0"></i><span>Backup</span></a>
             @elseif($isInstructor)
-                <a href="{{ route('instructor.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('instructor.dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-tachometer-alt w-5 shrink-0"></i><span x-show="!collapsed">Dashboard</span></a>
-                <a href="{{ route('instructor.classes.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('instructor.classes.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chalkboard w-5 shrink-0"></i><span x-show="!collapsed">Classes</span></a>
-                <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('suggestions.community') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-comments w-5 shrink-0"></i><span x-show="!collapsed">Community</span></a>
+                <a href="{{ route('instructor.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('instructor.dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-tachometer-alt w-5 shrink-0"></i><span>Dashboard</span></a>
+                <a href="{{ route('instructor.classes.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('instructor.classes.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chalkboard w-5 shrink-0"></i><span>Classes</span></a>
+                <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('suggestions.community') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-comments w-5 shrink-0"></i><span>Community</span></a>
             @else
-                <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('dashboard.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-home w-5 shrink-0"></i><span x-show="!collapsed">Dashboard</span></a>
-                <a href="{{ route('sensors.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('sensors.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-microchip w-5 shrink-0"></i><span x-show="!collapsed">Sensors</span></a>
-                <a href="{{ route('projects.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('projects.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-project-diagram w-5 shrink-0"></i><span x-show="!collapsed">Projects</span></a>
-                <a href="{{ route('videos.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('videos.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-play-circle w-5 shrink-0"></i><span x-show="!collapsed">Tutorials</span></a>
-                <a href="{{ route('dashboard.classes.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('dashboard.classes.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chalkboard w-5 shrink-0"></i><span x-show="!collapsed">Classes</span></a>
-                <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('suggestions.community') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-comments w-5 shrink-0"></i><span x-show="!collapsed">Community</span></a>
-                <a href="{{ route('shop.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('shop.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-store w-5 shrink-0"></i><span x-show="!collapsed">Shop</span></a>
+                <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('dashboard.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-home w-5 shrink-0"></i><span>Dashboard</span></a>
+                <a href="{{ route('sensors.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('sensors.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-microchip w-5 shrink-0"></i><span>Sensors</span></a>
+                <a href="{{ route('projects.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('projects.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-project-diagram w-5 shrink-0"></i><span>Projects</span></a>
+                <a href="{{ route('videos.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('videos.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-play-circle w-5 shrink-0"></i><span>Tutorials</span></a>
+                <a href="{{ route('dashboard.classes.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('dashboard.classes.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chalkboard w-5 shrink-0"></i><span>Classes</span></a>
+                <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('suggestions.community') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-comments w-5 shrink-0"></i><span>Community</span></a>
+                <a href="{{ route('shop.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('shop.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-store w-5 shrink-0"></i><span>Shop</span></a>
             @endif
 
             {{-- Simulation link for all roles --}}
-            <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-flask w-5 shrink-0"></i><span x-show="!collapsed">Simulation</span></a>
+            <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-flask w-5 shrink-0"></i><span>Simulation</span></a>
         </nav>
 
         {{-- Bottom section --}}
@@ -179,25 +192,20 @@
             {{-- Notifications --}}
             @php $unreadCount = auth()->user()->notifications()->where('is_read', false)->count(); @endphp
             <a href="{{ route('notifications.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 relative">
-                <i class="fas fa-bell w-5 shrink-0"></i><span x-show="!collapsed">Notifications</span>
+                <i class="fas fa-bell w-5 shrink-0"></i><span>Notifications</span>
                 @if($unreadCount > 0)<span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ $unreadCount }}</span>@endif
             </a>
 
             {{-- Dark Mode --}}
             <button id="darkModeToggle" class="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                <i class="fas fa-moon dark:hidden w-5 shrink-0"></i><i class="fas fa-sun hidden dark:inline w-5 shrink-0"></i><span x-show="!collapsed">Dark Mode</span>
-            </button>
-
-            {{-- Collapse --}}
-            <button @click="collapsed = !collapsed" class="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                <i class="fas fa-angles-left w-5 shrink-0" :class="collapsed ? 'rotate-180' : ''"></i><span x-show="!collapsed">Collapse</span>
+                <i class="fas fa-moon dark:hidden w-5 shrink-0"></i><i class="fas fa-sun hidden dark:inline w-5 shrink-0"></i><span>Dark Mode</span>
             </button>
 
             {{-- Logout --}}
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
-                    <i class="fas fa-sign-out-alt w-5 shrink-0"></i><span x-show="!collapsed">Logout</span>
+                    <i class="fas fa-sign-out-alt w-5 shrink-0"></i><span>Logout</span>
                 </button>
             </form>
         </div>
@@ -205,12 +213,12 @@
     @endauth
 
     <!-- Main Content -->
-    <main class="@auth ml-60 @else pt-16 @endauth transition-all duration-300" :class="collapsed ? 'ml-16' : 'ml-60'" x-data @collapse.window="collapsed = $event.detail">
+    <main class="@auth lg:ml-60 @else pt-16 @endauth transition-all duration-300">
     @yield('content')
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 dark:bg-gray-950 text-white mt-16">
+    <footer class="bg-gray-800 dark:bg-gray-950 text-white mt-16 @auth lg:ml-60 @endauth">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
@@ -252,6 +260,21 @@
     </footer>
 
     <script>
+        // Layout manager for mobile sidebar
+        function layoutManager() {
+            return {
+                mobileSidebarOpen: false,
+                init() {
+                    // Close mobile sidebar on window resize to desktop
+                    window.addEventListener('resize', () => {
+                        if (window.innerWidth >= 1024) {
+                            this.mobileSidebarOpen = false;
+                        }
+                    });
+                }
+            }
+        }
+
         const darkModeToggle = document.getElementById('darkModeToggle');
         const mobileDarkModeToggle = document.getElementById('mobileDarkModeToggle');
         const html = document.documentElement;
@@ -661,4 +684,4 @@
     @endauth
 
 </body>
-</html>>
+</html>
