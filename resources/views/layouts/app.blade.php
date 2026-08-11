@@ -82,259 +82,130 @@
     </style>
 
     <!-- Navigation -->
+    @guest
+    {{-- Top Nav for Guests --}}
     <nav class="bg-white dark:bg-gray-800 shadow-lg fixed top-0 left-0 right-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between gap-3 h-16">
                 <div class="flex items-center min-w-0">
-                    <a href="{{ route($homeRoute) }}" class="flex items-center space-x-2 min-w-0">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-2 min-w-0">
                         <i class="fas fa-microchip text-2xl sm:text-3xl text-primary shrink-0"></i>
-                        <div>
-                            <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorsHub</span>
-                            @if($isAdministrator)
-                                <span class="text-xs text-primary font-semibold">Administrator</span>
-                            @elseif($isInstructor)
-                                <span class="text-xs text-secondary font-semibold">Instructor</span>
-                            @endif
-                        </div>
+                        <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorsHub</span>
                     </a>
                 </div>
-
-                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6">
-                   {{-- Administrator Desktop Menu --}}
-                    @if($isAdministrator)
-                        <div class="relative group">
-                            <a href="{{ route('administrator.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold flex items-center gap-1">
-                                Control Panel <i class="fas fa-chevron-down text-xs"></i>
-                            </a>
-                            <div class="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                                <a href="{{ route('administrator.analytics') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
-                                    <i class="fas fa-chart-bar w-4 mr-2"></i> Analytics
-                                </a>
-                                <a href="{{ route('administrator.users.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="fas fa-users w-4 mr-2"></i> Users
-                                </a>
-                                <a href="{{ route('administrator.suggestions.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="fas fa-lightbulb w-4 mr-2"></i> Suggestions
-                                </a>
-                                <a href="{{ route('administrator.sensors.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="fas fa-microchip w-4 mr-2"></i> Sensors
-                                </a>
-                                <a href="{{ route('administrator.projects.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="fas fa-project-diagram w-4 mr-2"></i> Projects
-                                </a>
-                                <a href="{{ route('administrator.products.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="fas fa-shopping-cart w-4 mr-2"></i> Products
-                                </a>
-                                <a href="{{ route('administrator.videos.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="fas fa-video w-4 mr-2"></i> Videos
-                                </a>
-                                <a href="{{ route('administrator.logs') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="fas fa-history w-4 mr-2"></i> Activity Logs
-                                </a>
-                                <a href="{{ route('administrator.backup') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg">
-                                    <i class="fas fa-database w-4 mr-2"></i> Database Backup
-                                </a>
-                            </div>
-                        </div>
-                        <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
-                    
-                    {{-- Instructor Desktop Menu --}}
-                    @elseif($isInstructor)
-                        <a href="{{ route('instructor.dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition font-semibold">Dashboard</a>
-                        <a href="{{ route('instructor.classes.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Classes</a>
-                        <a href="{{ route('suggestions.community') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Community</a>
-                        <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
-                    
-                    {{-- User Desktop Menu --}}
-                    @else
-                        <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Home</a>
-                        <a href="{{ route('sensors.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Sensors</a>
-                        <a href="{{ route('projects.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Projects</a>
-                        <a href="{{ route('videos.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Tutorials</a>
-                        <a href="{{ route('dashboard.classes.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Classes</a>
-                        <a href="{{ route('suggestions.community') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Community</a>
-                        <a href="{{ route('shop.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Shop</a>
-                        <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Simulation</a>
-                    @endif
-                    
-                    @auth
-                        <form method="POST" action="{{ route('logout') }}" class="inline-flex items-center">
-                            @csrf
-                            <button type="submit" class="bg-transparent border-0 p-0 m-0 text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition cursor-pointer leading-normal">Logout</button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition">Login</a>
-                        <a href="{{ route('register') }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Register</a>
-                    @endauth
-
-                    @auth
-                    @php $unreadCount = auth()->user()->notifications()->where('is_read', false)->count(); @endphp
-                    <div class="relative" x-data="{ open: false }">
-                        <button @click="open = !open" class="text-gray-700 dark:text-gray-300 hover:text-primary relative">
-                            <i class="fas fa-bell"></i>
-                            @if($unreadCount > 0)
-                                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                                    {{ $unreadCount }}
-                                </span>
-                            @endif
-                        </button>
-                        <div x-show="open" @click.outside="open = false" 
-                            class="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 z-50 max-h-80 overflow-y-auto">
-                            <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                                <h3 class="font-bold text-gray-900 dark:text-white">Notifications</h3>
-                            </div>
-                           @php $notifications = auth()->user()->notifications()->latest()->take(4)->get(); @endphp
-                            @if($notifications->count() > 0)
-                                @foreach($notifications as $notification)
-                                    <a href="{{ $notification->link ?? '#' }}" 
-                                        onclick="markAsRead({{ $notification->id }})"
-                                        class="block px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 {{ $notification->is_read ? '' : 'bg-blue-50 dark:bg-blue-900/20' }}">
-                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $notification->title }}</p>
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $notification->message }}</p>
-                                        <p class="text-xs text-gray-400 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
-                                    </a>
-                                @endforeach
-                            @else
-                                <p class="px-4 py-3 text-sm text-gray-500">No notifications</p>
-                            @endif
-                            <div class="p-3 border-t border-gray-200 dark:border-gray-700 text-center">
-                                <a href="{{ route('notifications.index') }}" class="text-sm text-primary hover:underline">View All</a>
-                            </div>
-                        </div>
-                    </div>
-                    @endauth
-                    
-                    <button id="darkModeToggle" class="text-gray-700 dark:text-gray-300 hover:text-primary">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:inline"></i>
-                    </button>
+                    <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Home</a>
+                    <a href="{{ route('sensors.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Sensors</a>
+                    <a href="{{ route('projects.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Projects</a>
+                    <a href="{{ route('videos.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Tutorials</a>
+                    <a href="{{ route('suggestions.community') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Community</a>
+                    <a href="{{ route('shop.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Shop</a>
+                    <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Login</a>
+                    <a href="{{ route('register') }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Register</a>
+                    <button id="darkModeToggle" class="text-gray-700 dark:text-gray-300 hover:text-primary"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:inline"></i></button>
                 </div>
-
                 <div class="md:hidden flex items-center">
-                    <button id="mobileMenuButton" class="text-gray-700 dark:text-gray-300 p-2 -mr-2">
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
+                    <button id="mobileMenuButton" class="text-gray-700 dark:text-gray-300 p-2 -mr-2"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
         </div>
-
-        <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-800 border-t dark:border-gray-700">
             <div class="px-4 pt-2 pb-4 space-y-1">
-                @if($isAdministrator)
-                <a href="{{ route('administrator.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                    <i class="fas fa-tachometer-alt w-5"></i> Dashboard
-                </a>
-                <a href="{{ route('administrator.analytics') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                   <i class="fas fa-chart-bar w-5"></i> Analytics
-               </a>
-                    <a href="{{ route('administrator.users.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-users w-5"></i> Users
-                    </a>
-                    <a href="{{ route('administrator.suggestions.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-lightbulb w-5"></i> Suggestions
-                    </a>
-                    <a href="{{ route('administrator.sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-microchip w-5"></i> Sensors
-                    </a>
-                    <a href="{{ route('administrator.projects.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-project-diagram w-5"></i> Projects
-                    </a>
-                    <a href="{{ route('administrator.products.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-shopping-cart w-5"></i> Products
-                    </a>
-                    <a href="{{ route('administrator.videos.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-video w-5"></i> Videos
-                    </a>
-                    <a href="{{ route('administrator.logs') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-history w-5"></i> Activity Logs
-                    </a>
-                    <a href="{{ route('administrator.backup') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-database w-5"></i> Database Backup
-                    </a>
-                    <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-flask w-5"></i> Simulation
-                    </a>
-                @elseif($isInstructor)
-                    <a href="{{ route('instructor.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-tachometer-alt w-5"></i> Dashboard
-                    </a>
-                    <a href="{{ route('instructor.classes.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-chalkboard w-5"></i> Classes
-                    </a>
-                    <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-comments w-5"></i> Community
-                    </a>
-                    <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-flask w-5"></i> Simulation
-                    </a>
-                @else
-                    <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-home w-5"></i> Home
-                    </a>
-                    <a href="{{ route('sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-microchip w-5"></i> Sensors
-                    </a>
-                    <a href="{{ route('projects.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-folder-open w-5"></i> Projects
-                    </a>
-                    <a href="{{ route('videos.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-play-circle w-5"></i> Tutorials
-                    </a>
-                    <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-comments w-5"></i> Community
-                    </a>
-                    <a href="{{ route('shop.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-store w-5"></i> Shop
-                    </a>
-                    <a href="{{ route('dashboard.classes.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-chalkboard w-5"></i> Classes
-                    </a>
-                    <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-flask w-5"></i> Simulation
-                    </a>
-                @endif
-                
-                @auth
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="flex items-center gap-3 w-full text-left px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                            <i class="fas fa-sign-out-alt w-5"></i> Logout
-                        </button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-key w-5"></i> Login
-                    </a>
-                    <a href="{{ route('register') }}" class="flex items-center gap-3 px-3 py-2 text-primary font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                        <i class="fas fa-user-plus w-5"></i> Register
-                    </a>
-                @endauth
-
-                @auth
-                @php $unreadCount = auth()->user()->notifications()->where('is_read', false)->count(); @endphp
-                <a href="{{ route('notifications.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded relative">
-                    <i class="fas fa-bell w-5"></i> Notifications
-                    @if($unreadCount > 0)
-                        <span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                            {{ $unreadCount }}
-                        </span>
-                    @endif
-                </a>
-                @endauth
-                
-                <button id="mobileDarkModeToggle" type="button" class="flex items-center gap-3 w-full px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
-                    <i class="fas fa-moon dark:hidden w-5"></i>
-                    <i class="fas fa-sun hidden dark:inline w-5"></i>
-                    Dark/Light Mode
-                </button>
+                <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-home w-5"></i> Home</a>
+                <a href="{{ route('sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-microchip w-5"></i> Sensors</a>
+                <a href="{{ route('projects.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-folder-open w-5"></i> Projects</a>
+                <a href="{{ route('videos.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-play-circle w-5"></i> Tutorials</a>
+                <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-comments w-5"></i> Community</a>
+                <a href="{{ route('shop.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-store w-5"></i> Shop</a>
+                <a href="{{ route('login') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-key w-5"></i> Login</a>
+                <a href="{{ route('register') }}" class="flex items-center gap-3 px-3 py-2 text-primary font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-user-plus w-5"></i> Register</a>
             </div>
         </div>
     </nav>
+    @endguest
+
+    @auth
+    {{-- Sidebar for Logged-in Users --}}
+    <aside class="fixed left-0 top-0 h-full w-60 bg-white dark:bg-gray-800 shadow-lg z-40 flex flex-col transition-all duration-300 overflow-y-auto" x-data="{ collapsed: false }" :class="collapsed ? 'w-16' : 'w-60'">
+        {{-- Logo --}}
+        <div class="h-16 flex items-center gap-3 px-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+            <i class="fas fa-microchip text-xl text-primary shrink-0"></i>
+            <span class="text-lg font-bold text-gray-800 dark:text-white truncate" x-show="!collapsed">SensorsHub</span>
+        </div>
+
+        {{-- Role Badge --}}
+        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700" x-show="!collapsed">
+            <span class="px-2 py-0.5 text-xs rounded-full
+                {{ $isAdministrator ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' : '' }}
+                {{ $isInstructor ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : '' }}
+                {{ !$isAdministrator && !$isInstructor ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}">
+                {{ $isAdministrator ? 'Administrator' : ($isInstructor ? 'Instructor' : 'Student') }}
+            </span>
+        </div>
+
+        {{-- Nav Links --}}
+        <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+            @if($isAdministrator)
+                <a href="{{ route('administrator.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-tachometer-alt w-5 shrink-0"></i><span x-show="!collapsed">Dashboard</span></a>
+                <a href="{{ route('administrator.analytics') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.analytics') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chart-bar w-5 shrink-0"></i><span x-show="!collapsed">Analytics</span></a>
+                <a href="{{ route('administrator.users.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.users.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-users w-5 shrink-0"></i><span x-show="!collapsed">Users</span></a>
+                <a href="{{ route('administrator.suggestions.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.suggestions.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-lightbulb w-5 shrink-0"></i><span x-show="!collapsed">Suggestions</span></a>
+                <a href="{{ route('administrator.sensors.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.sensors.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-microchip w-5 shrink-0"></i><span x-show="!collapsed">Sensors</span></a>
+                <a href="{{ route('administrator.projects.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.projects.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-project-diagram w-5 shrink-0"></i><span x-show="!collapsed">Projects</span></a>
+                <a href="{{ route('administrator.products.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.products.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-shopping-cart w-5 shrink-0"></i><span x-show="!collapsed">Products</span></a>
+                <a href="{{ route('administrator.videos.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.videos.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-video w-5 shrink-0"></i><span x-show="!collapsed">Videos</span></a>
+                <a href="{{ route('administrator.logs') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.logs') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-history w-5 shrink-0"></i><span x-show="!collapsed">Activity Logs</span></a>
+                <a href="{{ route('administrator.backup') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('administrator.backup*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-database w-5 shrink-0"></i><span x-show="!collapsed">Backup</span></a>
+            @elseif($isInstructor)
+                <a href="{{ route('instructor.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('instructor.dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-tachometer-alt w-5 shrink-0"></i><span x-show="!collapsed">Dashboard</span></a>
+                <a href="{{ route('instructor.classes.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('instructor.classes.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chalkboard w-5 shrink-0"></i><span x-show="!collapsed">Classes</span></a>
+                <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('suggestions.community') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-comments w-5 shrink-0"></i><span x-show="!collapsed">Community</span></a>
+            @else
+                <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('dashboard.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-home w-5 shrink-0"></i><span x-show="!collapsed">Dashboard</span></a>
+                <a href="{{ route('sensors.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('sensors.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-microchip w-5 shrink-0"></i><span x-show="!collapsed">Sensors</span></a>
+                <a href="{{ route('projects.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('projects.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-project-diagram w-5 shrink-0"></i><span x-show="!collapsed">Projects</span></a>
+                <a href="{{ route('videos.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('videos.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-play-circle w-5 shrink-0"></i><span x-show="!collapsed">Tutorials</span></a>
+                <a href="{{ route('dashboard.classes.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('dashboard.classes.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chalkboard w-5 shrink-0"></i><span x-show="!collapsed">Classes</span></a>
+                <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('suggestions.community') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-comments w-5 shrink-0"></i><span x-show="!collapsed">Community</span></a>
+                <a href="{{ route('shop.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('shop.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-store w-5 shrink-0"></i><span x-show="!collapsed">Shop</span></a>
+            @endif
+
+            {{-- Simulation link for all roles --}}
+            <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-flask w-5 shrink-0"></i><span x-show="!collapsed">Simulation</span></a>
+        </nav>
+
+        {{-- Bottom section --}}
+        <div class="border-t border-gray-200 dark:border-gray-700 px-3 py-3 space-y-1 flex-shrink-0">
+            {{-- Notifications --}}
+            @php $unreadCount = auth()->user()->notifications()->where('is_read', false)->count(); @endphp
+            <a href="{{ route('notifications.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 relative">
+                <i class="fas fa-bell w-5 shrink-0"></i><span x-show="!collapsed">Notifications</span>
+                @if($unreadCount > 0)<span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ $unreadCount }}</span>@endif
+            </a>
+
+            {{-- Dark Mode --}}
+            <button id="darkModeToggle" class="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                <i class="fas fa-moon dark:hidden w-5 shrink-0"></i><i class="fas fa-sun hidden dark:inline w-5 shrink-0"></i><span x-show="!collapsed">Dark Mode</span>
+            </button>
+
+            {{-- Collapse --}}
+            <button @click="collapsed = !collapsed" class="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                <i class="fas fa-angles-left w-5 shrink-0" :class="collapsed ? 'rotate-180' : ''"></i><span x-show="!collapsed">Collapse</span>
+            </button>
+
+            {{-- Logout --}}
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
+                    <i class="fas fa-sign-out-alt w-5 shrink-0"></i><span x-show="!collapsed">Logout</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+    @endauth
 
     <!-- Main Content -->
-    <main class="pt-16">
+    <main class="@auth ml-60 @else pt-16 @endauth transition-all duration-300" :class="collapsed ? 'ml-16' : 'ml-60'" x-data @collapse.window="collapsed = $event.detail">
     @yield('content')
     </main>
 
