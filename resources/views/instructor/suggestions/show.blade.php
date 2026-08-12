@@ -21,6 +21,17 @@
                     {{ ucfirst($suggestion->status) }}
                 </span>
                 <span class="text-xs text-gray-400">{{ $suggestion->created_at->format('M d, Y') }}</span>
+                @if(!auth()->user()->isAdministrator() && auth()->id() !== $suggestion->user_id)
+                    <form method="POST" action="{{ route('report.store') }}" class="inline ml-auto">
+                        @csrf
+                        <input type="hidden" name="reportable_type" value="suggestion">
+                        <input type="hidden" name="reportable_id" value="{{ $suggestion->id }}">
+                        <input type="hidden" name="reason" value="inappropriate">
+                        <button type="button" class="text-red-400 hover:text-red-600 transition text-sm" title="Report Suggestion" onclick="let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
+                            <i class="fas fa-flag mr-1"></i> Report
+                        </button>
+                    </form>
+                @endif
             </div>
 
             <h1 class="text-xl font-bold text-gray-900 dark:text-white mb-1">{{ $suggestion->title }}</h1>

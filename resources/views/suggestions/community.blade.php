@@ -60,20 +60,7 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center gap-2 flex-shrink-0 mt-1">
-                        @auth
-                            @if(!auth()->user()->isAdministrator() && auth()->id() !== $suggestion->user_id)
-                            <form method="POST" action="{{ route('report.store') }}" class="inline">
-                                @csrf
-                                <input type="hidden" name="reportable_type" value="suggestion">
-                                <input type="hidden" name="reportable_id" value="{{ $suggestion->id }}">
-                                <input type="hidden" name="reason" value="inappropriate">
-                                <button type="button" class="text-gray-400 hover:text-red-500 transition" title="Report" onclick=" event.stopPropagation(); let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
-                                    <i class="fas fa-flag text-xs"></i>
-                                </button>
-                            </form>
-                            @endif
-                        @endauth
+                    <div class="flex items-center gap-2 flex-shrink-0 mt-1">   
                         <i class="fas fa-chevron-right text-gray-300 dark:text-gray-600 group-hover:text-primary transition"></i>
                     </div>
                 </a>

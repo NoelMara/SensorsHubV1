@@ -31,8 +31,21 @@
                 @endif">
                 {{ ucfirst($suggestion->status) }}
             </span>
+            @auth
+                @if(!auth()->user()->isAdministrator() && auth()->id() !== $suggestion->user_id)
+                    <form method="POST" action="{{ route('report.store') }}" class="inline">
+                        @csrf
+                        <input type="hidden" name="reportable_type" value="suggestion">
+                        <input type="hidden" name="reportable_id" value="{{ $suggestion->id }}">
+                        <input type="hidden" name="reason" value="inappropriate">
+                        <button type="button" class="text-red-400 hover:text-red-600 transition text-sm" title="Report Suggestion" onclick="let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
+                            <i class="fas fa-flag mr-1"></i> Report
+                        </button>
+                    </form>
+                @endif
+            @endauth
         </div>
-
+     
         <div class="space-y-4 mb-6">
             <div>
                 <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Description</label>
