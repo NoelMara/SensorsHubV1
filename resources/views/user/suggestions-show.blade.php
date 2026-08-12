@@ -74,7 +74,7 @@
         @if($suggestion->admin_notes)
         <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
             <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Administrator Notes:</p>
-            <p class="text-sm text-gray-600 dark:text-gray-400">{{ $suggestion->admin_notes }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 break-words">{{ $suggestion->admin_notes }}</p>
         </div>
         @endif
 
@@ -88,7 +88,7 @@
                 <div class="space-y-4 mb-6">
                     @foreach($suggestion->comments as $comment)
                         <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
                                 <div class="flex items-center gap-2">
                                     <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                                         <span class="text-primary font-bold text-sm">{{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}</span>
@@ -117,7 +117,7 @@
                                         @endif
                                     @endauth
                             </div>
-                            <p class="text-gray-700 dark:text-gray-300 whitespace-pre-line">{{ $comment->body }}</p>
+                            <p class="text-gray-700 dark:text-gray-300 whitespace-pre-line break-words overflow-hidden">{{ $comment->body }}</p>
                             @if($comment->created_at != $comment->updated_at)
                                 <p class="text-xs text-gray-400 mt-2">(edited)</p>
                             @endif

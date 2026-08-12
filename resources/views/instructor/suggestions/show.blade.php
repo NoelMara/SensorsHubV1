@@ -37,7 +37,7 @@
             <h1 class="text-xl font-bold text-gray-900 dark:text-white mb-1">{{ $suggestion->title }}</h1>
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">by {{ $suggestion->user?->name ?? 'Deleted user' }}</p>
 
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-5 text-gray-700 dark:text-gray-300 text-sm whitespace-pre-line leading-relaxed">
+                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-5 text-gray-700 dark:text-gray-300 text-sm whitespace-pre-line leading-relaxed break-words overflow-hidden">
                 {{ $suggestion->description }}
             </div>
 
@@ -88,7 +88,7 @@
                                     </form>
                                 @endif
                                 </div>
-                            <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line">{{ $comment->body }}</p>
+                            <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line break-words overflow-hidden">{{ $comment->body }}</p>
                             @if(auth()->id() === $comment->user_id)
                                 <button onclick="document.getElementById('edit-{{ $comment->id }}').classList.toggle('hidden')" class="text-xs text-primary hover:underline mt-1">Edit</button>
                                 <form id="edit-{{ $comment->id }}" method="POST"

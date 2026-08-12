@@ -13,7 +13,7 @@
                     onclick="markAsRead({{ $notification->id }})"
                     class="block p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 {{ $notification->is_read ? '' : 'bg-blue-50 dark:bg-blue-900/20' }}">
                     <p class="font-semibold text-gray-900 dark:text-white">{{ $notification->title }}</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $notification->message }}</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 break-words">{{ $notification->message }}</p>
                     <p class="text-xs text-gray-400 mt-2">{{ $notification->created_at->diffForHumans() }}</p>
                 </a>
             @endforeach
