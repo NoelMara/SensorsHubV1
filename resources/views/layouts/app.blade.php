@@ -293,9 +293,20 @@
         // ===== Guest Mobile Menu =====
         const mobileMenuButton = document.getElementById('mobileMenuButton');
         const mobileMenu = document.getElementById('mobileMenu');
-        mobileMenuButton?.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+        mobileMenuButton?.addEventListener('click', function() {
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden');
+            this.innerHTML = isOpen 
+                ? '<i class="fas fa-bars text-2xl"></i>' 
+                : '<i class="fas fa-times text-2xl"></i>';
+        });
+
         mobileMenu?.querySelectorAll('a, button').forEach(el => {
-            el.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+            el.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenuButton.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+            });
         });
 
         // ===== Auth Mobile Sidebar =====
