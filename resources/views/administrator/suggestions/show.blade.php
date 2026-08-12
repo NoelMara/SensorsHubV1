@@ -22,7 +22,7 @@
             <span class="text-sm text-gray-400">{{ $suggestion->created_at->format('F d, Y') }}</span>
         </div>
 
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">{{ $suggestion->title }}</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 break-words">{{ $suggestion->title }}</h1>
         <p class="text-gray-500 dark:text-gray-400 text-sm mb-8">Submitted by {{ $suggestion->user?->name ?? 'Deleted user' }}</p>
 
         <div class="text-gray-800 dark:text-gray-200 text-base whitespace-pre-line leading-relaxed break-words overflow-hidden">
@@ -64,7 +64,7 @@
                         <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0 text-sm font-bold text-gray-500 dark:text-gray-400">
                             {{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}
                         </div>
-                        <div class="flex-1">
+                         <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="font-semibold text-gray-900 dark:text-white text-sm">{{ $comment->user?->name ?? 'Deleted user' }}</span>
                                 <span class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
