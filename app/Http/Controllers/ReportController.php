@@ -47,10 +47,25 @@ class ReportController extends Controller
                     : route('administrator.suggestions.index');
             }
 
-            NotificationHelper::send(
+             // Build a more detailed message
+            $reporterName = auth()->user()->name;
+            
+            if ($validated['reportable_type'] === 'suggestion') {
+                $suggestion = \App\Models\Suggestion::find($validated['reportable_id']);
+                $reportedUserName = $suggestion?->user?->name ?? 'Deleted user';
+                $contentPreview = $suggestion ? \Str::limit($suggestion->title, 50) : 'N/A';
+                $message = "{$reporterName} reported {$reportedUserName}'s suggestion \"{$contentPreview}\" — Reason: {$validated['reason']}";
+            } else {
+                $comment = \App\Models\Comment::find($validated['reportable_id']);
+                $reportedUserName = $comment?->user?->name ?? 'Deleted user';
+                $contentPreview = $comment ? \Str::limit($comment->body, 50) : 'N/A';
+                $message = "{$reporterName} reported {$reportedUserName}'s comment \"{$contentPreview}\" — Reason: {$validated['reason']}";
+            }
+
+                NotificationHelper::send(
                 $admin->id,
                 '🚩 New Report',
-                auth()->user()->name . ' reported a ' . $itemType . ' - ' . $validated['reason'],
+                $message,
                 $link
             );
         }
