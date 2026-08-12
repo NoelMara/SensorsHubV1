@@ -63,12 +63,12 @@
                     <div class="flex items-center gap-2 flex-shrink-0 mt-1">
                         @auth
                             @if(!auth()->user()->isAdministrator() && auth()->id() !== $suggestion->user_id)
-                            <form method="POST" action="{{ route('report.store') }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
+                            <form method="POST" action="{{ route('report.store') }}" class="inline">
                                 @csrf
                                 <input type="hidden" name="reportable_type" value="suggestion">
                                 <input type="hidden" name="reportable_id" value="{{ $suggestion->id }}">
                                 <input type="hidden" name="reason" value="inappropriate">
-                                <button type="submit" class="text-gray-400 hover:text-red-500 transition" title="Report">
+                                <button type="button" class="text-gray-400 hover:text-red-500 transition" title="Report" onclick="let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
                                     <i class="fas fa-flag text-xs"></i>
                                 </button>
                             </form>

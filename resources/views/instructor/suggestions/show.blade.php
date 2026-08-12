@@ -66,12 +66,12 @@
                                     <span class="text-xs text-gray-400">· edited</span>
                                 @endif
                                 @if(!auth()->user()->isAdministrator() && auth()->id() !== $comment->user_id)
-                                    <form method="POST" action="{{ route('report.store') }}" class="inline" onsubmit="event.preventDefault(); let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.querySelector('[name=reason]').value = reason; this.submit(); }">
+                                    <form method="POST" action="{{ route('report.store') }}" class="inline">
                                         @csrf
                                         <input type="hidden" name="reportable_type" value="comment">
                                         <input type="hidden" name="reportable_id" value="{{ $comment->id }}">
                                         <input type="hidden" name="reason" value="inappropriate">
-                                        <button type="submit" class="text-gray-400 hover:text-red-500 transition ml-1" title="Report">
+                                        <button type="button" class="text-gray-400 hover:text-red-500 transition ml-1" title="Report" onclick="let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
                                             <i class="fas fa-flag text-xs"></i>
                                         </button>
                                     </form>
