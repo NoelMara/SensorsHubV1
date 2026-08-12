@@ -139,7 +139,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // ─── Instructor Routes ─────────────────────────────────────────────────────────────
-Route::middleware(['auth', 'instructor'])->prefix('instructor')->name('instructor.')->group(function () {
+Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('instructor.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Classes
