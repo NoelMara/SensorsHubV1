@@ -304,11 +304,15 @@
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('mobileSidebarOverlay');
 
+        let sidebarOpen = false;
+
         function openSidebar() {
             sidebar?.classList.add('translate-x-0');
             sidebar?.classList.remove('-translate-x-full');
             overlay?.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            sidebarOpen = true;
+            updateToggleIcon();
         }
 
         function closeSidebar() {
@@ -316,9 +320,27 @@
             sidebar?.classList.add('-translate-x-full');
             overlay?.classList.add('hidden');
             document.body.style.overflow = '';
+            sidebarOpen = false;
+            updateToggleIcon();
         }
 
-        mobileSidebarToggle?.addEventListener('click', openSidebar);
+        function toggleSidebar() {
+            if (sidebarOpen) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        }
+
+        function updateToggleIcon() {
+            if (sidebarOpen) {
+                mobileSidebarToggle.innerHTML = '<i class="fas fa-times text-2xl"></i>';
+            } else {
+                mobileSidebarToggle.innerHTML = '<i class="fas fa-bars text-2xl"></i>';
+            }
+        }
+
+        mobileSidebarToggle?.addEventListener('click', toggleSidebar);
         mobileSidebarClose?.addEventListener('click', closeSidebar);
         overlay?.addEventListener('click', closeSidebar);
 
