@@ -68,7 +68,7 @@
                                 <input type="hidden" name="reportable_type" value="suggestion">
                                 <input type="hidden" name="reportable_id" value="{{ $suggestion->id }}">
                                 <input type="hidden" name="reason" value="inappropriate">
-                                <button type="button" class="text-gray-400 hover:text-red-500 transition" title="Report"   onclick=" event.stopPropagation(); let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
+                                <button type="button" class="text-gray-400 hover:text-red-500 transition" title="Report" onclick=" event.stopPropagation(); let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
                                     <i class="fas fa-flag text-xs"></i>
                                 </button>
                             </form>
