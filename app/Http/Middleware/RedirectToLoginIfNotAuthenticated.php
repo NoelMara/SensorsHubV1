@@ -29,6 +29,10 @@ class RedirectToLoginIfNotAuthenticated
             return redirect()->route('login')->with('error', 'Account banned: ' . $reason);
         }
 
+        if (!Auth::user()->email_verified_at) {
+            return redirect()->route('verification.notice');
+        }
+
         return $next($request);
     }
 }
