@@ -94,8 +94,7 @@ header('Expires: 0');
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between gap-3 h-16">
                 <div class="flex items-center min-w-0">
-                    <a href="{{ route('home') }}" class="flex items-center space-x-2 min-w-0">
-                        <i class="fas fa-microchip text-2xl sm:text-3xl text-primary shrink-0"></i>
+                   <a href="{{ route('home') }}" class="flex items-center space-x-2 min-w-0"><img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-8 w-8 sm:h-9 sm:w-9 object-contain shrink-0">
                         <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorsHub</span>
                     </a>
                 </div>
@@ -139,7 +138,7 @@ header('Expires: 0');
         <div class="px-4">
             <div class="flex justify-between items-center h-16">
                 <a href="{{ route($homeRoute) }}" class="flex items-center space-x-2">
-                    <i class="fas fa-microchip text-2xl text-primary shrink-0"></i>
+                   <img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-8 w-8 object-contain shrink-0">
                     <span class="text-xl font-bold text-gray-800 dark:text-white">SensorsHub</span>
                 </a>
                 <button id="mobileSidebarToggle" class="text-gray-700 dark:text-gray-300 p-2 -mr-2">
@@ -157,7 +156,7 @@ header('Expires: 0');
                 -translate-x-full lg:translate-x-0 transition-transform duration-300">
         {{-- Logo (Desktop) --}}
         <div class="h-16 hidden lg:flex items-center gap-3 px-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
-            <i class="fas fa-microchip text-xl text-primary shrink-0"></i>
+            <img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-7 w-7 object-contain shrink-0">
             <span class="text-lg font-bold text-gray-800 dark:text-white truncate">SensorsHub</span>
         </div>
 
@@ -246,7 +245,7 @@ header('Expires: 0');
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div>
                     <h3 class="text-2xl font-bold mb-4 flex items-center">
-                        <i class="fas fa-microchip mr-2"></i> SensorsHub
+                        <img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-7 w-7 object-contain mr-2"> SensorsHub
                     </h3>
                     <p class="text-gray-400">Learn Sensors. Build Projects. Share Ideas.</p>
                 </div>
