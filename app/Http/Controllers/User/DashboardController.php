@@ -12,8 +12,9 @@ class DashboardController extends Controller
         $user = auth()->user();
         $suggestionsCount = $user->suggestions()->count();
         $savedProjectsCount = $user->savedProjects()->count();
+        $myClass = $user->classes()->first();
         $recentSuggestions = $user->suggestions()->latest()->take(5)->get();
         
-        return view('user.dashboard', compact('user', 'suggestionsCount', 'savedProjectsCount', 'recentSuggestions'));
+        return view('user.dashboard', compact('user', 'suggestionsCount', 'savedProjectsCount', 'myClass', 'recentSuggestions'));
     }
 }

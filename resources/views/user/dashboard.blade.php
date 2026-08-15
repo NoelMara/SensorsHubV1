@@ -39,7 +39,8 @@
     </div>
 
     {{-- Stats Cards --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 max-w-2xl">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        {{-- My Suggestions --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
@@ -52,6 +53,7 @@
             </div>
             <a href="{{ route('dashboard.suggestions') }}" class="text-xs text-primary hover:underline">View all →</a>
         </div>
+        {{-- Saved Projects --}}
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
             <div class="flex items-center gap-3 mb-3">
                 <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -63,6 +65,21 @@
                 </div>
             </div>
             <a href="{{ route('dashboard.saved') }}" class="text-xs text-primary hover:underline">View all →</a>
+        </div>
+        {{-- My Class --}}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                    <i class="fas fa-chalkboard text-purple-600 dark:text-purple-400"></i>
+                </div>
+                <div class="min-w-0">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">My Class</p>
+                    <p class="text-lg font-bold text-gray-900 dark:text-white truncate">{{ $myClass?->name ?? 'No class joined yet' }}</p>
+                </div>
+            </div>
+            <a href="{{ $myClass ? route('dashboard.classes.show', $myClass) : route('dashboard.classes.index') }}" class="text-xs text-primary hover:underline">
+                {{ $myClass ? 'View class →' : 'Join a class →' }}
+            </a>
         </div>
     </div>
 
