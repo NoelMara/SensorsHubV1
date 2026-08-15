@@ -94,7 +94,7 @@ header('Expires: 0');
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between gap-3 h-16">
                 <div class="flex items-center min-w-0">
-                   <a href="{{ route('home') }}" class="flex items-center space-x-2 min-w-0"><img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-8 w-8 sm:h-9 sm:w-9 object-contain shrink-0">
+                   <a href="{{ route('home') }}" class="flex items-center space-x-2 min-w-0"><img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-7 w-7 sm:h-8 sm:w-8 object-contain shrink-0">
                         <span class="block text-xl sm:text-2xl font-bold text-gray-800 dark:text-white leading-tight">SensorsHub</span>
                     </a>
                 </div>
