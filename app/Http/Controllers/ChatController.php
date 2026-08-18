@@ -9,16 +9,16 @@ class ChatController extends Controller
 {
     public function send(Request $request)
     {
-        // Only enrolled students can use the chatbot
-        if (auth()->user()->role !== 'student') {
+        // Only students and instructors can use the chatbot
+        if (!in_array(auth()->user()->role, ['student', 'instructor'])) {
             return response()->json([
-                'reply' => '👋 The AI chatbot is available for enrolled students only. Join a class to unlock this feature!'
+                'reply' => '👋 The AI chatbot is available for students and instructors only.'
             ]);
         }
 
         $message = trim($request->input('message'));
 
-      $systemPrompt = "You are SensorsHub AI. Rules:
+        $systemPrompt = "You are SensorsHub AI. Rules:
 - For greetings like 'hello' or 'hi', respond with a friendly one-sentence greeting and ask what they want to learn.
 - For real questions, answer directly in 1-3 sentences without greetings.
 - Only provide code if explicitly asked for it.
@@ -34,7 +34,7 @@ class ChatController extends Controller
                     [
                         'role' => 'user',
                         'parts' => [
-                            ['text' => $systemPrompt . "\n\nStudent Question:\n" . $message]
+                            ['text' => $systemPrompt . "\n\nQuestion:\n" . $message]
                         ]
                     ]
                 ],

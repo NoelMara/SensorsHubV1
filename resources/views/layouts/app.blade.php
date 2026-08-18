@@ -511,7 +511,7 @@ header('Expires: 0');
 
     {{-- ========================== AI Chatbot ========================== --}}
     @auth
-    @if(auth()->user()->role === 'student')
+    @if(auth()->user()->role === 'student' || auth()->user()->role === 'instructor')
     <style>
         .chat-bubble {
             position:fixed; bottom:80px; right:16px; z-index:9998;
