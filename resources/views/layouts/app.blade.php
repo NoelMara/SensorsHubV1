@@ -380,6 +380,7 @@ header('Expires: 0');
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('form').forEach(function(form) {
+                if (form.hasAttribute('x-data')) return; 
                 form.addEventListener('submit', function(e) {
                     var onsubmit = form.getAttribute('onsubmit');
                     if (onsubmit && onsubmit.includes('fileSizeError')) return;
