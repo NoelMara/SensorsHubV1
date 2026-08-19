@@ -136,6 +136,9 @@ class DashboardController extends Controller
         }
 
         $tables = \DB::select("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'");
+        $tables = collect($tables)->sortBy(function($table) {
+            return $table->tablename === 'users' ? 0 : 1;
+        })->values()->all();
         
         $output = "-- SensorsHub Database Backup\n";
         $output .= "-- Generated: " . now()->toDateTimeString() . "\n\n";
