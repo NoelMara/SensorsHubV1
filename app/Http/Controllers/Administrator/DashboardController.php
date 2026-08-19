@@ -153,6 +153,10 @@ class DashboardController extends Controller
                 foreach ((array) $row as $value) {
                     if (is_null($value)) {
                         $values[] = 'NULL';
+                    } elseif (is_bool($value)) {
+                        $values[] = $value ? 'TRUE' : 'FALSE';
+                    } elseif (is_int($value) || is_float($value)) {
+                        $values[] = $value;
                     } else {
                         $values[] = "'" . str_replace("'", "''", $value) . "'";
                     }
