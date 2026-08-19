@@ -143,8 +143,10 @@ class DashboardController extends Controller
         $output = "-- SensorsHub Database Backup\n";
         $output .= "-- Generated: " . now()->toDateTimeString() . "\n\n";
         
+        $skipTables = ['migrations', 'sessions', 'cache', 'jobs'];
         foreach ($tables as $table) {
             $tableName = $table->tablename;
+            if (in_array($tableName, $skipTables)) continue;
             $rows = \DB::table($tableName)->get();
             
             if ($rows->isEmpty()) continue;
