@@ -137,7 +137,26 @@ class DashboardController extends Controller
 
         $tables = \DB::select("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'");
         $tables = collect($tables)->sortBy(function($table) {
-            return $table->tablename === 'users' ? 0 : 1;
+            $priority = [
+                'users' => 0,
+                'sensors' => 1,
+                'projects' => 1,
+                'products' => 1,
+                'videos' => 1,
+                'classes' => 2,
+                'suggestions' => 2,
+                'announcements' => 3,
+                'modules' => 3,
+                'assessments' => 3,
+                'quizzes' => 3,
+                'class_student' => 3,
+                'notifications' => 3,
+                'quiz_questions' => 4,
+                'quiz_options' => 5,
+                'reports' => 4,
+                'activity_logs' => 6,
+            ];
+            return $priority[$table->tablename] ?? 99;
         })->values()->all();
         
         $output = "-- SensorsHub Database Backup\n";
