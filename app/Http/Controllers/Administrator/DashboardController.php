@@ -150,11 +150,17 @@ class DashboardController extends Controller
                 'assessments' => 3,
                 'quizzes' => 3,
                 'class_student' => 3,
+                'class_resource' => 3,
                 'notifications' => 3,
+                'saved_projects' => 3,
+                'comments' => 3,
                 'quiz_questions' => 4,
                 'quiz_options' => 5,
+                'assessment_submissions' => 5,
+                'quiz_submissions' => 5,
+                'quiz_answers' => 6,
                 'reports' => 4,
-                'activity_logs' => 6,
+                'activity_logs' => 7,
             ];
             return $priority[$table->tablename] ?? 99;
         })->values()->all();
