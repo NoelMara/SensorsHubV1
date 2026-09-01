@@ -142,7 +142,7 @@ header('Expires: 0');
                     <span class="text-xl font-bold text-gray-800 dark:text-white">SensorsHub</span>
                 </a>
                 <div class="flex items-center">
-                    <button onclick="window.location.reload()" class="text-gray-700 dark:text-gray-300 p-2" title="Refresh">
+                    <button onclick="this.innerHTML = '<i class=\'fas fa-sync-alt text-lg fa-spin\'></i>'; setTimeout(() => window.location.reload(), 300);" class="text-gray-700 dark:text-gray-300 p-2" title="Refresh">
                         <i class="fas fa-sync-alt text-lg"></i>
                     </button>
                     <button id="mobileSidebarToggle" class="text-gray-700 dark:text-gray-300 p-2 -mr-2">
