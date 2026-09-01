@@ -49,14 +49,14 @@
                     <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium">
                         <i class="fas fa-save mr-1.5"></i> Update Status
                     </button>
-                    <form method="POST" action="{{ route('administrator.suggestions.destroy', $suggestion) }}"
-                        onsubmit="return confirm('Delete this suggestion permanently?');" class="inline">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="px-5 py-2.5 border border-red-300 dark:border-red-600 text-red-500 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition text-sm font-medium">
-                            <i class="fas fa-trash mr-1.5"></i> Delete
-                        </button>
-                    </form>
                 </div>
+            </form>
+            <form method="POST" action="{{ route('administrator.suggestions.destroy', $suggestion) }}"
+                onsubmit="return confirm('Delete this suggestion permanently?');" class="mt-3">
+                @csrf @method('DELETE')
+                <button type="submit" class="px-5 py-2.5 border border-red-300 dark:border-red-600 text-red-500 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition text-sm font-medium">
+                    <i class="fas fa-trash mr-1.5"></i> Delete
+                </button>
             </form>
         </div>
     </div>
