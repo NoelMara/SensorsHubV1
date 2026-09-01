@@ -47,6 +47,13 @@
                 </div>
                 <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium">Update Status</button>
             </form>
+            <form method="POST" action="{{ route('administrator.suggestions.destroy', $suggestion) }}" class="mt-3"
+                onsubmit="return confirm('Delete this suggestion permanently?');">
+                @csrf @method('DELETE')
+                <button type="submit" class="px-5 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-medium">
+                    <i class="fas fa-trash mr-1.5"></i> Delete Suggestion
+                </button>
+            </form>
         </div>
     </div>
 
@@ -86,6 +93,13 @@
                                     </div>
                                 </form>
                             @endif
+                            <form method="POST" action="{{ route('administrator.suggestions.comment.destroy', [$suggestion, $comment]) }}"
+                                onsubmit="return confirm('Delete this comment?');" class="inline">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="text-xs text-red-500 hover:underline mt-2">
+                                    <i class="fas fa-trash mr-1"></i> Delete
+                                </button>
+                            </form>
                         </div>
                     </div>
                 @endforeach

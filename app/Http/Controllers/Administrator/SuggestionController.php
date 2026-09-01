@@ -43,6 +43,18 @@ class SuggestionController extends Controller
         return back()->with('success', 'Suggestion updated successfully.');
     }
 
+    public function destroy(Suggestion $suggestion)
+    {
+        ActivityLogHelper::log('deleted', 'suggestion', "deleted suggestion '{$suggestion->title}'");
+        $suggestion->delete();
+        return redirect()->route('administrator.suggestions.index')->with('success', 'Suggestion deleted.');
+    }
+
+    public function destroyComment(Suggestion $suggestion, Comment $comment)
+    {
+        $comment->delete();
+        return back()->with('success', 'Comment deleted.');
+    }
 
     public function storeComment(Request $request, Suggestion $suggestion)
     {

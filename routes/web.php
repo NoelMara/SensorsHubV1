@@ -262,6 +262,8 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
     Route::get('/suggestions', [AdministratorSuggestionController::class, 'index'])->name('suggestions.index');
     Route::get('/suggestions/{suggestion}', [AdministratorSuggestionController::class, 'show'])->name('suggestions.show');
     Route::put('/suggestions/{suggestion}/status', [AdministratorSuggestionController::class, 'updateStatus'])->name('suggestions.status');
+    Route::delete('/suggestions/{suggestion}', [AdministratorSuggestionController::class, 'destroy'])->name('suggestions.destroy');
+    Route::delete('/suggestions/{suggestion}/comment/{comment}', [AdministratorSuggestionController::class, 'destroyComment'])->name('suggestions.comment.destroy');
 
     // Comment routes (administrator)
     Route::post('/suggestions/{suggestion}/comment', [AdministratorSuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
