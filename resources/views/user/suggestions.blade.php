@@ -92,6 +92,13 @@
                                    class="text-xs text-blue-600 hover:underline font-medium">
                                     <i class="fas fa-edit mr-1"></i> Edit
                                 </a>
+                                <form method="POST" action="{{ route('dashboard.suggestions.destroy', $suggestion) }}"
+                                    onsubmit="return confirm('Delete this suggestion?');" class="inline">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="text-xs text-red-500 hover:underline font-medium">
+                                        <i class="fas fa-trash mr-1"></i> Delete
+                                    </button>
+                                </form>
                             @endif
                         </div>
                     </div>
