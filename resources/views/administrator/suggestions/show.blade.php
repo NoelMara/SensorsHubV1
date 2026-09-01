@@ -10,16 +10,26 @@
 
     {{-- Suggestion Card --}}
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-6">
-        <div class="flex items-center gap-3 mb-6">
-            <span class="px-3 py-1 text-sm font-medium rounded-full
-                @if($suggestion->status === 'pending') bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300
-                @elseif($suggestion->status === 'reviewed') bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300
-                @elseif($suggestion->status === 'implemented') bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300
-                @else bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300
-                @endif">
-                {{ ucfirst($suggestion->status) }}
-            </span>
-            <span class="text-sm text-gray-400">{{ $suggestion->created_at->format('F d, Y') }}</span>
+        {{-- Status and Delete Row --}}
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 text-sm font-medium rounded-full
+                    @if($suggestion->status === 'pending') bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300
+                    @elseif($suggestion->status === 'reviewed') bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300
+                    @elseif($suggestion->status === 'implemented') bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300
+                    @else bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300
+                    @endif">
+                    {{ ucfirst($suggestion->status) }}
+                </span>
+                <span class="text-sm text-gray-400">{{ $suggestion->created_at->format('F d, Y') }}</span>
+            </div>
+            <form method="POST" action="{{ route('administrator.suggestions.destroy', $suggestion) }}"
+                onsubmit="return confirm('Delete this suggestion permanently?');" class="inline">
+                @csrf @method('DELETE')
+                <button type="submit" class="text-gray-400 hover:text-red-500 transition p-1" title="Delete suggestion">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
         </div>
 
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 break-words">{{ $suggestion->title }}</h1>
@@ -29,12 +39,13 @@
             {{ $suggestion->description }}
         </div>
 
+        {{-- Update Form --}}
         <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
             <form method="POST" action="{{ route('administrator.suggestions.status', $suggestion) }}" class="space-y-4">
                 @csrf @method('PUT')
-                <div class="flex items-center gap-3">
-                    <label class="text-sm font-medium text-gray-600 dark:text-gray-400">Status:</label>
-                    <select name="status" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
+                <div>
+                    <label class="text-sm font-medium text-gray-600 dark:text-gray-400 block mb-1.5">Status</label>
+                    <select name="status" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm w-full sm:w-48">
                         <option value="pending" {{ $suggestion->status === 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="reviewed" {{ $suggestion->status === 'reviewed' ? 'selected' : '' }}>Reviewed</option>
                         <option value="implemented" {{ $suggestion->status === 'implemented' ? 'selected' : '' }}>Implemented</option>
@@ -42,20 +53,11 @@
                     </select>
                 </div>
                 <div>
-                    <label class="text-sm font-medium text-gray-600 dark:text-gray-400 block mb-1">Administrator Notes:</label>
+                    <label class="text-sm font-medium text-gray-600 dark:text-gray-400 block mb-1.5">Administrator Notes</label>
                     <textarea name="admin_notes" rows="3" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm resize-none">{{ $suggestion->admin_notes }}</textarea>
                 </div>
-                <div class="flex items-center gap-3 pt-2">
-                    <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium">
-                        <i class="fas fa-save mr-1.5"></i> Update Status
-                    </button>
-                </div>
-            </form>
-            <form method="POST" action="{{ route('administrator.suggestions.destroy', $suggestion) }}"
-                onsubmit="return confirm('Delete this suggestion permanently?');" class="mt-3">
-                @csrf @method('DELETE')
-                <button type="submit" class="px-5 py-2.5 border border-red-300 dark:border-red-600 text-red-500 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition text-sm font-medium">
-                    <i class="fas fa-trash mr-1.5"></i> Delete
+                <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium">
+                    <i class="fas fa-save mr-1.5"></i> Update Status
                 </button>
             </form>
         </div>
@@ -83,7 +85,7 @@
                                     <span class="text-xs text-gray-400">(edited)</span>
                                 @endif
                                 <form method="POST" action="{{ route('administrator.suggestions.comment.destroy', [$suggestion, $comment]) }}"
-                                    onsubmit="return confirm('Delete this comment?');" class="inline ml-auto opacity-0 group-hover:opacity-100 transition">
+                                onsubmit="return confirm('Delete this comment?');" class="inline ml-auto">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="text-gray-400 hover:text-red-500 transition" title="Delete comment">
                                         <i class="fas fa-trash text-xs"></i>
