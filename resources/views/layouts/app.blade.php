@@ -141,9 +141,14 @@ header('Expires: 0');
                    <img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-8 w-8 object-contain shrink-0">
                     <span class="text-xl font-bold text-gray-800 dark:text-white">SensorsHub</span>
                 </a>
-                <button id="mobileSidebarToggle" class="text-gray-700 dark:text-gray-300 p-2 -mr-2">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
+                <div class="flex items-center">
+                    <button onclick="window.location.reload()" class="text-gray-700 dark:text-gray-300 p-2" title="Refresh">
+                        <i class="fas fa-sync-alt text-lg"></i>
+                    </button>
+                    <button id="mobileSidebarToggle" class="text-gray-700 dark:text-gray-300 p-2 -mr-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
