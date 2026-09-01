@@ -196,6 +196,16 @@ class DashboardController extends Controller
             $output .= "\n";
         }
         
+        // Reset sequences to avoid duplicate key errors on restore
+        $output .= "\n-- Reset Sequences\n";
+        $sequences = \DB::select("SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'public'");
+        foreach ($sequences as $sequence) {
+            $seqName = $sequence->sequence_name;
+            $tableName = preg_replace('/_id_seq$/', '', $seqName);
+            $output .= "SELECT setval('{$seqName}', COALESCE((SELECT MAX(id) FROM {$tableName}), 1));\n";
+        }
+        $output .= "\n";
+        
         $filename = 'sensorshub-backup-' . now()->format('Y-m-d-H-i-s') . '.sql';
         file_put_contents($backupPath . '/' . $filename, $output);
         
