@@ -45,14 +45,18 @@
                     <label class="text-sm font-medium text-gray-600 dark:text-gray-400 block mb-1">Administrator Notes:</label>
                     <textarea name="admin_notes" rows="3" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm resize-none">{{ $suggestion->admin_notes }}</textarea>
                 </div>
-                <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium">Update Status</button>
-            </form>
-            <form method="POST" action="{{ route('administrator.suggestions.destroy', $suggestion) }}" class="mt-3"
-                onsubmit="return confirm('Delete this suggestion permanently?');">
-                @csrf @method('DELETE')
-                <button type="submit" class="px-5 py-2.5 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-medium">
-                    <i class="fas fa-trash mr-1.5"></i> Delete Suggestion
-                </button>
+                <div class="flex items-center gap-3 pt-2">
+                    <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-lg hover:bg-blue-600 transition text-sm font-medium">
+                        <i class="fas fa-save mr-1.5"></i> Update Status
+                    </button>
+                    <form method="POST" action="{{ route('administrator.suggestions.destroy', $suggestion) }}"
+                        onsubmit="return confirm('Delete this suggestion permanently?');" class="inline">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="px-5 py-2.5 border border-red-300 dark:border-red-600 text-red-500 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition text-sm font-medium">
+                            <i class="fas fa-trash mr-1.5"></i> Delete
+                        </button>
+                    </form>
+                </div>
             </form>
         </div>
     </div>
@@ -67,17 +71,24 @@
         @if($suggestion->comments->count() > 0)
             <div class="space-y-6 mb-10">
                 @foreach($suggestion->comments as $comment)
-                    <div class="flex gap-4">
+                    <div class="flex gap-4 group">
                         <div class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0 text-sm font-bold text-gray-500 dark:text-gray-400">
                             {{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}
                         </div>
-                         <div class="flex-1 min-w-0">
+                        <div class="flex-1 min-w-0">
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="font-semibold text-gray-900 dark:text-white text-sm">{{ $comment->user?->name ?? 'Deleted user' }}</span>
                                 <span class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
                                 @if($comment->created_at != $comment->updated_at)
                                     <span class="text-xs text-gray-400">(edited)</span>
                                 @endif
+                                <form method="POST" action="{{ route('administrator.suggestions.comment.destroy', [$suggestion, $comment]) }}"
+                                    onsubmit="return confirm('Delete this comment?');" class="inline ml-auto opacity-0 group-hover:opacity-100 transition">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="text-gray-400 hover:text-red-500 transition" title="Delete comment">
+                                        <i class="fas fa-trash text-xs"></i>
+                                    </button>
+                                </form>
                             </div>
                             <p class="text-gray-700 dark:text-gray-300 text-sm whitespace-pre-line leading-relaxed break-words overflow-hidden">{{ $comment->body }}</p>
                             @if(auth()->id() === $comment->user_id)
@@ -93,13 +104,6 @@
                                     </div>
                                 </form>
                             @endif
-                            <form method="POST" action="{{ route('administrator.suggestions.comment.destroy', [$suggestion, $comment]) }}"
-                                onsubmit="return confirm('Delete this comment?');" class="inline">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="text-xs text-red-500 hover:underline mt-2">
-                                    <i class="fas fa-trash mr-1"></i> Delete
-                                </button>
-                            </form>
                         </div>
                     </div>
                 @endforeach
