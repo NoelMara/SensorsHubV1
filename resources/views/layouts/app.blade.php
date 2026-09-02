@@ -211,7 +211,7 @@ header('Expires: 0');
             @endif
 
             {{-- Simulation link for all roles --}}
-            <a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-flask w-5 shrink-0"></i><span>Simulation</span></a>
+            <a href="https://sensors-hub-simulator.vercel.app/" target="_blank" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-flask w-5 shrink-0"></i><span>Simulation</span></a>
         </nav>
 
         {{-- Bottom section --}}
@@ -268,7 +268,7 @@ header('Expires: 0');
                     <ul class="space-y-2">
                         <li><a href="{{ route('suggestions.community') }}" class="text-gray-400 hover:text-white transition">Community</a></li>
                         <li><a href="{{ route('shop.index') }}" class="text-gray-400 hover:text-white transition">Shop</a></li>
-                        <li><a href="https://donotopenthisweb.infinityfree.me/" target="_blank" class="text-gray-400 hover:text-white transition">Simulation</a></li>
+                        <li><a href="https://sensors-hub-simulator.vercel.app/" target="_blank" class="text-gray-400 hover:text-white transition">Simulation</a></li>
                     </ul>
                 </div>
                 <div>

@@ -72,7 +72,7 @@
                     <p class="text-sm text-gray-500 dark:text-gray-400">Explore sensor projects</p>
                 </div>
             </a>
-            <a href="https://sensorshub.infinityfree.me/" target="_blank" class="flex items-start sm:items-center p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-primary transition gap-3">
+            <a href="ttps://sensors-hub-simulator.vercel.app/" target="_blank" class="flex items-start sm:items-center p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-primary transition gap-3">
                 <i class="fas fa-flask text-orange-600 text-2xl shrink-0"></i>
                 <div>
                     <p class="font-semibold text-gray-800 dark:text-white">Simulation</p>
