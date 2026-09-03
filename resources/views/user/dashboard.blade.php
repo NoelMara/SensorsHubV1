@@ -107,7 +107,7 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400">Explore sensor projects</p>
                 </div>
             </a>
-            <a href="ttps://sensors-hub-simulator.vercel.app/" target="_blank" 
+            <a href="https://sensors-hub-simulator.vercel.app/" target="_blank" 
                 class="flex items-center gap-3 p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl hover:border-primary dark:hover:border-primary transition">
                 <div class="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center flex-shrink-0">
                     <i class="fas fa-flask text-orange-600 dark:text-orange-400"></i>
