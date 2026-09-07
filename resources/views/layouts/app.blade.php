@@ -262,7 +262,11 @@ header('Expires: 0');
         {{-- Bottom section --}}
         <div class="border-t border-gray-200 dark:border-gray-700 px-3 py-3 space-y-1 flex-shrink-0">
             {{-- Notifications --}}
-            @php $unreadCount = auth()->user()->notifications()->where('is_read', false)->count(); @endphp
+            @php 
+                $unreadCount = cache()->remember('unread_notifications_'.auth()->id(), 60, function() {
+                    return auth()->user()->notifications()->where('is_read', false)->count();
+                });
+            @endphp
             <a href="{{ route('notifications.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 relative">
                 <i class="fas fa-bell w-5 shrink-0"></i><span>Notifications</span>
                 @if($unreadCount > 0)<span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ $unreadCount }}</span>@endif
