@@ -95,6 +95,13 @@ header('Expires: 0');
             border-radius: 50%;
             pointer-events: none;
             z-index: 99999;
+            transition: opacity 0.4s, transform 0.3s;
+        }
+        .cursor-dot.idle {
+            opacity: 0;
+        }
+        .cursor-dot.clicking {
+            transform: scale(2);
         }
         .cursor-ring {
             position: fixed;
@@ -106,6 +113,13 @@ header('Expires: 0');
             z-index: 99998;
             opacity: 0.5;
             transition: width 0.3s, height 0.3s, opacity 0.3s, border-color 0.3s;
+        }
+        .cursor-ring.idle {
+            opacity: 0;
+        }
+        .cursor-ring.clicking {
+            transform: scale(0.7);
+            opacity: 0.8;
         }
         .cursor-ring.hovering {
             width: 45px;
@@ -750,6 +764,17 @@ header('Expires: 0');
             const ring = document.getElementById('cursorRing');
             let mouseX = -100, mouseY = -100;
             let ringX = -100, ringY = -100;
+            let idleTimer;
+            
+            function resetIdleTimer() {
+                dot.classList.remove('idle');
+                ring.classList.remove('idle');
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(() => {
+                    dot.classList.add('idle');
+                    ring.classList.add('idle');
+                }, 3000);
+            }
             
             document.addEventListener('mousemove', function(e) {
                 mouseX = e.clientX;
@@ -758,6 +783,8 @@ header('Expires: 0');
                 dot.style.left = mouseX - 3 + 'px';
                 dot.style.top = mouseY - 3 + 'px';
                 
+                resetIdleTimer();
+                
                 const target = e.target.closest('a, button, input, select, textarea, [role="button"]');
                 if (target) {
                     ring.classList.add('hovering');
@@ -765,6 +792,20 @@ header('Expires: 0');
                     ring.classList.remove('hovering');
                 }
             });
+            
+            document.addEventListener('mousedown', function() {
+                dot.classList.add('clicking');
+                ring.classList.add('clicking');
+            });
+            
+            document.addEventListener('mouseup', function() {
+                setTimeout(() => {
+                    dot.classList.remove('clicking');
+                    ring.classList.remove('clicking');
+                }, 150);
+            });
+            
+            resetIdleTimer();
             
             function animateRing() {
                 ringX += (mouseX - ringX) * 0.15;
