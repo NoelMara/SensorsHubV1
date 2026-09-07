@@ -269,7 +269,7 @@ header('Expires: 0');
             @endphp
             <a href="{{ route('notifications.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 relative">
                 <i class="fas fa-bell w-5 shrink-0"></i><span>Notifications</span>
-                @if($unreadCount > 0)<span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ $unreadCount }}</span>@endif
+                @if($unreadCount > 0)<span class="ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>@endif
             </a>
 
             {{-- Dark Mode --}}

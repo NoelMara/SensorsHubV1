@@ -39,8 +39,13 @@
                     </div>
 
                     <div class="p-5">
-                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4">
-                            <pre class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap font-mono">{{ $submission->content }}</pre>
+                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4 relative">
+                            <button onclick="copySubmission('{{ $submission->id }}')"
+                                class="absolute top-3 right-3 px-3 py-1.5 bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 rounded-lg text-xs font-medium hover:bg-gray-300 dark:hover:bg-gray-500 transition"
+                                title="Copy submission">
+                                <i class="fas fa-copy mr-1"></i> Copy
+                            </button>
+                            <pre id="submission-{{ $submission->id }}" class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap font-mono">{{ $submission->content }}</pre>
                         </div>
 
                         <form method="POST" action="{{ route('instructor.classes.assessments.grade', [$class, $assessment, $submission]) }}" class="flex items-end gap-3">
@@ -73,4 +78,23 @@
         </div>
     @endif
 </div>
+
+<script>
+function copySubmission(id) {
+    const content = document.getElementById('submission-' + id).innerText;
+    
+    navigator.clipboard.writeText(content).then(() => {
+        // Change button text temporarily
+        const btn = event.target.closest('button');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+        
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+        }, 2000);
+    }).catch(err => {
+        alert('Failed to copy. Please select the text manually.');
+    });
+}
+</script>
 @endsection
