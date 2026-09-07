@@ -85,6 +85,37 @@ header('Expires: 0');
         .animate-slide-in {
             animation: slideIn 0.3s ease-out;
         }
+
+        /* Custom Cursor */
+        .cursor-dot {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: #3B82F6;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+        }
+        .cursor-ring {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #3B82F6;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99998;
+            opacity: 0.5;
+            transition: width 0.3s, height 0.3s, opacity 0.3s, border-color 0.3s;
+        }
+        .cursor-ring.hovering {
+            width: 45px;
+            height: 45px;
+            border-color: #10B981;
+            opacity: 0.8;
+        }
+        @media (max-width: 1024px) {
+            .cursor-dot, .cursor-ring { display: none; }
+        }
     </style>
 
     <!-- Navigation -->
@@ -211,7 +242,7 @@ header('Expires: 0');
             @endif
 
             {{-- Simulation link for all roles --}}
-            <a href="hhttps://sensors-hub-simulator.vercel.app/" target="_blank" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-flask w-5 shrink-0"></i><span>Simulation</span></a>
+            <a href="https://sensors-hub-simulator.vercel.app/" target="_blank" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"><i class="fas fa-flask w-5 shrink-0"></i><span>Simulation</span></a>
         </nav>
 
         {{-- Bottom section --}}
@@ -268,7 +299,7 @@ header('Expires: 0');
                     <ul class="space-y-2">
                         <li><a href="{{ route('suggestions.community') }}" class="text-gray-400 hover:text-white transition">Community</a></li>
                         <li><a href="{{ route('shop.index') }}" class="text-gray-400 hover:text-white transition">Shop</a></li>
-                        <li><a href="hhttps://sensors-hub-simulator.vercel.app/" target="_blank" class="text-gray-400 hover:text-white transition">Simulation</a></li>
+                        <li><a href="https://sensors-hub-simulator.vercel.app/" target="_blank" class="text-gray-400 hover:text-white transition">Simulation</a></li>
                     </ul>
                 </div>
                 <div>
@@ -705,8 +736,50 @@ header('Expires: 0');
             }
         }
     </script>
-    @endif
+        @endif
     @endauth
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth < 1024) return;
+            
+            const dot = document.getElementById('cursorDot');
+            const ring = document.getElementById('cursorRing');
+            let mouseX = -100, mouseY = -100;
+            let ringX = -100, ringY = -100;
+            
+            document.addEventListener('mousemove', function(e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                
+                dot.style.left = mouseX - 3 + 'px';
+                dot.style.top = mouseY - 3 + 'px';
+                
+                const target = e.target.closest('a, button, input, select, textarea, [role="button"]');
+                if (target) {
+                    ring.classList.add('hovering');
+                } else {
+                    ring.classList.remove('hovering');
+                }
+            });
+            
+            function animateRing() {
+                ringX += (mouseX - ringX) * 0.15;
+                ringY += (mouseY - ringY) * 0.15;
+                
+                const offset = ring.classList.contains('hovering') ? 22.5 : 15;
+                ring.style.left = ringX - offset + 'px';
+                ring.style.top = ringY - offset + 'px';
+                
+                requestAnimationFrame(animateRing);
+            }
+            
+            animateRing();
+        });
+    </script>
 
 </body>
 </html>
