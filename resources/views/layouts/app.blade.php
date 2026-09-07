@@ -263,7 +263,7 @@ header('Expires: 0');
         <div class="border-t border-gray-200 dark:border-gray-700 px-3 py-3 space-y-1 flex-shrink-0">
             {{-- Notifications --}}
             @php 
-                $unreadCount = cache()->remember('unread_notifications_'.auth()->id(), 60, function() {
+                $unreadCount = cache()->remember('unread_notifications_'.auth()->id(), 15, function() {
                     return auth()->user()->notifications()->where('is_read', false)->count();
                 });
             @endphp
