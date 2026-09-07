@@ -82,19 +82,39 @@
 <script>
 function copySubmission(id) {
     const content = document.getElementById('submission-' + id).innerText;
+    const btn = event.target.closest('button');
     
-    navigator.clipboard.writeText(content).then(() => {
-        // Change button text temporarily
-        const btn = event.target.closest('button');
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
-        
-        setTimeout(() => {
-            btn.innerHTML = originalHTML;
-        }, 2000);
-    }).catch(err => {
-        alert('Failed to copy. Please select the text manually.');
-    });
+    // Try modern clipboard API first
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(content).then(() => {
+            showCopied(btn);
+        }).catch(() => {
+            fallbackCopy(content, btn);
+        });
+    } else {
+        // Fallback for non-HTTPS
+        fallbackCopy(content, btn);
+    }
+}
+
+function fallbackCopy(text, btn) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    textarea.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    
+    showCopied(btn);
+}
+
+function showCopied(btn) {
+    const originalHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
+    setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
 }
 </script>
 @endsection
