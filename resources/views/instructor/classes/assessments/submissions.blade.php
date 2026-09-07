@@ -82,24 +82,11 @@
 <script>
 function copySubmission(id) {
     const content = document.getElementById('submission-' + id).innerText;
-    const btn = event.target.closest('button');
+    const btn = document.querySelector('#submission-' + id).parentElement.querySelector('button');
     
-    // Try modern clipboard API first
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(content).then(() => {
-            showCopied(btn);
-        }).catch(() => {
-            fallbackCopy(content, btn);
-        });
-    } else {
-        // Fallback for non-HTTPS
-        fallbackCopy(content, btn);
-    }
-}
-
-function fallbackCopy(text, btn) {
+    // Simple fallback that works everywhere
     const textarea = document.createElement('textarea');
-    textarea.value = text;
+    textarea.value = content;
     textarea.style.position = 'fixed';
     textarea.style.opacity = '0';
     document.body.appendChild(textarea);
@@ -108,10 +95,6 @@ function fallbackCopy(text, btn) {
     document.execCommand('copy');
     document.body.removeChild(textarea);
     
-    showCopied(btn);
-}
-
-function showCopied(btn) {
     const originalHTML = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-check mr-1"></i> Copied!';
     setTimeout(() => { btn.innerHTML = originalHTML; }, 2000);
