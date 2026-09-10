@@ -199,35 +199,37 @@ class ClassroomController extends Controller
         $totalAssessments = $assessments->count();
         $totalQuizzes = $quizzes->count();
         
-        $leaderboard = $students->map(function ($student) use ($assessments, $quizzes, $totalAssessments, $totalQuizzes) {
-            $submissions = AssessmentSubmission::where('user_id', $student->id)
-                ->whereIn('assessment_id', $assessments->pluck('id'))->get();
-            $quizSubmissions = QuizSubmission::where('user_id', $student->id)
-                ->whereIn('quiz_id', $quizzes->pluck('id'))->get();
+        // Batch load ALL submissions (fixes N+1)
+        $allAssessmentSubs = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))->get();
+        $allQuizSubs = QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))->get();
+
+        $leaderboard = $students->map(function ($student) use ($assessments, $quizzes, $totalAssessments, $totalQuizzes, $allAssessmentSubs, $allQuizSubs) {
+            $submissions = $allAssessmentSubs->where('user_id', $student->id);
+            $quizSubmissions = $allQuizSubs->where('user_id', $student->id);
             
             $assessmentPoints = $submissions->sum('score');
             $quizPoints = $quizSubmissions->sum('score');
             $totalPoints = $assessmentPoints + $quizPoints;
             
-            $pending = $assessments->filter(function ($assessment) use ($student) {
-                return !AssessmentSubmission::where('assessment_id', $assessment->id)
-                    ->where('user_id', $student->id)->exists() 
+            // Use already-loaded submissions (no more DB queries)
+            $submittedAssessmentIds = $submissions->pluck('assessment_id')->toArray();
+            $submittedQuizIds = $quizSubmissions->pluck('quiz_id')->toArray();
+
+            $pending = $assessments->filter(function ($assessment) use ($submittedAssessmentIds) {
+                return !in_array($assessment->id, $submittedAssessmentIds)
                     && (!$assessment->due_date || now()->lessThanOrEqualTo($assessment->due_date));
             })->count();
-            $pending += $quizzes->filter(function ($quiz) use ($student) {
-                return !QuizSubmission::where('quiz_id', $quiz->id)
-                    ->where('user_id', $student->id)->exists() 
+            $pending += $quizzes->filter(function ($quiz) use ($submittedQuizIds) {
+                return !in_array($quiz->id, $submittedQuizIds)
                     && (!$quiz->due_date || now()->lessThanOrEqualTo($quiz->due_date));
             })->count();
-            
-            $overdue = $assessments->filter(function ($assessment) use ($student) {
-                return !AssessmentSubmission::where('assessment_id', $assessment->id)
-                    ->where('user_id', $student->id)->exists() 
+
+            $overdue = $assessments->filter(function ($assessment) use ($submittedAssessmentIds) {
+                return !in_array($assessment->id, $submittedAssessmentIds)
                     && $assessment->due_date && now()->isAfter($assessment->due_date);
             })->count();
-            $overdue += $quizzes->filter(function ($quiz) use ($student) {
-                return !QuizSubmission::where('quiz_id', $quiz->id)
-                    ->where('user_id', $student->id)->exists() 
+            $overdue += $quizzes->filter(function ($quiz) use ($submittedQuizIds) {
+                return !in_array($quiz->id, $submittedQuizIds)
                     && $quiz->due_date && now()->isAfter($quiz->due_date);
             })->count();
             
