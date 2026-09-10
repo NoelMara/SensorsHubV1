@@ -88,6 +88,7 @@ class QuizController extends Controller
     public function edit(Classroom $class, Quiz $quiz)
     {
         if ($class->instructor_id !== auth()->id()) abort(403);
+        if ($quiz->class_id !== $class->id) abort(404);
         $quiz->load('questions.options');
         return view('instructor.classes.quizzes.edit', compact('class', 'quiz'));
     }
@@ -96,6 +97,7 @@ class QuizController extends Controller
     public function update(Request $request, Classroom $class, Quiz $quiz)
     {
         if ($class->instructor_id !== auth()->id()) abort(403);
+        if ($quiz->class_id !== $class->id) abort(404);
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -157,6 +159,7 @@ class QuizController extends Controller
     public function destroy(Classroom $class, Quiz $quiz)
     {
         if ($class->instructor_id !== auth()->id()) abort(403);
+        if ($quiz->class_id !== $class->id) abort(404);
         $quiz->delete();
         ActivityLogHelper::log('deleted', 'quiz', "deleted quiz '{$quiz->title}'");
         return back()->with('success', 'Quiz deleted!');
@@ -165,6 +168,17 @@ class QuizController extends Controller
     // Student/Instructor: Show Quiz
     public function show(Classroom $class, Quiz $quiz)
     {
+        if ($quiz->class_id !== $class->id) abort(404);
+
+        // Students must be enrolled
+        if (!auth()->user()->isInstructor() && !auth()->user()->isAdministrator()) {
+            $enrolled = $class->students()
+                ->where('user_id', auth()->id())
+                ->wherePivot('status', 'approved')
+                ->exists();
+            if (!$enrolled) abort(403);
+        }
+
         $quiz->load('questions.options');
         $submission = QuizSubmission::where('quiz_id', $quiz->id)->where('user_id', auth()->id())->first();
         return view('user.classes.quizzes.show', compact('class', 'quiz', 'submission'));
@@ -173,6 +187,15 @@ class QuizController extends Controller
     // Student: Submit Quiz
     public function submit(Request $request, Classroom $class, Quiz $quiz)
     {
+        if ($quiz->class_id !== $class->id) abort(404);
+
+        // Students must be enrolled
+        $enrolled = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->exists();
+        if (!$enrolled) abort(403);
+
         if ($quiz->due_date && now()->isAfter($quiz->due_date)) {
             return back()->with('error', 'This quiz is past the due date.');
         }
@@ -224,6 +247,19 @@ class QuizController extends Controller
     // Student: List Quizzes
     public function studentIndex(Classroom $class)
     {
+        // Instructor/Admin can view
+        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
+            $quizzes = $class->quizzes()->where('is_published', true)->latest()->paginate(10);
+            return view('user.classes.quizzes.index', compact('class', 'quizzes'));
+        }
+
+        // Students must be enrolled
+        $enrolled = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->exists();
+        if (!$enrolled) abort(403);
+
         $quizzes = $class->quizzes()->where('is_published', true)->latest()->paginate(10);
         return view('user.classes.quizzes.index', compact('class', 'quizzes'));
     }
@@ -232,9 +268,11 @@ class QuizController extends Controller
     public function submissions(Classroom $class, Quiz $quiz)
     {
         if ($class->instructor_id !== auth()->id()) abort(403);
+        if ($quiz->class_id !== $class->id) abort(404);
         $submissions = $quiz->submissions()->with('user')->latest()->get();
         return view('instructor.classes.quizzes.submissions', compact('class', 'quiz', 'submissions'));
     }
+
     // Instructor: Import Form
     public function import(Classroom $class)
     {
