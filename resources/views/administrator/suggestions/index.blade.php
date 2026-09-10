@@ -9,6 +9,30 @@
         <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Review user feedback and track status.</p>
     </div>
 
+    {{-- Search & Filter --}}
+    <form method="GET" action="{{ route('administrator.suggestions.index') }}" class="mb-6 flex flex-col sm:flex-row gap-3">
+        <div class="relative flex-1">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by title, description, or user..."
+                class="w-full pl-11 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition">
+        </div>
+        <select name="status" class="px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm">
+            <option value="">All Status</option>
+            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+            <option value="reviewed" {{ request('status') === 'reviewed' ? 'selected' : '' }}>Reviewed</option>
+            <option value="implemented" {{ request('status') === 'implemented' ? 'selected' : '' }}>Implemented</option>
+            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
+        </select>
+        <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium">
+            <i class="fas fa-search mr-1.5"></i> Search
+        </button>
+        @if(request('search') || request('status'))
+            <a href="{{ route('administrator.suggestions.index') }}" class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium text-center">
+                <i class="fas fa-times mr-1"></i> Clear
+            </a>
+        @endif
+    </form>
+
     {{-- Stats --}}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
@@ -81,9 +105,17 @@
         @endif
     @else
         <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <i class="fas fa-lightbulb text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
-            <h3 class="text-lg font-bold text-gray-600 dark:text-gray-400">No Suggestions Yet</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">User feedback will appear here once submitted.</p>
+            <i class="fas fa-search text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+            @if(request('search') || request('status'))
+                <h3 class="text-lg font-bold text-gray-600 dark:text-gray-400">No Results Found</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Try adjusting your search or filters.</p>
+                <a href="{{ route('administrator.suggestions.index') }}" class="inline-block mt-4 text-primary hover:underline text-sm font-medium">
+                    <i class="fas fa-times mr-1"></i> Clear filters
+                </a>
+            @else
+                <h3 class="text-lg font-bold text-gray-600 dark:text-gray-400">No Suggestions Yet</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">User feedback will appear here once submitted.</p>
+            @endif
         </div>
     @endif
 </div>

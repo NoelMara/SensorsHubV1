@@ -10,9 +10,26 @@ use Illuminate\Http\Request;
 
 class SuggestionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $suggestions = Suggestion::with('user')->latest()->paginate(10);
+        $query = Suggestion::with('user');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'ilike', "%{$search}%")
+                  ->orWhere('description', 'ilike', "%{$search}%")
+                  ->orWhereHas('user', function($u) use ($search) {
+                      $u->where('name', 'ilike', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $suggestions = $query->latest()->paginate(10)->withQueryString();
         $stats = [
             'total'       => Suggestion::count(),
             'pending'     => Suggestion::where('status', 'pending')->count(),
