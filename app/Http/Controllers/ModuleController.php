@@ -75,6 +75,8 @@ class ModuleController extends Controller
 
     public function show(Classroom $class, Module $module)
     {
+        if ($module->class_id !== $class->id) abort(404);
+
         // Allow instructors to preview
         if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
             return view('user.classes.modules.show', compact('class', 'module'));
@@ -98,6 +100,7 @@ class ModuleController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+        if ($module->class_id !== $class->id) abort(404);
         return view('instructor.classes.modules.edit', compact('class', 'module'));
     }
 
@@ -106,6 +109,8 @@ class ModuleController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+        if ($module->class_id !== $class->id) abort(404);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
@@ -150,6 +155,7 @@ class ModuleController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+        if ($module->class_id !== $class->id) abort(404);
         
         $filePath = $module->file_path;
         $module->delete();
