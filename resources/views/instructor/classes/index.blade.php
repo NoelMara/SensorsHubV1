@@ -87,13 +87,21 @@
     @else
         <div class="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div class="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-chalkboard text-3xl text-gray-400"></i>
+                <i class="fas fa-search text-3xl text-gray-400"></i>
             </div>
-            <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-400">No Classes Yet</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6">Create your first class and share the code with students!</p>
-            <a href="{{ route('instructor.classes.create') }}" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
-                <i class="fas fa-plus mr-1.5"></i> Create Class
-            </a>
+            @if(request('search'))
+                <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-400">No Classes Found</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6">Try a different search term.</p>
+                <a href="{{ route('instructor.classes.index') }}" class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
+                    <i class="fas fa-times mr-1"></i> Clear Search
+                </a>
+            @else
+                <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-400">No Classes Yet</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6">Create your first class and share the code with students!</p>
+                <a href="{{ route('instructor.classes.create') }}" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
+                    <i class="fas fa-plus mr-1.5"></i> Create Class
+                </a>
+            @endif
         </div>
     @endif
 </div>
