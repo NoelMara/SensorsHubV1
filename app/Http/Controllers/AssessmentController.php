@@ -66,6 +66,9 @@ class AssessmentController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+        if ($assessment->class_id !== $class->id) {
+            abort(404);
+        }
         return view('instructor.classes.assessments.edit', compact('class', 'assessment'));
     }
 
@@ -73,6 +76,9 @@ class AssessmentController extends Controller
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
+        }
+        if ($assessment->class_id !== $class->id) {
+            abort(404);
         }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -101,6 +107,10 @@ class AssessmentController extends Controller
 
     public function show(Classroom $class, Assessment $assessment)
     {
+        if ($assessment->class_id !== $class->id) {
+            abort(404);
+        }
+
         if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
             $submission = AssessmentSubmission::where('assessment_id', $assessment->id)
                 ->where('user_id', auth()->id())
@@ -126,6 +136,10 @@ class AssessmentController extends Controller
 
     public function submit(Request $request, Classroom $class, Assessment $assessment)
     {
+        if ($assessment->class_id !== $class->id) {
+            abort(404);
+        }
+
         $enrolled = $class->students()
             ->where('user_id', auth()->id())
             ->wherePivot('status', 'approved')
@@ -167,6 +181,9 @@ class AssessmentController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+        if ($assessment->class_id !== $class->id) {
+            abort(404);
+        }
         $submissions = $assessment->submissions()->with('user')->get();
         return view('instructor.classes.assessments.submissions', compact('class', 'assessment', 'submissions'));
     }
@@ -175,6 +192,12 @@ class AssessmentController extends Controller
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
+        }
+        if ($assessment->class_id !== $class->id) {
+            abort(404);
+        }
+        if ($submission->assessment_id !== $assessment->id) {
+            abort(404);
         }
         $validated = $request->validate([
             'score' => 'required|integer|min:0|max:' . $assessment->points,
@@ -201,6 +224,9 @@ class AssessmentController extends Controller
     {
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
+        }
+        if ($assessment->class_id !== $class->id) {
+            abort(404);
         }
         $assessment->delete();
         ActivityLogHelper::log('deleted', 'assessment', "deleted assessment '{$assessment->title}'");
