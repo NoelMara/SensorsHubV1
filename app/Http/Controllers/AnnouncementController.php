@@ -62,6 +62,7 @@ class AnnouncementController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+        if ($announcement->class_id !== $class->id) abort(404);
         return view('instructor.classes.announcements.edit', compact('class', 'announcement'));
     }
 
@@ -70,6 +71,8 @@ class AnnouncementController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+        if ($announcement->class_id !== $class->id) abort(404);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
@@ -103,6 +106,7 @@ class AnnouncementController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+        if ($announcement->class_id !== $class->id) abort(404);
         $announcement->delete();
         return back()->with('success', 'Announcement deleted!');
     }
