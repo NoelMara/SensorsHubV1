@@ -12,9 +12,20 @@ use Illuminate\Http\Request;
 
 class ClassroomController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $classes = Classroom::where('instructor_id', auth()->id())->latest()->paginate(3);
+        $query = Classroom::where('instructor_id', auth()->id());
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'ilike', "%{$search}%")
+                  ->orWhere('section', 'ilike', "%{$search}%")
+                  ->orWhere('code', 'ilike', "%{$search}%");
+            });
+        }
+
+        $classes = $query->latest()->paginate(3)->withQueryString();
         return view('instructor.classes.index', compact('classes'));
     }
 
