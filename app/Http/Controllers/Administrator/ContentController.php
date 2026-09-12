@@ -15,9 +15,12 @@ use Illuminate\Support\Str;
 
 class ContentController extends Controller
 {
-    public function sensors()
+    public function sensors(Request $request)
     {
-        $items = Sensor::latest()->paginate(10);
+        $search = $request->query('search');
+        $items = Sensor::when($search, function ($q) use ($search) {
+            $q->where('name', 'ilike', "%{$search}%");
+        })->latest()->paginate(10)->withQueryString();
         $stats = [
             'total' => Sensor::count(),
             'active' => Sensor::where('is_active', true)->count(),
@@ -33,9 +36,14 @@ class ContentController extends Controller
         ]);
     }
 
-    public function projects()
+    public function projects(Request $request)
     {
-        $items = Project::with('sensor')->latest()->paginate(10);
+        $search = $request->query('search');
+        $items = Project::with('sensor')
+            ->when($search, function ($q) use ($search) {
+                $q->where('title', 'ilike', "%{$search}%");
+            })
+            ->latest()->paginate(10)->withQueryString();
         $stats = [
             'total' => Project::count(),
             'active' => Project::where('is_active', true)->count(),
@@ -52,9 +60,12 @@ class ContentController extends Controller
         ]);
     }
 
-    public function products()
+    public function products(Request $request)
     {
-        $items = Product::latest()->paginate(10);
+        $search = $request->query('search');
+        $items = Product::when($search, function ($q) use ($search) {
+            $q->where('name', 'ilike', "%{$search}%");
+        })->latest()->paginate(10)->withQueryString();
         $stats = [
             'total' => Product::count(),
             'active' => Product::where('is_active', true)->count(),
@@ -70,9 +81,14 @@ class ContentController extends Controller
         ]);
     }
 
-    public function videos()
+    public function videos(Request $request)
     {
-        $items = Video::with('sensor')->latest()->paginate(10);
+        $search = $request->query('search');
+        $items = Video::with('sensor')
+            ->when($search, function ($q) use ($search) {
+                $q->where('title', 'ilike', "%{$search}%");
+            })
+            ->latest()->paginate(10)->withQueryString();
         $stats = [
             'total' => Video::count(),
             'active' => Video::where('is_active', true)->count(),
