@@ -150,6 +150,7 @@ header('Expires: 0');
                     <a href="{{ route('videos.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Tutorials</a>
                     <a href="{{ route('suggestions.community') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Community</a>
                     <a href="{{ route('shop.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Shop</a>
+                    <a href="https://sensors-hub-simulator.vercel.app/" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Simulation</a>
                     <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition">Login</a>
                     <a href="{{ route('register') }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">Register</a>
                     <button id="darkModeToggle" class="text-gray-700 dark:text-gray-300 hover:text-primary"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:inline"></i></button>
@@ -167,6 +168,7 @@ header('Expires: 0');
                 <a href="{{ route('videos.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-play-circle w-5"></i> Tutorials</a>
                 <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-comments w-5"></i> Community</a>
                 <a href="{{ route('shop.index') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-store w-5"></i> Shop</a>
+                <a href="https://sensors-hub-simulator.vercel.app/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-flask w-5"></i> Simulation</a>
                 <a href="{{ route('login') }}" class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-key w-5"></i> Login</a>
                 <a href="{{ route('register') }}" class="flex items-center gap-3 px-3 py-2 text-primary font-semibold hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-user-plus w-5"></i> Register</a>
                 <button id="mobileDarkModeToggle" class="flex items-center gap-3 w-full px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"><i class="fas fa-moon dark:hidden w-5"></i><i class="fas fa-sun hidden dark:inline w-5"></i> Dark Mode</button>
