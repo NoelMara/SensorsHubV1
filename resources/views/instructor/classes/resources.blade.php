@@ -67,7 +67,7 @@
                         {{-- Thumbnail --}}
                         <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
                             @if($sensor->image)
-                                <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : asset($sensor->image) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover">
+                                <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : asset($sensor->image) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover" loading="lazy">
                             @else
                                 <i class="fas fa-microchip text-gray-400"></i>
                             @endif
@@ -147,7 +147,7 @@
                         {{-- YouTube Thumbnail --}}
                         <div class="w-12 h-12 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0 overflow-hidden">
                             @if($video->youtube_id)
-                                <img src="https://img.youtube.com/vi/{{ $video->youtube_id }}/mqdefault.jpg" alt="{{ $video->title }}" class="w-full h-full object-cover">
+                                <img src="https://img.youtube.com/vi/{{ $video->youtube_id }}/mqdefault.jpg" alt="{{ $video->title }}" class="w-full h-full object-cover" loading="lazy">
                             @else
                                 <i class="fas fa-video text-red-600 dark:text-red-400"></i>
                             @endif
