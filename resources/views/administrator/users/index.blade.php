@@ -14,6 +14,26 @@
         </a>
     </div>
 
+    {{-- Search --}}
+    <form method="GET" action="{{ route('administrator.users.index') }}" class="mb-6 flex flex-col sm:flex-row gap-3">
+        @if($role)
+            <input type="hidden" name="role" value="{{ $role }}">
+        @endif
+        <div class="relative flex-1">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name or email..."
+                class="w-full pl-11 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition">
+        </div>
+        <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium">
+            <i class="fas fa-search mr-1.5"></i> Search
+        </button>
+        @if(request('search'))
+            <a href="{{ route('administrator.users.index', $role ? ['role' => $role] : []) }}" class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium text-center">
+                <i class="fas fa-times mr-1"></i> Clear
+            </a>
+        @endif
+    </form>
+
     {{-- Filter Tabs --}}
     <div class="flex flex-wrap gap-2 mb-6">
         <a href="{{ route('administrator.users.index') }}" class="px-4 py-2 rounded-lg text-sm font-medium transition {{ !$role ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700' }}">All ({{ $roleCounts['all'] }})</a>

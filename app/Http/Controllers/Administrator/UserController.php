@@ -15,8 +15,15 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $role = $request->query('role');
+        $search = $request->query('search');
 
         $users = User::when($role, fn ($query) => $query->where('role', $role))
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'ilike', "%{$search}%")
+                    ->orWhere('email', 'ilike', "%{$search}%");
+                });
+            })
             ->latest()
             ->paginate(12)
             ->withQueryString();
