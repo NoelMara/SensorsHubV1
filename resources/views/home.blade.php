@@ -215,73 +215,135 @@
     </div>
 </div>
 @else
-{{-- ==================== GUEST HOME (redesigned) ==================== --}}
+{{-- ==================== GUEST HOME (workbench redesign) ==================== --}}
 
-{{-- Fonts --}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-    .guest-home { font-family: 'IBM Plex Sans', system-ui, sans-serif; }
-    .guest-mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+    .wb { font-family: 'Inter', system-ui, sans-serif; }
+    .wb-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    .wb-noise {
+        background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+        background-size: 24px 24px;
+    }
+    .wb-grid {
+        background-image:
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+        background-size: 48px 48px;
+    }
+    @keyframes wb-blink {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0; }
+    }
+    .wb-cursor {
+        display: inline-block;
+        width: 0.55ch;
+        height: 1.05em;
+        background: #10B981;
+        vertical-align: text-bottom;
+        animation: wb-blink 1.1s infinite;
+        margin-left: 2px;
+    }
+    @keyframes wb-pulse-dot {
+        0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+        50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+    }
+    .wb-live-dot {
+        animation: wb-pulse-dot 2s ease-in-out infinite;
+    }
 </style>
 
-<div class="guest-home">
+<div class="wb bg-gray-950 text-white">
 
-{{-- Hero Section --}}
-<section class="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {{-- Left: Text --}}
-            <div>
-                <p class="guest-mono text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-4">
-                    &gt; sensor.lab_
-                </p>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.05] text-gray-900 dark:text-white mb-6">
-                    Learn sensors.<br>
-                    Build real circuits.
+{{-- ============ HERO: WORKBENCH ============ --}}
+<section class="relative overflow-hidden border-b border-white/5 wb-grid">
+    <div class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-emerald-500/5 blur-3xl pointer-events-none"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div class="lg:col-span-7">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/5 mb-8">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 wb-live-dot"></span>
+                    <span class="wb-mono text-[11px] uppercase tracking-widest text-emerald-400">open for learning</span>
+                </div>
+
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.95] tracking-tight mb-8">
+                    The workbench<br>
+                    for <span class="text-emerald-400">makers</span> who<br>
+                    want to <span class="text-amber-400">build</span>.
                 </h1>
-                <p class="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-lg">
-                    A hands-on workspace for students and makers. Study components, follow real projects, test circuits in a live simulator.
+
+                <p class="text-lg text-gray-400 max-w-xl mb-10 leading-relaxed">
+                    Sensor guides, real project walkthroughs, and a live simulator — all in one place. No fluff. Just components, code, and things that actually work.
                 </p>
+
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <a href="{{ route('sensors.index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-                        Browse Sensors
-                        <i class="fas fa-arrow-right text-sm"></i>
+                    <a href="{{ route('sensors.index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-emerald-500 text-gray-950 font-bold rounded-md hover:bg-emerald-400 transition group">
+                        Start with sensors
+                        <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
                     </a>
-                    <a href="{{ route('projects.index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                        View Projects
+                    <a href="{{ route('projects.index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-white/15 text-white font-bold rounded-md hover:bg-white/5 transition">
+                        See projects
                     </a>
+                </div>
+
+                <div class="mt-10 flex items-center gap-2 wb-mono text-xs text-gray-500">
+                    <span class="text-emerald-400">$</span>
+                    <span>ready when you are</span>
+                    <span class="wb-cursor"></span>
                 </div>
             </div>
 
-            {{-- Right: Technical Spec Card --}}
-            <div class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-950">
-                {{-- Terminal Header --}}
-                <div class="flex items-center gap-2 px-4 py-3 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-                    <span class="w-3 h-3 rounded-full bg-red-400"></span>
-                    <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
-                    <span class="w-3 h-3 rounded-full bg-green-400"></span>
-                    <span class="guest-mono text-xs text-gray-500 dark:text-gray-400 ml-2">sensorshub — specs</span>
-                </div>
-                {{-- Specs Grid --}}
-                <div class="p-6 space-y-4 guest-mono text-sm">
-                    <div class="flex items-center justify-between border-b border-dashed border-gray-200 dark:border-gray-800 pb-3">
-                        <span class="text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs">Sensors</span>
-                        <span class="text-blue-600 dark:text-blue-400 font-semibold">{{ str_pad($featuredSensors->count(), 3, '0', STR_PAD_LEFT) }}</span>
-                    </div>
-                    <div class="flex items-center justify-between border-b border-dashed border-gray-200 dark:border-gray-800 pb-3">
-                        <span class="text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs">Projects</span>
-                        <span class="text-blue-600 dark:text-blue-400 font-semibold">{{ str_pad($featuredProjects->count(), 3, '0', STR_PAD_LEFT) }}</span>
-                    </div>
-                    <div class="flex items-center justify-between border-b border-dashed border-gray-200 dark:border-gray-800 pb-3">
-                        <span class="text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs">Tutorials</span>
-                        <span class="text-blue-600 dark:text-blue-400 font-semibold">{{ str_pad($latestVideos->count(), 3, '0', STR_PAD_LEFT) }}</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <span class="text-gray-500 dark:text-gray-400 uppercase tracking-wide text-xs">Simulator</span>
-                        <span class="text-green-600 dark:text-green-400 font-semibold">● ONLINE</span>
+            <div class="lg:col-span-5">
+                <div class="relative">
+                    <div class="absolute -inset-1 bg-gradient-to-br from-emerald-500/20 via-transparent to-amber-500/20 rounded-xl blur-lg"></div>
+
+                    <div class="relative bg-gray-900 border border-white/10 rounded-xl overflow-hidden">
+                        <div class="flex items-center justify-between px-4 py-2.5 border-b border-white/5 bg-black/40">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/70"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/70"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/70"></span>
+                            </div>
+                            <span class="wb-mono text-[10px] uppercase tracking-widest text-gray-500">live / sensor-01</span>
+                        </div>
+
+                        <div class="p-6 space-y-5">
+                            <div>
+                                <div class="flex items-baseline justify-between mb-2">
+                                    <span class="wb-mono text-[10px] uppercase tracking-widest text-gray-500">Temperature</span>
+                                    <span class="wb-mono text-[10px] text-emerald-400">● stable</span>
+                                </div>
+                                <div class="flex items-baseline gap-2">
+                                    <span class="wb-mono text-5xl font-bold text-white tabular-nums">24.5</span>
+                                    <span class="wb-mono text-xl text-gray-500">°C</span>
+                                </div>
+                                <svg class="w-full h-8 mt-2" viewBox="0 0 300 30" preserveAspectRatio="none">
+                                    <polyline fill="none" stroke="#10B981" stroke-width="1.5" points="0,20 20,18 40,22 60,15 80,12 100,16 120,10 140,14 160,8 180,12 200,9 220,11 240,7 260,10 280,8 300,6"/>
+                                </svg>
+                            </div>
+
+                            <div class="border-t border-white/5"></div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="wb-mono text-[10px] uppercase tracking-widest text-gray-500 mb-1">Humidity</p>
+                                    <p class="wb-mono text-2xl font-bold text-white tabular-nums">62<span class="text-sm text-gray-500">%</span></p>
+                                </div>
+                                <div>
+                                    <p class="wb-mono text-[10px] uppercase tracking-widest text-gray-500 mb-1">Distance</p>
+                                    <p class="wb-mono text-2xl font-bold text-white tabular-nums">142<span class="text-sm text-gray-500">cm</span></p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-4 border-t border-white/5 wb-mono text-[10px] uppercase tracking-widest">
+                                <span class="text-gray-500">Uptime</span>
+                                <span class="text-emerald-400">00:14:23:07</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -289,123 +351,170 @@
     </div>
 </section>
 
-{{-- Featured Sensors — Datasheet Style --}}
-<section class="bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="flex items-end justify-between mb-8 gap-4">
-            <div>
-                <p class="guest-mono text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-2">// 01</p>
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Sensors</h2>
+{{-- ============ NUMBERS STRIP ============ --}}
+<section class="border-b border-white/5 bg-black">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 divide-x divide-white/5">
+            <div class="py-8 px-6">
+                <p class="wb-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Sensors</p>
+                <p class="wb-mono text-4xl font-bold text-white tabular-nums">{{ str_pad($featuredSensors->count(), 2, '0', STR_PAD_LEFT) }}</p>
             </div>
-            <a href="{{ route('sensors.index') }}" class="guest-mono text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap">
-                All Sensors →
+            <div class="py-8 px-6">
+                <p class="wb-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Projects</p>
+                <p class="wb-mono text-4xl font-bold text-white tabular-nums">{{ str_pad($featuredProjects->count(), 2, '0', STR_PAD_LEFT) }}</p>
+            </div>
+            <div class="py-8 px-6">
+                <p class="wb-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Tutorials</p>
+                <p class="wb-mono text-4xl font-bold text-white tabular-nums">{{ str_pad($latestVideos->count(), 2, '0', STR_PAD_LEFT) }}</p>
+            </div>
+            <div class="py-8 px-6">
+                <p class="wb-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">Simulator</p>
+                <p class="wb-mono text-4xl font-bold text-emerald-400">LIVE</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- ============ SENSORS: COMPONENT DRAWER ============ --}}
+<section class="border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="flex items-end justify-between mb-12 gap-4">
+            <div>
+                <p class="wb-mono text-[11px] uppercase tracking-widest text-emerald-400 mb-3">— 01 / sensors</p>
+                <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight">Browse the drawer</h2>
+            </div>
+            <a href="{{ route('sensors.index') }}" class="hidden sm:inline-flex items-center gap-2 wb-mono text-xs uppercase tracking-widest text-gray-400 hover:text-emerald-400 transition">
+                View all <i class="fas fa-arrow-right text-[10px]"></i>
             </a>
         </div>
 
-        <div class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-white dark:bg-gray-900">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5 border border-white/5 rounded-lg overflow-hidden">
             @foreach($featuredSensors as $index => $sensor)
-            <a href="{{ route('sensors.show', $sensor->slug) }}" class="flex items-center gap-4 sm:gap-6 px-4 sm:px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition border-b border-gray-100 dark:border-gray-800 last:border-0 group">
-                {{-- Index --}}
-                <span class="guest-mono text-xs text-gray-400 dark:text-gray-600 w-8 flex-shrink-0">
+            <a href="{{ route('sensors.show', $sensor->slug) }}" class="group relative bg-gray-950 hover:bg-gray-900 p-6 transition">
+                <div class="absolute top-4 right-4 wb-mono text-[10px] text-gray-600">
                     {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
-                </span>
-                {{-- Thumbnail --}}
-                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0 overflow-hidden border border-gray-200 dark:border-gray-700">
+                </div>
+
+                <div class="w-full h-40 mb-5 bg-black/40 border border-white/5 rounded-lg flex items-center justify-center overflow-hidden">
                     @if($sensor->image)
-                        <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : (Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image)) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover" loading="lazy">
+                        <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : (Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image)) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                     @else
-                        <i class="fas fa-microchip text-gray-400"></i>
+                        <i class="fas fa-microchip text-4xl text-gray-700"></i>
                     @endif
                 </div>
-                {{-- Name + Description --}}
-                <div class="flex-1 min-w-0">
-                    <p class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition truncate">
-                        {{ $sensor->name }}
-                    </p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ Str::limit($sensor->description, 70) }}</p>
+
+                <h3 class="text-lg font-bold mb-2 group-hover:text-emerald-400 transition line-clamp-2">
+                    {{ $sensor->name }}
+                </h3>
+
+                <p class="text-sm text-gray-500 line-clamp-2 mb-4">{{ Str::limit($sensor->description, 90) }}</p>
+
+                <div class="flex items-center justify-between pt-4 border-t border-white/5">
+                    <span class="wb-mono text-[10px] uppercase tracking-widest text-gray-600">sensor</span>
+                    <i class="fas fa-arrow-right text-xs text-gray-600 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all"></i>
                 </div>
-                {{-- Arrow --}}
-                <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-1 transition-all flex-shrink-0"></i>
             </a>
             @endforeach
+        </div>
+
+        <div class="sm:hidden text-center mt-8">
+            <a href="{{ route('sensors.index') }}" class="inline-flex items-center gap-2 wb-mono text-xs uppercase tracking-widest text-gray-400 hover:text-emerald-400 transition">
+                View all sensors <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
         </div>
     </div>
 </section>
 
-{{-- Featured Projects — Numbered List --}}
-<section class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="flex items-end justify-between mb-8 gap-4">
+{{-- ============ PROJECTS: WORKBENCH LIST ============ --}}
+<section class="border-b border-white/5 bg-black">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="flex items-end justify-between mb-12 gap-4">
             <div>
-                <p class="guest-mono text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-2">// 02</p>
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Projects</h2>
+                <p class="wb-mono text-[11px] uppercase tracking-widest text-amber-400 mb-3">— 02 / projects</p>
+                <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight">Build these next</h2>
             </div>
-            <a href="{{ route('projects.index') }}" class="guest-mono text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap">
-                All Projects →
+            <a href="{{ route('projects.index') }}" class="hidden sm:inline-flex items-center gap-2 wb-mono text-xs uppercase tracking-widest text-gray-400 hover:text-amber-400 transition">
+                View all <i class="fas fa-arrow-right text-[10px]"></i>
             </a>
         </div>
 
-        <div class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
+        <div class="space-y-px bg-white/5 rounded-lg overflow-hidden border border-white/5">
             @foreach($featuredProjects as $index => $project)
-            <a href="{{ route('projects.show', $project->slug) }}" class="block px-4 sm:px-6 py-5 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition border-b border-gray-100 dark:border-gray-800 last:border-0 group">
-                <div class="flex items-start gap-4 sm:gap-6">
-                    <span class="guest-mono text-xs text-gray-400 dark:text-gray-600 w-8 flex-shrink-0 pt-1">
-                        {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
-                    </span>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="font-semibold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition mb-2">
+            <a href="{{ route('projects.show', $project->slug) }}" class="group block bg-gray-950 hover:bg-gray-900 px-6 py-6 transition">
+                <div class="grid grid-cols-12 gap-6 items-center">
+                    <div class="col-span-2 sm:col-span-1">
+                        <span class="wb-mono text-3xl font-bold text-gray-700 group-hover:text-amber-400 transition tabular-nums">
+                            {{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}
+                        </span>
+                    </div>
+
+                    <div class="col-span-10 sm:col-span-7">
+                        <h3 class="text-xl sm:text-2xl font-bold mb-2 group-hover:text-amber-400 transition line-clamp-2">
                             {{ $project->title }}
                         </h3>
-                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 guest-mono text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                            <span class="{{ $project->difficulty === 'Beginner' ? 'text-green-600 dark:text-green-400' : ($project->difficulty === 'Intermediate' ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400') }}">
-                                {{ $project->difficulty }}
+                        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 wb-mono text-[11px] uppercase tracking-widest">
+                            <span class="{{ $project->difficulty === 'Beginner' ? 'text-emerald-400' : ($project->difficulty === 'Intermediate' ? 'text-amber-400' : 'text-red-400') }}">
+                                ● {{ $project->difficulty }}
                             </span>
-                            <span>·</span>
-                            <span>{{ $project->sensor?->name ?? 'GENERAL' }}</span>
+                            <span class="text-gray-600">{{ $project->sensor?->name ?? 'GENERAL' }}</span>
                         </div>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 line-clamp-2">{{ Str::limit($project->description, 120) }}</p>
                     </div>
-                    <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-blue-600 dark:group-hover:text-blue-400 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1"></i>
+
+                    <div class="hidden sm:block sm:col-span-3">
+                        <p class="text-sm text-gray-500 line-clamp-2">{{ Str::limit($project->description, 100) }}</p>
+                    </div>
+
+                    <div class="col-span-12 sm:col-span-1 text-right">
+                        <i class="fas fa-arrow-right text-gray-600 group-hover:text-amber-400 group-hover:translate-x-1 transition-all"></i>
+                    </div>
                 </div>
             </a>
             @endforeach
         </div>
+
+        <div class="sm:hidden text-center mt-8">
+            <a href="{{ route('projects.index') }}" class="inline-flex items-center gap-2 wb-mono text-xs uppercase tracking-widest text-gray-400 hover:text-amber-400 transition">
+                View all projects <i class="fas fa-arrow-right text-[10px]"></i>
+            </a>
+        </div>
     </div>
 </section>
 
-{{-- Latest Tutorials --}}
+{{-- ============ TUTORIALS ============ --}}
 @if($latestVideos->count() > 0)
-<section class="bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="flex items-end justify-between mb-8 gap-4">
+<section class="border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="flex items-end justify-between mb-12 gap-4">
             <div>
-                <p class="guest-mono text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-2">// 03</p>
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Tutorials</h2>
+                <p class="wb-mono text-[11px] uppercase tracking-widest text-red-400 mb-3">— 03 / tutorials</p>
+                <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tight">Watch & build</h2>
             </div>
-            <a href="{{ route('videos.index') }}" class="guest-mono text-xs uppercase tracking-wide text-blue-600 dark:text-blue-400 hover:underline whitespace-nowrap">
-                All Tutorials →
+            <a href="{{ route('videos.index') }}" class="hidden sm:inline-flex items-center gap-2 wb-mono text-xs uppercase tracking-widest text-gray-400 hover:text-red-400 transition">
+                View all <i class="fas fa-arrow-right text-[10px]"></i>
             </a>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             @foreach($latestVideos as $video)
-            <a href="{{ $video->youtube_link ?? route('videos.index') }}" target="_blank" class="group border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-white dark:bg-gray-900 hover:border-blue-500 dark:hover:border-blue-500 transition">
-                <div class="relative pb-[56.25%] bg-gray-200 dark:bg-gray-800">
+            <a href="{{ $video->youtube_link ?? route('videos.index') }}" target="_blank" class="group block bg-gray-950 border border-white/5 rounded-lg overflow-hidden hover:border-red-500/50 transition">
+                <div class="relative pb-[56.25%] bg-black">
                     @if($video->youtube_id)
-                        <img src="https://img.youtube.com/vi/{{ $video->youtube_id }}/mqdefault.jpg" alt="{{ $video->title }}" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
-                        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition flex items-center justify-center">
-                            <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <img src="https://img.youtube.com/vi/{{ $video->youtube_id }}/mqdefault.jpg" alt="{{ $video->title }}" class="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                 <i class="fas fa-play text-white text-sm ml-0.5"></i>
                             </div>
                         </div>
+                        <div class="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/80 rounded wb-mono text-[10px] text-white">
+                            ▶
+                        </div>
                     @endif
                 </div>
+
                 <div class="p-4">
-                    <p class="guest-mono text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">
-                        {{ $video->category ?? 'Tutorial' }}
-                    </p>
-                    <h3 class="font-semibold text-sm text-gray-900 dark:text-white line-clamp-2 mb-2">{{ $video->title }}</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">{{ Str::limit($video->description, 60) }}</p>
+                    <p class="wb-mono text-[10px] uppercase tracking-widest text-gray-500 mb-2">{{ $video->category ?? 'TUTORIAL' }}</p>
+                    <h3 class="font-bold text-sm mb-2 line-clamp-2 group-hover:text-red-400 transition">{{ $video->title }}</h3>
+                    <p class="text-xs text-gray-500 line-clamp-2">{{ Str::limit($video->description, 70) }}</p>
                 </div>
             </a>
             @endforeach
@@ -414,26 +523,31 @@
 </section>
 @endif
 
-{{-- CTA Section --}}
-<section class="bg-gray-900 dark:bg-black">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div>
-                <p class="guest-mono text-xs uppercase tracking-widest text-blue-400 mb-3">// ready?</p>
-                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">
-                    Build something.<br>
-                    Share it with the community.
-                </h2>
-                <p class="text-gray-400 max-w-md">
-                    Create an account to submit project ideas, join classes, and track your learning progress.
-                </p>
-            </div>
-            <div class="lg:text-right">
-                <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-                    Create Account
-                    <i class="fas fa-arrow-right text-sm"></i>
-                </a>
-            </div>
+{{-- ============ CTA: FINAL ============ --}}
+<section class="relative overflow-hidden bg-black wb-grid">
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-amber-500/10"></div>
+
+    <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+        <p class="wb-mono text-[11px] uppercase tracking-widest text-emerald-400 mb-6">— ready to start?</p>
+
+        <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6">
+            Plug in.<br>
+            <span class="text-emerald-400">Start building.</span>
+        </h2>
+
+        <p class="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
+            Create a free account to submit project ideas, join classes, and track everything you learn.
+        </p>
+
+        <a href="{{ route('register') }}" class="inline-flex items-center gap-3 px-8 py-4 bg-emerald-500 text-gray-950 font-bold rounded-md hover:bg-emerald-400 transition text-lg group">
+            Create free account
+            <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+        </a>
+
+        <div class="mt-10 flex items-center justify-center gap-2 wb-mono text-xs text-gray-500">
+            <span class="text-emerald-400">$</span>
+            <span>no credit card needed</span>
+            <span class="wb-cursor"></span>
         </div>
     </div>
 </section>
