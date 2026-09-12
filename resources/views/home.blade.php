@@ -264,7 +264,7 @@
                 </div>
 
                 <p class="terminal-line text-sm text-gray-500 dark:text-gray-400">
-                    <span class="text-secondary font-semibold">$</span> your next project starts here<span class="cursor-blink">▊</span>
+                    <span class="text-secondary font-semibold">$</span> start with a sensor, build something real<span class="cursor-blink">▌</span>
                 </p>
             </div>
 
@@ -487,7 +487,7 @@
             <i class="fas fa-arrow-right text-sm"></i>
         </a>
         <p class="terminal-line text-sm text-gray-500 mt-10">
-            <span class="text-secondary font-semibold">$</span> no credit card needed<span class="cursor-blink">▊</span>
+            <span class="text-secondary font-semibold">$</span> ready when you are<span class="cursor-blink">▍</span>
         </p>
     </div>
 </section>
