@@ -245,6 +245,7 @@ header('Expires: 0');
                 <a href="{{ route('instructor.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('instructor.dashboard') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-tachometer-alt w-5 shrink-0"></i><span>Dashboard</span></a>
                 <a href="{{ route('instructor.classes.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('instructor.classes.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-chalkboard w-5 shrink-0"></i><span>Classes</span></a>
                 <a href="{{ route('suggestions.community') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('suggestions.community') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-comments w-5 shrink-0"></i><span>Community</span></a>
+                <a href="{{ route('shop.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('shop.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-store w-5 shrink-0"></i><span>Shop</span></a>
             @else
                 <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('dashboard.index') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-home w-5 shrink-0"></i><span>Dashboard</span></a>
                 <a href="{{ route('sensors.index') }}" class="flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg {{ request()->routeIs('sensors.*') ? 'bg-primary/10 text-primary font-semibold' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' }}"><i class="fas fa-microchip w-5 shrink-0"></i><span>Sensors</span></a>
@@ -466,7 +467,7 @@ header('Expires: 0');
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-         @auth
+        @auth
             @if(request()->is('email/verify*'))
                 const audioSrc = null;
                 const storageKey = null;
