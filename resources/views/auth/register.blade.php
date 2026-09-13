@@ -49,7 +49,7 @@
     <div class="mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 items-stretch gap-0 lg:grid-cols-2">
 
         {{-- ==================== LEFT PANEL — BRANDING ==================== --}}
-        <section class="hidden lg:flex flex-col justify-between bg-gray-950 p-10 xl:p-14 text-white relative overflow-hidden">
+        <section class="hidden lg:flex flex-col justify-center gap-10 bg-gray-950 p-10 xl:p-14 text-white relative overflow-hidden">
             <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-emerald-500/6 blur-3xl pointer-events-none"></div>
             <div class="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full bg-blue-500/6 blur-3xl pointer-events-none"></div>
 
