@@ -127,7 +127,7 @@
 
                 {{-- Mobile brand --}}
                 <a href="{{ route('home') }}" class="inline-flex items-center gap-2.5 text-sm font-medium text-gray-500 dark:text-gray-400 mb-8 lg:hidden">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                     Sensors Hub
                 </a>
 
@@ -137,11 +137,11 @@
                     {{-- Card header bar --}}
                     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-900 bg-gray-50/50 dark:bg-black/40">
                         <div class="flex items-center gap-2.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                             <span class="terminal-line text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">
                                 register
                             </span>
-                            <span class="cursor-blink text-emerald-500 text-xs">▌</span>
+                            <span class="cursor-blink text-blue-500 text-xs">▌</span>
                         </div>
                         <span class="terminal-line text-[10px] uppercase tracking-widest text-gray-400 dark:text-gray-600">
                             new user
@@ -230,7 +230,7 @@
                             </p>
 
                             {{-- Submit --}}
-                            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
+                            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-emerald-600 dark:bg-emerald-500 text-white font-medium rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-400 transition">
                                 Create account
                                 <i class="fas fa-arrow-right text-xs"></i>
                             </button>
