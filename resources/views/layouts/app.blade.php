@@ -185,11 +185,8 @@ header('Expires: 0');
         </div>
 
         {{-- Role Badge --}}
-        <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-800">
-            <span class="px-2.5 py-1 text-xs font-medium rounded-full
-                {{ $isAdministrator ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' : '' }}
-                {{ $isInstructor ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : '' }}
-                {{ !$isAdministrator && !$isInstructor ? (auth()->user()->isUser() ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300') : '' }}">
+        <div class="px-5 py-3 border-b border-gray-200 dark:border-gray-800">
+            <span class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400">
                 {{ $isAdministrator ? 'Administrator' : ($isInstructor ? 'Instructor' : (auth()->user()->isUser() ? 'User' : 'Student')) }}
             </span>
         </div>
