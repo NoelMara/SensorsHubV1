@@ -90,7 +90,7 @@ header('Expires: 0');
     <!-- Navigation -->
     @guest
     {{-- Top Nav for Guests --}}
-    <nav class="bg-white dark:bg-black border-b border-gray-200 dark:border-gray-900 fixed top-0 left-0 right-0 z-50">
+    <nav class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 fixed top-0 left-0 right-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between gap-3 h-16">
                 <div class="flex items-center min-w-0">
@@ -121,7 +121,7 @@ header('Expires: 0');
                 </div>
             </div>
         </div>
-        <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-black border-t border-gray-200 dark:border-gray-900">
+        <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
             <div class="px-4 pt-2 pb-4 space-y-1">
                 <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg"><i class="fas fa-home w-5"></i> Home</a>
                 <a href="{{ route('sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-900 rounded-lg"><i class="fas fa-microchip w-5"></i> Sensors</a>
@@ -145,7 +145,7 @@ header('Expires: 0');
     {{-- Top Nav for Logged-in Users (Mobile) + Sidebar for Desktop --}}
     
     {{-- Mobile Top Bar --}}
-    <nav class="lg:hidden bg-white dark:bg-black border-b border-gray-200 dark:border-gray-900 fixed top-0 left-0 right-0 z-50">
+    <nav class="lg:hidden bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 fixed top-0 left-0 right-0 z-50">
         <div class="px-4">
             <div class="flex justify-between items-center h-16">
                 <a href="{{ route($homeRoute) }}" class="flex items-center gap-2.5">
@@ -168,16 +168,16 @@ header('Expires: 0');
     <div id="mobileSidebarOverlay" class="hidden lg:hidden fixed inset-0 bg-black/50 z-40"></div>
 
     {{-- Sidebar (Desktop always visible, Mobile slides in) --}}
-    <aside id="sidebar" class="fixed left-0 top-0 h-full w-60 bg-white dark:bg-black border-r border-gray-200 dark:border-gray-900 z-40 flex flex-col overflow-y-auto
+    <aside id="sidebar" class="fixed left-0 top-0 h-full w-60 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 z-40 flex flex-col overflow-y-auto
                 -translate-x-full lg:translate-x-0 transition-transform duration-300">
         {{-- Logo (Desktop) --}}
-        <div class="h-16 hidden lg:flex items-center gap-2.5 px-5 border-b border-gray-200 dark:border-gray-900 flex-shrink-0">
+        <div class="h-16 hidden lg:flex items-center gap-2.5 px-5 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
             <img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-7 w-7 object-contain shrink-0">
             <span class="text-base font-semibold tracking-tight text-gray-900 dark:text-white truncate">Sensors Hub</span>
         </div>
 
         {{-- Mobile sidebar header --}}
-        <div class="h-16 lg:hidden flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-900 flex-shrink-0">
+        <div class="h-16 lg:hidden flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
             <span class="text-base font-semibold tracking-tight text-gray-900 dark:text-white">Menu</span>
             <button id="mobileSidebarClose" class="text-gray-500 dark:text-gray-400 p-1">
                 <i class="fas fa-times text-xl"></i>
@@ -185,7 +185,7 @@ header('Expires: 0');
         </div>
 
         {{-- Role Badge --}}
-        <div class="px-5 py-3 border-b border-gray-200 dark:border-gray-900">
+        <div class="px-5 py-3 border-b border-gray-200 dark:border-gray-800">
             <span class="text-[10px] font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400">
                 {{ $isAdministrator ? 'Administrator' : ($isInstructor ? 'Instructor' : 'Student') }}
             </span>
@@ -223,7 +223,7 @@ header('Expires: 0');
         </nav>
 
         {{-- Bottom section --}}
-        <div class="border-t border-gray-200 dark:border-gray-900 px-2 py-2 space-y-0.5 flex-shrink-0">
+        <div class="border-t border-gray-200 dark:border-gray-800 px-2 py-2 space-y-0.5 flex-shrink-0">
             @php 
                 $unreadCount = cache()->remember('unread_notifications_'.auth()->id(), 15, function() {
                     return auth()->user()->notifications()->where('is_read', false)->count();
