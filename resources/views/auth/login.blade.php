@@ -282,13 +282,10 @@
                         @endif
                     </div>
 
-                    {{-- Card footer --}}
+                    {{-- Card footer (hidden during 2FA verify) --}}
+                    @if(!session('require_verification'))
                     <div class="px-6 sm:px-8 py-4 border-t border-gray-100 dark:border-gray-900 bg-gray-50/50 dark:bg-black/40 text-sm text-gray-500 dark:text-gray-400">
-                        @if(session('require_verification'))
-                            <a href="{{ $isAdministratorLogin ? route('administrator.login') : route('login') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
-                                ← Back to login
-                            </a>
-                        @elseif($isAdministratorLogin)
+                        @if($isAdministratorLogin)
                             Need a regular account?
                             <a href="{{ route('login') }}" class="font-medium text-gray-900 dark:text-white hover:underline">
                                 User login
@@ -300,6 +297,7 @@
                             </a>
                         @endif
                     </div>
+                    @endif
                 </div>
 
                 {{-- Trust line --}}
