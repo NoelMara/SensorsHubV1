@@ -95,7 +95,13 @@
                                     {{ strtoupper(substr($user->name, 0, 1)) }}
                                 </div>
                                 <div class="min-w-0">
-                                    <p class="font-medium text-gray-800 dark:text-white text-sm truncate">{{ $user->name }}</p>
+                                    <div class="flex items-center gap-2">
+                                        <p class="font-medium text-gray-800 dark:text-white text-sm truncate">{{ $user->name }}</p>
+                                        <span class="text-[10px] font-medium uppercase tracking-wider flex-shrink-0
+                                            {{ $user->role === 'user' ? 'text-gray-400 dark:text-gray-500' : 'text-emerald-500 dark:text-emerald-400' }}">
+                                            {{ $user->role === 'user' ? 'User' : 'Student' }}
+                                        </span>
+                                    </div>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $user->email }}</p>
                                 </div>
                             </div>

@@ -20,7 +20,7 @@ class DashboardController extends Controller
             'pending_suggestions' => Suggestion::where('status', 'pending')->count(),
         ];
 
-        $recentUsers = User::where('role', 'student')
+        $recentUsers = User::whereIn('role', ['user', 'student'])
             ->latest()
             ->take(5)
             ->get();
