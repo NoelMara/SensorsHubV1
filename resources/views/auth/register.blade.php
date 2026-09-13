@@ -56,7 +56,7 @@
             <div class="relative z-10">
                 <a href="{{ route('home') }}" class="inline-flex items-center gap-2.5 text-sm font-medium text-gray-400 hover:text-white transition">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    Sensors Hub
+                    SensorsHub
                 </a>
             </div>
 
@@ -128,7 +128,7 @@
                 {{-- Mobile brand --}}
                 <a href="{{ route('home') }}" class="inline-flex items-center gap-2.5 text-sm font-medium text-gray-500 dark:text-gray-400 mb-8 lg:hidden">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                    Sensors Hub
+                    SensorsHub
                 </a>
 
                 {{-- ============ FORM CARD ============ --}}

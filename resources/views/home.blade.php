@@ -236,7 +236,7 @@
 <section class="bg-white dark:bg-gray-900">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 pb-16 sm:pb-20">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-6">
-            Sensors Hub
+            SensorsHub
         </p>
 
         <h1 class="text-5xl sm:text-6xl lg:text-7xl font-semibold text-gray-900 dark:text-white leading-[1.05] tracking-tight mb-8 max-w-3xl">
