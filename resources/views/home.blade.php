@@ -233,7 +233,7 @@
 </style>
 
 {{-- Hero --}}
-<section class="bg-white dark:bg-black">
+<section class="bg-white dark:bg-gray-900">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 pb-16 sm:pb-20">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-6">
             Sensors Hub
@@ -327,7 +327,7 @@
 </section>
 
 {{-- Featured Sensors --}}
-<section class="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-900">
+<section class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div class="mb-12">
             <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">01 — Sensors</p>
@@ -368,7 +368,7 @@
 </section>
 
 {{-- Featured Projects --}}
-<section class="bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-900">
+<section class="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div class="mb-12">
             <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">02 — Projects</p>
@@ -408,7 +408,7 @@
 
 {{-- Latest Tutorials --}}
 @if($latestVideos->count() > 0)
-<section class="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-900">
+<section class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div class="mb-12">
             <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">03 — Tutorials</p>
@@ -459,7 +459,7 @@
 @endif
 
 {{-- CTA --}}
-<section class="bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-900">
+<section class="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div class="max-w-2xl">
             <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">Get started</p>

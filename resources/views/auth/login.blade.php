@@ -16,7 +16,7 @@
         background:
             radial-gradient(circle at 20% 10%, rgba(16, 185, 129, 0.06), transparent 40%),
             radial-gradient(circle at 85% 90%, rgba(59, 130, 246, 0.06), transparent 40%),
-            #050505;
+            #111827;
     }
 
     .auth-input {
