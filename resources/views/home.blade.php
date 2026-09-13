@@ -233,106 +233,93 @@
 </style>
 
 {{-- Hero --}}
-<section class="relative overflow-hidden bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-    <div class="absolute -top-40 -right-40 w-[500px] h-[500px] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+<section class="bg-white dark:bg-black">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 pb-16 sm:pb-20">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-6">
+            Sensors Hub
+        </p>
 
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {{-- Left: Copy --}}
-            <div class="lg:col-span-7">
-                <div class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-900/50 mb-6">
-                    <span class="text-xs font-semibold text-blue-700 dark:text-blue-300 uppercase tracking-wider">Sensors Hub</span>
-                </div>
+        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-semibold text-gray-900 dark:text-white leading-[1.05] tracking-tight mb-8 max-w-3xl">
+            Learn sensors.<br>
+            Build real circuits.
+        </h1>
 
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-[1.1] tracking-tight">
-                    Learn sensors.<br>
-                    Build <span class="text-primary">real</span> circuits.
-                </h1>
+        <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-2xl leading-relaxed">
+            A hands-on workspace for students and makers. Study components, follow real projects, and test circuits in a live simulator.
+        </p>
 
-                <p class="text-lg text-gray-600 dark:text-gray-400 mb-10 max-w-xl leading-relaxed">
-                    A hands-on workspace for students and makers. Study components, follow real projects, and test circuits in a live simulator.
-                </p>
+        <div class="flex flex-col sm:flex-row sm:items-center gap-6 mb-16">
+            <a href="{{ route('sensors.index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
+                Browse Sensors
+                <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+            <a href="{{ route('projects.index') }}" class="inline-flex items-center gap-2 text-gray-900 dark:text-white font-medium hover:text-primary transition group">
+                View Projects
+                <i class="fas fa-arrow-right text-xs group-hover:translate-x-0.5 transition-transform"></i>
+            </a>
+        </div>
 
-                <div class="flex flex-col sm:flex-row gap-3 mb-10">
-                    <a href="{{ route('sensors.index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-white font-semibold rounded-lg hover:bg-blue-600 transition shadow-sm hover:shadow-md">
-                        Browse Sensors
-                        <i class="fas fa-arrow-right text-sm"></i>
-                    </a>
-                    <a href="{{ route('projects.index') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition">
-                        View Projects
-                    </a>
-                </div>
+        <p class="terminal-line text-sm text-gray-500 dark:text-gray-500 mb-20">
+            <span class="text-secondary">$</span> start with a sensor, build something real<span class="cursor-blink">▌</span>
+        </p>
 
-                <p class="terminal-line text-sm text-gray-500 dark:text-gray-400">
-                    <span class="text-secondary font-semibold">$</span> start with a sensor, build something real<span class="cursor-blink">▌</span>
-                </p>
-            </div>
-
-            {{-- Right: Code preview --}}
-            <div class="lg:col-span-5">
-                <div class="relative">
-                    <div class="absolute -inset-3 bg-gradient-to-tr from-blue-500/10 via-transparent to-blue-500/5 rounded-2xl blur-xl pointer-events-none"></div>
-
-                    <div class="relative bg-gray-900 dark:bg-black border border-gray-800 rounded-xl overflow-hidden shadow-2xl">
-                        {{-- Window bar --}}
-                        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-gray-950">
-                            <div class="flex items-center gap-2">
-                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/80"></span>
-                            </div>
-                            <span class="terminal-line text-[10px] uppercase tracking-widest text-gray-500">main.py — pico</span>
-                        </div>
-
-                        {{-- Code --}}
-                        <div class="p-5 terminal-line text-xs leading-relaxed space-y-0.5">
-                            <div class="flex">
-                                <span class="text-gray-600 select-none w-6 text-right mr-4 shrink-0">1</span>
-                                <span class="whitespace-pre"><span class="text-pink-400">from</span> <span class="text-gray-300">machine</span> <span class="text-pink-400">import</span> <span class="text-gray-300">ADC, Pin</span></span>
-                            </div>
-                            <div class="flex">
-                                <span class="text-gray-600 select-none w-6 text-right mr-4 shrink-0">2</span>
-                                <span class="whitespace-pre"><span class="text-pink-400">import</span> <span class="text-gray-300">time</span></span>
-                            </div>
-                            <div class="flex">
-                                <span class="text-gray-600 select-none w-6 text-right mr-4 shrink-0">3</span>
-                                <span class="whitespace-pre"> </span>
-                            </div>
-                            <div class="flex">
-                                <span class="text-gray-600 select-none w-6 text-right mr-4 shrink-0">4</span>
-                                <span class="whitespace-pre"><span class="text-gray-300">sensor = ADC(Pin(</span><span class="text-amber-400">26</span><span class="text-gray-300">))</span></span>
-                            </div>
-                            <div class="flex">
-                                <span class="text-gray-600 select-none w-6 text-right mr-4 shrink-0">5</span>
-                                <span class="whitespace-pre"> </span>
-                            </div>
-                            <div class="flex">
-                                <span class="text-gray-600 select-none w-6 text-right mr-4 shrink-0">6</span>
-                                <span class="whitespace-pre"><span class="text-purple-400">while</span> <span class="text-amber-400">True</span><span class="text-gray-300">:</span></span>
-                            </div>
-                            <div class="flex">
-                                <span class="text-gray-600 select-none w-6 text-right mr-4 shrink-0">7</span>
-                                <span class="whitespace-pre"><span class="text-gray-300">    value = sensor.</span><span class="text-blue-400">read_u16</span><span class="text-gray-300">()</span></span>
-                            </div>
-                            <div class="flex">
-                                <span class="text-gray-600 select-none w-6 text-right mr-4 shrink-0">8</span>
-                                <span class="whitespace-pre"><span class="text-gray-300">    </span><span class="text-blue-400">print</span><span class="text-gray-300">(value)</span></span>
-                            </div>
-                            <div class="flex">
-                                <span class="text-gray-600 select-none w-6 text-right mr-4 shrink-0">9</span>
-                                <span class="whitespace-pre"><span class="text-gray-300">    time.</span><span class="text-blue-400">sleep</span><span class="text-gray-300">(</span><span class="text-amber-400">1</span><span class="text-gray-300">)</span></span>
-                            </div>
-                        </div>
-
-                        {{-- Status bar --}}
-                        <div class="flex items-center justify-between px-4 py-2 border-t border-gray-800 bg-gray-950 terminal-line text-[10px] uppercase tracking-widest">
-                            <span class="text-gray-500">Raspberry Pi Pico</span>
-                            <span class="text-secondary flex items-center gap-1.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                                Running
-                            </span>
-                        </div>
+        {{-- Code card --}}
+        <div class="max-w-2xl">
+            <div class="bg-gray-950 border border-gray-800 rounded-lg overflow-hidden shadow-2xl">
+                <div class="flex items-center justify-between px-4 py-3 border-b border-gray-800">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-gray-700"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-gray-700"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-gray-700"></span>
                     </div>
+                    <span class="terminal-line text-[10px] uppercase tracking-widest text-gray-600">main.py — pico</span>
+                </div>
+
+                <div class="p-6 terminal-line text-[13px] leading-[1.7] space-y-0.5">
+                    <div class="flex">
+                        <span class="text-gray-700 select-none w-6 text-right mr-5 shrink-0">1</span>
+                        <span class="whitespace-pre"><span class="text-pink-400">from</span> <span class="text-gray-300">machine</span> <span class="text-pink-400">import</span> <span class="text-gray-300">ADC, Pin</span></span>
+                    </div>
+                    <div class="flex">
+                        <span class="text-gray-700 select-none w-6 text-right mr-5 shrink-0">2</span>
+                        <span class="whitespace-pre"><span class="text-pink-400">import</span> <span class="text-gray-300">time</span></span>
+                    </div>
+                    <div class="flex">
+                        <span class="text-gray-700 select-none w-6 text-right mr-5 shrink-0">3</span>
+                        <span class="whitespace-pre"> </span>
+                    </div>
+                    <div class="flex">
+                        <span class="text-gray-700 select-none w-6 text-right mr-5 shrink-0">4</span>
+                        <span class="whitespace-pre"><span class="text-gray-300">sensor = ADC(Pin(</span><span class="text-amber-400">26</span><span class="text-gray-300">))</span></span>
+                    </div>
+                    <div class="flex">
+                        <span class="text-gray-700 select-none w-6 text-right mr-5 shrink-0">5</span>
+                        <span class="whitespace-pre"> </span>
+                    </div>
+                    <div class="flex">
+                        <span class="text-gray-700 select-none w-6 text-right mr-5 shrink-0">6</span>
+                        <span class="whitespace-pre"><span class="text-purple-400">while</span> <span class="text-amber-400">True</span><span class="text-gray-300">:</span></span>
+                    </div>
+                    <div class="flex">
+                        <span class="text-gray-700 select-none w-6 text-right mr-5 shrink-0">7</span>
+                        <span class="whitespace-pre"><span class="text-gray-300">    value = sensor.</span><span class="text-blue-400">read_u16</span><span class="text-gray-300">()</span></span>
+                    </div>
+                    <div class="flex">
+                        <span class="text-gray-700 select-none w-6 text-right mr-5 shrink-0">8</span>
+                        <span class="whitespace-pre"><span class="text-gray-300">    </span><span class="text-blue-400">print</span><span class="text-gray-300">(value)</span></span>
+                    </div>
+                    <div class="flex">
+                        <span class="text-gray-700 select-none w-6 text-right mr-5 shrink-0">9</span>
+                        <span class="whitespace-pre"><span class="text-gray-300">    time.</span><span class="text-blue-400">sleep</span><span class="text-gray-300">(</span><span class="text-amber-400">1</span><span class="text-gray-300">)</span></span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between px-4 py-2.5 border-t border-gray-800 terminal-line text-[10px] uppercase tracking-widest">
+                    <span class="text-gray-600">Raspberry Pi Pico</span>
+                    <span class="text-gray-500 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                        Running
+                    </span>
                 </div>
             </div>
         </div>
@@ -340,91 +327,80 @@
 </section>
 
 {{-- Featured Sensors --}}
-<section class="bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <div class="flex items-end justify-between mb-10 gap-4">
-            <div>
-                <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-2">01 — Sensors</p>
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Explore the components</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Every project starts with a sensor. Start here.</p>
-            </div>
-            <a href="{{ route('sensors.index') }}" class="hidden sm:inline-flex text-primary text-sm font-semibold hover:underline whitespace-nowrap items-center gap-1">
-                View all <i class="fas fa-arrow-right text-xs"></i>
-            </a>
+<section class="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-900">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div class="mb-12">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">01 — Sensors</p>
+            <h2 class="text-3xl sm:text-4xl font-semibold text-gray-900 dark:text-white tracking-tight mb-3">Explore the components</h2>
+            <p class="text-base text-gray-600 dark:text-gray-400 max-w-xl">Every project starts with a sensor. Learn what each one does and how to use it.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($featuredSensors as $sensor)
-            <a href="{{ route('sensors.show', $sensor->slug) }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col group">
-                <div class="h-40 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 overflow-hidden">
+            <a href="{{ route('sensors.show', $sensor->slug) }}" class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:border-gray-400 dark:hover:border-gray-600 transition flex flex-col group">
+                <div class="aspect-[16/10] bg-gray-100 dark:bg-gray-900 overflow-hidden">
                     @if($sensor->image)
-                        <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : (Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image)) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                        <img src="{{ Str::startsWith($sensor->image, ['http://', 'https://']) ? $sensor->image : (Str::startsWith($sensor->image, ['images/', '/images/']) ? asset($sensor->image) : asset('storage/' . $sensor->image)) }}" alt="{{ $sensor->name }}" class="w-full h-full object-cover" loading="lazy">
                     @else
                         <div class="w-full h-full flex items-center justify-center">
-                            <i class="fas fa-microchip text-4xl text-gray-400 dark:text-gray-500"></i>
+                            <i class="fas fa-microchip text-3xl text-gray-400 dark:text-gray-600"></i>
                         </div>
                     @endif
                 </div>
                 <div class="p-5 flex-1 flex flex-col">
-                    <h3 class="text-base font-bold text-gray-800 dark:text-white mb-2 group-hover:text-primary transition line-clamp-2">{{ $sensor->name }}</h3>
+                    <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">{{ $sensor->name }}</h3>
                     <p class="text-sm text-gray-600 dark:text-gray-400 flex-1 line-clamp-2 mb-4">{{ Str::limit($sensor->description, 90) }}</p>
-                    <span class="text-primary font-semibold text-sm inline-flex items-center gap-1">
-                        Learn more <i class="fas fa-arrow-right text-xs group-hover:translate-x-0.5 transition-transform"></i>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                        Learn more <i class="fas fa-arrow-right text-[10px]"></i>
                     </span>
                 </div>
             </a>
             @endforeach
         </div>
 
-        <div class="sm:hidden text-center mt-8">
-            <a href="{{ route('sensors.index') }}" class="text-primary text-sm font-semibold hover:underline">
-                View all sensors →
+        <div class="mt-12">
+            <a href="{{ route('sensors.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white border-b border-gray-900 dark:border-white pb-0.5 hover:gap-3 transition-all">
+                View all sensors
+                <i class="fas fa-arrow-right text-xs"></i>
             </a>
         </div>
     </div>
 </section>
 
 {{-- Featured Projects --}}
-<section class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <div class="flex items-end justify-between mb-10 gap-4">
-            <div>
-                <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-2">02 — Projects</p>
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Build these next</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Step-by-step walkthroughs with real components.</p>
-            </div>
-            <a href="{{ route('projects.index') }}" class="hidden sm:inline-flex text-primary text-sm font-semibold hover:underline whitespace-nowrap items-center gap-1">
-                View all <i class="fas fa-arrow-right text-xs"></i>
-            </a>
+<section class="bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-900">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div class="mb-12">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">02 — Projects</p>
+            <h2 class="text-3xl sm:text-4xl font-semibold text-gray-900 dark:text-white tracking-tight mb-3">Build these next</h2>
+            <p class="text-base text-gray-600 dark:text-gray-400 max-w-xl">Step-by-step walkthroughs using real components and real code.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             @foreach($featuredProjects as $project)
-            <a href="{{ route('projects.show', $project->slug) }}" class="bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col group">
-                <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold
-                        @if($project->difficulty === 'Beginner') bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300
-                        @elseif($project->difficulty === 'Intermediate') bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300
-                        @else bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300
-                        @endif">
+            <a href="{{ route('projects.show', $project->slug) }}" class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-6 hover:border-gray-400 dark:hover:border-gray-600 transition flex flex-col group">
+                <div class="flex flex-wrap items-center gap-3 mb-4">
+                    <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         {{ $project->difficulty }}
                     </span>
-                    <span class="text-gray-500 dark:text-gray-400 text-xs inline-flex items-center gap-1">
-                        <i class="fas fa-microchip"></i> {{ $project->sensor?->name ?? 'General' }}
+                    <span class="text-xs text-gray-400 dark:text-gray-600">·</span>
+                    <span class="text-xs text-gray-500 dark:text-gray-400">
+                        {{ $project->sensor?->name ?? 'General' }}
                     </span>
                 </div>
-                <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2 group-hover:text-primary transition line-clamp-2">{{ $project->title }}</h3>
-                <p class="text-gray-600 dark:text-gray-300 text-sm flex-1 line-clamp-2 mb-4">{{ Str::limit($project->description, 120) }}</p>
-                <span class="text-primary font-semibold text-sm inline-flex items-center gap-1">
-                    View project <i class="fas fa-arrow-right text-xs group-hover:translate-x-0.5 transition-transform"></i>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 line-clamp-2">{{ $project->title }}</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400 flex-1 line-clamp-2 mb-4">{{ Str::limit($project->description, 120) }}</p>
+                <span class="text-sm font-medium text-gray-900 dark:text-white inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                    View project <i class="fas fa-arrow-right text-[10px]"></i>
                 </span>
             </a>
             @endforeach
         </div>
 
-        <div class="sm:hidden text-center mt-8">
-            <a href="{{ route('projects.index') }}" class="text-primary text-sm font-semibold hover:underline">
-                View all projects →
+        <div class="mt-12">
+            <a href="{{ route('projects.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white border-b border-gray-900 dark:border-white pb-0.5 hover:gap-3 transition-all">
+                View all projects
+                <i class="fas fa-arrow-right text-xs"></i>
             </a>
         </div>
     </div>
@@ -432,63 +408,65 @@
 
 {{-- Latest Tutorials --}}
 @if($latestVideos->count() > 0)
-<section class="bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <div class="flex items-end justify-between mb-10 gap-4">
-            <div>
-                <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-2">03 — Tutorials</p>
-                <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Watch & build</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Follow along, then make it your own.</p>
-            </div>
-            <a href="{{ route('videos.index') }}" class="hidden sm:inline-flex text-primary text-sm font-semibold hover:underline whitespace-nowrap items-center gap-1">
-                View all <i class="fas fa-arrow-right text-xs"></i>
-            </a>
+<section class="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-900">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div class="mb-12">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">03 — Tutorials</p>
+            <h2 class="text-3xl sm:text-4xl font-semibold text-gray-900 dark:text-white tracking-tight mb-3">Watch & build</h2>
+            <p class="text-base text-gray-600 dark:text-gray-400 max-w-xl">Follow along, then make it your own.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($latestVideos as $video)
-            <a href="{{ $video->youtube_link ?? route('videos.index') }}" target="_blank" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 flex flex-col group">
-                <div class="relative pb-[56.25%] bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            <a href="{{ $video->youtube_link ?? route('videos.index') }}" target="_blank" class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:border-gray-400 dark:hover:border-gray-600 transition flex flex-col group">
+                <div class="relative aspect-video bg-gray-100 dark:bg-gray-900 overflow-hidden">
                     @if($video->youtube_id)
-                        <img src="https://img.youtube.com/vi/{{ $video->youtube_id }}/mqdefault.jpg" alt="{{ $video->title }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition flex items-center justify-center">
-                            <div class="w-11 h-11 rounded-full bg-red-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <i class="fas fa-play text-white text-sm ml-0.5"></i>
+                        <img src="https://img.youtube.com/vi/{{ $video->youtube_id }}/mqdefault.jpg" alt="{{ $video->title }}" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-10 h-10 rounded-full bg-black/70 dark:bg-white/90 flex items-center justify-center">
+                                <i class="fas fa-play text-white dark:text-gray-900 text-xs ml-0.5"></i>
                             </div>
                         </div>
                     @endif
                 </div>
                 <div class="p-4 flex-1 flex flex-col">
-                    <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">{{ $video->category ?? 'Tutorial' }}</p>
-                    <h3 class="font-semibold text-sm text-gray-800 dark:text-white line-clamp-2 mb-2 group-hover:text-primary transition">{{ $video->title }}</h3>
+                    <p class="text-[10px] font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">{{ $video->category ?? 'Tutorial' }}</p>
+                    <h3 class="font-semibold text-sm text-gray-900 dark:text-white line-clamp-2 mb-2">{{ $video->title }}</h3>
                     <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 flex-1">{{ Str::limit($video->description, 70) }}</p>
                 </div>
             </a>
             @endforeach
+        </div>
+
+        <div class="mt-12">
+            <a href="{{ route('videos.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white border-b border-gray-900 dark:border-white pb-0.5 hover:gap-3 transition-all">
+                View all tutorials
+                <i class="fas fa-arrow-right text-xs"></i>
+            </a>
         </div>
     </div>
 </section>
 @endif
 
 {{-- CTA --}}
-<section class="relative overflow-hidden bg-gray-900 dark:bg-black">
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 text-center">
-        <p class="text-xs font-semibold uppercase tracking-widest text-blue-400 mb-4">Get started</p>
-        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
-            Ready to build?
-        </h2>
-        <p class="text-gray-400 mb-10 max-w-xl mx-auto text-lg">
-            Create a free account to submit project ideas, join classes, and track everything you learn.
-        </p>
-        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-white font-semibold rounded-lg hover:bg-blue-600 transition shadow-lg shadow-blue-500/20">
-            Create Free Account
-            <i class="fas fa-arrow-right text-sm"></i>
-        </a>
-        <p class="terminal-line text-sm text-gray-500 mt-10">
-            <span class="text-secondary font-semibold">$</span> ready when you are<span class="cursor-blink">▍</span>
-        </p>
+<section class="bg-gray-50 dark:bg-gray-950 border-t border-gray-200 dark:border-gray-900">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div class="max-w-2xl">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">Get started</p>
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold text-gray-900 dark:text-white leading-[1.1] tracking-tight mb-6">
+                Ready to build something?
+            </h2>
+            <p class="text-lg text-gray-600 dark:text-gray-400 mb-10 max-w-xl">
+                Create a free account to submit project ideas, join classes, and track everything you learn.
+            </p>
+            <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
+                Create Free Account
+                <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+            <p class="terminal-line text-sm text-gray-500 dark:text-gray-500 mt-12">
+                <span class="text-secondary">$</span> ready when you are<span class="cursor-blink">▌</span>
+            </p>
+        </div>
     </div>
 </section>
 @endauth

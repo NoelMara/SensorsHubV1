@@ -1,241 +1,270 @@
-{{-- Main layout --}}
 @extends('layouts.app')
 
-{{-- Page title --}}
 @section('title', 'Register')
 
 @push('styles')
 <style>
-    /* Light mode background */
     .auth-shell {
         background:
-            radial-gradient(circle at 18% 14%, rgba(16, 185, 129, 0.12), transparent 28%),
-            radial-gradient(circle at 84% 18%, rgba(59, 130, 246, 0.15), transparent 30%),
-            linear-gradient(135deg, #f8fafc 0%, #edf7f2 52%, #f7fafc 100%);
+            radial-gradient(circle at 20% 10%, rgba(16, 185, 129, 0.08), transparent 40%),
+            radial-gradient(circle at 85% 90%, rgba(59, 130, 246, 0.08), transparent 40%),
+            #fafafa;
     }
-
-    /* Dark mode background */
     .dark .auth-shell {
         background:
-            radial-gradient(circle at 18% 14%, rgba(16, 185, 129, 0.12), transparent 28%),
-            radial-gradient(circle at 84% 18%, rgba(59, 130, 246, 0.12), transparent 30%),
-            linear-gradient(135deg, #0f172a 0%, #111827 52%, #0b1120 100%);
+            radial-gradient(circle at 20% 10%, rgba(16, 185, 129, 0.06), transparent 40%),
+            radial-gradient(circle at 85% 90%, rgba(59, 130, 246, 0.06), transparent 40%),
+            #050505;
     }
 
-    /* Glass effect panel */
-    .auth-panel {
-        background: rgba(255, 255, 255, 0.92);
-        border: 1px solid rgba(148, 163, 184, 0.28);
-        box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
-        backdrop-filter: blur(18px);
-    }
-
-    .dark .auth-panel {
-        background: rgba(15, 23, 42, 0.88);
-        border-color: rgba(148, 163, 184, 0.18);
-        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
-    }
-
-    /* Input field styling */
     .auth-input {
-        transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+        transition: border-color 200ms ease, box-shadow 200ms ease;
     }
-
     .auth-input:focus {
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.14);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
     }
 
-    /* Feature card row */
+    @keyframes cursor-blink {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0; }
+    }
+    .cursor-blink {
+        display: inline-block;
+        width: 0.5ch;
+        animation: cursor-blink 1.1s step-end infinite;
+    }
+    .terminal-line {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
     .feature-row {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
     }
 </style>
 @endpush
 
 @section('content')
 <div class="auth-shell min-h-screen">
-    <div class="mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[0.95fr_1.05fr] lg:px-10">
-        
-        {{-- Left side: Registration form --}}
-        <section class="mx-auto w-full max-w-lg">
-            <div class="mb-8 text-center lg:text-left">
-                {{-- Mobile logo link --}}
-                <a href="{{ route('home') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200 lg:hidden">
-                    <i class="fas fa-microchip text-emerald-500"></i>
-                    SensorsHub
+    <div class="mx-auto grid min-h-screen w-full max-w-7xl grid-cols-1 items-stretch gap-0 lg:grid-cols-2">
+
+        {{-- ==================== LEFT PANEL — BRANDING ==================== --}}
+        <section class="hidden lg:flex flex-col justify-between bg-gray-950 p-12 xl:p-16 text-white relative overflow-hidden">
+            {{-- Subtle gradient glow --}}
+            <div class="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-emerald-500/8 blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-blue-500/8 blur-3xl pointer-events-none"></div>
+
+            {{-- Top: Brand --}}
+            <div class="relative z-10">
+                <a href="{{ route('home') }}" class="inline-flex items-center gap-2.5 text-sm font-medium text-gray-400 hover:text-white transition">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    Sensors Hub
                 </a>
-                <p class="mt-6 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-300">Create your workspace</p>
-                <h2 class="mt-3 text-3xl font-bold text-slate-950 dark:text-white">Start building with SensorsHub</h2>
-                <p class="mt-3 text-slate-600 dark:text-slate-400">Create an account to save projects, follow tutorials, and organize your sensor learning path.</p>
             </div>
 
-            {{-- Registration form card --}}
-            <div class="auth-panel rounded-3xl p-7 sm:p-8">
+            {{-- Middle: Copy + Features --}}
+            <div class="relative z-10 max-w-lg">
+                <p class="terminal-line text-sm text-emerald-400 mb-6">
+                    <span class="text-gray-600">$</span> create account<span class="cursor-blink">▌</span>
+                </p>
+
+                <h1 class="text-4xl xl:text-5xl font-semibold leading-[1.1] tracking-tight mb-6">
+                    A focused home<br>for sensor learning.
+                </h1>
+                <p class="text-base text-gray-400 leading-relaxed mb-10">
+                    Organize projects, explore practical guides, and keep the materials you need close when you're ready to build.
+                </p>
+
+                {{-- Feature list --}}
+                <div class="space-y-3">
+                    <div class="feature-row rounded-lg p-4 flex items-start gap-4">
+                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-300">
+                            <i class="fas fa-book-open text-sm"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm font-medium text-white">Structured sensor guides</p>
+                            <p class="mt-1 text-xs leading-relaxed text-gray-400">Browse clear references for modules, wiring, and project ideas.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-row rounded-lg p-4 flex items-start gap-4">
+                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-400/15 text-blue-300">
+                            <i class="fas fa-folder-open text-sm"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm font-medium text-white">Saved project flow</p>
+                            <p class="mt-1 text-xs leading-relaxed text-gray-400">Keep favorite builds and tutorials ready for your next session.</p>
+                        </div>
+                    </div>
+
+                    <div class="feature-row rounded-lg p-4 flex items-start gap-4">
+                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cyan-400/15 text-cyan-300">
+                            <i class="fas fa-lightbulb text-sm"></i>
+                        </span>
+                        <div>
+                            <p class="text-sm font-medium text-white">Ideas that keep moving</p>
+                            <p class="mt-1 text-xs leading-relaxed text-gray-400">Share suggestions and discover practical inspiration from the platform.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Bottom: Stats --}}
+            <div class="relative z-10 grid grid-cols-3 gap-6 pt-8 border-t border-gray-900">
+                <div>
+                    <p class="text-2xl font-semibold text-white">Free</p>
+                    <p class="mt-1 text-xs uppercase tracking-widest text-gray-500">Forever</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-semibold text-white">2FA</p>
+                    <p class="mt-1 text-xs uppercase tracking-widest text-gray-500">Secured</p>
+                </div>
+                <div>
+                    <p class="text-2xl font-semibold text-white">IoT</p>
+                    <p class="mt-1 text-xs uppercase tracking-widest text-gray-500">Focused</p>
+                </div>
+            </div>
+        </section>
+
+        {{-- ==================== RIGHT PANEL — FORM ==================== --}}
+        <section class="flex items-center justify-center p-6 sm:p-10 lg:p-16">
+            <div class="w-full max-w-sm">
+
+                {{-- Mobile brand --}}
+                <a href="{{ route('home') }}" class="inline-flex items-center gap-2.5 text-sm font-medium text-gray-500 dark:text-gray-400 mb-10 lg:hidden">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    Sensors Hub
+                </a>
+
+                {{-- Heading --}}
+                <p class="terminal-line text-sm text-emerald-600 dark:text-emerald-400 mb-4">
+                    <span class="text-gray-400 dark:text-gray-600">$</span> register<span class="cursor-blink">▌</span>
+                </p>
+                <h2 class="text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mb-3">
+                    Create your account
+                </h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-10">
+                    Start building in a workspace made for makers.
+                </p>
+
+                {{-- Registration form --}}
                 <form method="POST" action="{{ route('register') }}" class="space-y-5">
-                    @csrf {{-- Security token --}}
+                    @csrf
 
-                    {{-- Name field --}}
+                    {{-- Name --}}
                     <div>
-                        <label for="name" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Full name</label>
-                        <div class="relative mt-2">
-                            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                                <i class="fas fa-user"></i>
-                            </span>
-                            <input id="name" name="name" type="text" required
-                                class="auth-input w-full rounded-2xl border border-slate-300 bg-white py-3.5 pl-12 pr-4 text-slate-950 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white @error('name') border-red-500 @enderror"
-                                placeholder="Juan Dela Cruz"
-                                value="{{ old('name') }}">
-                        </div>
+                        <label for="name" class="block text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+                            Full name
+                        </label>
+                        <input id="name" name="name" type="text" required
+                            value="{{ old('name') }}"
+                            placeholder="Juan Dela Cruz"
+                            class="auth-input w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition @error('name') border-red-500 dark:border-red-500 @enderror">
                         @error('name')
-                            <p class="mt-2 text-sm text-red-600 dark:text-red-400"><i class="fas fa-circle-exclamation mr-1"></i>{{ $message }}</p>
+                            <p class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Email field --}}
+                    {{-- Email --}}
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Email address</label>
-                        <div class="relative mt-2">
-                            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                                <i class="fas fa-envelope"></i>
-                            </span>
-                            <input id="email" name="email" type="email" required
-                                class="auth-input w-full rounded-2xl border border-slate-300 bg-white py-3.5 pl-12 pr-4 text-slate-950 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white @error('email') border-red-500 @enderror"
-                                placeholder="you@example.com"
-                                value="{{ old('email') }}">
-                        </div>
+                        <label for="email" class="block text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+                            Email
+                        </label>
+                        <input id="email" name="email" type="email" required
+                            value="{{ old('email') }}"
+                            placeholder="you@example.com"
+                            class="auth-input w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition @error('email') border-red-500 dark:border-red-500 @enderror">
                         @error('email')
-                            <p class="mt-2 text-sm text-red-600 dark:text-red-400"><i class="fas fa-circle-exclamation mr-1"></i>{{ $message }}</p>
+                            <p class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Account type info --}}
-                    <div class="rounded-2xl bg-blue-50 p-4 text-sm text-blue-700 dark:bg-blue-900/30 dark:text-blue-200">
-                        <i class="fas fa-user-circle mr-2"></i>
-                        You are registering as a <strong>User</strong>
+                    {{-- Password --}}
+                    <div>
+                        <label for="password" class="block text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <input id="password" name="password" type="password" required
+                                placeholder="Minimum 8 characters"
+                                class="auth-input w-full px-4 py-3 pr-12 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition @error('password') border-red-500 dark:border-red-500 @enderror">
+                            <button type="button" id="togglePassword" aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+                                <i class="fas fa-eye text-sm"></i>
+                            </button>
+                        </div>
+                        @error('password')
+                            <p class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    {{-- Password fields (side by side) --}}
-                    <div class="grid gap-5 sm:grid-cols-2">
-                        {{-- Password --}}
-                        <div>
-                            <label for="password" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Password</label>
-                            <div class="relative mt-2">
-                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                                    <i class="fas fa-lock"></i>
-                                </span>
-                                <input id="password" name="password" type="password" required
-                                    class="auth-input w-full rounded-2xl border border-slate-300 bg-white py-3.5 pl-12 pr-4 text-slate-950 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white @error('password') border-red-500 @enderror"
-                                    placeholder="Minimum 8 characters">
-                            </div>
-                            @error('password')
-                                <p class="mt-2 text-sm text-red-600 dark:text-red-400"><i class="fas fa-circle-exclamation mr-1"></i>{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        {{-- Confirm password --}}
-                        <div>
-                            <label for="password_confirmation" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Confirm password</label>
-                            <div class="relative mt-2">
-                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                                    <i class="fas fa-lock"></i>
-                                </span>
-                                <input id="password_confirmation" name="password_confirmation" type="password" required
-                                    class="auth-input w-full rounded-2xl border border-slate-300 bg-white py-3.5 pl-12 pr-4 text-slate-950 outline-none focus:border-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white"
-                                    placeholder="Repeat password">
-                            </div>
+                    {{-- Confirm password --}}
+                    <div>
+                        <label for="password_confirmation" class="block text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+                            Confirm password
+                        </label>
+                        <div class="relative">
+                            <input id="password_confirmation" name="password_confirmation" type="password" required
+                                placeholder="Repeat password"
+                                class="auth-input w-full px-4 py-3 pr-12 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition">
+                            <button type="button" id="togglePasswordConfirm" aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+                                <i class="fas fa-eye text-sm"></i>
+                            </button>
                         </div>
                     </div>
 
-                    {{-- Password tip --}}
-                    <div class="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600 dark:bg-slate-900/70 dark:text-slate-300">
-                        <i class="fas fa-circle-info mr-2 text-emerald-600 dark:text-emerald-300"></i>
-                        Use at least 8 characters for better account security.
-                    </div>
+                    {{-- Account type notice --}}
+                    <p class="text-xs text-gray-500 dark:text-gray-500">
+                        You're registering as a <span class="font-medium text-gray-900 dark:text-white">User</span>.
+                    </p>
 
-                    {{-- Submit button --}}
-                    <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-950 px-5 py-4 font-semibold text-white shadow-lg shadow-slate-900/15 transition hover:-translate-y-0.5 hover:bg-slate-800 dark:bg-emerald-500 dark:text-slate-950 dark:hover:bg-emerald-400">
-                        <i class="fas fa-user-plus"></i>
+                    {{-- Submit --}}
+                    <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
                         Create account
+                        <i class="fas fa-arrow-right text-xs"></i>
                     </button>
                 </form>
 
                 {{-- Login link --}}
-                <div class="mt-7 border-t border-slate-200 pt-6 text-center text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
+                <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400">
                     Already have an account?
-                    <a href="{{ route('login') }}" class="font-semibold text-emerald-700 transition hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200">
+                    <a href="{{ route('login') }}" class="font-medium text-gray-900 dark:text-white hover:underline">
                         Sign in
                     </a>
                 </div>
-            </div>
 
-            {{-- Copyright text --}}
-            <p class="mt-8 text-center text-xs font-medium uppercase tracking-[0.18em] text-slate-400">
-                &copy; {{ date('Y') }} SensorsHub
-            </p>
-        </section>
-
-        {{-- Right side: Feature highlights (hidden on mobile) --}}
-        <section class="hidden overflow-hidden rounded-[2rem] bg-slate-950 p-10 text-white shadow-2xl lg:block">
-            <div class="relative min-h-[720px]">
-                <div class="absolute inset-0 bg-[linear-gradient(145deg,rgba(16,185,129,0.24),transparent_42%),linear-gradient(315deg,rgba(59,130,246,0.22),transparent_45%)]"></div>
-                <div class="relative z-10 flex min-h-[720px] flex-col justify-between">
-                    <div>
-                        {{-- Brand logo --}}
-                        <a href="{{ route('home') }}" class="inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold tracking-wide text-white/90">
-                            <i class="fas fa-microchip text-emerald-300"></i>
-                            SensorsHub
-                        </a>
-
-                        {{-- Hero text --}}
-                        <div class="mt-16 max-w-xl">
-                            <p class="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-200">Learn. Build. Share.</p>
-                            <h1 class="mt-5 text-5xl font-bold leading-tight">A focused home for sensor learning.</h1>
-                            <p class="mt-6 text-lg leading-8 text-slate-200">Organize projects, explore practical guides, and keep the materials you need close when you are ready to build.</p>
-                        </div>
-                    </div>
-
-                    {{-- Feature list --}}
-                    <div class="space-y-4">
-                        <div class="feature-row rounded-2xl p-5">
-                            <div class="flex items-start gap-4">
-                                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-emerald-400/15 text-emerald-200">
-                                    <i class="fas fa-book-open"></i>
-                                </span>
-                                <div>
-                                    <p class="font-semibold">Structured sensor guides</p>
-                                    <p class="mt-1 text-sm leading-6 text-slate-300">Browse clear references for modules, wiring, and project ideas.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="feature-row rounded-2xl p-5">
-                            <div class="flex items-start gap-4">
-                                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-400/15 text-blue-200">
-                                    <i class="fas fa-folder-open"></i>
-                                </span>
-                                <div>
-                                    <p class="font-semibold">Saved project flow</p>
-                                    <p class="mt-1 text-sm leading-6 text-slate-300">Keep favorite builds and tutorials ready for your next session.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="feature-row rounded-2xl p-5">
-                            <div class="flex items-start gap-4">
-                                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cyan-400/15 text-cyan-200">
-                                    <i class="fas fa-lightbulb"></i>
-                                </span>
-                                <div>
-                                    <p class="font-semibold">Ideas that keep moving</p>
-                                    <p class="mt-1 text-sm leading-6 text-slate-300">Share suggestions and discover practical inspiration from the platform.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {{-- Trust line --}}
+                <p class="mt-8 text-xs text-gray-400 dark:text-gray-600 text-center">
+                    <i class="fas fa-shield-halved mr-1"></i>
+                    Free forever · No credit card required
+                </p>
             </div>
         </section>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    const passwordInput = document.getElementById('password');
+    const togglePassword = document.getElementById('togglePassword');
+    if (passwordInput && togglePassword) {
+        togglePassword.addEventListener('click', function() {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    }
+
+    const passwordConfirmInput = document.getElementById('password_confirmation');
+    const togglePasswordConfirm = document.getElementById('togglePasswordConfirm');
+    if (passwordConfirmInput && togglePasswordConfirm) {
+        togglePasswordConfirm.addEventListener('click', function() {
+            const isPassword = passwordConfirmInput.type === 'password';
+            passwordConfirmInput.type = isPassword ? 'text' : 'password';
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    }
+</script>
+@endpush
