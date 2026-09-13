@@ -112,8 +112,8 @@ header('Expires: 0');
                     <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-4 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
                         Register
                     </a>
-                    <button id="darkModeToggle" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition p-1.5">
-                        <i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:inline"></i>
+                    <button id="darkModeToggle" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition w-8 h-8 flex items-center justify-center">
+                        <i class="fas fa-moon dark:hidden w-4 text-center"></i><i class="fas fa-sun hidden dark:inline w-4 text-center"></i>
                     </button>
                 </div>
                 <div class="md:hidden flex items-center">
@@ -134,7 +134,7 @@ header('Expires: 0');
                 <a href="{{ route('login') }}" class="flex items-center gap-3 px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"><i class="fas fa-key w-5"></i> Login</a>
                 <a href="{{ route('register') }}" class="flex items-center justify-center gap-2 px-3 py-2 text-base font-medium text-white dark:text-gray-900 bg-gray-900 dark:bg-white rounded-lg"><i class="fas fa-user-plus w-5"></i> Register</a>
                 <button id="mobileDarkModeToggle" class="flex items-center gap-3 w-full px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
-                    <i class="fas fa-moon dark:hidden w-5"></i><i class="fas fa-sun hidden dark:inline w-5"></i> Dark Mode
+                    <i class="fas fa-moon dark:hidden w-5 text-center shrink-0"></i><i class="fas fa-sun hidden dark:inline w-5 text-center shrink-0"></i> Dark Mode
                 </button>
             </div>
         </div>
