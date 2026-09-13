@@ -42,8 +42,9 @@
                         <span class="px-2 py-0.5 text-xs rounded-full
                             {{ $user->isAdministrator() ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' : '' }}
                             {{ $user->isInstructor() ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : '' }}
-                            {{ !$user->isInstructor() && !$user->isAdministrator() ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}">
-                            {{ $user->isAdministrator() ? 'Administrator' : ($user->isInstructor() ? 'Instructor' : 'Student') }}
+                            {{ !$user->isAdministrator() && !$user->isInstructor() && $user->isUser() ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300' : '' }}
+                            {{ !$user->isAdministrator() && !$user->isInstructor() && !$user->isUser() ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}">
+                            {{ $user->isAdministrator() ? 'Administrator' : ($user->isInstructor() ? 'Instructor' : ($user->isUser() ? 'User' : 'Student')) }}
                         </span>
                         <span class="text-xs text-gray-400">· Joined {{ $user->created_at->format('M Y') }}</span>
                     </div>

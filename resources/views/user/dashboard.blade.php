@@ -25,8 +25,11 @@
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 flex-wrap">
                     <h2 class="text-lg font-bold text-gray-900 dark:text-white truncate">{{ $user->name }}</h2>
-                    <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
-                        Student
+                    <span class="px-2 py-0.5 text-xs rounded-full
+                        {{ auth()->user()->isUser()
+                            ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                            : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' }}">
+                        {{ auth()->user()->isUser() ? 'User' : 'Student' }}
                     </span>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ $user->email }}</p>
