@@ -95,7 +95,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function isUser()
     {
-        return $this->isStudent();
+        return $this->role === 'user';
     }
 
     /**

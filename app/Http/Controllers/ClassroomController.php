@@ -185,9 +185,20 @@ class ClassroomController extends Controller
             abort(403);
         }
         $class->students()->detach($userId);
+
+        // Demote to 'user' if no longer in any approved class
+        $user = User::find($userId);
+        if ($user && $user->role === 'student') {
+            $hasOtherClasses = $user->classes()
+                ->wherePivot('status', 'approved')
+                ->exists();
+            if (!$hasOtherClasses) {
+                $user->update(['role' => 'user']);
+            }
+        }
+
         return back()->with('success', 'Student removed!');
     }
-
     public function leaderboard(Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) {
