@@ -337,8 +337,9 @@ header('Expires: 0');
         let sidebarOpen = false;
 
         function openSidebar() {
-            sidebar?.classList.add('translate-x-0');
-            sidebar?.classList.remove('-translate-x-full');
+            if (!sidebar) return;
+            sidebar.classList.add('translate-x-0');
+            sidebar.classList.remove('-translate-x-full');
             overlay?.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
             sidebarOpen = true;
@@ -346,8 +347,9 @@ header('Expires: 0');
         }
 
         function closeSidebar() {
-            sidebar?.classList.remove('translate-x-0');
-            sidebar?.classList.add('-translate-x-full');
+            if (!sidebar) return;
+            sidebar.classList.remove('translate-x-0');
+            sidebar.classList.add('-translate-x-full');
             overlay?.classList.add('hidden');
             document.body.style.overflow = '';
             sidebarOpen = false;
@@ -363,6 +365,7 @@ header('Expires: 0');
         }
 
         function updateToggleIcon() {
+            if (!mobileSidebarToggle) return;
             if (sidebarOpen) {
                 mobileSidebarToggle.innerHTML = '<i class="fas fa-times text-2xl"></i>';
             } else {
@@ -383,7 +386,7 @@ header('Expires: 0');
         });
 
         window.addEventListener('resize', () => {
-            if (window.innerWidth >= 1024) {
+            if (sidebar && window.innerWidth >= 1024) {
                 closeSidebar();
             }
         });
