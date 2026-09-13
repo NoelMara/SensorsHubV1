@@ -230,7 +230,7 @@
                             </p>
 
                             {{-- Submit --}}
-                            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-emerald-600 dark:bg-emerald-500 text-white font-medium rounded-lg hover:bg-emerald-700 dark:hover:bg-emerald-400 transition">
+                            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
                                 Create account
                                 <i class="fas fa-arrow-right text-xs"></i>
                             </button>
