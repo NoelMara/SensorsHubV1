@@ -418,23 +418,33 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($latestVideos as $video)
-            <a href="{{ $video->youtube_link ?? route('videos.index') }}" target="_blank" class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:border-gray-400 dark:hover:border-gray-600 transition flex flex-col group">
-                <div class="relative aspect-video bg-gray-100 dark:bg-gray-900 overflow-hidden">
-                    @if($video->youtube_id)
-                        <img src="https://img.youtube.com/vi/{{ $video->youtube_id }}/mqdefault.jpg" alt="{{ $video->title }}" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-10 h-10 rounded-full bg-black/70 dark:bg-white/90 flex items-center justify-center">
-                                <i class="fas fa-play text-white dark:text-gray-900 text-xs ml-0.5"></i>
+            <div class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:border-gray-400 dark:hover:border-gray-600 transition flex flex-col group">
+                {{-- Click thumbnail → opens video modal --}}
+                <button type="button" onclick="openVideoModal('{{ $video->youtube_id }}')" class="text-left block w-full">
+                    <div class="relative aspect-video bg-gray-100 dark:bg-gray-900 overflow-hidden">
+                        @if($video->youtube_id)
+                            <img src="https://img.youtube.com/vi/{{ $video->youtube_id }}/mqdefault.jpg" alt="{{ $video->title }}" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-10 h-10 rounded-full bg-black/70 dark:bg-white/90 flex items-center justify-center">
+                                    <i class="fas fa-play text-white dark:text-gray-900 text-xs ml-0.5"></i>
+                                </div>
                             </div>
-                        </div>
-                    @endif
-                </div>
+                        @endif
+                    </div>
+                </button>
+
                 <div class="p-4 flex-1 flex flex-col">
                     <p class="text-[10px] font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">{{ $video->category ?? 'Tutorial' }}</p>
                     <h3 class="font-semibold text-sm text-gray-900 dark:text-white line-clamp-2 mb-2">{{ $video->title }}</h3>
-                    <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 flex-1">{{ Str::limit($video->description, 70) }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 flex-1 mb-3">{{ Str::limit($video->description, 70) }}</p>
+
+                    {{-- Small "Watch on YouTube" link --}}
+                    <a href="{{ $video->youtube_link ?? 'https://www.youtube.com/watch?v=' . $video->youtube_id }}" target="_blank" class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white inline-flex items-center gap-1 transition">
+                        Watch on YouTube
+                        <i class="fas fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
                 </div>
-            </a>
+            </div>
             @endforeach
         </div>
 
@@ -469,5 +479,43 @@
         </div>
     </div>
 </section>
+
+{{-- Video Modal --}}
+<div id="videoModal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4" onclick="if(event.target === this) closeVideoModal()">
+    <button type="button" onclick="closeVideoModal()" class="absolute top-4 right-4 text-white/70 hover:text-white transition" aria-label="Close video">
+        <i class="fas fa-times text-2xl"></i>
+    </button>
+    <div class="w-full max-w-4xl aspect-video">
+        <iframe id="videoFrame" src="" class="w-full h-full rounded-lg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+    function openVideoModal(videoId) {
+        const modal = document.getElementById('videoModal');
+        const frame = document.getElementById('videoFrame');
+        if (modal && frame && videoId) {
+            frame.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeVideoModal() {
+        const modal = document.getElementById('videoModal');
+        const frame = document.getElementById('videoFrame');
+        if (modal && frame) {
+            frame.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeVideoModal();
+    });
+</script>
+@endpush
 @endauth
 @endsection
