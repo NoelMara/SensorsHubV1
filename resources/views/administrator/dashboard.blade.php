@@ -247,8 +247,13 @@
                     <a href="{{ route('administrator.suggestions.show', $comment->suggestion) }}"
                        class="block border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
                         <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-xs font-semibold text-white dark:text-gray-900">
-                                {{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}
+                            <div class="w-8 h-8 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 overflow-hidden text-xs font-semibold text-white dark:text-gray-900">
+                                @if($comment->user?->profile_image)
+                                    <img src="{{ Str::startsWith($comment->user->profile_image, ['http://', 'https://']) ? $comment->user->profile_image : asset($comment->user->profile_image) }}"
+                                         alt="{{ $comment->user->name }}" class="w-full h-full object-cover">
+                                @else
+                                    {{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}
+                                @endif
                             </div>
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center gap-2 flex-wrap mb-1">
