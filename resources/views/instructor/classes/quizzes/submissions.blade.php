@@ -3,49 +3,108 @@
 @section('title', 'Submissions - ' . $quiz->title)
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <a href="{{ route('instructor.classes.quizzes.index', $class) }}" class="text-primary hover:underline inline-block text-sm mb-6">
-        <i class="fas fa-arrow-left mr-1"></i> Back to Quizzes
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
+    {{-- Back link --}}
+    <a href="{{ route('instructor.classes.quizzes.index', $class) }}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to Quizzes
     </a>
 
-    <div class="mb-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Submissions - {{ $quiz->title }}</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $submissions->count() }} {{ Str::plural('submission', $submissions->count()) }} · {{ $quiz->points }} points · Pass: {{ $quiz->passing_score }}%</p>
+    {{-- Header --}}
+    <div class="mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Submissions · {{ $class->name }}
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4 break-words">
+            {{ $quiz->title }}
+        </h1>
+
+        {{-- Meta line --}}
+        <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+            <span class="inline-flex items-center gap-1.5">
+                <i class="fas fa-users text-xs"></i>
+                {{ $submissions->count() }} {{ Str::plural('submission', $submissions->count()) }}
+            </span>
+            <span class="text-gray-300 dark:text-gray-700">·</span>
+            <span class="inline-flex items-center gap-1.5">
+                <i class="fas fa-star text-xs"></i>
+                {{ $quiz->points }} points
+            </span>
+            <span class="text-gray-300 dark:text-gray-700">·</span>
+            <span class="inline-flex items-center gap-1.5">
+                <i class="fas fa-check text-xs"></i>
+                Pass: {{ $quiz->passing_score }}%
+            </span>
+        </div>
     </div>
 
     @if($submissions->count() > 0)
-        <div class="space-y-4">
+        <div class="space-y-3">
             @foreach($submissions as $submission)
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                    <div class="px-5 py-4 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-sm font-semibold text-gray-500 dark:text-gray-400">
+                @php
+                    $percent = ($submission->correct_answers / max($submission->total_questions, 1)) * 100;
+                    $passed = $percent >= $quiz->passing_score;
+                @endphp
+
+                <article class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+
+                        {{-- Student info --}}
+                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                            <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-sm font-semibold text-white dark:text-gray-900">
                                 {{ strtoupper(substr($submission->user->name, 0, 1)) }}
                             </div>
-                            <div>
-                                <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $submission->user->name }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $submission->submitted_at->format('M d, Y h:i A') }}</p>
+                            <div class="min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $submission->user->name }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $submission->submitted_at->format('M d, Y · h:i A') }}</p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-sm font-bold {{ $submission->correct_answers / max($submission->total_questions, 1) * 100 >= $quiz->passing_score ? 'text-green-600' : 'text-red-600' }}">
-                                {{ $submission->correct_answers }}/{{ $submission->total_questions }}
-                            </span>
-                            <span class="px-2.5 py-0.5 text-xs font-medium rounded-full {{ $submission->correct_answers / max($submission->total_questions, 1) * 100 >= $quiz->passing_score ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' }}">
-                                {{ $submission->score }}/{{ $quiz->points }} pts
+
+                        {{-- Score + result --}}
+                        <div class="flex items-center gap-4 flex-shrink-0">
+                            <div class="text-right">
+                                <p class="text-sm font-semibold tabular-nums {{ $passed ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">
+                                    {{ $submission->score }}/{{ $quiz->points }}
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 tabular-nums">
+                                    {{ $submission->correct_answers }}/{{ $submission->total_questions }} correct
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-medium uppercase tracking-wider flex-shrink-0
+                                {{ $passed ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">
+                                ● {{ $passed ? 'Passed' : 'Failed' }}
                             </span>
                         </div>
                     </div>
-                </div>
+
+                    {{-- Progress bar --}}
+                    <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+                        <div class="flex items-center justify-between gap-3 mb-2">
+                            <span class="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                                Score
+                            </span>
+                            <span class="text-xs tabular-nums text-gray-500 dark:text-gray-400">
+                                {{ round($percent) }}% (pass {{ $quiz->passing_score }}%)
+                            </span>
+                        </div>
+                        <div class="bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden relative">
+                            <div class="{{ $passed ? 'bg-emerald-500' : 'bg-red-500' }} h-1.5 rounded-full transition-all"
+                                 style="width: {{ min(100, round($percent)) }}%"></div>
+                            <div class="absolute top-0 bottom-0 w-px bg-gray-400 dark:bg-gray-600"
+                                 style="left: {{ min(100, $quiz->passing_score) }}%"></div>
+                        </div>
+                    </div>
+                </article>
             @endforeach
         </div>
     @else
-        <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
-                <i class="fas fa-users text-2xl text-gray-400"></i>
-            </div>
-            <h3 class="text-base font-semibold text-gray-600 dark:text-gray-400">No Submissions Yet</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Wait for students to take this quiz.</p>
+        {{-- Empty state --}}
+        <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
+            <i class="fas fa-users text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No submissions yet</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Wait for students to take this quiz.</p>
         </div>
     @endif
 </div>
