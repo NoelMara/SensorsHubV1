@@ -114,7 +114,7 @@
 
                                 {{-- Status --}}
                                 <td class="px-5 py-4 align-top">
-                                    <span class="text-[10px] font-medium uppercase tracking-wider
+                                    <span class="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider
                                         @if($suggestion->status === 'pending') text-amber-600 dark:text-amber-400
                                         @elseif($suggestion->status === 'reviewed') text-blue-600 dark:text-blue-400
                                         @elseif($suggestion->status === 'implemented') text-emerald-600 dark:text-emerald-400
