@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Providers;
-
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
@@ -22,17 +20,8 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useTailwind();
 
         // Force HTTPS in production
-        if (app()->environment('production')) {
+        if (config('app.env') === 'production') {
             URL::forceScheme('https');
-
-            // Trust Render's proxy so Laravel knows the original request was HTTPS
-            Request::setTrustedProxies(
-                ['*'],
-                Request::HEADER_X_FORWARDED_FOR |
-                Request::HEADER_X_FORWARDED_HOST |
-                Request::HEADER_X_FORWARDED_PORT |
-                Request::HEADER_X_FORWARDED_PROTO
-            );
         }
 
         // Max 5 failed login attempts per minute per IP
