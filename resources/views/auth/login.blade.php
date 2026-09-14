@@ -275,7 +275,7 @@
                                 </label>
 
                                 <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
-                                    {{ $isAdministratorLogin ? 'Enter administrator' : 'Sign in' }}
+                                    {{ $isAdministratorLogin ? 'Sign in as administrator' : 'Sign in' }}
                                     <i class="fas fa-arrow-right text-xs"></i>
                                 </button>
                             </form>
