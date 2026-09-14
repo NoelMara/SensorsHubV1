@@ -3,106 +3,169 @@
 @section('title', 'Assessments - ' . $class->name)
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8">
-        <a href="{{ route('instructor.classes.show', $class) }}" class="text-primary hover:underline mb-2 inline-block">
-            <i class="fas fa-arrow-left mr-1"></i> Back to Class
-        </a>
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Assessments - {{ $class->name }}</h1>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $assessments->total() }} {{ Str::plural('assessment', $assessments->total()) }}</p>
-            </div>
-            <div class="flex items-center gap-2">
-                <a href="{{ route('instructor.classes.assessments.create', $class) }}" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition text-sm whitespace-nowrap">
-                    <i class="fas fa-plus mr-1"></i> Add Assessment
-                </a>
-                <a href="{{ route('instructor.classes.assessments.import', $class) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition text-sm whitespace-nowrap">
-                    <i class="fas fa-download mr-1"></i> Import
-                </a>
-            </div>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
+    {{-- Back link --}}
+    <a href="{{ route('instructor.classes.show', $class) }}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to Class
+    </a>
+
+    {{-- Header --}}
+    <div class="mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Assessments · {{ $class->name }}
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
+            Assessments
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mb-8">
+            {{ $assessments->total() }} {{ Str::plural('assessment', $assessments->total()) }} in this class.
+        </p>
+
+        {{-- Actions --}}
+        <div class="flex flex-wrap items-center gap-2">
+            <a href="{{ route('instructor.classes.assessments.create', $class) }}"
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+                <i class="fas fa-plus text-xs"></i>
+                Add assessment
+            </a>
+            <a href="{{ route('instructor.classes.assessments.import', $class) }}"
+               class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition text-sm font-medium">
+                <i class="fas fa-download text-xs"></i>
+                Import
+            </a>
         </div>
     </div>
 
     @if($assessments->count() > 0)
-        <div class="space-y-4">
+        <div class="space-y-3">
             @foreach($assessments as $index => $assessment)
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5">
-                    <div class="flex gap-3">
-                        <div class="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-sm font-bold text-gray-500 dark:text-gray-400 mt-0.5">
+                @php
+                    $isOverdue = $assessment->due_date && $assessment->due_date->isPast();
+                    $isDueSoon = $assessment->due_date && !$isOverdue && $assessment->due_date->diffInDays(now()) <= 2;
+                @endphp
+                <article class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
+
+                    {{-- Top row --}}
+                    <div class="flex items-start gap-3 mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-gray-600 dark:text-gray-400">
                             {{ $index + 1 }}
-                        </div>
-
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-white truncate mb-1.5" title="{{ $assessment->title }}">
-                                {{ Str::limit($assessment->title, 60) }}
-                            </h3>
-                            <div class="flex items-center gap-2 flex-wrap mb-1.5">
+                        </span>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2 flex-wrap mb-0.5">
+                                <h3 class="text-base font-medium text-gray-900 dark:text-white break-words min-w-0" title="{{ $assessment->title }}">
+                                    {{ Str::limit($assessment->title, 60) }}
+                                </h3>
                                 @if($assessment->is_published)
-                                    <span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">Published</span>
+                                    <span class="text-[10px] font-medium uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex-shrink-0">
+                                        ● Published
+                                    </span>
                                 @else
-                                    <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">Draft</span>
+                                    <span class="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 flex-shrink-0">
+                                        ● Draft
+                                    </span>
                                 @endif
-                                @if($assessment->due_date && $assessment->due_date->isPast())
-                                    <span class="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300">Overdue</span>
-                                @elseif($assessment->due_date && $assessment->due_date->diffInDays(now()) <= 2)
-                                    <span class="px-2 py-0.5 text-xs rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">Due Soon</span>
+                                @if($isOverdue)
+                                    <span class="text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400 flex-shrink-0">
+                                        ● Overdue
+                                    </span>
+                                @elseif($isDueSoon)
+                                    <span class="text-[10px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400 flex-shrink-0">
+                                        ● Due soon
+                                    </span>
                                 @endif
                             </div>
-                            @if($assessment->description)
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1.5 line-clamp-1">{{ Str::limit($assessment->description, 120) }}</p>
-                            @endif
-                            <div class="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400 flex-wrap">
-                                <span><i class="fas fa-star text-yellow-500 mr-1"></i>{{ $assessment->points }} pts</span>
-                                @if($assessment->due_date)
-                                    <span><i class="fas fa-clock mr-1"></i>Due: {{ $assessment->due_date->format('M d') }}</span>
-                                @else
-                                    <span class="text-gray-400 dark:text-gray-500"><i class="fas fa-clock mr-1"></i>No deadline</span>
-                                @endif
-                                <span><i class="fas fa-users mr-1"></i>{{ $assessment->submissions->count() }}</span>
-                            </div>
-                        </div>
 
-                        <div class="flex sm:flex-col items-center gap-0.5 sm:gap-1 flex-shrink-0">
-                            <a href="{{ route('instructor.classes.assessments.show', [$class, $assessment]) }}" 
-                               class="p-1.5 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
-                               title="Preview">
-                                <i class="fas fa-eye text-sm"></i>
-                            </a>
-                            <a href="{{ route('instructor.classes.assessments.edit', [$class, $assessment]) }}" 
-                               class="p-1.5 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
-                               title="Edit">
-                                <i class="fas fa-edit text-sm"></i>
-                            </a>
-                            <a href="{{ route('instructor.classes.assessments.submissions', [$class, $assessment]) }}" 
-                               class="p-1.5 rounded-lg text-gray-500 hover:text-primary hover:bg-primary/10 dark:text-gray-400 dark:hover:text-primary dark:hover:bg-primary/10 transition"
-                               title="Submissions">
-                                <i class="fas fa-users text-sm"></i>
-                            </a>
-                            <form action="{{ route('instructor.classes.assessments.destroy', [$class, $assessment]) }}" method="POST"
-                                onsubmit="return confirm('Delete this assessment?');">
-                                @csrf @method('DELETE')
-                                <button type="submit" 
-                                        class="p-1.5 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:text-gray-400 dark:hover:text-red-400 dark:hover:bg-red-900/20 transition"
-                                        title="Delete">
-                                    <i class="fas fa-trash text-sm"></i>
-                                </button>
-                            </form>
+                            @if($assessment->description)
+                                <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-1 mt-1">
+                                    {{ Str::limit($assessment->description, 120) }}
+                                </p>
+                            @endif
+
+                            {{-- Meta line --}}
+                            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 dark:text-gray-400 mt-2">
+                                <span class="inline-flex items-center gap-1">
+                                    <i class="fas fa-star text-[10px]"></i>
+                                    {{ $assessment->points }} pts
+                                </span>
+                                <span class="text-gray-300 dark:text-gray-700">·</span>
+                                @if($assessment->due_date)
+                                    <span class="inline-flex items-center gap-1">
+                                        <i class="fas fa-clock text-[10px]"></i>
+                                        Due {{ $assessment->due_date->format('M d') }}
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 text-gray-400 dark:text-gray-600">
+                                        <i class="fas fa-clock text-[10px]"></i>
+                                        No deadline
+                                    </span>
+                                @endif
+                                <span class="text-gray-300 dark:text-gray-700">·</span>
+                                <span class="inline-flex items-center gap-1">
+                                    <i class="fas fa-users text-[10px]"></i>
+                                    {{ $assessment->submissions->count() }} {{ Str::plural('submission', $assessment->submissions->count()) }}
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    {{-- Actions footer --}}
+                    <div class="grid grid-cols-2 sm:flex sm:items-center sm:justify-end gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
+                        <a href="{{ route('instructor.classes.assessments.show', [$class, $assessment]) }}"
+                           class="inline-flex items-center justify-center gap-1.5 px-3 h-9 sm:h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+                            <i class="fas fa-eye text-[10px]"></i>
+                            Preview
+                        </a>
+                        <a href="{{ route('instructor.classes.assessments.edit', [$class, $assessment]) }}"
+                           class="inline-flex items-center justify-center gap-1.5 px-3 h-9 sm:h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+                            <i class="fas fa-edit text-[10px]"></i>
+                            Edit
+                        </a>
+                        <a href="{{ route('instructor.classes.assessments.submissions', [$class, $assessment]) }}"
+                           class="inline-flex items-center justify-center gap-1.5 px-3 h-9 sm:h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+                            <i class="fas fa-users text-[10px]"></i>
+                            Submissions
+                        </a>
+                        <form action="{{ route('instructor.classes.assessments.destroy', [$class, $assessment]) }}"
+                            method="POST" onsubmit="return confirm('Delete this assessment?');">
+                            @csrf @method('DELETE')
+                            <button type="submit"
+                                class="w-full inline-flex items-center justify-center gap-1.5 px-3 h-9 sm:h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500 transition">
+                                <i class="fas fa-trash text-[10px]"></i>
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </article>
             @endforeach
         </div>
-    @else
-        <div class="text-center py-16 bg-white dark:bg-gray-800 rounded-xl border">
-            <i class="fas fa-tasks text-5xl text-gray-300 mb-4"></i>
-            <h3 class="text-lg font-bold text-gray-600">No Assessments Yet</h3>
-            <p class="text-gray-500">Add your first assessment or import from another class!</p>
-        </div>
-     @endif
 
-    @if($assessments->hasPages())
-        <div class="mt-6 mb-8">{{ $assessments->links() }}</div>
+        @if($assessments->hasPages())
+            <div class="mt-12 flex justify-center">
+                {{ $assessments->links() }}
+            </div>
+        @endif
+    @else
+        {{-- Empty state --}}
+        <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
+            <i class="fas fa-tasks text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No assessments yet</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Add your first assessment or import from another class.</p>
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                <a href="{{ route('instructor.classes.assessments.create', $class) }}"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+                    <i class="fas fa-plus text-xs"></i>
+                    Add assessment
+                </a>
+                <a href="{{ route('instructor.classes.assessments.import', $class) }}"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition text-sm font-medium">
+                    <i class="fas fa-download text-xs"></i>
+                    Import
+                </a>
+            </div>
+        </div>
     @endif
 </div>
 @endsection
