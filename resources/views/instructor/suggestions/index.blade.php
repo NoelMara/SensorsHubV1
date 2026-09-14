@@ -57,8 +57,13 @@
                             <tr class="border-b border-gray-100 dark:border-gray-800/50 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
                                 <td class="px-5 py-4 align-top">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-xs font-semibold text-white dark:text-gray-900">
-                                            {{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}
+                                        <div class="w-8 h-8 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 overflow-hidden text-xs font-semibold text-white dark:text-gray-900">
+                                            @if($suggestion->user?->profile_image)
+                                                <img src="{{ Str::startsWith($suggestion->user->profile_image, ['http://', 'https://']) ? $suggestion->user->profile_image : asset($suggestion->user->profile_image) }}"
+                                                     alt="{{ $suggestion->user->name }}" class="w-full h-full object-cover">
+                                            @else
+                                                {{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}
+                                            @endif
                                         </div>
                                         <div class="min-w-0">
                                             <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $suggestion->user?->name ?? 'Deleted user' }}</p>

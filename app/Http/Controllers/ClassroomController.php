@@ -340,6 +340,7 @@ class ClassroomController extends Controller
             $sq = $quizByStudent->get($student->id, collect())->sum('score');
             $studentPerformance[] = [
                 'name' => $student->name,
+                'profile_image' => $student->profile_image,
                 'assessment_avg' => $totalAssessmentPoints > 0 ? round(($sa / $totalAssessmentPoints) * 100, 1) : null,
                 'quiz_avg' => $totalQuizPoints > 0 ? round(($sq / $totalQuizPoints) * 100, 1) : null,
                 'overall' => ($totalAssessmentPoints + $totalQuizPoints) > 0 ? round((($sa + $sq) / ($totalAssessmentPoints + $totalQuizPoints)) * 100, 1) : null,

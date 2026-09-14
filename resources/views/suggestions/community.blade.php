@@ -44,8 +44,13 @@
                     <div class="flex items-start gap-4">
 
                         {{-- Avatar --}}
-                        <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-sm font-semibold text-white dark:text-gray-900">
-                            {{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}
+                        <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 overflow-hidden text-sm font-semibold text-white dark:text-gray-900">
+                            @if($suggestion->user?->profile_image)
+                                <img src="{{ Str::startsWith($suggestion->user->profile_image, ['http://', 'https://']) ? $suggestion->user->profile_image : asset($suggestion->user->profile_image) }}"
+                                     alt="{{ $suggestion->user->name }}" class="w-full h-full object-cover">
+                            @else
+                                {{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}
+                            @endif
                         </div>
 
                         {{-- Content --}}

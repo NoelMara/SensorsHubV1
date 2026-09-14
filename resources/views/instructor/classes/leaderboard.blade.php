@@ -60,8 +60,13 @@
                                 {{-- Student --}}
                                 <td class="px-3 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-9 h-9 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-xs font-semibold text-white dark:text-gray-900">
-                                            {{ strtoupper(substr($row['student']->name, 0, 1)) }}
+                                        <div class="w-9 h-9 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 overflow-hidden text-xs font-semibold text-white dark:text-gray-900">
+                                            @if($row['student']->profile_image)
+                                                <img src="{{ Str::startsWith($row['student']->profile_image, ['http://', 'https://']) ? $row['student']->profile_image : asset($row['student']->profile_image) }}"
+                                                     alt="{{ $row['student']->name }}" class="w-full h-full object-cover">
+                                            @else
+                                                {{ strtoupper(substr($row['student']->name, 0, 1)) }}
+                                            @endif
                                         </div>
                                         <div class="min-w-0">
                                             <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $row['student']->name }}</p>

@@ -224,8 +224,13 @@
 
                         {{-- Row 1: avatar + name + status --}}
                         <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-sm font-semibold text-white dark:text-gray-900">
-                                {{ strtoupper(substr($student->name, 0, 1)) }}
+                            <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 overflow-hidden text-sm font-semibold text-white dark:text-gray-900">
+                                @if($student->profile_image)
+                                    <img src="{{ Str::startsWith($student->profile_image, ['http://', 'https://']) ? $student->profile_image : asset($student->profile_image) }}"
+                                         alt="{{ $student->name }}" class="w-full h-full object-cover">
+                                @else
+                                    {{ strtoupper(substr($student->name, 0, 1)) }}
+                                @endif
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $student->name }}</p>

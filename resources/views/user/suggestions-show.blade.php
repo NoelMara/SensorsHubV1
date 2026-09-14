@@ -14,8 +14,13 @@
     <article class="border border-gray-200 dark:border-gray-800 rounded-lg p-6 sm:p-8">
 
         <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-sm font-semibold text-white dark:text-gray-900">
-                {{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}
+            <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 overflow-hidden text-sm font-semibold text-white dark:text-gray-900">
+                @if($suggestion->user?->profile_image)
+                    <img src="{{ Str::startsWith($suggestion->user->profile_image, ['http://', 'https://']) ? $suggestion->user->profile_image : asset($suggestion->user->profile_image) }}"
+                         alt="{{ $suggestion->user->name }}" class="w-full h-full object-cover">
+                @else
+                    {{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}
+                @endif
             </div>
             <div class="min-w-0">
                 <p class="font-medium text-gray-900 dark:text-white truncate">
@@ -117,8 +122,13 @@
                     <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
                         <div class="flex items-center justify-between gap-3 mb-3 flex-wrap">
                             <div class="flex items-center gap-2.5 min-w-0">
-                                <div class="w-8 h-8 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-xs font-semibold text-white dark:text-gray-900">
-                                    {{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}
+                                <div class="w-8 h-8 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 overflow-hidden text-xs font-semibold text-white dark:text-gray-900">
+                                    @if($comment->user?->profile_image)
+                                        <img src="{{ Str::startsWith($comment->user->profile_image, ['http://', 'https://']) ? $comment->user->profile_image : asset($comment->user->profile_image) }}"
+                                             alt="{{ $comment->user->name }}" class="w-full h-full object-cover">
+                                    @else
+                                        {{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}
+                                    @endif
                                 </div>
                                 <span class="text-sm font-medium text-gray-900 dark:text-white truncate">
                                     {{ $comment->user?->name ?? 'Deleted user' }}
