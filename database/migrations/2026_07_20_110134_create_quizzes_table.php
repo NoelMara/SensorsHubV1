@@ -61,6 +61,7 @@ return new class extends Migration
             $table->integer('correct_answers')->default(0);
             $table->string('status')->default('submitted'); // submitted, graded
             $table->timestamp('submitted_at')->nullable();
+            $table->unsignedInteger('tab_switches')->default(0);
             $table->timestamps();
         });
     }
