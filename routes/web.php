@@ -38,6 +38,7 @@ Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projec
 Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/shop', [ProductController::class, 'index'])->name('shop.index');
 Route::get('/shop/{id}', [ProductController::class, 'show'])->name('shop.show');
+Route::get('/debug-env', fn() => ['env' => app()->environment(), 'app_url' => config('app.url')]);
 
 // ─── Community Suggestions (Public - requires auth to comment) ────────────────
 Route::get('/community', [SuggestionController::class, 'community'])->name('suggestions.community');
