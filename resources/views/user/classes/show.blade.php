@@ -3,249 +3,347 @@
 @section('title', $class->name)
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8">
-        <a href="{{ route('dashboard.classes.index') }}" class="text-primary hover:underline mb-2 inline-block">
-            <i class="fas fa-arrow-left mr-1"></i> Back to Classes
-        </a>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">{{ $class->name }}</h1>
-        @if($class->section)
-            <span class="inline-block mt-2 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm font-semibold">
-                Block {{ $class->section }}
-            </span>
-        @endif
-    </div>
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
 
-    <!-- Class Info -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
-            <i class="fas fa-info-circle text-blue-500 mr-2"></i>Class Info
-        </h2>
-        <div class="space-y-3">
-            <div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Instructor</p>
-                <p class="font-semibold text-gray-900 dark:text-white">{{ $class->instructor->name }}</p>
-            </div>
-            @if($class->description)
-            <div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Description</p>
-                <p class="text-gray-700 dark:text-gray-300">{{ $class->description }}</p>
-            </div>
+    {{-- Back link --}}
+    <a href="{{ route('dashboard.classes.index') }}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to Classes
+    </a>
+
+    {{-- Header --}}
+    <div class="mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Class
+        </p>
+        <div class="flex flex-wrap items-baseline gap-3 mb-4">
+            <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                {{ $class->name }}
+            </h1>
+            @if($class->section)
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    · Block {{ $class->section }}
+                </span>
             @endif
-            <div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Class Code</p>
-                <p class="text-2xl font-bold text-primary tracking-[0.3em]">{{ $class->code }}</p>
-            </div>
         </div>
+        <p class="text-lg text-gray-600 dark:text-gray-400">
+            Taught by <span class="text-gray-900 dark:text-white font-medium">{{ $class->instructor->name }}</span>
+        </p>
     </div>
 
-    {{-- 📊 Progress Summary --}}
+    {{-- Progress summary — compact bar + stats inline --}}
     @if($totalPossible > 0)
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
-            <i class="fas fa-chart-line text-primary mr-2"></i>My Progress
-        </h2>
-        
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
-                <p class="text-xl font-bold text-green-600">{{ $assessmentSubmissions->count() }}/{{ $assessments->count() }}</p>
-                <p class="text-xs text-gray-500 mt-1">Assessments Done</p>
+        @php
+            $overallPct = $totalPossible > 0 ? round(($totalPoints / $totalPossible) * 100) : 0;
+        @endphp
+        <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6 mb-12">
+            <div class="flex items-end justify-between gap-4 mb-4">
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Progress
+                    </p>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        My progress
+                    </h2>
+                </div>
+                <span class="text-3xl font-semibold text-gray-900 dark:text-white tabular-nums">{{ $overallPct }}%</span>
             </div>
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
-                <p class="text-xl font-bold text-indigo-600">{{ $quizSubmissions->count() }}/{{ $quizzes->count() }}</p>
-                <p class="text-xs text-gray-500 mt-1">Quizzes Done</p>
-            </div>
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
-                <p class="text-xl font-bold text-primary">{{ $totalPoints }}</p>
-                <p class="text-xs text-gray-500 mt-1">Points Earned</p>
-            </div>
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 text-center">
-                <p class="text-xl font-bold text-primary">{{ $totalPossible > 0 ? round(($totalPoints / $totalPossible) * 100) : 0 }}%</p>
-                <p class="text-xs text-gray-500 mt-1">Overall</p>
-            </div>
-        </div>
 
-        <div class="bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
-            <div class="bg-primary h-2.5 rounded-full" style="width: {{ $totalPossible > 0 ? round(($totalPoints / $totalPossible) * 100) : 0 }}%"></div>
-        </div>
-    </div>
+            <div class="bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden mb-6">
+                <div class="bg-gray-900 dark:bg-white h-1.5 rounded-full transition-all duration-500" style="width: {{ $overallPct }}%"></div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 text-center sm:text-left">
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Assessments</p>
+                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $assessmentSubmissions->count() }}/{{ $assessments->count() }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Quizzes</p>
+                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $quizSubmissions->count() }}/{{ $quizzes->count() }}</p>
+                </div>
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Points</p>
+                    <p class="text-sm font-medium text-emerald-600 dark:text-emerald-400">{{ $totalPoints }}/{{ $totalPossible }}</p>
+                </div>
+            </div>
+        </section>
     @endif
 
-    {{-- 📝 Assessments Progress --}}
-    @if($assessments->count() > 0)
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white">
-                <i class="fas fa-tasks text-purple-500 mr-2"></i>Assessments
-                <span class="text-sm font-normal text-gray-500">({{ $assessmentPoints }}/{{ $totalAssessmentPoints }} pts)</span>
-            </h2>
-            <a href="{{ route('dashboard.classes.assessments.index', $class) }}" class="text-sm text-primary hover:underline">View All</a>
+    {{-- Class code — subtle info card --}}
+    <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6 mb-12 bg-gray-50 dark:bg-gray-900/50">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Class code</p>
+                <p class="text-2xl font-semibold text-gray-900 dark:text-white tracking-[0.25em] font-mono">{{ $class->code }}</p>
+            </div>
+            <button type="button"
+                onclick="navigator.clipboard.writeText('{{ $class->code }}'); this.querySelector('span').textContent='Copied'; setTimeout(() => this.querySelector('span').textContent='Copy', 2000);"
+                class="inline-flex items-center gap-1.5 px-3 h-9 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+                <i class="fas fa-copy text-[11px]"></i>
+                <span>Copy</span>
+            </button>
         </div>
-        <div class="space-y-2">
-            @foreach($assessments as $assessment)
-                @php $sub = $assessmentSubmissions->get($assessment->id); @endphp
-                <a href="{{ route('dashboard.classes.assessments.show', [$class, $assessment]) }}" 
-                   class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <span class="flex-shrink-0">
-                            @if($sub && $sub->score !== null)
-                                <i class="fas fa-check-circle text-green-500"></i>
-                            @elseif($sub)
-                                <i class="fas fa-clock text-blue-500"></i>
-                            @else
-                                <i class="fas fa-circle text-gray-300 text-xs"></i>
-                            @endif
-                        </span>
-                        <span class="text-sm text-gray-700 dark:text-gray-300 truncate">{{ $assessment->title }}</span>
-                    </div>
-                    <span class="text-sm font-semibold flex-shrink-0 ml-2 
-                        {{ $sub && $sub->score !== null ? 'text-green-600' : ($sub ? 'text-blue-600' : 'text-gray-400') }}">
-                        {{ $sub && $sub->score !== null ? $sub->score : '--' }}/{{ $assessment->points }}
-                    </span>
+        @if($class->description)
+            <div class="mt-5 pt-5 border-t border-gray-100 dark:border-gray-800">
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Description</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{{ $class->description }}</p>
+            </div>
+        @endif
+    </section>
+
+    {{-- Quick access — assessment / quiz / module / announcement cards --}}
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-12">
+        <a href="{{ route('dashboard.classes.assessments.index', $class) }}"
+           class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
+            <i class="fas fa-tasks text-gray-400 dark:text-gray-600 text-sm mb-3 block"></i>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">Assessments</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $assessments->count() }} available</p>
+        </a>
+        <a href="{{ route('dashboard.classes.quizzes.index', $class) }}"
+           class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
+            <i class="fas fa-question-circle text-gray-400 dark:text-gray-600 text-sm mb-3 block"></i>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">Quizzes</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $quizzes->count() }} available</p>
+        </a>
+        <a href="{{ route('dashboard.classes.modules.index', $class) }}"
+           class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
+            <i class="fas fa-book-open text-gray-400 dark:text-gray-600 text-sm mb-3 block"></i>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">Modules</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $class->modules()->where('is_published', true)->count() }} available</p>
+        </a>
+        <a href="{{ route('dashboard.classes.announcements.index', $class) }}"
+           class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
+            <i class="fas fa-bullhorn text-gray-400 dark:text-gray-600 text-sm mb-3 block"></i>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">Announcements</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $class->announcements()->where('is_published', true)->count() }} posted</p>
+        </a>
+    </section>
+
+    {{-- Announcements --}}
+    @php $announcements = $class->announcements()->where('is_published', true)->latest()->take(3)->get(); @endphp
+    @if($announcements->count() > 0)
+        <section class="mb-12">
+            <div class="flex items-end justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Announcements
+                    </p>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        Latest from instructor
+                    </h2>
+                </div>
+                <a href="{{ route('dashboard.classes.announcements.index', $class) }}"
+                   class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white inline-flex items-center gap-1 transition flex-shrink-0">
+                    View all
+                    <i class="fas fa-arrow-right text-xs"></i>
                 </a>
-            @endforeach
-        </div>
-    </div>
+            </div>
+
+            <div class="space-y-3">
+                @foreach($announcements as $announcement)
+                    <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-5 border-l-2 border-l-amber-500 dark:border-l-amber-400">
+                        <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-1">{{ $announcement->title }}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{{ Str::limit($announcement->content, 120) }}</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-600 mt-2">{{ $announcement->created_at->diffForHumans() }}</p>
+                    </div>
+                @endforeach
+            </div>
+        </section>
     @endif
 
-    {{-- 📝 Quizzes Progress --}}
+    {{-- Modules --}}
+    @php $modules = $class->modules()->where('is_published', true)->orderBy('order')->take(3)->get(); @endphp
+    @if($modules->count() > 0)
+        <section class="mb-12">
+            <div class="flex items-end justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Modules
+                    </p>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        Learning materials
+                    </h2>
+                </div>
+                <a href="{{ route('dashboard.classes.modules.index', $class) }}"
+                   class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white inline-flex items-center gap-1 transition flex-shrink-0">
+                    View all
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+
+            <div class="space-y-2">
+                @foreach($modules as $module)
+                    <a href="{{ route('dashboard.classes.modules.show', [$class, $module]) }}"
+                       class="flex items-center justify-between gap-3 border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition group">
+                        <div class="flex items-center gap-3 min-w-0 flex-1">
+                            <span class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-gray-600 dark:text-gray-400">
+                                {{ $module->order }}
+                            </span>
+                            <div class="min-w-0 flex-1">
+                                <h3 class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $module->title }}</h3>
+                                @if($module->content)
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">{{ Str::limit($module->content, 80) }}</p>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 flex-shrink-0">
+                            @if($module->file_path)
+                                <i class="fas fa-paperclip text-gray-400 text-xs"></i>
+                            @endif
+                            <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-gray-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all text-xs"></i>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
+    {{-- Assessments --}}
+    @if($assessments->count() > 0)
+        <section class="mb-12">
+            <div class="flex items-end justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Assessments
+                    </p>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        {{ $assessmentPoints }}/{{ $totalAssessmentPoints }} pts earned
+                    </h2>
+                </div>
+                <a href="{{ route('dashboard.classes.assessments.index', $class) }}"
+                   class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white inline-flex items-center gap-1 transition flex-shrink-0">
+                    View all
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+
+            <div class="space-y-2">
+                @foreach($assessments as $assessment)
+                    @php $sub = $assessmentSubmissions->get($assessment->id); @endphp
+                    <a href="{{ route('dashboard.classes.assessments.show', [$class, $assessment]) }}"
+                       class="flex items-center justify-between gap-3 border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
+                        <div class="flex items-center gap-3 min-w-0">
+                            @if($sub && $sub->score !== null)
+                                <i class="fas fa-check-circle text-emerald-500 text-sm flex-shrink-0"></i>
+                            @elseif($sub)
+                                <i class="fas fa-clock text-blue-500 text-sm flex-shrink-0"></i>
+                            @else
+                                <i class="fas fa-circle text-gray-300 dark:text-gray-700 text-xs flex-shrink-0"></i>
+                            @endif
+                            <span class="text-sm text-gray-900 dark:text-white truncate">{{ $assessment->title }}</span>
+                        </div>
+                        <span class="text-xs font-medium flex-shrink-0 tabular-nums
+                            {{ $sub && $sub->score !== null ? 'text-emerald-600 dark:text-emerald-400' : ($sub ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-gray-600') }}">
+                            {{ $sub && $sub->score !== null ? $sub->score : '--' }}/{{ $assessment->points }}
+                        </span>
+                    </a>
+                @endforeach
+            </div>
+        </section>
+    @endif
+
+    {{-- Quizzes --}}
     @if($quizzes->count() > 0)
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white">
-                <i class="fas fa-question-circle text-indigo-500 mr-2"></i>Quizzes
-                <span class="text-sm font-normal text-gray-500">({{ $quizPoints }}/{{ $totalQuizPoints }} pts)</span>
-            </h2>
-            <a href="{{ route('dashboard.classes.quizzes.index', $class) }}" class="text-sm text-primary hover:underline">View All</a>
-        </div>
-        <div class="space-y-2">
-            @foreach($quizzes as $quiz)
-                @php $sub = $quizSubmissions->get($quiz->id); @endphp
-                <a href="{{ route('dashboard.classes.quizzes.show', [$class, $quiz]) }}" 
-                   class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <span class="flex-shrink-0">
+        <section class="mb-12">
+            <div class="flex items-end justify-between gap-4 mb-6">
+                <div>
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Quizzes
+                    </p>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                        {{ $quizPoints }}/{{ $totalQuizPoints }} pts earned
+                    </h2>
+                </div>
+                <a href="{{ route('dashboard.classes.quizzes.index', $class) }}"
+                   class="text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white inline-flex items-center gap-1 transition flex-shrink-0">
+                    View all
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+
+            <div class="space-y-2">
+                @foreach($quizzes as $quiz)
+                    @php $sub = $quizSubmissions->get($quiz->id); @endphp
+                    <a href="{{ route('dashboard.classes.quizzes.show', [$class, $quiz]) }}"
+                       class="flex items-center justify-between gap-3 border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
+                        <div class="flex items-center gap-3 min-w-0">
                             @if($sub)
                                 @php $pct = ($sub->correct_answers / max($sub->total_questions, 1)) * 100; @endphp
                                 @if($pct >= $quiz->passing_score)
-                                    <i class="fas fa-check-circle text-green-500"></i>
+                                    <i class="fas fa-check-circle text-emerald-500 text-sm flex-shrink-0"></i>
                                 @else
-                                    <i class="fas fa-times-circle text-red-500"></i>
+                                    <i class="fas fa-times-circle text-red-500 text-sm flex-shrink-0"></i>
                                 @endif
                             @else
-                                <i class="fas fa-circle text-gray-300 text-xs"></i>
+                                <i class="fas fa-circle text-gray-300 dark:text-gray-700 text-xs flex-shrink-0"></i>
                             @endif
+                            <span class="text-sm text-gray-900 dark:text-white truncate">{{ $quiz->title }}</span>
+                        </div>
+                        <span class="text-xs font-medium flex-shrink-0 tabular-nums
+                            {{ $sub ? ($sub->correct_answers / max($sub->total_questions, 1) * 100 >= $quiz->passing_score ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400') : 'text-gray-400 dark:text-gray-600' }}">
+                            {{ $sub ? $sub->score : '--' }}/{{ $quiz->points }}
                         </span>
-                        <span class="text-sm text-gray-700 dark:text-gray-300 truncate">{{ $quiz->title }}</span>
-                    </div>
-                    <span class="text-sm font-semibold flex-shrink-0 ml-2 
-                        {{ $sub ? ($sub->correct_answers / max($sub->total_questions, 1) * 100 >= $quiz->passing_score ? 'text-green-600' : 'text-red-600') : 'text-gray-400' }}">
-                        {{ $sub ? $sub->score : '--' }}/{{ $quiz->points }}
-                    </span>
-                </a>
-            @endforeach
-        </div>
-    </div>
+                    </a>
+                @endforeach
+            </div>
+        </section>
     @endif
 
-    {{-- 📚 Recommended Resources --}}
+    {{-- Resources --}}
     @php $resources = $class->resources()->get(); @endphp
     @if($resources->count() > 0)
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
-            <i class="fas fa-book text-cyan-500 mr-2"></i>Instructor Recommended
-        </h2>
-        <div class="space-y-2">
-            @foreach($resources as $resource)
-                @php
-                    $item = null;
-                    $link = '#';
-                    if ($resource->resource_type === 'sensor') {
-                        $item = \App\Models\Sensor::find($resource->resource_id);
-                        $link = $item ? route('sensors.show', $item->slug) : '#';
-                    } elseif ($resource->resource_type === 'project') {
-                        $item = \App\Models\Project::find($resource->resource_id);
-                        $link = $item ? route('projects.show', $item->slug) : '#';
-                   } elseif ($resource->resource_type === 'video') {
-                        $item = \App\Models\Video::find($resource->resource_id);
-                        $link = $item && $item->youtube_link ? $item->youtube_link : '#';
-                    }
-                @endphp
-                @if($item)
-                    <a href="{{ $link }}" target="_blank" class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                        <span class="text-xs px-2 py-0.5 rounded-full
-                            {{ $resource->resource_type === 'sensor' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : '' }}
-                            {{ $resource->resource_type === 'project' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}
-                            {{ $resource->resource_type === 'video' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' : '' }}">
-                            {{ ucfirst($resource->resource_type) }}
-                        </span>
-                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $item->title ?? $item->name }}</span>
-                        <i class="fas fa-external-link-alt text-gray-400 text-xs ml-auto"></i>
-                    </a>
-                @endif
-            @endforeach
-        </div>
-    </div>
+        <section class="mb-12">
+            <div class="mb-6">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Resources
+                </p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Instructor recommended
+                </h2>
+            </div>
+
+            <div class="space-y-2">
+                @foreach($resources as $resource)
+                    @php
+                        $item = null;
+                        $link = '#';
+                        if ($resource->resource_type === 'sensor') {
+                            $item = \App\Models\Sensor::find($resource->resource_id);
+                            $link = $item ? route('sensors.show', $item->slug) : '#';
+                        } elseif ($resource->resource_type === 'project') {
+                            $item = \App\Models\Project::find($resource->resource_id);
+                            $link = $item ? route('projects.show', $item->slug) : '#';
+                        } elseif ($resource->resource_type === 'video') {
+                            $item = \App\Models\Video::find($resource->resource_id);
+                            $link = $item && $item->youtube_link ? $item->youtube_link : '#';
+                        }
+                    @endphp
+                    @if($item)
+                        <a href="{{ $link }}" target="_blank"
+                           class="flex items-center gap-3 border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition group">
+                            <span class="text-[10px] font-medium uppercase tracking-wider flex-shrink-0 w-14
+                                {{ $resource->resource_type === 'sensor' ? 'text-emerald-600 dark:text-emerald-400' : '' }}
+                                {{ $resource->resource_type === 'project' ? 'text-blue-600 dark:text-blue-400' : '' }}
+                                {{ $resource->resource_type === 'video' ? 'text-red-600 dark:text-red-400' : '' }}">
+                                {{ $resource->resource_type }}
+                            </span>
+                            <span class="text-sm text-gray-900 dark:text-white truncate flex-1">{{ $item->title ?? $item->name }}</span>
+                            <i class="fas fa-arrow-up-right-from-square text-gray-400 text-xs flex-shrink-0 group-hover:text-gray-900 dark:group-hover:text-white transition"></i>
+                        </a>
+                    @endif
+                @endforeach
+            </div>
+        </section>
     @endif
 
-    <!-- Announcements -->
-    @php $announcements = $class->announcements()->where('is_published', true)->latest()->take(3)->get(); @endphp
-    @if($announcements->count() > 0)
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white">
-                <i class="fas fa-bullhorn text-yellow-500 mr-2"></i>Announcements
-            </h2>
-            <a href="{{ route('dashboard.classes.announcements.index', $class) }}" class="text-sm text-primary hover:underline">View All</a>
-        </div>
-        <div class="space-y-3">
-            @foreach($announcements as $announcement)
-                <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <h3 class="font-semibold text-gray-900 dark:text-white">{{ $announcement->title }}</h3>
-                    <p class="text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($announcement->content, 100) }}</p>
-                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">{{ $announcement->created_at->diffForHumans() }}</p>
-                </div>
-            @endforeach
-        </div>
-    </div>
-    @endif
-
-    <!-- Modules -->
-    @php $modules = $class->modules()->where('is_published', true)->orderBy('order')->take(3)->get(); @endphp
-    @if($modules->count() > 0)
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white">
-                <i class="fas fa-book-open text-green-500 mr-2"></i>Modules
-            </h2>
-            <a href="{{ route('dashboard.classes.modules.index', $class) }}" class="text-sm text-primary hover:underline">View All</a>
-        </div>
-        <div class="space-y-3">
-            @foreach($modules as $module)
-                <a href="{{ route('dashboard.classes.modules.show', [$class, $module]) }}" class="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="font-semibold text-gray-900 dark:text-white">{{ $module->order }}. {{ $module->title }}</h3>
-                            @if($module->content)
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ Str::limit($module->content, 80) }}</p>
-                            @endif
-                        </div>
-                        <div class="flex items-center gap-2">
-                            @if($module->file_path)
-                                <i class="fas fa-paperclip text-gray-400"></i>
-                            @endif
-                            <i class="fas fa-chevron-right text-gray-400"></i>
-                        </div>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-    </div>
-    @endif
-
-    <div class="text-center">
-        <a href="{{ route('dashboard.classes.index') }}" class="text-primary hover:underline">
-            <i class="fas fa-arrow-left mr-1"></i> Back to My Classes
+    {{-- Back link bottom --}}
+    <div class="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800">
+        <a href="{{ route('dashboard.classes.index') }}"
+           class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+            <i class="fas fa-arrow-left text-xs"></i>
+            Back to My Classes
         </a>
     </div>
 </div>
