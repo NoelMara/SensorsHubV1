@@ -147,7 +147,7 @@ header('Expires: 0');
                 <a href="https://sensors-hub-simulator.vercel.app/" target="_blank" class="flex items-center gap-3 px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"><i class="fas fa-flask w-5"></i> Simulation</a>
                 <div class="border-t border-gray-200 dark:border-gray-800 my-2"></div>
                 <a href="{{ route('login') }}" class="flex items-center gap-3 px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"><i class="fas fa-key w-5"></i> Login</a>
-                <a href="{{ route('register') }}" class="flex items-center gap-3 px-3 py-2 text-base font-medium text-white dark:text-gray-900 bg-gray-900 dark:bg-white rounded-lg"><i class="fas fa-user-plus w-5 text-center shrink-0"></i> Register</a>
+                <a href="{{ route('register') }}" class="flex items-center justify-center gap-2 px-3 py-2 text-base font-medium text-white dark:text-gray-900 bg-gray-900 dark:bg-white rounded-lg"><i class="fas fa-user-plus w-5"></i> Register</a>
                 <button id="mobileDarkModeToggle" class="flex items-center gap-3 w-full px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
                     <i class="fas fa-moon dark-icon-moon w-5 text-center shrink-0"></i><i class="fas fa-sun dark-icon-sun w-5 text-center shrink-0" style="display: none;"></i> Dark Mode
                 </button>
@@ -629,21 +629,31 @@ header('Expires: 0');
         style.textContent = `
             .audio-btn {
                 position:fixed; bottom:16px; right:16px; z-index:9999;
-                background:rgba(59,130,246,0.75); backdrop-filter:blur(8px);
+                background:rgba(16,185,129,0.85); backdrop-filter:blur(8px);
                 color:white; width:40px; height:40px; border-radius:50%;
                 border:1px solid rgba(255,255,255,0.15); cursor:pointer;
-                box-shadow:0 4px 12px rgba(59,130,246,0.3);
+                box-shadow:0 4px 12px rgba(16,185,129,0.35);
                 display:flex; align-items:center; justify-content:center;
-                font-size:14px; transition:all 0.3s ease; opacity:0.5;
+                font-size:14px; transition:all 0.3s ease; opacity:0.75;
             }
-            .audio-btn:hover, .audio-btn:focus { opacity:1; transform:scale(1.1); box-shadow:0 8px 20px rgba(59,130,246,0.5); }
+            .audio-btn:hover, .audio-btn:focus { opacity:1; transform:scale(1.1); box-shadow:0 8px 20px rgba(16,185,129,0.5); }
             .audio-btn.playing { animation: audioPulse 2s infinite; opacity:1; }
+            .audio-btn.muted {
+                background:rgba(75,85,99,0.85);
+                box-shadow:0 4px 12px rgba(75,85,99,0.35);
+                opacity:0.55;
+            }
+            .audio-btn.muted:hover, .audio-btn.muted:focus {
+                opacity:1;
+                box-shadow:0 8px 20px rgba(75,85,99,0.5);
+            }
             @keyframes audioPulse {
-                0%, 100% { box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
-                50% { box-shadow: 0 4px 20px rgba(59,130,246,0.7), 0 0 0 6px rgba(59,130,246,0.1); }
+                0%, 100% { box-shadow: 0 4px 12px rgba(16,185,129,0.4); }
+                50% { box-shadow: 0 4px 20px rgba(16,185,129,0.7), 0 0 0 6px rgba(16,185,129,0.1); }
             }
             @media (max-width: 640px) {
-                .audio-btn { width:34px; height:34px; bottom:12px; right:12px; font-size:12px; opacity:0.45; }
+                .audio-btn { width:34px; height:34px; bottom:12px; right:12px; font-size:12px; opacity:0.7; }
+                .audio-btn.muted { opacity:0.5; }
             }
         `;
         document.head.appendChild(style);
@@ -653,8 +663,18 @@ header('Expires: 0');
         btn.innerHTML = '<i class="fas fa-volume-up"></i>';
         btn.title = "Play Welcome Message";
 
-        function startPulse() { btn.classList.add('playing'); btn.title = "Stop Audio"; }
-        function stopPulse() { btn.classList.remove('playing'); btn.title = "Play Welcome Message"; }
+        function startPulse() {
+            btn.classList.add('playing');
+            btn.classList.remove('muted');
+            btn.querySelector('i').className = 'fas fa-volume-up';
+            btn.title = "Mute";
+        }
+        function stopPulse() {
+            btn.classList.remove('playing');
+            btn.classList.add('muted');
+            btn.querySelector('i').className = 'fas fa-volume-mute';
+            btn.title = "Play welcome message";
+        }
 
         btn.addEventListener('click', function () {
             if (audio.paused) { audio.currentTime = 0; audio.play(); }
@@ -664,6 +684,8 @@ header('Expires: 0');
         audio.addEventListener('play', startPulse);
         audio.addEventListener('pause', stopPulse);
         audio.addEventListener('ended', stopPulse);
+        btn.classList.add('muted');
+        btn.querySelector('i').className = 'fas fa-volume-mute';
         document.body.appendChild(btn);
 
         if (!sessionStorage.getItem(storageKey)) {
@@ -685,14 +707,14 @@ header('Expires: 0');
         .chat-bubble {
             position:fixed; bottom:80px; right:16px; z-index:9998;
             width:40px; height:40px; border-radius:50%;
-            background:rgba(59,130,246,0.75); backdrop-filter:blur(8px);
+            background:rgba(16,185,129,0.85); backdrop-filter:blur(8px);
             color:white; display:flex; align-items:center; justify-content:center;
             cursor:pointer; font-size:16px;
-            box-shadow:0 4px 12px rgba(59,130,246,0.3);
+            box-shadow:0 4px 12px rgba(16,185,129,0.35);
             transition:all 0.3s ease; border:1px solid rgba(255,255,255,0.15);
-            opacity:0.75;
+            opacity:0.85;
         }
-        .chat-bubble:hover { opacity:1; transform:scale(1.1); }
+        .chat-bubble:hover { opacity:1; transform:scale(1.1); box-shadow:0 8px 20px rgba(16,185,129,0.5); }
         .chat-window {
             position:fixed; bottom:130px; right:16px; z-index:9999;
             width:360px; max-height:480px;
@@ -711,7 +733,7 @@ header('Expires: 0');
         .dark .chat-header { color:#F9FAFB; border-color:#374151; background:#111827; }
         .chat-header .ai-avatar {
             width:32px; height:32px; border-radius:50%;
-            background:linear-gradient(135deg,#3B82F6,#2563EB);
+            background:linear-gradient(135deg,#10B981,#059669);
             display:flex; align-items:center; justify-content:center;
             font-size:14px; flex-shrink:0;
         }
@@ -730,15 +752,15 @@ header('Expires: 0');
         .chat-message-wrapper.user { justify-content:flex-end; }
         .chat-ai-avatar {
             width:28px; height:28px; border-radius:50%;
-            background:linear-gradient(135deg,#3B82F6,#2563EB);
+            background:linear-gradient(135deg,#10B981,#059669);
             display:flex; align-items:center; justify-content:center;
             font-size:12px; flex-shrink:0;
         }
         .chat-user {
-            background:linear-gradient(135deg,#3B82F6,#2563EB); color:white;
+            background:linear-gradient(135deg,#10B981,#059669); color:white;
             padding:10px 14px; border-radius:18px 18px 4px 18px;
             max-width:80%; font-size:13px; line-height:1.5;
-            box-shadow:0 2px 8px rgba(59,130,246,0.2);
+            box-shadow:0 2px 8px rgba(16,185,129,0.25);
         }
         .chat-ai {
             background:white; color:#1F2937;
@@ -769,16 +791,16 @@ header('Expires: 0');
             font-size:13px; outline:none; background:#F9FAFB;
             transition:all 0.2s;
         }
-        .chat-input-area input:focus { border-color:#3B82F6; box-shadow:0 0 0 3px rgba(59,130,246,0.1); }
+        .chat-input-area input:focus { border-color:#10B981; box-shadow:0 0 0 3px rgba(16,185,129,0.15); }
         .dark .chat-input-area input { background:#374151; border-color:#4B5563; color:#E5E7EB; }
         .chat-input-area button {
             width:38px; height:38px; border-radius:50%;
-            background:linear-gradient(135deg,#3B82F6,#2563EB); color:white;
+            background:linear-gradient(135deg,#10B981,#059669); color:white;
             border:none; cursor:pointer; font-size:14px;
             display:flex; align-items:center; justify-content:center;
             transition:all 0.2s; flex-shrink:0;
         }
-        .chat-input-area button:hover { transform:scale(1.05); box-shadow:0 4px 12px rgba(59,130,246,0.4); }
+        .chat-input-area button:hover { transform:scale(1.05); box-shadow:0 4px 12px rgba(16,185,129,0.4); }
         .chat-input-area button:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
         @media (max-width:640px) {
             .chat-window { width:92vw; right:4vw; bottom:120px; max-height:60vh; }
