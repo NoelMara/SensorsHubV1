@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Providers;
+
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
@@ -22,14 +24,6 @@ class AppServiceProvider extends ServiceProvider
         // Force HTTPS in production
         if (app()->environment('production')) {
             URL::forceScheme('https');
-
-            Request::setTrustedProxies(
-                ['*'],
-                Request::HEADER_X_FORWARDED_FOR |
-                Request::HEADER_X_FORWARDED_HOST |
-                Request::HEADER_X_FORWARDED_PORT |
-                Request::HEADER_X_FORWARDED_PROTO
-            );
         }
 
         // Max 5 failed login attempts per minute per IP
