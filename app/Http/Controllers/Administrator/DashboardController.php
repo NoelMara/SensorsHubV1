@@ -32,9 +32,6 @@ class DashboardController extends Controller
         $recentUsers = User::latest()->take(6)->get();
         $recentSuggestions = Suggestion::with('user')->latest()->take(5)->get();
         $recentComments = Comment::with(['user', 'suggestion'])
-            ->whereHas('user', function($q) {
-                $q->where('role', 'student');
-            })
             ->latest()
             ->take(5)
             ->get();

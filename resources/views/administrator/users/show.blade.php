@@ -3,126 +3,181 @@
 @section('title', 'View User')
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8">
-        <a href="{{ route('administrator.users.index') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
-            <i class="fas fa-arrow-left mr-1"></i> Back to Users
-        </a>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">User Details</h1>
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
+    {{-- Back link --}}
+    <a href="{{ route('administrator.users.index') }}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to Users
+    </a>
+
+    {{-- Header --}}
+    <div class="mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Administrator · User
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
+            User details
+        </h1>
     </div>
 
-    {{-- Profile Header --}}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8 mb-6">
+    {{-- Profile card --}}
+    <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6 sm:p-8 mb-8">
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
-            <div class="w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <div class="w-20 h-20 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center overflow-hidden flex-shrink-0">
                 @if($user->profile_image)
-                    <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                    <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}"
+                         alt="{{ $user->name }}" class="w-full h-full object-cover">
                 @else
-                    <span class="text-2xl font-bold text-gray-400">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                    <span class="text-2xl font-semibold text-white dark:text-gray-900">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
                 @endif
             </div>
-            <div class="flex-1">
-                <div class="flex items-center gap-2 justify-center sm:justify-start flex-wrap">
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ $user->name }}</h2>
-                    <span class="px-2 py-0.5 text-xs rounded-full
-                        {{ $user->role === 'administrator' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' : '' }}
-                        {{ $user->role === 'instructor' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' : '' }}
-                        {{ $user->role === 'student' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}
-                        {{ $user->role === 'user' ? 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300' : '' }}">
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 justify-center sm:justify-start flex-wrap mb-1">
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white break-words">{{ $user->name }}</h2>
+                    <span class="text-[10px] font-medium uppercase tracking-wider
+                        {{ $user->role === 'administrator' ? 'text-purple-600 dark:text-purple-400' : '' }}
+                        {{ $user->role === 'instructor' ? 'text-blue-600 dark:text-blue-400' : '' }}
+                        {{ $user->role === 'student' ? 'text-emerald-600 dark:text-emerald-400' : '' }}
+                        {{ $user->role === 'user' ? 'text-gray-500 dark:text-gray-400' : '' }}">
                         {{ $user->role === 'administrator' ? 'Administrator' : ($user->role === 'instructor' ? 'Instructor' : ($user->role === 'student' ? 'Student' : 'User')) }}
                     </span>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $user->email }}</p>
-            </div>
-            <div class="flex items-center gap-2 flex-shrink-0">
-                @if(!$user->isAdministrator() || $user->is(auth()->user()))
-                    <a href="{{ route('administrator.users.edit', $user) }}"
-                        class="px-3 py-2 rounded-lg bg-primary text-white hover:bg-blue-600 transition text-sm font-medium">
-                        <i class="fas fa-edit mr-1"></i> Edit
-                    </a>
-                @endif
-                @if(!$user->is(auth()->user()) && !$user->isAdministrator())
-                    <form method="POST" action="{{ route('administrator.users.destroy', $user) }}"
-                        onsubmit="return confirm('Remove this account?');">
-                        @csrf @method('DELETE')
-                        <button type="submit"
-                            class="px-3 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition text-sm font-medium">
-                            <i class="fas fa-trash mr-1"></i> Remove
-                        </button>
-                    </form>
-                @endif
+                <p class="text-sm text-gray-500 dark:text-gray-400 break-words">{{ $user->email }}</p>
+
+                {{-- Actions --}}
+                <div class="flex flex-wrap items-center gap-2 justify-center sm:justify-start mt-4">
+                    @if(!$user->isAdministrator() || $user->is(auth()->user()))
+                        <a href="{{ route('administrator.users.edit', $user) }}"
+                           class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+                            <i class="fas fa-edit text-[11px]"></i>
+                            Edit
+                        </a>
+                    @endif
+                    @if(!$user->is(auth()->user()) && !$user->isAdministrator())
+                        <form method="POST" action="{{ route('administrator.users.destroy', $user) }}"
+                            onsubmit="return confirm('Remove this account?');" class="inline">
+                            @csrf @method('DELETE')
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500 transition">
+                                <i class="fas fa-trash text-[11px]"></i>
+                                Remove
+                            </button>
+                        </form>
+                    @endif
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    {{-- Info Cards --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 text-center">
-            <i class="fas fa-calendar-check text-2xl {{ $user->email_verified_at ? 'text-green-500' : 'text-yellow-500' }} mb-2"></i>
-            <p class="text-xs text-gray-500 dark:text-gray-400">Email Status</p>
-            <p class="text-sm font-semibold {{ $user->email_verified_at ? 'text-green-600 dark:text-green-400' : 'text-yellow-600 dark:text-yellow-400' }} mt-1">
+    {{-- Info tiles --}}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fas fa-calendar-check text-xs {{ $user->email_verified_at ? 'text-emerald-500' : 'text-amber-500' }}"></i>
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Email status</p>
+            </div>
+            <p class="text-sm font-semibold {{ $user->email_verified_at ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400' }}">
                 {{ $user->email_verified_at ? 'Verified' : 'Pending' }}
             </p>
             @if($user->email_verified_at)
-                <p class="text-xs text-gray-400 mt-0.5">{{ $user->email_verified_at->format('M d, Y') }}</p>
+                <p class="text-xs text-gray-400 dark:text-gray-600 mt-1">{{ $user->email_verified_at->format('M d, Y') }}</p>
             @endif
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 text-center">
-            <i class="fas fa-user-plus text-2xl text-blue-500 mb-2"></i>
-            <p class="text-xs text-gray-500 dark:text-gray-400">Account Created</p>
-            <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1">{{ $user->created_at->format('M d, Y') }}</p>
-            <p class="text-xs text-gray-400 mt-0.5">{{ $user->created_at->diffForHumans() }}</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fas fa-user-plus text-xs text-blue-500"></i>
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Account created</p>
+            </div>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $user->created_at->format('M d, Y') }}</p>
+            <p class="text-xs text-gray-400 dark:text-gray-600 mt-1">{{ $user->created_at->diffForHumans() }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 text-center">
-            <i class="fas fa-clock text-2xl text-gray-400 mb-2"></i>
-            <p class="text-xs text-gray-500 dark:text-gray-400">Last Updated</p>
-            <p class="text-sm font-semibold text-gray-900 dark:text-white mt-1">{{ $user->updated_at->format('M d, Y') }}</p>
-            <p class="text-xs text-gray-400 mt-0.5">{{ $user->updated_at->diffForHumans() }}</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fas fa-clock text-xs text-gray-400 dark:text-gray-600"></i>
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Last updated</p>
+            </div>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $user->updated_at->format('M d, Y') }}</p>
+            <p class="text-xs text-gray-400 dark:text-gray-600 mt-1">{{ $user->updated_at->diffForHumans() }}</p>
         </div>
     </div>
 
     {{-- Moderation --}}
     @if(!$user->isAdministrator())
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-6">
-        <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">Moderation</h2>
-        
-        @if($user->isBanned())
-            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 mb-4">
-                <p class="text-sm font-semibold text-red-700 dark:text-red-400">⚠️ This user is banned</p>
-                <p class="text-xs text-red-600 dark:text-red-300 mt-1">{{ $user->ban_reason }}</p>
-                <form method="POST" action="{{ route('administrator.users.unban', $user) }}" class="mt-3">
-                    @csrf
-                    <button type="submit" class="px-4 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700">Unban User</button>
-                </form>
+        <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6 mb-8">
+            <div class="mb-6">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Moderation
+                </p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Account status
+                </h2>
             </div>
-        @else
-            <div class="flex items-center gap-2 mb-3">
-                <span class="text-sm text-gray-600 dark:text-gray-400">Warnings: <strong>{{ $user->warning_count }}</strong>/3</span>
-            </div>
-            <div class="flex flex-wrap gap-2">
-                <form method="POST" action="{{ route('administrator.users.warn', $user) }}" class="inline">
+
+            @if($user->isBanned())
+                {{-- Banned state --}}
+                <div class="border-l-2 border-red-500 dark:border-red-400 pl-4 py-1 mb-6">
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-red-600 dark:text-red-400 mb-2">
+                        ● Banned
+                    </p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        {{ $user->ban_reason ?: 'No reason provided.' }}
+                    </p>
+                </div>
+
+                <form method="POST" action="{{ route('administrator.users.unban', $user) }}">
                     @csrf
-                    <input type="hidden" name="reason" value="">
-                    <button type="button" class="px-3 py-1.5 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700" onclick="let reason = prompt('Warning reason:'); if(reason) { this.form.querySelector('[name=reason]').value = reason; this.form.submit(); }">
-                        <i class="fas fa-exclamation-triangle mr-1"></i> Warn
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-emerald-500 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition text-sm font-medium">
+                        <i class="fas fa-unlock text-xs"></i>
+                        Unban user
                     </button>
                 </form>
-                <form method="POST" action="{{ route('administrator.users.ban', $user) }}" class="inline">
-                    @csrf
-                    <input type="hidden" name="reason" value="">
-                    <button type="button" class="px-3 py-1.5 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700" onclick="let reason = prompt('Ban reason:'); if(reason) { this.form.querySelector('[name=reason]').value = reason; this.form.submit(); }">
-                        <i class="fas fa-ban mr-1"></i> Ban
-                    </button>
-                </form>
-            </div>
-        @endif
-    </div>
+            @else
+                {{-- Warning count --}}
+                <div class="flex items-center justify-between gap-3 mb-6 pb-6 border-b border-gray-100 dark:border-gray-800">
+                    <div>
+                        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Warnings</p>
+                        <p class="text-lg font-semibold {{ $user->warning_count > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-white' }}">
+                            {{ $user->warning_count }} / 3
+                        </p>
+                    </div>
+                </div>
+
+                {{-- Actions --}}
+                <div class="flex flex-wrap items-center gap-2">
+                    <form method="POST" action="{{ route('administrator.users.warn', $user) }}" class="inline">
+                        @csrf
+                        <input type="hidden" name="reason" value="">
+                        <button type="button"
+                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-amber-500 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/20 transition text-sm font-medium"
+                            onclick="let reason = prompt('Warning reason:'); if(reason) { this.form.querySelector('[name=reason]').value = reason; this.form.submit(); }">
+                            <i class="fas fa-exclamation-triangle text-xs"></i>
+                            Warn
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ route('administrator.users.ban', $user) }}" class="inline">
+                        @csrf
+                        <input type="hidden" name="reason" value="">
+                        <button type="button"
+                            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-red-500 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition text-sm font-medium"
+                            onclick="let reason = prompt('Ban reason:'); if(reason) { this.form.querySelector('[name=reason]').value = reason; this.form.submit(); }">
+                            <i class="fas fa-ban text-xs"></i>
+                            Ban
+                        </button>
+                    </form>
+                </div>
+            @endif
+        </section>
     @endif
 
-    {{-- Back Link --}}
-    <div class="text-center">
-        <a href="{{ route('administrator.users.index') }}" class="text-sm text-primary hover:underline">
-            <i class="fas fa-arrow-left mr-1"></i> Back to Users
+    {{-- Bottom back link --}}
+    <div class="mt-12 pt-8 border-t border-gray-100 dark:border-gray-800">
+        <a href="{{ route('administrator.users.index') }}"
+           class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+            <i class="fas fa-arrow-left text-xs"></i>
+            Back to Users
         </a>
     </div>
 </div>
