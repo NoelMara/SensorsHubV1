@@ -530,7 +530,10 @@ header('Expires: 0');
                     // Pick a label based on the button's existing text
                     var text = (button.textContent || '').trim().toLowerCase();
                     var label = 'Saving';
-                    if (text.includes('submit') || text.includes('post') || text.includes('send')) label = 'Submitting';
+                    if (text.includes('logout') || text.includes('log out')) label = 'Logging out';
+                    else if (text.includes('login') || text.includes('log in') || text.includes('sign in')) label = 'Logging in';
+                    else if (text.includes('register') || text.includes('sign up') || text.includes('signup')) label = 'Creating account';
+                    else if (text.includes('submit') || text.includes('post') || text.includes('send')) label = 'Submitting';
                     else if (text.includes('import')) label = 'Importing';
                     else if (text.includes('create') || text.includes('add')) label = 'Creating';
                     else if (text.includes('update') || text.includes('edit')) label = 'Updating';
