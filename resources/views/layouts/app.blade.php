@@ -519,7 +519,6 @@ header('Expires: 0');
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('form').forEach(function(form) {
                 if (form.hasAttribute('x-data')) return;
-                if (form.method.toUpperCase() === 'GET') return;
                 form.addEventListener('submit', function(e) {
                     var onsubmit = form.getAttribute('onsubmit');
                     if (onsubmit && onsubmit.includes('fileSizeError')) return;
@@ -531,7 +530,8 @@ header('Expires: 0');
                     // Pick a label based on the button's existing text
                     var text = (button.textContent || '').trim().toLowerCase();
                     var label = 'Saving';
-                    if (text.includes('logout') || text.includes('log out')) label = 'Logging out';
+                    if (text.includes('search') || text.includes('filter')) label = 'Searching';
+                    else if (text.includes('logout') || text.includes('log out')) label = 'Logging out';
                     else if (text.includes('login') || text.includes('log in') || text.includes('sign in')) label = 'Logging in';
                     else if (text.includes('register') || text.includes('sign up') || text.includes('signup')) label = 'Creating account';
                     else if (text.includes('submit') || text.includes('post') || text.includes('send')) label = 'Submitting';
