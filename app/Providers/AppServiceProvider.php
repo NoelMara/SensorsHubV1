@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Providers;
+
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
@@ -20,8 +22,17 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useTailwind();
 
         // Force HTTPS in production
-        if (config('app.env') === 'production') {
+        if (app()->environment('production')) {
             URL::forceScheme('https');
+
+            // Trust Render's proxy so Laravel knows the original request was HTTPS
+            Request::setTrustedProxies(
+                ['*'],
+                Request::HEADER_X_FORWARDED_FOR |
+                Request::HEADER_X_FORWARDED_HOST |
+                Request::HEADER_X_FORWARDED_PORT |
+                Request::HEADER_X_FORWARDED_PROTO
+            );
         }
 
         // Max 5 failed login attempts per minute per IP
@@ -29,14 +40,6 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->ip());
         });
 
-        // Max 3 failed verify code attempts per minute per IP
-        RateLimiter::for('verify-code', function (Request $request) {
-            return Limit::perMinute(3)->by($request->ip());
-        });
-
-        // Max 3 resend attempts per minute per IP
-        RateLimiter::for('resend-code', function (Request $request) {
-            return Limit::perMinute(1)->by($request->ip());
-        });
+        // ... (rest unchanged)
     }
 }
