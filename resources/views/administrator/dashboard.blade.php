@@ -156,8 +156,13 @@
                         <a href="{{ route('administrator.users.show', $user) }}"
                            class="flex items-center justify-between gap-3 border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
                             <div class="flex items-center gap-3 min-w-0 flex-1">
-                                <div class="w-9 h-9 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-xs font-semibold text-white dark:text-gray-900">
-                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                <div class="w-9 h-9 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 overflow-hidden text-xs font-semibold text-white dark:text-gray-900">
+                                    @if($user->profile_image)
+                                        <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}"
+                                             alt="{{ $user->name }}" class="w-full h-full object-cover">
+                                    @else
+                                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                                    @endif
                                 </div>
                                 <div class="min-w-0">
                                     <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $user->name }}</p>

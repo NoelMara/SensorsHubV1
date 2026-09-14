@@ -21,6 +21,16 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        \Log::info('ADMIN profile update attempt', [
+            'has_file' => $request->hasFile('profile_image'),
+            'file_valid' => $request->file('profile_image')?->isValid(),
+            'file_error' => $request->file('profile_image')?->getError(),
+            'file_size' => $request->file('profile_image')?->getSize(),
+            'file_name' => $request->file('profile_image')?->getClientOriginalName(),
+            'post_max_size' => ini_get('post_max_size'),
+            'upload_max_filesize' => ini_get('upload_max_filesize'),
+        ]);
+
         $user = Auth::user();
 
         $request->validate([
