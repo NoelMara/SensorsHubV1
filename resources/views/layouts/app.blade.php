@@ -529,16 +529,27 @@ header('Expires: 0');
 
                     // Pick a label based on the button's existing text
                     var text = (button.textContent || '').trim().toLowerCase();
+                    // Fallback: use title attribute for icon-only buttons
+                    if (!text && button.getAttribute('title')) {
+                        text = button.getAttribute('title').toLowerCase();
+                    }
+
                     var label = 'Saving';
                     if (text.includes('search') || text.includes('filter')) label = 'Searching';
                     else if (text.includes('logout') || text.includes('log out')) label = 'Logging out';
                     else if (text.includes('login') || text.includes('log in') || text.includes('sign in')) label = 'Logging in';
                     else if (text.includes('register') || text.includes('sign up') || text.includes('signup')) label = 'Creating account';
+                    else if (text.includes('verify')) label = 'Verifying';
+                    else if (text.includes('resend')) label = 'Sending';
                     else if (text.includes('submit') || text.includes('post') || text.includes('send')) label = 'Submitting';
                     else if (text.includes('import')) label = 'Importing';
                     else if (text.includes('create') || text.includes('add')) label = 'Creating';
                     else if (text.includes('update') || text.includes('edit')) label = 'Updating';
                     else if (text.includes('delete') || text.includes('remove')) label = 'Deleting';
+                    else if (text.includes('clear')) label = 'Clearing';
+                    else if (text.includes('unban')) label = 'Unbanning';
+                    else if (text.includes('reject')) label = 'Rejecting';
+                    else if (text.includes('mark') || text.includes('read')) label = 'Updating';
                     else if (text.includes('join')) label = 'Joining';
                     else if (text.includes('grade')) label = 'Saving';
                     else if (text.includes('approve')) label = 'Approving';
