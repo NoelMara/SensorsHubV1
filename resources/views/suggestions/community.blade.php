@@ -39,12 +39,12 @@
         <div class="space-y-3">
             @foreach($suggestions as $suggestion)
                 <a href="{{ auth()->user() && (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) ? route('instructor.suggestions.show', $suggestion) : route('dashboard.suggestions.show', $suggestion) }}" 
-                   class="block border border-gray-200 dark:border-gray-800 rounded-lg p-5 hover:border-gray-400 dark:hover:border-gray-600 transition group">
+                   class="block border border-gray-200 dark:border-gray-800 rounded-lg p-5 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition group">
 
                     <div class="flex items-start gap-4">
 
                         {{-- Avatar --}}
-                        <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0 text-sm font-semibold text-gray-500 dark:text-gray-400">
+                        <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-sm font-semibold text-white dark:text-gray-900">
                             {{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}
                         </div>
 

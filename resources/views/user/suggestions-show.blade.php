@@ -3,34 +3,45 @@
 @section('title', 'View Suggestion')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
     <a href="{{ route('dashboard.suggestions') }}"
-       class="inline-flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-primary mb-6">
-        <i class="fas fa-arrow-left mr-2"></i> Back to My Suggestions
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to My Suggestions
     </a>
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        {{-- Author Info --}}
-        <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <span class="text-primary font-bold">{{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}</span>
+    <article class="border border-gray-200 dark:border-gray-800 rounded-lg p-6 sm:p-8">
+
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-sm font-semibold text-white dark:text-gray-900">
+                {{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}
             </div>
-            <div>
-                <p class="font-semibold text-gray-900 dark:text-white">{{ $suggestion->user?->name ?? 'Deleted user' }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $suggestion->created_at->format('M d, Y h:i A') }}</p>
+            <div class="min-w-0">
+                <p class="font-medium text-gray-900 dark:text-white truncate">
+                    {{ $suggestion->user?->name ?? 'Deleted user' }}
+                </p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">
+                    {{ $suggestion->created_at->format('M d, Y · h:i A') }}
+                </p>
             </div>
         </div>
 
-        <div class="flex items-start justify-between mb-6">
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $suggestion->title }}</h1>
-            <span class="px-3 py-1 text-sm font-semibold rounded-full
-                @if($suggestion->status === 'pending') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-                @elseif($suggestion->status === 'reviewed') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-                @elseif($suggestion->status === 'implemented') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
-                @endif">
-                {{ ucfirst($suggestion->status) }}
-            </span>
+        <div class="flex flex-wrap items-start justify-between gap-3 mb-6">
+            <div class="flex flex-wrap items-center gap-3 min-w-0">
+                <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-gray-900 dark:text-white break-words">
+                    {{ $suggestion->title }}
+                </h1>
+                <span class="text-[10px] font-medium uppercase tracking-wider flex-shrink-0
+                    @if($suggestion->status === 'pending') text-amber-600 dark:text-amber-400
+                    @elseif($suggestion->status === 'reviewed') text-blue-600 dark:text-blue-400
+                    @elseif($suggestion->status === 'implemented') text-emerald-600 dark:text-emerald-400
+                    @else text-red-600 dark:text-red-400
+                    @endif">
+                    ● {{ $suggestion->status }}
+                </span>
+            </div>
+
             @auth
                 @if(!auth()->user()->isAdministrator() && auth()->id() !== $suggestion->user_id)
                     <form method="POST" action="{{ route('report.store') }}" class="inline">
@@ -38,151 +49,205 @@
                         <input type="hidden" name="reportable_type" value="suggestion">
                         <input type="hidden" name="reportable_id" value="{{ $suggestion->id }}">
                         <input type="hidden" name="reason" value="inappropriate">
-                        <button type="button" class="text-red-400 hover:text-red-600 transition text-sm" title="Report Suggestion" onclick="let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
-                            <i class="fas fa-flag mr-1"></i> Report
+                        <button type="button"
+                            class="inline-flex items-center gap-1.5 px-3 h-9 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500 transition"
+                            title="Report Suggestion"
+                            onclick="let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
+                            <i class="fas fa-flag text-[11px]"></i>
+                            Report
                         </button>
                     </form>
                 @endif
             @endauth
         </div>
-     
-        <div class="space-y-4 mb-6">
+
+        <section class="mb-8">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                Description
+            </p>
+            <p class="text-base text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-line">
+                {{ $suggestion->description }}
+            </p>
+        </section>
+
+        <section class="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-gray-100 dark:border-gray-800 pt-6">
             <div>
-                <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Description</label>
-                <p class="mt-1 text-gray-800 dark:text-white whitespace-pre-line">{{ $suggestion->description }}</p>
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-1.5">Difficulty</p>
+                <p class="text-sm text-gray-900 dark:text-white">{{ $suggestion->difficulty ?? '—' }}</p>
             </div>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Difficulty</label>
-                    <p class="mt-1 text-gray-800 dark:text-white">{{ $suggestion->difficulty ?? 'N/A' }}</p>
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Sensor Type</label>
-                    <p class="mt-1 text-gray-800 dark:text-white">{{ $suggestion->sensor_type ?? 'N/A' }}</p>
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Submitted</label>
-                    <p class="mt-1 text-gray-800 dark:text-white">{{ $suggestion->created_at->format('M d, Y h:i A') }}</p>
-                </div>
-                <div>
-                    <label class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</label>
-                    <p class="mt-1 text-gray-800 dark:text-white">{{ $suggestion->updated_at->format('M d, Y h:i A') }}</p>
-                </div>
+            <div>
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-1.5">Sensor Type</p>
+                <p class="text-sm text-gray-900 dark:text-white">{{ $suggestion->sensor_type ?? '—' }}</p>
             </div>
-        </div>
+            <div>
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-1.5">Submitted</p>
+                <p class="text-sm text-gray-900 dark:text-white">{{ $suggestion->created_at->format('M d, Y · h:i A') }}</p>
+            </div>
+            <div>
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-1.5">Last Updated</p>
+                <p class="text-sm text-gray-900 dark:text-white">{{ $suggestion->updated_at->format('M d, Y · h:i A') }}</p>
+            </div>
+        </section>
 
         @if($suggestion->admin_notes)
-        <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-6">
-            <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Administrator Notes:</p>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 break-words">{{ $suggestion->admin_notes }}</p>
-        </div>
+            <section class="mt-8 border-l-2 border-emerald-500 dark:border-emerald-400 pl-4 py-1">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-emerald-600 dark:text-emerald-400 mb-2">
+                    Administrator Notes
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed break-words whitespace-pre-line">
+                    {{ $suggestion->admin_notes }}
+                </p>
+            </section>
         @endif
+    </article>
 
-        {{-- Comments Section --}}
-        <div class="border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
-            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">
-                Discussion ({{ $suggestion->comments->count() }})
-            </h3>
+    <section class="mt-12">
+        <div class="mb-6">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                Discussion
+            </p>
+            <h2 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                {{ $suggestion->comments->count() }} {{ Str::plural('comment', $suggestion->comments->count()) }}
+            </h2>
+        </div>
 
-            @if($suggestion->comments->count() > 0)
-                <div class="space-y-4 mb-6">
-                    @foreach($suggestion->comments as $comment)
-                        <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                                <div class="flex items-center justify-between mb-2 flex-wrap gap-2">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                        <span class="text-primary font-bold text-sm">{{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}</span>
-                                    </div>
-                                    <span class="font-semibold text-gray-900 dark:text-white">{{ $comment->user?->name ?? 'Deleted user' }}</span>
-                                    <span class="px-2 py-0.5 text-xs rounded-full
-                                        {{ ($comment->user?->role ?? 'user') === 'administrator' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' : '' }}
-                                        {{ ($comment->user?->role ?? 'user') === 'instructor' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : '' }}
-                                        {{ ($comment->user?->role ?? 'user') === 'student' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}
-                                        {{ ($comment->user?->role ?? 'user') === 'user' ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300' : '' }}">
-                                        {{ ucfirst($comment->user?->role ?? 'user') }}
-                                    </span>
+        @if($suggestion->comments->count() > 0)
+            <div class="space-y-3 mb-8">
+                @foreach($suggestion->comments as $comment)
+                    <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
+                        <div class="flex items-center justify-between gap-3 mb-3 flex-wrap">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-8 h-8 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-xs font-semibold text-white dark:text-gray-900">
+                                    {{ strtoupper(substr($comment->user?->name ?? '?', 0, 1)) }}
                                 </div>
-                                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
-                                    @auth
-                                        @if(!auth()->user()->isAdministrator() && auth()->id() !== $comment->user_id)
-                                            <form method="POST" action="{{ route('report.store') }}" class="inline">
-                                                @csrf
-                                                <input type="hidden" name="reportable_type" value="comment">
-                                                <input type="hidden" name="reportable_id" value="{{ $comment->id }}">
-                                                <input type="hidden" name="reason" value="inappropriate">
-                                                <button type="button" class="text-gray-400 hover:text-red-500 transition ml-2" title="Report" onclick="let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
-                                                    <i class="fas fa-flag text-xs"></i>
-                                                </button>
-                                            </form>
-                                        @endif
-                                    @endauth
+                                <span class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                                    {{ $comment->user?->name ?? 'Deleted user' }}
+                                </span>
+                                <span class="text-[10px] font-medium uppercase tracking-wider flex-shrink-0
+                                    @if(($comment->user?->role ?? 'user') === 'administrator') text-purple-600 dark:text-purple-400
+                                    @elseif(($comment->user?->role ?? 'user') === 'instructor') text-blue-600 dark:text-blue-400
+                                    @elseif(($comment->user?->role ?? 'user') === 'student') text-emerald-600 dark:text-emerald-400
+                                    @else text-gray-500 dark:text-gray-400
+                                    @endif">
+                                    {{ $comment->user?->role ?? 'user' }}
+                                </span>
                             </div>
-                            <p class="text-gray-700 dark:text-gray-300 whitespace-pre-line break-words overflow-hidden">{{ $comment->body }}</p>
-                            @if($comment->created_at != $comment->updated_at)
-                                <p class="text-xs text-gray-400 mt-2">(edited)</p>
-                            @endif
 
-                            @if(auth()->id() === $comment->user_id)
-                                <button onclick="document.getElementById('edit-comment-{{ $comment->id }}').classList.toggle('hidden')"
-                                    class="mt-2 text-sm text-primary hover:underline">
-                                    <i class="fas fa-edit mr-1"></i>Edit
+                            <div class="flex items-center gap-3 flex-shrink-0">
+                                <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
+                                @auth
+                                    @if(!auth()->user()->isAdministrator() && auth()->id() !== $comment->user_id)
+                                        <form method="POST" action="{{ route('report.store') }}" class="inline">
+                                            @csrf
+                                            <input type="hidden" name="reportable_type" value="comment">
+                                            <input type="hidden" name="reportable_id" value="{{ $comment->id }}">
+                                            <input type="hidden" name="reason" value="inappropriate">
+                                            <button type="button" class="text-gray-400 hover:text-red-500 transition" title="Report"
+                                                onclick="let reason = prompt('Reason: spam, inappropriate, harassment, other'); if(reason) { this.parentElement.querySelector('[name=reason]').value = reason; this.parentElement.submit(); }">
+                                                <i class="fas fa-flag text-xs"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                @endauth
+                            </div>
+                        </div>
+
+                        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line break-words">
+                            {{ $comment->body }}
+                        </p>
+
+                        @if($comment->created_at != $comment->updated_at)
+                            <p class="text-xs text-gray-400 dark:text-gray-600 mt-2 italic">edited</p>
+                        @endif
+
+                        @if(auth()->id() === $comment->user_id)
+                            <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
+                                <button type="button"
+                                    onclick="document.getElementById('edit-comment-{{ $comment->id }}').classList.toggle('hidden')"
+                                    class="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+                                    <i class="fas fa-edit text-[10px]"></i>
+                                    Edit
                                 </button>
+
                                 <form id="edit-comment-{{ $comment->id }}" method="POST"
                                     action="{{ route('dashboard.suggestions.comment.update', [$suggestion, $comment]) }}"
                                     class="mt-3 hidden">
                                     @csrf
                                     @method('PUT')
                                     <textarea name="body" rows="3" required
-                                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">{{ $comment->body }}</textarea>
-                                    <div class="flex gap-2 mt-2">
-                                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 text-sm">Update</button>
-                                        <button type="button" onclick="document.getElementById('edit-comment-{{ $comment->id }}').classList.add('hidden')"
-                                            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Cancel</button>
+                                        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition">{{ $comment->body }}</textarea>
+                                    <div class="flex gap-2 mt-3">
+                                        <button type="submit"
+                                            class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
+                                            Update
+                                        </button>
+                                        <button type="button"
+                                            onclick="document.getElementById('edit-comment-{{ $comment->id }}').classList.add('hidden')"
+                                            class="inline-flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+                                            Cancel
+                                        </button>
                                     </div>
                                 </form>
-                            @endif
-                        </div>
-                    @endforeach
-                </div>
-            @else
-                <p class="text-gray-500 dark:text-gray-400 text-sm mb-6">No comments yet. Be the first to share your thoughts!</p>
-            @endif
-
-            {{-- Comment Form --}}
-            @php
-                $userComment = $suggestion->comments->where('user_id', auth()->id())->first();
-            @endphp
-
-            @if($userComment)
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                    You've already commented.
-                    <button onclick="document.getElementById('edit-my-comment').classList.toggle('hidden')"
-                        class="text-primary hover:underline">Edit your comment</button>
-                </p>
-                <form id="edit-my-comment" method="POST"
-                    action="{{ route('dashboard.suggestions.comment.update', [$suggestion, $userComment]) }}"
-                    class="hidden">
-                    @csrf
-                    @method('PUT')
-                    <textarea name="body" rows="3" required
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white">{{ $userComment->body }}</textarea>
-                    <div class="flex gap-2 mt-2">
-                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 text-sm">Update</button>
-                        <button type="button" onclick="document.getElementById('edit-my-comment').classList.add('hidden')"
-                            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">Cancel</button>
+                            </div>
+                        @endif
                     </div>
-                </form>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center py-12 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg mb-8">
+                <i class="fas fa-comments text-3xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                <p class="text-sm text-gray-500 dark:text-gray-400">No comments yet. Be the first to share your thoughts.</p>
+            </div>
+        @endif
+
+        @php
+            $userComment = $suggestion->comments->where('user_id', auth()->id())->first();
+        @endphp
+
+        @auth
+            @if($userComment)
+                <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        You've already commented.
+                        <button type="button"
+                            onclick="document.getElementById('edit-my-comment').classList.toggle('hidden')"
+                            class="text-gray-900 dark:text-white font-medium hover:underline">
+                            Edit your comment
+                        </button>
+                    </p>
+                    <form id="edit-my-comment" method="POST"
+                        action="{{ route('dashboard.suggestions.comment.update', [$suggestion, $userComment]) }}"
+                        class="hidden">
+                        @csrf
+                        @method('PUT')
+                        <textarea name="body" rows="3" required
+                            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition">{{ $userComment->body }}</textarea>
+                        <div class="flex gap-2 mt-3">
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
+                                Update
+                            </button>
+                            <button type="button"
+                                onclick="document.getElementById('edit-my-comment').classList.add('hidden')"
+                                class="inline-flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
             @else
                 <form method="POST" action="{{ route('dashboard.suggestions.comment.store', $suggestion) }}">
                     @csrf
                     <textarea name="body" rows="3" required placeholder="Write your comment..."
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"></textarea>
-                    <button type="submit" class="mt-2 px-6 py-2 bg-primary text-white rounded-lg hover:bg-blue-600">
-                        <i class="fas fa-paper-plane mr-2"></i>Post Comment
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition"></textarea>
+                    <button type="submit"
+                        class="mt-3 inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
+                        <i class="fas fa-paper-plane text-xs"></i>
+                        Post comment
                     </button>
                 </form>
             @endif
-        </div>
-    </div>
+        @endauth
+    </section>
 </div>
 @endsection
