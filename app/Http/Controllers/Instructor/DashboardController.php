@@ -15,12 +15,15 @@ class DashboardController extends Controller
     public function index()
     {
         $stats = [
-            'users' => User::whereIn('role', ['user', 'student'])->count(),
+            'users' => User::whereIn('role', ['user', 'student'])
+                ->whereNotNull('email_verified_at')
+                ->count(),
             'suggestions' => Suggestion::count(),
             'pending_suggestions' => Suggestion::where('status', 'pending')->count(),
         ];
 
         $recentUsers = User::whereIn('role', ['user', 'student'])
+            ->whereNotNull('email_verified_at')
             ->latest()
             ->take(5)
             ->get();
