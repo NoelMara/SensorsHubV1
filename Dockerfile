@@ -1,3 +1,20 @@
+# ============================
+# Stage 1: Build Vite assets
+# ============================
+FROM node:22-alpine AS node-builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+
+# ============================
+# Stage 2: PHP runtime
+# ============================
 FROM php:8.2-cli
 
 RUN apt-get update && apt-get install -y \
@@ -18,7 +35,11 @@ WORKDIR /app
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Copy app source
 COPY . .
+
+# Copy the compiled Vite assets from the node-builder stage
+COPY --from=node-builder /app/public/build ./public/build
 
 RUN composer install --optimize-autoloader
 
