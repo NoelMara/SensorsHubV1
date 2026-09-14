@@ -11,23 +11,9 @@ header('Expires: 0');
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'SensorsHub') - Learn Sensors. Build Projects. Share Ideas.</title>
     <link rel="icon" type="image/png" href="{{ asset('sensorshub_logo.png') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#3B82F6',
-                        secondary: '#10B981',
-                        dark: '#1F2937',
-                    }
-                }
-            }
-        }
-    </script>
     @stack('styles')
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-clip min-h-screen flex flex-col">
@@ -123,7 +109,7 @@ header('Expires: 0');
                         Register
                     </a>
                     <button id="darkModeToggle" class="text-gray-400 hover:text-gray-900 dark:hover:text-white transition w-8 h-8 flex items-center justify-center">
-                        <i class="fas fa-moon dark:hidden w-4 text-center"></i><i class="fas fa-sun hidden dark:inline w-4 text-center"></i>
+                        <i class="fas fa-moon dark-icon-moon w-4 text-center"></i><i class="fas fa-sun dark-icon-sun w-4 text-center" style="display: none;"></i>
                     </button>
                 </div>
                 <div class="md:hidden flex items-center">
@@ -144,7 +130,7 @@ header('Expires: 0');
                 <a href="{{ route('login') }}" class="flex items-center gap-3 px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"><i class="fas fa-key w-5"></i> Login</a>
                 <a href="{{ route('register') }}" class="flex items-center justify-center gap-2 px-3 py-2 text-base font-medium text-white dark:text-gray-900 bg-gray-900 dark:bg-white rounded-lg"><i class="fas fa-user-plus w-5"></i> Register</a>
                 <button id="mobileDarkModeToggle" class="flex items-center gap-3 w-full px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg">
-                    <i class="fas fa-moon dark:hidden w-5 text-center shrink-0"></i><i class="fas fa-sun hidden dark:inline w-5 text-center shrink-0"></i> Dark Mode
+                    <i class="fas fa-moon dark-icon-moon w-5 text-center shrink-0"></i><i class="fas fa-sun dark-icon-sun w-5 text-center shrink-0" style="display: none;"></i> Dark Mode
                 </button>
             </div>
         </div>
@@ -245,7 +231,7 @@ header('Expires: 0');
             </a>
 
             <button id="sidebarDarkModeToggle" class="flex items-center gap-3 w-full px-3 py-2 text-base rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white transition">
-                <i class="fas fa-moon dark:hidden w-5 text-center shrink-0"></i><i class="fas fa-sun hidden dark:inline w-5 text-center shrink-0"></i><span>Dark Mode</span>
+                <i class="fas fa-moon dark-icon-moon w-5 text-center shrink-0"></i><i class="fas fa-sun dark-icon-sun w-5 text-center shrink-0" style="display: none;"></i><span>Dark Mode</span>
             </button>
 
             <form method="POST" action="{{ route('logout') }}">
@@ -344,10 +330,24 @@ header('Expires: 0');
         const html = document.documentElement;
         if (localStorage.getItem('darkMode') === 'true') html.classList.add('dark');
 
+        function updateDarkIcons() {
+            const isDark = html.classList.contains('dark');
+            document.querySelectorAll('.dark-icon-moon').forEach(el => {
+                el.style.display = isDark ? 'none' : '';
+            });
+            document.querySelectorAll('.dark-icon-sun').forEach(el => {
+                el.style.display = isDark ? '' : 'none';
+            });
+        }
+
         function toggleDarkMode() {
             html.classList.toggle('dark');
             localStorage.setItem('darkMode', html.classList.contains('dark'));
+            updateDarkIcons();
         }
+
+        // Run once on load to set the correct icon
+        updateDarkIcons();
 
         document.getElementById('darkModeToggle')?.addEventListener('click', toggleDarkMode);
         document.getElementById('mobileDarkModeToggle')?.addEventListener('click', toggleDarkMode);
