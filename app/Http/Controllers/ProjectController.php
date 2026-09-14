@@ -29,9 +29,14 @@ class ProjectController extends Controller
         }
 
         $projects = $query->latest()->paginate(12)->appends($request->all());
+
+        // Get saved project IDs for the current user
+        $savedProjectIds = auth()->check()
+            ? SavedProject::where('user_id', auth()->id())->pluck('project_id')->toArray()
+            : [];
         $sensors = Sensor::where('is_active', true)->orderBy('name')->get();
 
-        return view('projects.index', compact('projects', 'sensors'));
+        return view('projects.index', compact('projects', 'sensors', 'savedProjectIds'));
     }
 
     public function show($slug)
