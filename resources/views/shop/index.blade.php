@@ -21,7 +21,7 @@
     {{-- Search & Filter --}}
     <form method="GET" action="{{ route('shop.index') }}" class="mb-12">
         <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
-            <div class="sm:col-span-5 relative">
+            <div class="sm:col-span-4 relative">
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
                 <input type="text" name="search" value="{{ request('search') }}" 
                     placeholder="Search products..." 
@@ -44,9 +44,9 @@
                     <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Name: A-Z</option>
                 </select>
             </div>
-            <div class="sm:col-span-1">
+            <div class="sm:col-span-2">
                 <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
-                    <i class="fas fa-search text-sm"></i>
+                    Search
                 </button>
             </div>
         </div>
