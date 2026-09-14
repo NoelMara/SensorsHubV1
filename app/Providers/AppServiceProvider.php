@@ -20,8 +20,16 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useTailwind();
 
         // Force HTTPS in production
-        if (config('app.env') === 'production') {
+        if (app()->environment('production')) {
             URL::forceScheme('https');
+
+            Request::setTrustedProxies(
+                ['*'],
+                Request::HEADER_X_FORWARDED_FOR |
+                Request::HEADER_X_FORWARDED_HOST |
+                Request::HEADER_X_FORWARDED_PORT |
+                Request::HEADER_X_FORWARDED_PROTO
+            );
         }
 
         // Max 5 failed login attempts per minute per IP
