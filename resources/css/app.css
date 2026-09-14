@@ -14,3 +14,17 @@
     --color-secondary: #10B981;
     --color-dark: #1F2937;
 }
+
+/* Dark mode fix for native date/time picker icons */
+.dark input[type="date"],
+.dark input[type="datetime-local"],
+.dark input[type="time"] {
+    color-scheme: dark;
+}
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator,
+.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.dark input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
