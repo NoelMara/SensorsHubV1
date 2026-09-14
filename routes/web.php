@@ -67,6 +67,11 @@ Route::middleware('auth')->group(function () {
         return response()->json(['success' => true]);
     })->name('notifications.read');
 
+    Route::post('/notifications/read-all', function () {
+        auth()->user()->notifications()->update(['is_read' => true]);
+        return back();
+    })->name('notifications.read-all');
+
     Route::get('/notifications', function () {
         $notifications = auth()->user()->notifications()->latest()->paginate(5);
         return view('notifications.index', compact('notifications'));
