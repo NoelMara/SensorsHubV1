@@ -3,207 +3,259 @@
 @section('title', 'Analytics - ' . $class->name)
 
 @section('content')
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <a href="{{ route('instructor.classes.show', $class) }}" class="text-primary hover:underline inline-block text-sm mb-6">
-        <i class="fas fa-arrow-left mr-1"></i> Back to Class
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
+    {{-- Back link --}}
+    <a href="{{ route('instructor.classes.show', $class) }}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to Class
     </a>
 
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Analytics</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $class->name }} · {{ $studentCount }} {{ Str::plural('student', $studentCount) }}</p>
-        </div>
+    {{-- Header --}}
+    <div class="mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Analytics · {{ $class->name }}
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
+            Analytics
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+            Performance overview for {{ $studentCount }} {{ Str::plural('student', $studentCount) }}.
+        </p>
     </div>
 
     {{-- Stat Cards --}}
-    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{{ $studentCount }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Students</p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-12">
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Students</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $studentCount }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $assessmentCount }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Assessments</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Assessments</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $assessmentCount }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $quizCount }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quizzes</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Quizzes</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $quizCount }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">{{ $assessmentAvg }}%</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Assess Avg</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Assess avg</p>
+            <p class="text-2xl font-semibold tabular-nums {{ $assessmentAvg >= 75 ? 'text-emerald-600 dark:text-emerald-400' : ($assessmentAvg >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400') }}">{{ $assessmentAvg }}%</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-cyan-600 dark:text-cyan-400">{{ $quizAvg }}%</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quiz Avg</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Quiz avg</p>
+            <p class="text-2xl font-semibold tabular-nums {{ $quizAvg >= 75 ? 'text-emerald-600 dark:text-emerald-400' : ($quizAvg >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400') }}">{{ $quizAvg }}%</p>
         </div>
     </div>
 
     {{-- Submission Timeline Chart --}}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5 mb-8">
-        <h2 class="text-sm sm:text-base font-bold text-gray-900 dark:text-white mb-1">
-            <i class="fas fa-chart-line text-blue-600 dark:text-blue-400 mr-2"></i>Submission Timeline
-        </h2>
-        <div class="flex items-center gap-4 mb-3">
-            <span class="text-xs text-gray-500">
-                <span class="inline-block w-3 h-3 bg-blue-500 rounded-full mr-1"></span> Assessments
+    <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-5 sm:p-6 mb-12">
+        <div class="mb-6">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                Timeline
+            </p>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Submission activity
+            </h2>
+        </div>
+
+        {{-- Legend --}}
+        <div class="flex items-center gap-5 mb-4">
+            <span class="inline-flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <span class="inline-block w-2.5 h-2.5 bg-blue-500 rounded-full"></span>
+                Assessments
             </span>
-            <span class="text-xs text-gray-500">
-                <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mr-1"></span> Quizzes
+            <span class="inline-flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <span class="inline-block w-2.5 h-2.5 bg-purple-500 rounded-full"></span>
+                Quizzes
             </span>
         </div>
+
+        {{-- Chart --}}
         <div class="relative h-48 sm:h-64">
             <canvas id="submissionChart"></canvas>
         </div>
-        <div class="flex items-center justify-center gap-3 mt-3">
-            <button id="prevBtn" class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition disabled:opacity-30">← Prev</button>
-            <span id="pageLabel" class="text-xs text-gray-500 dark:text-gray-400"></span>
-            <button id="nextBtn" class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition disabled:opacity-30">Next →</button>
+
+        {{-- Pagination --}}
+        <div class="flex items-center justify-center gap-3 mt-4">
+            <button id="prevBtn" type="button"
+                class="inline-flex items-center justify-center gap-1.5 px-3 h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition disabled:opacity-30 disabled:pointer-events-none">
+                <i class="fas fa-arrow-left text-[10px]"></i>
+                Prev
+            </button>
+            <span id="pageLabel" class="text-xs text-gray-500 dark:text-gray-400 tabular-nums"></span>
+            <button id="nextBtn" type="button"
+                class="inline-flex items-center justify-center gap-1.5 px-3 h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition disabled:opacity-30 disabled:pointer-events-none">
+                Next
+                <i class="fas fa-arrow-right text-[10px]"></i>
+            </button>
         </div>
-    </div>
+    </section>
 
     {{-- Breakdown Tables --}}
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-            <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">
-                <i class="fas fa-tasks text-purple-600 dark:text-purple-400 mr-2"></i>Assessment Breakdown
-            </h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+
+        {{-- Assessment Breakdown --}}
+        <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6">
+            <div class="mb-6">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Assessments
+                </p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Breakdown
+                </h2>
+            </div>
+
             @if(count($assessmentBreakdown) > 0)
-                <div class="space-y-4">
+                <div class="space-y-5">
                     @foreach($assessmentBreakdown as $item)
+                        @php $aColor = $item['average'] >= 75 ? 'bg-emerald-500' : ($item['average'] >= 50 ? 'bg-amber-500' : 'bg-red-500'); @endphp
                         <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-700 dark:text-gray-300 font-medium">{{ $item['title'] }}</span>
-                                <span class="text-gray-500 dark:text-gray-400">{{ $item['submitted'] }}/{{ $item['total'] }} · {{ $item['average'] }}%</span>
+                            <div class="flex items-baseline justify-between gap-3 mb-2">
+                                <span class="text-sm font-medium text-gray-900 dark:text-white truncate min-w-0">{{ $item['title'] }}</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 tabular-nums flex-shrink-0">
+                                    {{ $item['submitted'] }}/{{ $item['total'] }} · {{ $item['average'] }}%
+                                </span>
                             </div>
-                            <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
-                                <div class="h-2.5 rounded-full 
-                                    {{ $item['average'] >= 75 ? 'bg-green-500' : ($item['average'] >= 50 ? 'bg-yellow-500' : 'bg-red-500') }}"
-                                    style="width: {{ $item['submission_rate'] }}%">
-                                </div>
+                            <div class="bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                                <div class="{{ $aColor }} h-1.5 rounded-full transition-all" style="width: {{ $item['submission_rate'] }}%"></div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <p class="text-gray-500 dark:text-gray-400 text-sm">No assessments published yet.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">No assessments published yet.</p>
             @endif
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-            <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">
-                <i class="fas fa-question-circle text-indigo-600 dark:text-indigo-400 mr-2"></i>Quiz Breakdown
-            </h2>
+        </section>
+
+        {{-- Quiz Breakdown --}}
+        <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6">
+            <div class="mb-6">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Quizzes
+                </p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Breakdown
+                </h2>
+            </div>
+
             @if(count($quizBreakdown) > 0)
-                <div class="space-y-4">
+                <div class="space-y-5">
                     @foreach($quizBreakdown as $item)
+                        @php $qColor = $item['average'] >= 75 ? 'bg-emerald-500' : ($item['average'] >= 50 ? 'bg-amber-500' : 'bg-red-500'); @endphp
                         <div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-700 dark:text-gray-300 font-medium">{{ $item['title'] }}</span>
-                                <span class="text-gray-500 dark:text-gray-400">{{ $item['submitted'] }}/{{ $item['total'] }} · {{ $item['average'] }}%</span>
+                            <div class="flex items-baseline justify-between gap-3 mb-2">
+                                <span class="text-sm font-medium text-gray-900 dark:text-white truncate min-w-0">{{ $item['title'] }}</span>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 tabular-nums flex-shrink-0">
+                                    {{ $item['submitted'] }}/{{ $item['total'] }} · {{ $item['average'] }}%
+                                </span>
                             </div>
-                            <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
-                                <div class="h-2.5 rounded-full 
-                                    {{ $item['average'] >= 75 ? 'bg-green-500' : ($item['average'] >= 50 ? 'bg-yellow-500' : 'bg-red-500') }}"
-                                    style="width: {{ $item['submission_rate'] }}%">
-                                </div>
+                            <div class="bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden">
+                                <div class="{{ $qColor }} h-1.5 rounded-full transition-all" style="width: {{ $item['submission_rate'] }}%"></div>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <p class="text-gray-500 dark:text-gray-400 text-sm">No quizzes published yet.</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">No quizzes published yet.</p>
             @endif
-        </div>
+        </section>
     </div>
 
-    {{-- Student Performance --}}
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 class="text-base font-bold text-gray-900 dark:text-white">
-                <i class="fas fa-users text-blue-600 dark:text-blue-400 mr-2"></i>Student Performance
+    {{-- Student Performance Table --}}
+    <section>
+        <div class="mb-6">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                Students
+            </p>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Performance
             </h2>
         </div>
+
         @if(count($studentPerformance) > 0)
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead>
-                        <tr class="bg-gray-50 dark:bg-gray-700/50">
-                            <th class="pl-5 pr-3 py-3.5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Student</th>
-                            <th class="px-3 py-3.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Assessments</th>
-                            <th class="px-3 py-3.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Quizzes</th>
-                            <th class="pl-3 pr-5 py-3.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Overall</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                        @foreach($studentPerformance as $student)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
-                                <td class="pl-5 pr-3 py-3">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
-                                            {{ strtoupper(substr($student['name'], 0, 1)) }}
-                                        </div>
-                                        <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $student['name'] }}</span>
-                                    </div>
-                                </td>
-                                <td class="px-3 py-3 text-center">
-                                    @if($student['assessment_avg'] !== null)
-                                        @php $aColor = $student['assessment_avg'] >= 75 ? 'green' : ($student['assessment_avg'] >= 50 ? 'yellow' : 'red'); @endphp
-                                        <span class="px-2 py-0.5 text-xs font-medium rounded-full 
-                                            {{ $aColor === 'green' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}
-                                            {{ $aColor === 'yellow' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' : '' }}
-                                            {{ $aColor === 'red' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' : '' }}">
-                                            {{ $student['assessment_avg'] }}%
-                                        </span>
-                                    @else
-                                        <span class="text-xs text-gray-400">—</span>
-                                    @endif
-                                </td>
-                                <td class="px-3 py-3 text-center">
-                                    @if($student['quiz_avg'] !== null)
-                                        @php $qColor = $student['quiz_avg'] >= 75 ? 'green' : ($student['quiz_avg'] >= 50 ? 'yellow' : 'red'); @endphp
-                                        <span class="px-2 py-0.5 text-xs font-medium rounded-full 
-                                            {{ $qColor === 'green' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' : '' }}
-                                            {{ $qColor === 'yellow' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' : '' }}
-                                            {{ $qColor === 'red' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300' : '' }}">
-                                            {{ $student['quiz_avg'] }}%
-                                        </span>
-                                    @else
-                                        <span class="text-xs text-gray-400">—</span>
-                                    @endif
-                                </td>
-                                <td class="pl-3 pr-5 py-3 text-center">
-                                    @if($student['overall'] !== null)
-                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">{{ $student['overall'] }}%</span>
-                                    @else
-                                        <span class="text-xs text-gray-400">—</span>
-                                    @endif
-                                </td>
+            <div class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200 dark:border-gray-800">
+                                <th class="pl-5 pr-3 py-3 text-left text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Student</th>
+                                <th class="px-3 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Assessments</th>
+                                <th class="px-3 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Quizzes</th>
+                                <th class="pl-3 pr-5 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Overall</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach($studentPerformance as $student)
+                                <tr class="border-b border-gray-100 dark:border-gray-800/50 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
+                                    <td class="pl-5 pr-3 py-3.5">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-9 h-9 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-xs font-semibold text-white dark:text-gray-900">
+                                                {{ strtoupper(substr($student['name'], 0, 1)) }}
+                                            </div>
+                                            <span class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $student['name'] }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-3 py-3.5 text-center">
+                                        @if($student['assessment_avg'] !== null)
+                                            <span class="text-sm font-semibold tabular-nums {{ $student['assessment_avg'] >= 75 ? 'text-emerald-600 dark:text-emerald-400' : ($student['assessment_avg'] >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400') }}">
+                                                {{ $student['assessment_avg'] }}%
+                                            </span>
+                                        @else
+                                            <span class="text-xs text-gray-300 dark:text-gray-700">—</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-3 py-3.5 text-center">
+                                        @if($student['quiz_avg'] !== null)
+                                            <span class="text-sm font-semibold tabular-nums {{ $student['quiz_avg'] >= 75 ? 'text-emerald-600 dark:text-emerald-400' : ($student['quiz_avg'] >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400') }}">
+                                                {{ $student['quiz_avg'] }}%
+                                            </span>
+                                        @else
+                                            <span class="text-xs text-gray-300 dark:text-gray-700">—</span>
+                                        @endif
+                                    </td>
+                                    <td class="pl-3 pr-5 py-3.5 text-center">
+                                        @if($student['overall'] !== null)
+                                            <span class="text-sm font-semibold text-gray-900 dark:text-white tabular-nums">{{ $student['overall'] }}%</span>
+                                        @else
+                                            <span class="text-xs text-gray-300 dark:text-gray-700">—</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         @else
-            <div class="text-center py-16">
-                <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-users text-2xl text-gray-400"></i>
-                </div>
-                <h3 class="text-base font-semibold text-gray-600 dark:text-gray-400">No Students Yet</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Approved students will appear here.</p>
+            <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
+                <i class="fas fa-users text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No students yet</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Approved students will appear here.</p>
             </div>
         @endif
-    </div>
+    </section>
 </div>
+@endsection
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const ctx = document.getElementById('submissionChart').getContext('2d');
+    const canvas = document.getElementById('submissionChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
     const allData = @json($submissionTimeline);
     const daysPerPage = 7;
     const totalPages = Math.ceil(allData.length / daysPerPage);
-    let currentPage = totalPages - 1; // Start at most recent week
+    let currentPage = Math.max(0, totalPages - 1);
+
+    // Theme-aware chart colors
+    const isDark = document.documentElement.classList.contains('dark');
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+    const tickColor = isDark ? '#9ca3af' : '#6b7280';
 
     function getPageData(page) {
         const start = page * daysPerPage;
@@ -222,8 +274,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     fill: true,
                     tension: 0.3,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderWidth: 2,
                 },
                 {
                     label: 'Quizzes',
@@ -232,17 +285,37 @@ document.addEventListener('DOMContentLoaded', function () {
                     backgroundColor: 'rgba(168, 85, 247, 0.1)',
                     fill: true,
                     tension: 0.3,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderWidth: 2,
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: isDark ? '#111827' : '#ffffff',
+                    titleColor: isDark ? '#f9fafb' : '#111827',
+                    bodyColor: isDark ? '#d1d5db' : '#374151',
+                    borderColor: isDark ? '#374151' : '#e5e7eb',
+                    borderWidth: 1,
+                    padding: 10,
+                    cornerRadius: 8,
+                }
+            },
             scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, color: tickColor, font: { size: 11 } },
+                    grid: { color: gridColor },
+                },
+                x: {
+                    ticks: { color: tickColor, font: { size: 11 } },
+                    grid: { display: false },
+                }
             }
         }
     });
@@ -270,4 +343,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
-@endsection
