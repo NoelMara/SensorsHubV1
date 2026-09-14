@@ -40,6 +40,14 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->ip());
         });
 
-        // ... (rest unchanged)
+        // Max 3 failed verify code attempts per minute per IP
+        RateLimiter::for('verify-code', function (Request $request) {
+            return Limit::perMinute(3)->by($request->ip());
+        });
+
+        // Max 3 resend attempts per minute per IP
+        RateLimiter::for('resend-code', function (Request $request) {
+            return Limit::perMinute(1)->by($request->ip());
+        });
     }
 }
