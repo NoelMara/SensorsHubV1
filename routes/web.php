@@ -38,15 +38,6 @@ Route::get('/projects/{slug}', [ProjectController::class, 'show'])->name('projec
 Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/shop', [ProductController::class, 'index'])->name('shop.index');
 Route::get('/shop/{id}', [ProductController::class, 'show'])->name('shop.show');
-Route::get('/debug-env', function () {
-    return [
-        'env' => app()->environment(),
-        'app_url' => config('app.url'),
-        'is_secure' => request()->isSecure(),
-        'scheme' => request()->getScheme(),
-        'x_forwarded_proto' => request()->header('X-Forwarded-Proto'),
-    ];
-});
 
 // ─── Community Suggestions (Public - requires auth to comment) ────────────────
 Route::get('/community', [SuggestionController::class, 'community'])->name('suggestions.community');
