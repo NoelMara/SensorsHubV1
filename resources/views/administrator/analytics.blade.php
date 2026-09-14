@@ -3,136 +3,200 @@
 @section('title', 'Platform Analytics')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <a href="{{ route('administrator.dashboard') }}" class="text-primary hover:underline inline-block text-sm mb-6">
-        <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
+    {{-- Back link --}}
+    <a href="{{ route('administrator.dashboard') }}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to Dashboard
     </a>
 
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Platform Analytics</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Overview of your entire platform</p>
-        </div>
+    {{-- Header --}}
+    <div class="mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Administrator · Analytics
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
+            Platform analytics
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+            Overview of users, classes, and content across your platform.
+        </p>
     </div>
 
     {{-- Stat Cards --}}
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $totalUsers }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Users</p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-12">
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Users</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white tabular-nums">{{ $totalUsers }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{{ $totalInstructors }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Instructors</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Instructors</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white tabular-nums">{{ $totalInstructors }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400">{{ $totalClasses }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Classes</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Classes</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white tabular-nums">{{ $totalClasses }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $totalContent }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Content</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Content</p>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white tabular-nums">{{ $totalContent }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-teal-600 dark:text-teal-400">{{ $newThisMonth }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">New This Month</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">New · 30d</p>
+            <p class="text-2xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">{{ $newThisMonth }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-400">{{ $bannedCount }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Banned</p>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Banned</p>
+            <p class="text-2xl font-semibold {{ $bannedCount > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-900 dark:text-white' }} tabular-nums">{{ $bannedCount }}</p>
         </div>
     </div>
 
     {{-- User Growth Chart --}}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5 mb-8">
-        <h2 class="text-sm sm:text-base font-bold text-gray-900 dark:text-white mb-1">User Growth (Last 30 Days)</h2>
-        <div class="relative h-48 sm:h-64 mb-3">
+    <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-5 sm:p-6 mb-12">
+        <div class="mb-6">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                Timeline
+            </p>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                User growth · last 30 days
+            </h2>
+        </div>
+
+        <div class="relative h-48 sm:h-64">
             <canvas id="userGrowthChart"></canvas>
         </div>
-        <div class="flex items-center justify-center gap-3">
-            <button id="prevBtn" class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition disabled:opacity-30">← Prev</button>
-            <span id="pageLabel" class="text-xs text-gray-500 dark:text-gray-400"></span>
-            <button id="nextBtn" class="px-3 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition disabled:opacity-30">Next →</button>
+
+        <div class="flex items-center justify-center gap-3 mt-4">
+            <button id="prevBtn" type="button"
+                class="inline-flex items-center justify-center gap-1.5 px-3 h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition disabled:opacity-30 disabled:pointer-events-none">
+                <i class="fas fa-arrow-left text-[10px]"></i>
+                Prev
+            </button>
+            <span id="pageLabel" class="text-xs text-gray-500 dark:text-gray-400 tabular-nums"></span>
+            <button id="nextBtn" type="button"
+                class="inline-flex items-center justify-center gap-1.5 px-3 h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition disabled:opacity-30 disabled:pointer-events-none">
+                Next
+                <i class="fas fa-arrow-right text-[10px]"></i>
+            </button>
         </div>
-    </div>
+    </section>
 
     {{-- Top Classes + Content Breakdown --}}
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700">
-                <h2 class="text-base font-bold text-gray-900 dark:text-white">Top Classes</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        {{-- Top Classes --}}
+        <section>
+            <div class="mb-4">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Classes
+                </p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Top performers
+                </h2>
             </div>
+
             @if(count($topClasses) > 0)
-                <div class="divide-y divide-gray-100 dark:divide-gray-700">
+                <div class="space-y-2">
                     @foreach($topClasses as $index => $class)
-                        <div class="px-5 py-3 flex items-center justify-between gap-3">
-                            <div class="flex items-center gap-3 min-w-0">
-                                <span class="text-sm font-bold text-gray-400 w-6">#{{ $index + 1 }}</span>
-                                <div class="min-w-0">
+                        <div class="flex items-center justify-between gap-4 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+                            <div class="flex items-center gap-3 min-w-0 flex-1">
+                                <span class="text-xs font-semibold text-gray-400 dark:text-gray-600 tabular-nums w-5 flex-shrink-0">#{{ $index + 1 }}</span>
+                                <div class="min-w-0 flex-1">
                                     <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $class['name'] }}</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
                                         {{ $class['instructor'] }}
-                                        @if($class['section']) · Block {{ $class['section'] }} @endif
+                                        @if($class['section'])
+                                            <span class="text-gray-300 dark:text-gray-700 mx-1">·</span>
+                                            Block {{ $class['section'] }}
+                                        @endif
                                     </p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-3 text-xs flex-shrink-0">
-                                <span class="text-gray-500 dark:text-gray-400"><i class="fas fa-users mr-1"></i>{{ $class['students_count'] }}</span>
-                                <span class="font-semibold {{ $class['avg_score'] >= 75 ? 'text-green-600' : ($class['avg_score'] >= 50 ? 'text-yellow-600' : 'text-red-600') }}">{{ $class['avg_score'] }}%</span>
+                            <div class="flex items-center gap-4 flex-shrink-0">
+                                <span class="text-xs text-gray-500 dark:text-gray-400 tabular-nums inline-flex items-center gap-1">
+                                    <i class="fas fa-users text-[10px]"></i>
+                                    {{ $class['students_count'] }}
+                                </span>
+                                <span class="text-sm font-semibold tabular-nums {{ $class['avg_score'] >= 75 ? 'text-emerald-600 dark:text-emerald-400' : ($class['avg_score'] >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400') }}">
+                                    {{ $class['avg_score'] }}%
+                                </span>
                             </div>
                         </div>
                     @endforeach
                 </div>
             @else
-                <p class="text-gray-500 dark:text-gray-400 text-center py-8 text-sm">No classes yet.</p>
+                <div class="text-center py-12 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
+                    <i class="fas fa-chalkboard text-3xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">No classes yet.</p>
+                </div>
             @endif
-        </div>
+        </section>
 
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5">
-            <h2 class="text-base font-bold text-gray-900 dark:text-white mb-4">Content Breakdown</h2>
-            <div class="space-y-4">
-                <div class="flex items-center justify-between">
+        {{-- Content Breakdown --}}
+        <section>
+            <div class="mb-4">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Content
+                </p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Breakdown
+                </h2>
+            </div>
+
+            <div class="border border-gray-200 dark:border-gray-800 rounded-lg divide-y divide-gray-100 dark:divide-gray-800">
+                <div class="flex items-center justify-between gap-3 p-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center"><i class="fas fa-microchip text-blue-600 dark:text-blue-400"></i></div>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Sensors</span>
+                        <i class="fas fa-microchip text-emerald-500 text-sm w-5 text-center"></i>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Sensors</span>
                     </div>
-                    <span class="text-lg font-bold text-gray-900 dark:text-white">{{ $contentBreakdown['sensors'] }}</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white tabular-nums">{{ $contentBreakdown['sensors'] }}</span>
                 </div>
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between gap-3 p-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center"><i class="fas fa-project-diagram text-emerald-600 dark:text-emerald-400"></i></div>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Projects</span>
+                        <i class="fas fa-project-diagram text-blue-500 text-sm w-5 text-center"></i>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Projects</span>
                     </div>
-                    <span class="text-lg font-bold text-gray-900 dark:text-white">{{ $contentBreakdown['projects'] }}</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white tabular-nums">{{ $contentBreakdown['projects'] }}</span>
                 </div>
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between gap-3 p-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center"><i class="fas fa-video text-red-600 dark:text-red-400"></i></div>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Videos</span>
+                        <i class="fas fa-video text-red-500 text-sm w-5 text-center"></i>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Videos</span>
                     </div>
-                    <span class="text-lg font-bold text-gray-900 dark:text-white">{{ $contentBreakdown['videos'] }}</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white tabular-nums">{{ $contentBreakdown['videos'] }}</span>
                 </div>
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between gap-3 p-4">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center"><i class="fas fa-shopping-cart text-purple-600 dark:text-purple-400"></i></div>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Products</span>
+                        <i class="fas fa-shopping-cart text-purple-500 text-sm w-5 text-center"></i>
+                        <span class="text-sm text-gray-700 dark:text-gray-300">Products</span>
                     </div>
-                    <span class="text-lg font-bold text-gray-900 dark:text-white">{{ $contentBreakdown['products'] }}</span>
+                    <span class="text-sm font-semibold text-gray-900 dark:text-white tabular-nums">{{ $contentBreakdown['products'] }}</span>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 </div>
+@endsection
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const ctx = document.getElementById('userGrowthChart').getContext('2d');
+    const canvas = document.getElementById('userGrowthChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
     const allData = @json($userGrowth);
     const daysPerPage = 7;
     const totalPages = Math.ceil(allData.length / daysPerPage);
-    let currentPage = totalPages - 1;
+    let currentPage = Math.max(0, totalPages - 1);
+
+    // Theme-aware chart colors
+    const isDark = document.documentElement.classList.contains('dark');
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+    const tickColor = isDark ? '#9ca3af' : '#6b7280';
 
     function getPageData(page) {
         const start = page * daysPerPage;
@@ -150,16 +214,36 @@ document.addEventListener('DOMContentLoaded', function () {
                 backgroundColor: 'rgba(99, 102, 241, 0.1)',
                 fill: true,
                 tension: 0.3,
-                pointRadius: 4,
-                pointHoverRadius: 6,
+                pointRadius: 3,
+                pointHoverRadius: 5,
+                borderWidth: 2,
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: isDark ? '#111827' : '#ffffff',
+                    titleColor: isDark ? '#f9fafb' : '#111827',
+                    bodyColor: isDark ? '#d1d5db' : '#374151',
+                    borderColor: isDark ? '#374151' : '#e5e7eb',
+                    borderWidth: 1,
+                    padding: 10,
+                    cornerRadius: 8,
+                }
+            },
             scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, color: tickColor, font: { size: 11 } },
+                    grid: { color: gridColor },
+                },
+                x: {
+                    ticks: { color: tickColor, font: { size: 11 } },
+                    grid: { display: false },
+                }
             }
         }
     });
@@ -185,4 +269,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endpush
-@endsection
