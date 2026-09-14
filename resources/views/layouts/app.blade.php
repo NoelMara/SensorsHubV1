@@ -17,6 +17,7 @@ header('Expires: 0');
     @stack('styles')
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300 overflow-x-clip min-h-screen flex flex-col">
+    <div id="loading-bar"></div>
     @php
         $homeRoute = 'home';
         if (auth()->check()) {
@@ -34,14 +35,19 @@ header('Expires: 0');
 
     <!-- Toast Notifications -->
     @if(session('success'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" 
-            class="fixed top-20 right-4 z-[9999] max-w-sm w-full animate-slide-in">
-            <div class="flex items-center gap-3 bg-white dark:bg-gray-800 border border-green-200 dark:border-green-700 rounded-xl shadow-lg p-4">
-                <div class="flex-shrink-0 w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                    <i class="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                </div>
-                <p class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{{ session('success') }}</p>
-                <button @click="show = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+        <div x-data="{ show: true }" x-show="show"
+            x-init="setTimeout(() => show = false, 4000)"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-x-6"
+            x-transition:enter-end="opacity-100 translate-x-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-x-0"
+            x-transition:leave-end="opacity-0 translate-x-6"
+            class="fixed top-20 right-4 z-[9999] max-w-sm w-full">
+            <div class="flex items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-lg shadow p-4">
+                <i class="fas fa-check-circle text-secondary text-base shrink-0"></i>
+                <p class="flex-1 text-sm font-medium text-gray-900 dark:text-white">{{ session('success') }}</p>
+                <button @click="show = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
                     <i class="fas fa-times text-sm"></i>
                 </button>
             </div>
@@ -49,14 +55,19 @@ header('Expires: 0');
     @endif
 
     @if(session('error'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" 
+        <div x-data="{ show: true }" x-show="show"
+            x-init="setTimeout(() => show = false, 4000)"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-x-6"
+            x-transition:enter-end="opacity-100 translate-x-0"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-x-0"
+            x-transition:leave-end="opacity-0 translate-x-6"
             class="fixed top-20 right-4 z-[9999] max-w-sm w-full">
-            <div class="flex items-center gap-3 bg-white dark:bg-gray-800 border border-red-200 dark:border-red-700 rounded-xl shadow-lg p-4">
-                <div class="flex-shrink-0 w-8 h-8 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center">
-                    <i class="fas fa-exclamation text-red-600 dark:text-red-400 text-sm"></i>
-                </div>
-                <p class="flex-1 text-sm font-medium text-gray-800 dark:text-gray-200">{{ session('error') }}</p>
-                <button @click="show = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+            <div class="flex items-center gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-lg shadow p-4">
+                <i class="fas fa-exclamation-circle text-red-500 text-base shrink-0"></i>
+                <p class="flex-1 text-sm font-medium text-gray-900 dark:text-white">{{ session('error') }}</p>
+                <button @click="show = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition">
                     <i class="fas fa-times text-sm"></i>
                 </button>
             </div>
@@ -64,14 +75,6 @@ header('Expires: 0');
     @endif
 
     <style>
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        .animate-slide-in {
-            animation: slideIn 0.3s ease-out;
-        }
-
         @keyframes cursorBlink {
             0%, 49% { opacity: 1; }
             50%, 100% { opacity: 0; }
@@ -81,6 +84,22 @@ header('Expires: 0');
             width: 0.35ch;
             animation: cursorBlink 1.1s step-end infinite;
         }
+
+    #loading-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        width: 0%;
+        background: linear-gradient(to right, #10b981, #059669);
+        z-index: 99999;
+        transition: width 0.25s ease, opacity 0.4s ease;
+        opacity: 0;
+        pointer-events: none;
+    }
+    #loading-bar.active {
+        opacity: 1;
+    }
     </style>
 
     <!-- Navigation -->
@@ -434,6 +453,66 @@ header('Expires: 0');
                 closeSidebar();
             }
         });
+    </script>
+
+
+    <script>
+        (function () {
+            const bar = document.getElementById('loading-bar');
+            if (!bar) return;
+
+            let progress = 0;
+            let timer = null;
+            let visible = false;
+
+            function start() {
+                if (visible) return;
+                visible = true;
+                progress = 0;
+                bar.classList.add('active');
+                bar.style.width = '0%';
+
+                timer = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 95) progress = 95;
+                    bar.style.width = progress + '%';
+                }, 200);
+
+                setTimeout(() => { if (visible) done(); }, 8000);
+            }
+
+            function done() {
+                if (!visible) return;
+                clearInterval(timer);
+                bar.style.width = '100%';
+
+                setTimeout(() => {
+                    bar.classList.remove('active');
+                    bar.style.width = '0%';
+                    progress = 0;
+                    visible = false;
+                }, 400);
+            }
+
+            window.addEventListener('beforeunload', start);
+
+            document.addEventListener('click', function (e) {
+                const link = e.target.closest('a');
+                if (!link) return;
+                const href = link.getAttribute('href');
+                if (!href) return;
+                if (href.startsWith('#') || href.startsWith('javascript:')) return;
+                if (link.target === '_blank') return;
+                start();
+            });
+
+            document.addEventListener('submit', function () {
+                start();
+            });
+
+            window.addEventListener('pageshow', done);
+            window.addEventListener('load', done);
+        })();
     </script>
 
     <script>
