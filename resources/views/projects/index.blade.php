@@ -130,9 +130,10 @@
                             <form action="{{ route('dashboard.projects.save', $project) }}" method="POST">
                                 @csrf
                                 <button type="submit" 
-                                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition"
+                                    class="inline-flex items-center gap-1.5 px-3 h-9 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition"
                                     title="Save project">
-                                    <i class="fas fa-bookmark text-sm"></i>
+                                    <i class="fas fa-bookmark text-[11px]"></i>
+                                    Save
                                 </button>
                             </form>
                         @endauth
