@@ -3,68 +3,90 @@
 @section('title', $product->name)
 
 @section('content')
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Breadcrumb -->
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
+    {{-- Breadcrumb --}}
     <nav class="mb-8">
-        <a href="{{ route('shop.index') }}" class="text-primary hover:underline inline-flex items-center">
-            <i class="fas fa-arrow-left mr-2"></i> Back to Shop
-        </a>
+        <ol class="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400">
+            <li><a href="{{ route('home') }}" class="hover:text-gray-900 dark:hover:text-white transition">Home</a></li>
+            <li class="text-gray-300 dark:text-gray-700">/</li>
+            <li><a href="{{ route('shop.index') }}" class="hover:text-gray-900 dark:hover:text-white transition">Shop</a></li>
+            <li class="text-gray-300 dark:text-gray-700">/</li>
+            <li class="text-gray-900 dark:text-white">{{ Str::limit($product->name, 40) }}</li>
+        </ol>
     </nav>
 
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+    {{-- Main card --}}
+    <div class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
         <div class="grid grid-cols-1 md:grid-cols-2">
-            <!-- Image -->
-            <div class="bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-8 min-h-[400px]">
+
+            {{-- Image --}}
+            <div class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-8 aspect-square">
                 @if($product->image)
                     <img src="{{ Str::startsWith($product->image, ['http://', 'https://']) ? $product->image : (Str::startsWith($product->image, ['images/', '/images/']) ? asset($product->image) : asset('storage/' . $product->image)) }}" 
                         alt="{{ $product->name }}" 
-                       class="max-w-full max-h-96 object-contain rounded-xl">
+                        class="max-w-full max-h-full object-contain">
                 @else
                     <div class="text-center">
-                        <i class="fas fa-box-open text-8xl text-gray-300 dark:text-gray-600 mb-4"></i>
-                        <p class="text-gray-400 dark:text-gray-500 text-sm">No image available</p>
+                        <i class="fas fa-box-open text-5xl text-gray-300 dark:text-gray-600 mb-3"></i>
+                        <p class="text-xs text-gray-400 dark:text-gray-600">No image</p>
                     </div>
                 @endif
             </div>
 
-            <!-- Details -->
-            <div class="p-8 flex flex-col">
+            {{-- Details --}}
+            <div class="p-6 sm:p-8 flex flex-col">
+
+                {{-- Category --}}
                 @if($product->category)
-                <span class="inline-flex items-center gap-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-3 py-1.5 rounded-full text-xs font-semibold mb-4 w-fit">
-                    <i class="fas fa-tag text-xs"></i> {{ $product->category }}
-                </span>
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+                        {{ $product->category }}
+                    </p>
                 @endif
 
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ $product->name }}</h1>
+                {{-- Title --}}
+                <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4 break-words">
+                    {{ $product->name }}
+                </h1>
 
+                {{-- Description --}}
                 @if($product->description)
-                <div class="prose prose-sm dark:prose-invert mb-6">
-                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ $product->description }}</p>
-                </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-6">
+                        {{ $product->description }}
+                    </p>
                 @endif
 
+                {{-- Price --}}
                 @if($product->price)
-                <div class="bg-gray-100 dark:bg-gray-700 rounded-xl p-5 mb-6">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Price</p>
-                    <span class="text-3xl font-bold text-green-600 dark:text-green-400">₱{{ number_format($product->price, 2) }}</span>
-                </div>
+                    <div class="pt-4 border-t border-gray-100 dark:border-gray-800 mb-6">
+                        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-1.5">
+                            Price
+                        </p>
+                        <p class="text-2xl font-semibold text-gray-900 dark:text-white">
+                            ₱{{ number_format($product->price, 2) }}
+                        </p>
+                    </div>
                 @endif
 
-                <div class="mt-auto space-y-3">
-                    <a href="{{ $product->link }}" 
-                       target="_blank" 
-                       class="inline-flex items-center justify-center w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition shadow-md hover:shadow-lg text-base">
-                        <i class="fas fa-shopping-cart mr-2"></i> Buy Now
-                    </a>
-                    <p class="text-xs text-gray-400 dark:text-gray-500 text-center flex items-center justify-center gap-1">
-                        <i class="fas fa-external-link-alt"></i> You will be redirected to an external shop
+                {{-- Buy --}}
+                <div class="mt-auto">
+                    @if($product->link)
+                        <a href="{{ $product->link }}" 
+                           target="_blank" 
+                           class="w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
+                            Buy now
+                            <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+                        </a>
+                    @endif
+                    <p class="text-xs text-gray-400 dark:text-gray-600 text-center mt-3">
+                        You'll be redirected to an external shop
                     </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Related Products -->
+    {{-- Related products --}}
     @php
         $relatedProducts = \App\Models\Product::where('category', $product->category)
             ->where('id', '!=', $product->id)
@@ -75,30 +97,51 @@
     @endphp
 
     @if($relatedProducts->count() > 0)
-    <div class="mt-12">
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-            <i class="fas fa-layer-group text-primary"></i> Similar Products
-        </h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            @foreach($relatedProducts as $related)
-            <a href="{{ route('shop.show', $related->id) }}" class="bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group border border-gray-100 dark:border-gray-700">
-                <div class="h-36 bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-                    @if($related->image)
-                        <img src="{{ Str::startsWith($related->image, ['http://', 'https://']) ? $related->image : (Str::startsWith($related->image, ['images/', '/images/']) ? asset($related->image) : asset('storage/' . $related->image)) }}" alt="{{ $related->name }}" class="max-w-full max-h-full object-contain">
-                    @else
-                        <i class="fas fa-box-open text-4xl text-gray-300 dark:text-gray-600"></i>
-                    @endif
-                </div>
-                <div class="p-4">
-                    <p class="font-semibold text-gray-800 dark:text-white text-sm group-hover:text-primary transition line-clamp-2">{{ $related->name }}</p>
-                    @if($related->price)
-                    <p class="text-green-600 dark:text-green-400 font-bold text-sm mt-1">₱{{ number_format($related->price, 2) }}</p>
-                    @endif
-                </div>
-            </a>
-            @endforeach
-        </div>
-    </div>
+        <section class="mt-20 pt-16 border-t border-gray-200 dark:border-gray-800">
+            <div class="mb-8">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+                    Related
+                </p>
+                <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                    Similar products
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                @foreach($relatedProducts as $related)
+                    <a href="{{ route('shop.show', $related->id) }}" 
+                       class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:border-gray-400 dark:hover:border-gray-600 transition group flex flex-col">
+                        <div class="aspect-square bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4 overflow-hidden">
+                            @if($related->image)
+                                <img src="{{ Str::startsWith($related->image, ['http://', 'https://']) ? $related->image : (Str::startsWith($related->image, ['images/', '/images/']) ? asset($related->image) : asset('storage/' . $related->image)) }}" 
+                                    alt="{{ $related->name }}" 
+                                    class="max-w-full max-h-full object-contain" loading="lazy">
+                            @else
+                                <i class="fas fa-box-open text-3xl text-gray-300 dark:text-gray-600"></i>
+                            @endif
+                        </div>
+                        <div class="p-3.5 flex-1 flex flex-col">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 mb-1.5 group-hover:text-primary transition">
+                                {{ $related->name }}
+                            </p>
+                            @if($related->price)
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white mt-auto">
+                                    ₱{{ number_format($related->price, 2) }}
+                                </p>
+                            @endif
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </section>
     @endif
+
+    {{-- Back link --}}
+    <div class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
+        <a href="{{ route('shop.index') }}" class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+            <i class="fas fa-arrow-left text-xs"></i>
+            Back to shop
+        </a>
+    </div>
 </div>
 @endsection
