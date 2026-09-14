@@ -3,120 +3,188 @@
 @section('title', 'Administrator Profile')
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="mb-8">
-        <a href="{{ route('administrator.dashboard') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
-            <i class="fas fa-arrow-left mr-1"></i> Back to Dashboard
-        </a>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">Account Settings</h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage your profile and security settings.</p>
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
+    {{-- Back link --}}
+    <a href="{{ route('administrator.dashboard') }}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to Dashboard
+    </a>
+
+    {{-- Header --}}
+    <div class="mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Administrator · Account
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
+            Settings
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+            Manage your profile and security settings.
+        </p>
     </div>
 
-    <div class="space-y-6">
-        {{-- Profile Card --}}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
+    {{-- Validation errors --}}
+    @if($errors->any())
+        <div class="border border-red-200 dark:border-red-900/40 bg-red-50 dark:bg-red-950/20 rounded-lg p-5 mb-8">
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-red-600 dark:text-red-400 mb-2">
+                Please fix the following
+            </p>
+            <ul class="list-disc list-inside text-sm text-red-700 dark:text-red-300 space-y-1">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="space-y-8">
+
+        {{-- Profile summary --}}
+        <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6">
             <div class="flex flex-col sm:flex-row items-center sm:items-start gap-5">
-                <div class="relative">
-                    <div class="w-24 h-24 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center overflow-hidden">
-                        @if($user->profile_image)
-                            <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
-                        @else
-                            <span class="text-3xl font-bold text-gray-400">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
-                        @endif
-                    </div>
+                <div class="w-20 h-20 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center overflow-hidden flex-shrink-0">
+                    @if($user->profile_image)
+                        <img src="{{ Str::startsWith($user->profile_image, ['http://', 'https://']) ? $user->profile_image : asset($user->profile_image) }}"
+                             alt="{{ $user->name }}" class="w-full h-full object-cover">
+                    @else
+                        <span class="text-2xl font-semibold text-white dark:text-gray-900">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+                    @endif
                 </div>
-                <div class="text-center sm:text-left flex-1">
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ $user->name }}</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</p>
-                    <div class="flex items-center gap-2 mt-2 justify-center sm:justify-start">
-                        <span class="px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">Administrator</span>
-                        <span class="text-xs text-gray-400">· Joined {{ $user->created_at->format('M Y') }}</span>
+                <div class="text-center sm:text-left flex-1 min-w-0">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white truncate">{{ $user->name }}</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 truncate mb-2">{{ $user->email }}</p>
+                    <div class="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
+                        <span class="text-[10px] font-medium uppercase tracking-wider text-purple-600 dark:text-purple-400">
+                            Administrator
+                        </span>
+                        <span class="text-xs text-gray-400 dark:text-gray-600">·</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">Joined {{ $user->created_at->format('M Y') }}</span>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        {{-- Profile Form --}}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-6">Profile Information</h2>
-            <form action="{{ route('administrator.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+        {{-- Profile form --}}
+        <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6">
+            <div class="mb-6">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Profile
+                </p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Profile information
+                </h2>
+            </div>
+
+            <form action="{{ route('administrator.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Full Name</label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        <label for="name" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                            Full name <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required
+                            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm">
                     </div>
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Email Address</label>
-                        <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" required>
+                        <label for="email" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                            Email address <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required
+                            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Profile Picture</label>
+                    <label class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Profile picture <span class="text-gray-400 dark:text-gray-600 normal-case tracking-normal">(PNG, JPG, GIF up to 2MB)</span>
+                    </label>
                     <input type="file" name="profile_image" id="profile_image" accept="image/*"
-                        class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 dark:file:bg-gray-700 dark:file:text-gray-300 hover:file:bg-gray-200 dark:hover:file:bg-gray-600">
-                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">PNG, JPG, or GIF up to 2MB.</p>
+                        class="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2.5 file:px-5 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 dark:file:bg-gray-800 dark:file:text-gray-300 hover:file:bg-gray-200 dark:hover:file:bg-gray-700 file:transition file:cursor-pointer">
                 </div>
 
-                <div class="pt-2">
-                    <button type="submit" class="bg-primary hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-lg transition text-sm">
-                        <i class="fas fa-save mr-2"></i>Save Changes
+                <div class="pt-2 flex justify-end">
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+                        <i class="fas fa-save text-xs"></i>
+                        Save changes
                     </button>
                 </div>
             </form>
-        </div>
+        </section>
 
-        {{-- Password Form --}}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
-            <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-6">Change Password</h2>
-            <form action="{{ route('administrator.profile.password') }}" method="POST" class="space-y-4">
+        {{-- Password form --}}
+        <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6">
+            <div class="mb-6">
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Security
+                </p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Change password
+                </h2>
+            </div>
+
+            <form action="{{ route('administrator.profile.password') }}" method="POST" class="space-y-6">
                 @csrf
+
                 <div>
-                    <label for="current_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Current Password</label>
+                    <label for="current_password" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Current password <span class="text-red-500">*</span>
+                    </label>
                     <div class="relative">
-                        <input type="password" name="current_password" id="current_password"
-                            class="w-full px-4 py-2.5 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                        <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" onclick="togglePasswordVisibility('current_password', this)">
+                        <input type="password" name="current_password" id="current_password" required
+                            class="w-full px-4 py-3 pr-11 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:border-emerald-500 transition text-sm">
+                        <button type="button"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
+                            onclick="togglePasswordVisibility('current_password', this)">
                             <i class="fas fa-eye text-sm"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">New Password</label>
+                        <label for="password" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                            New password <span class="text-red-500">*</span>
+                        </label>
                         <div class="relative">
-                            <input type="password" name="password" id="password"
-                                class="w-full px-4 py-2.5 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" onclick="togglePasswordVisibility('password', this)">
+                            <input type="password" name="password" id="password" required
+                                class="w-full px-4 py-3 pr-11 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:border-emerald-500 transition text-sm">
+                            <button type="button"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
+                                onclick="togglePasswordVisibility('password', this)">
                                 <i class="fas fa-eye text-sm"></i>
                             </button>
                         </div>
                     </div>
                     <div>
-                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Confirm New Password</label>
+                        <label for="password_confirmation" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                            Confirm new password <span class="text-red-500">*</span>
+                        </label>
                         <div class="relative">
-                            <input type="password" name="password_confirmation" id="password_confirmation"
-                                class="w-full px-4 py-2.5 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary focus:border-transparent" required>
-                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" onclick="togglePasswordVisibility('password_confirmation', this)">
+                            <input type="password" name="password_confirmation" id="password_confirmation" required
+                                class="w-full px-4 py-3 pr-11 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:border-emerald-500 transition text-sm">
+                            <button type="button"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
+                                onclick="togglePasswordVisibility('password_confirmation', this)">
                                 <i class="fas fa-eye text-sm"></i>
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="pt-2">
-                    <button type="submit" class="bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-gray-300 text-white dark:text-gray-800 font-medium py-2.5 px-6 rounded-lg transition text-sm">
-                        <i class="fas fa-key mr-2"></i>Update Password
+                <div class="pt-2 flex justify-end">
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+                        <i class="fas fa-key text-xs"></i>
+                        Update password
                     </button>
                 </div>
             </form>
-        </div>
+        </section>
     </div>
 </div>
 @endsection
