@@ -87,15 +87,6 @@
     </div>
 
     {{-- Related products --}}
-    @php
-        $relatedProducts = \App\Models\Product::where('category', $product->category)
-            ->where('id', '!=', $product->id)
-            ->where('is_active', true)
-            ->latest()
-            ->take(4)
-            ->get();
-    @endphp
-
     @if($relatedProducts->count() > 0)
         <section class="mt-20 pt-16 border-t border-gray-200 dark:border-gray-800">
             <div class="mb-8">

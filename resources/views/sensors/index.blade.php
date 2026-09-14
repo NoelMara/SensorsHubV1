@@ -76,11 +76,11 @@
                         <div class="flex items-center gap-4 pt-3 border-t border-gray-100 dark:border-gray-800 mb-3 text-xs text-gray-500 dark:text-gray-400">
                             <span class="inline-flex items-center gap-1.5">
                                 <i class="fas fa-project-diagram"></i>
-                                {{ $sensor->projects()->count() }} {{ Str::plural('Project', $sensor->projects()->count()) }}
+                                {{ $sensor->projects_count }} {{ Str::plural('Project', $sensor->projects_count) }}
                             </span>
                             <span class="inline-flex items-center gap-1.5">
                                 <i class="fas fa-video"></i>
-                                {{ $sensor->videos()->count() }} {{ Str::plural('Video', $sensor->videos()->count()) }}
+                                {{ $sensor->videos_count }} {{ Str::plural('Video', $sensor->videos_count) }}
                             </span>
                         </div>
 

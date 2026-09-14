@@ -47,7 +47,8 @@
                     @if(request('search'))
                         Results for "<span class="font-medium text-gray-900 dark:text-white">{{ request('search') }}</span>"
                     @endif
-                    @if(request('search') && request('category')) · @endif
+                    @if(request('search') && request('category')) ·
+                    @endif
                     @if(request('category'))
                         Category: <span class="font-medium text-gray-900 dark:text-white">{{ request('category') }}</span>
                     @endif
@@ -65,23 +66,29 @@
             @foreach($videos as $video)
                 <div class="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:border-gray-400 dark:hover:border-gray-600 transition flex flex-col group">
 
-                    {{-- Video Embed --}}
-                    <div class="relative aspect-video bg-gray-100 dark:bg-gray-900 overflow-hidden">
-                        @if($video->youtube_id)
-                            <iframe 
-                                class="absolute inset-0 w-full h-full" 
-                                src="https://www.youtube.com/embed/{{ $video->youtube_id }}" 
-                                frameborder="0" 
-                                loading="lazy"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                            </iframe>
-                        @else
-                            <div class="w-full h-full flex items-center justify-center">
-                                <i class="fab fa-youtube text-4xl text-gray-400 dark:text-gray-600"></i>
-                            </div>
-                        @endif
-                    </div>
+                    {{-- Thumbnail → opens video modal --}}
+                    <button type="button" 
+                        onclick="openVideoModal('{{ $video->youtube_id }}')" 
+                        class="text-left block w-full">
+                        <div class="relative aspect-video bg-gray-100 dark:bg-gray-900 overflow-hidden">
+                            @if($video->youtube_id)
+                                <img 
+                                    src="https://img.youtube.com/vi/{{ $video->youtube_id }}/mqdefault.jpg" 
+                                    alt="{{ $video->title }}" 
+                                    class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                    loading="lazy">
+                                <div class="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/20 transition">
+                                    <div class="w-12 h-12 rounded-full bg-black/70 dark:bg-white/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-play text-white dark:text-gray-900 text-sm ml-0.5"></i>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <i class="fab fa-youtube text-4xl text-gray-400 dark:text-gray-600"></i>
+                                </div>
+                            @endif
+                        </div>
+                    </button>
 
                     {{-- Content --}}
                     <div class="p-5 flex-1 flex flex-col">
@@ -113,7 +120,7 @@
                             </p>
                         @endif
 
-                        {{-- Watch link --}}
+                        {{-- Watch on YouTube (external) --}}
                         <a href="https://www.youtube.com/watch?v={{ $video->youtube_id }}" 
                            target="_blank" 
                            class="text-sm font-medium text-gray-900 dark:text-white inline-flex items-center gap-1 hover:gap-2 transition-all">
@@ -167,5 +174,43 @@
             <i class="fas fa-arrow-up-right-from-square text-xs"></i>
         </a>
     </div>
+
+    {{-- Video Modal --}}
+    <div id="videoModal" class="hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4" onclick="if(event.target === this) closeVideoModal()">
+        <button type="button" onclick="closeVideoModal()" class="absolute top-4 right-4 text-white/70 hover:text-white transition" aria-label="Close video">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <div class="w-full max-w-4xl aspect-video">
+            <iframe id="videoFrame" src="" class="w-full h-full rounded-lg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function openVideoModal(videoId) {
+        const modal = document.getElementById('videoModal');
+        const frame = document.getElementById('videoFrame');
+        if (modal && frame && videoId) {
+            frame.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeVideoModal() {
+        const modal = document.getElementById('videoModal');
+        const frame = document.getElementById('videoFrame');
+        if (modal && frame) {
+            frame.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeVideoModal();
+    });
+</script>
+@endpush

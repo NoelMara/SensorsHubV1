@@ -192,16 +192,7 @@
     </div>
 
     {{-- Related Projects --}}
-    @if($project->sensor_id)
-        @php
-            $relatedProjects = \App\Models\Project::where('sensor_id', $project->sensor_id)
-                ->where('id', '!=', $project->id)
-                ->where('is_active', true)
-                ->limit(3)
-                ->get();
-        @endphp
-
-        @if($relatedProjects->count() > 0)
+    @if($relatedProjects->count() > 0)
             <section class="mt-20 pt-16 border-t border-gray-200 dark:border-gray-800">
                 <div class="mb-8">
                     <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
@@ -238,6 +229,5 @@
                 </div>
             </section>
         @endif
-    @endif
 </div>
 @endsection

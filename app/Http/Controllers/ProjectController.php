@@ -37,8 +37,21 @@ class ProjectController extends Controller
     public function show($slug)
     {
         $project = Project::where('slug', $slug)->with('sensor')->firstOrFail();
-        $isSaved = auth()->check() && SavedProject::where('user_id', auth()->id())->where('project_id', $project->id)->exists();
-        return view('projects.show', compact('project', 'isSaved'));
+        
+        $isSaved = auth()->check() && SavedProject::where('user_id', auth()->id())
+            ->where('project_id', $project->id)
+            ->exists();
+        
+        $relatedProjects = collect();
+        if ($project->sensor_id) {
+            $relatedProjects = Project::where('sensor_id', $project->sensor_id)
+                ->where('id', '!=', $project->id)
+                ->where('is_active', true)
+                ->limit(3)
+                ->get();
+        }
+        
+        return view('projects.show', compact('project', 'isSaved', 'relatedProjects'));
     }
 
     public function saved()

@@ -9,7 +9,7 @@ class VideoController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Video::where('is_active', true);
+        $query = Video::with('sensor')->where('is_active', true);
 
         if ($request->filled('search')) {
             $query->where('title', 'ilike', '%' . $request->search . '%');

@@ -9,13 +9,14 @@ class SensorController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Sensor::where('is_active', true);
+        $query = Sensor::where('is_active', true)
+            ->withCount(['projects', 'videos']);  // ← ADD THIS
 
         // Search by name or description
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'ilike', '%' . $request->search . '%')
-                ->orWhere('description', 'ilike', '%' . $request->search . '%');
+                  ->orWhere('description', 'ilike', '%' . $request->search . '%');
             });
         }
 
@@ -26,9 +27,20 @@ class SensorController extends Controller
 
     public function show($slug)
     {
-        $sensor = Sensor::where('slug', $slug)->firstOrFail();
-        $relatedProjects = $sensor->projects()->where('is_active', true)->take(3)->get();
-        $relatedVideos = $sensor->videos()->where('is_active', true)->take(3)->get();
+        $sensor = Sensor::withCount(['projects', 'videos'])
+            ->where('slug', $slug)
+            ->firstOrFail();
+        
+        $relatedProjects = $sensor->projects()
+            ->where('is_active', true)
+            ->take(3)
+            ->get();
+        
+        $relatedVideos = $sensor->videos()
+            ->where('is_active', true)
+            ->take(3)
+            ->get();
+        
         return view('sensors.show', compact('sensor', 'relatedProjects', 'relatedVideos'));
     }
 }

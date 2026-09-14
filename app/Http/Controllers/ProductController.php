@@ -38,6 +38,14 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::where('is_active', true)->findOrFail($id);
-        return view('shop.show', compact('product'));
+        
+        $relatedProducts = Product::where('category', $product->category)
+            ->where('id', '!=', $product->id)
+            ->where('is_active', true)
+            ->latest()
+            ->take(4)
+            ->get();
+        
+        return view('shop.show', compact('product', 'relatedProducts'));
     }
 }
