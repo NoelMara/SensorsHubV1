@@ -518,16 +518,31 @@ header('Expires: 0');
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('form').forEach(function(form) {
-                if (form.hasAttribute('x-data')) return; 
+                if (form.hasAttribute('x-data')) return;
                 form.addEventListener('submit', function(e) {
                     var onsubmit = form.getAttribute('onsubmit');
                     if (onsubmit && onsubmit.includes('fileSizeError')) return;
                     if (onsubmit && onsubmit.includes('confirm')) return;
+
                     var button = form.querySelector('button[type="submit"]');
-                    if (button && !button.disabled) {
-                        button.disabled = true;
-                        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
-                    }
+                    if (!button || button.disabled) return;
+
+                    // Pick a label based on the button's existing text
+                    var text = (button.textContent || '').trim().toLowerCase();
+                    var label = 'Saving';
+                    if (text.includes('submit') || text.includes('post') || text.includes('send')) label = 'Submitting';
+                    else if (text.includes('import')) label = 'Importing';
+                    else if (text.includes('create') || text.includes('add')) label = 'Creating';
+                    else if (text.includes('update') || text.includes('edit')) label = 'Updating';
+                    else if (text.includes('delete') || text.includes('remove')) label = 'Deleting';
+                    else if (text.includes('join')) label = 'Joining';
+                    else if (text.includes('grade')) label = 'Saving';
+                    else if (text.includes('approve')) label = 'Approving';
+                    else if (text.includes('upload')) label = 'Uploading';
+
+                    button.disabled = true;
+                    button.classList.add('opacity-70', 'pointer-events-none');
+                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>' + label + '...</span>';
                 });
             });
         });
