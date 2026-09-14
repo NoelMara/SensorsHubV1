@@ -137,18 +137,18 @@
                             {{-- Verified --}}
                             <td class="px-5 py-4 align-top">
                                 @if($user->email_verified_at)
-                                    <span class="text-[10px] font-medium uppercase tracking-wider text-emerald-600 dark:text-emerald-400">● Verified</span>
+                                    <span class="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-emerald-600 dark:text-emerald-400">● Verified</span>
                                 @else
-                                    <span class="text-[10px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400">● Pending</span>
+                                    <span class="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400">● Pending</span>
                                 @endif
                             </td>
 
                             {{-- Status --}}
                             <td class="px-5 py-4 align-top">
                                 @if($user->isBanned())
-                                    <span class="text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400">● Banned</span>
+                                    <span class="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400">● Banned</span>
                                 @elseif($user->warning_count > 0)
-                                    <span class="text-[10px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400">● {{ $user->warning_count }} {{ Str::plural('warning', $user->warning_count) }}</span>
+                                    <span class="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400">● {{ $user->warning_count }} {{ Str::plural('warning', $user->warning_count) }}</span>
                                 @else
                                     <span class="text-xs text-gray-300 dark:text-gray-700">—</span>
                                 @endif
