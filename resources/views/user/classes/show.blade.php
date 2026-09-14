@@ -28,7 +28,7 @@
             @endif
         </div>
         <p class="text-lg text-gray-600 dark:text-gray-400">
-            Taught by <span class="text-gray-900 dark:text-white font-medium">{{ $class->instructor->name }}</span>
+            Taught by <span class="text-blue-600 dark:text-blue-400 font-medium">{{ $class->instructor->name }}</span>
         </p>
     </div>
 
@@ -47,7 +47,11 @@
                         My progress
                     </h2>
                 </div>
-                <span class="text-3xl font-semibold text-gray-900 dark:text-white tabular-nums">{{ $overallPct }}%</span>
+                <span class="text-3xl font-semibold tabular-nums
+                    @if($overallPct >= 80) text-emerald-600 dark:text-emerald-400
+                    @elseif($overallPct >= 50) text-amber-600 dark:text-amber-400
+                    @else text-red-600 dark:text-red-400
+                    @endif">{{ $overallPct }}%</span>
             </div>
 
             <div class="bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden mb-6">
@@ -97,25 +101,25 @@
     <section class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-12">
         <a href="{{ route('dashboard.classes.assessments.index', $class) }}"
            class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
-            <i class="fas fa-tasks text-gray-400 dark:text-gray-600 text-sm mb-3 block"></i>
+            <i class="fas fa-tasks text-emerald-500 dark:text-emerald-400 text-sm mb-3 block"></i>
             <p class="text-sm font-medium text-gray-900 dark:text-white">Assessments</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $assessments->count() }} available</p>
         </a>
         <a href="{{ route('dashboard.classes.quizzes.index', $class) }}"
            class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
-            <i class="fas fa-question-circle text-gray-400 dark:text-gray-600 text-sm mb-3 block"></i>
+            <i class="fas fa-question-circle text-blue-500 dark:text-blue-400 text-sm mb-3 block"></i>
             <p class="text-sm font-medium text-gray-900 dark:text-white">Quizzes</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $quizzes->count() }} available</p>
         </a>
         <a href="{{ route('dashboard.classes.modules.index', $class) }}"
            class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
-            <i class="fas fa-book-open text-gray-400 dark:text-gray-600 text-sm mb-3 block"></i>
+            <i class="fas fa-book-open text-amber-500 dark:text-amber-400 text-sm mb-3 block"></i>
             <p class="text-sm font-medium text-gray-900 dark:text-white">Modules</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $class->modules()->where('is_published', true)->count() }} available</p>
         </a>
         <a href="{{ route('dashboard.classes.announcements.index', $class) }}"
            class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
-            <i class="fas fa-bullhorn text-gray-400 dark:text-gray-600 text-sm mb-3 block"></i>
+            <i class="fas fa-bullhorn text-purple-500 dark:text-purple-400 text-sm mb-3 block"></i>
             <p class="text-sm font-medium text-gray-900 dark:text-white">Announcements</p>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{{ $class->announcements()->where('is_published', true)->count() }} posted</p>
         </a>
