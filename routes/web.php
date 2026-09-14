@@ -155,7 +155,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::get('/classes/{class}/edit', [ClassroomController::class, 'edit'])->name('classes.edit');
     Route::put('/classes/{class}', [ClassroomController::class, 'update'])->name('classes.update');
     Route::delete('/classes/{class}', [ClassroomController::class, 'destroy'])->name('classes.destroy');
-   Route::post('/classes/{class}/approve/{user}', [ClassroomController::class, 'approve'])->name('classes.approve');
+    Route::post('/classes/{class}/approve/{user}', [ClassroomController::class, 'approve'])->name('classes.approve');
     Route::post('/classes/{class}/approve-all', [ClassroomController::class, 'approveAll'])->name('classes.approve-all');
     Route::delete('/classes/{class}/reject/{user}', [ClassroomController::class, 'reject'])->name('classes.reject');
 
@@ -229,7 +229,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
 // ─── Administrator Routes ───────────────────────────────────────────────────────
 Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('administrator.')->group(function () {
     Route::get('/dashboard', [AdministratorDashboardController::class, 'index'])->name('dashboard');
-   
+
     // Analytics
     Route::get('/analytics', [AdministratorDashboardController::class, 'analytics'])->name('analytics');
 
