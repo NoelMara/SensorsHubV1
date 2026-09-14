@@ -3,99 +3,148 @@
 @section('title', 'Add Sensor')
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <a href="{{ route(($prefix ?? 'administrator') . '.sensors.index') }}" class="text-primary hover:underline inline-block text-sm mb-6">
-        <i class="fas fa-arrow-left mr-1"></i> Back to Sensors
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
+    {{-- Back link --}}
+    <a href="{{ route(($prefix ?? 'administrator') . '.sensors.index') }}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to Sensors
     </a>
 
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="px-6 py-5 border-b border-gray-200 dark:border-gray-700">
-            <h1 class="text-lg font-bold text-gray-900 dark:text-white">Add New Sensor</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Fill in the details below to create a new sensor entry.</p>
-        </div>
-
-        <div class="p-6">
-            <form method="POST" action="{{ route('administrator.content.store', 'sensors') }}" enctype="multipart/form-data">
-                @csrf
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                    <div class="md:col-span-2">
-                        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Sensor Name</label>
-                        <input type="text" name="name" id="name" required value="{{ old('name') }}"
-                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition @error('name') border-red-500 @enderror">
-                        @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label for="description" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">Description</label>
-                        <textarea name="description" id="description" rows="3" required
-                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
-                        @error('description') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label for="how_it_works" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">How It Works</label>
-                        <textarea name="how_it_works" id="how_it_works" rows="3" required
-                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none @error('how_it_works') border-red-500 @enderror">{{ old('how_it_works') }}</textarea>
-                        @error('how_it_works') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
-                        <label for="use_cases" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">Use Cases</label>
-                        <textarea name="use_cases" id="use_cases" rows="3" required placeholder="Weather stations, Home automation..."
-                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none @error('use_cases') border-red-500 @enderror">{{ old('use_cases') }}</textarea>
-                        @error('use_cases') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
-                        <label for="components_needed" class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">Components Needed</label>
-                        <textarea name="components_needed" id="components_needed" rows="3" required placeholder="Arduino Uno, Sensor, Jumper Wires..."
-                            class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition resize-none @error('components_needed') border-red-500 @enderror">{{ old('components_needed') }}</textarea>
-                        @error('components_needed') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div class="md:col-span-2">
-                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 block">Sensor Image</label>
-                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl hover:border-primary/50 dark:hover:border-primary/50 transition cursor-pointer relative"
-                            onclick="document.getElementById('image').click()"
-                            x-data="{ preview: null }">
-                            <div class="space-y-1 text-center" x-show="!preview">
-                                <i class="fas fa-cloud-upload-alt text-2xl text-gray-400"></i>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Click to upload</p>
-                                <p class="text-xs text-gray-400 dark:text-gray-500">PNG, JPG, GIF up to 2MB</p>
-                            </div>
-                            <div x-show="preview" class="relative">
-                                <img :src="preview" class="max-h-32 rounded-lg object-cover">
-                                <button type="button" 
-                                    @click.stop="preview = null; document.getElementById('image').value = ''"
-                                    class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition shadow">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            <input type="file" name="image" id="image" accept="image/*" class="hidden"
-                                @change="preview = URL.createObjectURL($event.target.files[0])">
-                        </div>
-                        @error('image') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-                    </div>
-                </div>
-
-                <div class="mt-6 flex items-center gap-2">
-                    <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}
-                        class="h-4 w-4 text-primary rounded border-gray-300 focus:ring-primary">
-                    <label for="is_active" class="text-sm text-gray-700 dark:text-gray-300">Active (visible to users)</label>
-                </div>
-
-                <div class="mt-6 flex items-center gap-3">
-                    <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
-                        <i class="fas fa-save mr-1.5"></i> Create Sensor
-                    </button>
-                    <a href="{{ route(($prefix ?? 'administrator') . '.sensors.index') }}"
-                        class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
-                        Cancel
-                    </a>
-                </div>
-            </form>
-        </div>
+    {{-- Header --}}
+    <div class="mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Administrator · New sensor
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
+            Add new sensor
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+            Fill in the details below to create a new sensor entry.
+        </p>
     </div>
+
+    {{-- Form --}}
+    <form method="POST" action="{{ route('administrator.content.store', 'sensors') }}" enctype="multipart/form-data">
+        @csrf
+
+        <div class="space-y-6">
+
+            {{-- Name --}}
+            <div>
+                <label for="name" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Sensor name <span class="text-red-500">*</span>
+                </label>
+                <input type="text" name="name" id="name" required
+                    value="{{ old('name') }}"
+                    class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm @error('name') !border-red-500 @enderror"
+                    placeholder="e.g., DHT11 Temperature Sensor">
+                @error('name') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Description --}}
+            <div>
+                <label for="description" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Description <span class="text-red-500">*</span>
+                </label>
+                <textarea name="description" id="description" rows="3" required
+                    class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm resize-none leading-relaxed @error('description') !border-red-500 @enderror"
+                    placeholder="Brief overview of what this sensor does...">{{ old('description') }}</textarea>
+                @error('description') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- How it works --}}
+            <div>
+                <label for="how_it_works" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    How it works <span class="text-red-500">*</span>
+                </label>
+                <textarea name="how_it_works" id="how_it_works" rows="4" required
+                    class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm resize-none leading-relaxed @error('how_it_works') !border-red-500 @enderror"
+                    placeholder="Technical explanation of how the sensor operates...">{{ old('how_it_works') }}</textarea>
+                @error('how_it_works') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Use cases + Components --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                    <label for="use_cases" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Use cases <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="use_cases" id="use_cases" rows="4" required
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm resize-none leading-relaxed @error('use_cases') !border-red-500 @enderror"
+                        placeholder="Weather stations, Home automation...">{{ old('use_cases') }}</textarea>
+                    @error('use_cases') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
+                </div>
+                <div>
+                    <label for="components_needed" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Components needed <span class="text-red-500">*</span>
+                    </label>
+                    <textarea name="components_needed" id="components_needed" rows="4" required
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm resize-none leading-relaxed @error('components_needed') !border-red-500 @enderror"
+                        placeholder="Arduino Uno, Sensor, Jumper Wires...">{{ old('components_needed') }}</textarea>
+                    @error('components_needed') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
+                </div>
+            </div>
+
+            {{-- Image --}}
+            <div>
+                <label class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Sensor image <span class="text-gray-400 dark:text-gray-600 normal-case tracking-normal">(optional, PNG/JPG/GIF up to 2MB)</span>
+                </label>
+
+                <div x-data="{ preview: null }"
+                    class="border border-dashed border-gray-300 dark:border-gray-700 rounded-lg hover:border-gray-400 dark:hover:border-gray-600 transition cursor-pointer"
+                    onclick="document.getElementById('image').click()">
+
+                    <div class="p-6 text-center" x-show="!preview">
+                        <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 dark:text-gray-600 mb-2 block"></i>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            <span class="font-medium text-gray-900 dark:text-white">Click to upload</span>
+                        </p>
+                        <p class="text-xs text-gray-400 dark:text-gray-600 mt-1">PNG, JPG, GIF up to 2MB</p>
+                    </div>
+
+                    <div x-show="preview" x-cloak class="p-4 relative">
+                        <img :src="preview" class="max-h-40 w-full object-contain rounded-lg mx-auto">
+                        <button type="button"
+                            @click.stop="preview = null; document.getElementById('image').value = ''"
+                            class="absolute top-2 right-2 inline-flex items-center gap-1.5 px-3 h-8 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500 transition">
+                            <i class="fas fa-times text-[10px]"></i>
+                            Remove
+                        </button>
+                    </div>
+
+                    <input type="file" name="image" id="image" accept="image/*" class="hidden"
+                        @change="preview = $event.target.files[0] ? URL.createObjectURL($event.target.files[0]) : null">
+                </div>
+                @error('image') <p class="text-red-500 text-xs mt-1.5">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Active toggle --}}
+            <label for="is_active" class="flex items-start gap-3 border border-gray-200 dark:border-gray-800 rounded-lg p-4 cursor-pointer hover:border-gray-400 dark:hover:border-gray-600 transition">
+                <input type="checkbox" name="is_active" id="is_active" value="1"
+                    {{ old('is_active', true) ? 'checked' : '' }}
+                    class="mt-0.5 h-4 w-4 rounded border-gray-300 dark:border-gray-700 text-emerald-500 focus:ring-emerald-500 cursor-pointer">
+                <div>
+                    <p class="text-sm font-medium text-gray-900 dark:text-white">Active</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">When checked, this sensor is visible to users on the public site.</p>
+                </div>
+            </label>
+        </div>
+
+        {{-- Actions --}}
+        <div class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 flex flex-wrap items-center justify-end gap-3">
+            <a href="{{ route(($prefix ?? 'administrator') . '.sensors.index') }}"
+               class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition text-sm font-medium">
+                Cancel
+            </a>
+            <button type="submit"
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+                <i class="fas fa-save text-xs"></i>
+                Create sensor
+            </button>
+        </div>
+    </form>
 </div>
 @endsection
