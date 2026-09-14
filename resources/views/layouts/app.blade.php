@@ -85,6 +85,16 @@ header('Expires: 0');
         .animate-slide-in {
             animation: slideIn 0.3s ease-out;
         }
+
+        @keyframes cursorBlink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+        .cursor-blink {
+            display: inline-block;
+            width: 0.35ch;
+            animation: cursorBlink 1.1s step-end infinite;
+        }
     </style>
 
     <!-- Navigation -->
@@ -253,44 +263,78 @@ header('Expires: 0');
     @yield('content')
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 dark:bg-gray-950 text-white @auth lg:ml-60 @endauth">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-2xl font-bold mb-4 flex items-center">
-                        <img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-7 w-7 object-contain mr-2"> SensorsHub
-                    </h3>
-                    <p class="text-gray-400">Learn Sensors. Build Projects. Share Ideas.</p>
+        <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-900 @auth lg:ml-60 @endauth">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+            {{-- Top: brand + columns --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8">
+
+                {{-- Brand --}}
+                <div class="lg:col-span-5">
+                    <a href="{{ route('home') }}" class="inline-flex items-center gap-2.5 mb-4">
+                        <img src="{{ asset('sensorshub_logo.png') }}" alt="SensorsHub" class="h-7 w-7 object-contain">
+                        <span class="text-lg font-semibold tracking-tight text-white">
+                            SensorsHub
+                        </span>
+                    </a>
+                    <p class="text-sm text-gray-400 max-w-xs leading-relaxed">
+                        Learn sensors. Build real circuits. A hands-on workspace for students and makers.
+                    </p>
                 </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route($homeRoute) }}" class="text-gray-400 hover:text-white transition">Home</a></li>
-                        <li><a href="{{ route('sensors.index') }}" class="text-gray-400 hover:text-white transition">Sensors</a></li>
-                        <li><a href="{{ route('projects.index') }}" class="text-gray-400 hover:text-white transition">Projects</a></li>
-                        <li><a href="{{ route('videos.index') }}" class="text-gray-400 hover:text-white transition">Tutorials</a></li>
+
+                {{-- Quick links --}}
+                <div class="lg:col-span-2">
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 mb-4">
+                        Explore
+                    </p>
+                    <ul class="space-y-2.5">
+                        <li><a href="{{ route($homeRoute) }}" class="text-sm text-gray-400 hover:text-white transition">Home</a></li>
+                        <li><a href="{{ route('sensors.index') }}" class="text-sm text-gray-400 hover:text-white transition">Sensors</a></li>
+                        <li><a href="{{ route('projects.index') }}" class="text-sm text-gray-400 hover:text-white transition">Projects</a></li>
+                        <li><a href="{{ route('videos.index') }}" class="text-sm text-gray-400 hover:text-white transition">Tutorials</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Resources</h4>
-                    <ul class="space-y-2">
-                        <li><a href="{{ route('suggestions.community') }}" class="text-gray-400 hover:text-white transition">Community</a></li>
-                        <li><a href="{{ route('shop.index') }}" class="text-gray-400 hover:text-white transition">Shop</a></li>
-                        <li><a href="https://sensors-hub-simulator.vercel.app/" target="_blank" class="text-gray-400 hover:text-white transition">Simulation</a></li>
+
+                {{-- Resources --}}
+                <div class="lg:col-span-2">
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 mb-4">
+                        Resources
+                    </p>
+                    <ul class="space-y-2.5">
+                        <li><a href="{{ route('suggestions.community') }}" class="text-sm text-gray-400 hover:text-white transition">Community</a></li>
+                        <li><a href="{{ route('shop.index') }}" class="text-sm text-gray-400 hover:text-white transition">Shop</a></li>
+                        <li><a href="https://sensors-hub-simulator.vercel.app/" target="_blank" class="text-sm text-gray-400 hover:text-white transition">Simulation</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">Connect</h4>
-                    <div class="flex flex-wrap gap-4">
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-youtube text-2xl"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-github text-2xl"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter text-2xl"></i></a>
+
+                {{-- Connect --}}
+                <div class="lg:col-span-3">
+                    <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 mb-4">
+                        Connect
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <a href="#" class="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-gray-800 text-gray-500 hover:text-white hover:border-gray-600 transition" aria-label="YouTube">
+                            <i class="fab fa-youtube text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-gray-800 text-gray-500 hover:text-white hover:border-gray-600 transition" aria-label="Facebook">
+                            <i class="fab fa-facebook-f text-sm"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 inline-flex items-center justify-center rounded-lg border border-gray-800 text-gray-500 hover:text-white hover:border-gray-600 transition" aria-label="Discord">
+                            <i class="fab fa-discord text-sm"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; {{ date('Y') }} SensorsHub. All rights reserved.</p>
+
+            {{-- Bottom: copyright --}}
+            <div class="mt-12 pt-8 border-t border-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <p class="text-xs text-gray-500">
+                    &copy; {{ date('Y') }} SensorsHub. All rights reserved.
+                </p>
+                <p class="text-xs text-gray-500 font-mono">
+                    <span class="text-emerald-500">$</span> your next project starts with<span class="cursor-blink text-emerald-500">▎</span>
+                </p>
             </div>
         </div>
     </footer>
