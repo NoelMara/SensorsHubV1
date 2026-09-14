@@ -3,106 +3,137 @@
 @section('title', 'My Classes')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">My Classes</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ $classes->total() }} {{ Str::plural('class', $classes->total()) }}</p>
-        </div>
-        <a href="{{ route('instructor.classes.create') }}" class="px-4 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium flex-shrink-0 shadow-sm">
-            <i class="fas fa-plus mr-1.5"></i> Create Class
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+
+    {{-- Header --}}
+    <div class="mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Instructor
+        </p>
+        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
+            My classes
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mb-8">
+            {{ $classes->total() }} {{ Str::plural('class', $classes->total()) }} you teach.
+        </p>
+        <a href="{{ route('instructor.classes.create') }}"
+           class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+            <i class="fas fa-plus text-xs"></i>
+            Create class
         </a>
     </div>
 
     {{-- Search --}}
-    <form method="GET" action="{{ route('instructor.classes.index') }}" class="mb-6 flex flex-col sm:flex-row gap-3">
-        <div class="relative flex-1">
-            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by class name, section, or code..."
-                class="w-full pl-11 pr-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl dark:bg-gray-700 dark:text-white text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition">
+    <form method="GET" action="{{ route('instructor.classes.index') }}" class="mb-12">
+        <div class="flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+                <input type="text" name="search" value="{{ request('search') }}"
+                    placeholder="Search by name, section, or code..."
+                    class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm">
+            </div>
+            <button type="submit"
+                class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm whitespace-nowrap">
+                <i class="fas fa-search text-xs"></i>
+                Search
+            </button>
+            @if(request('search'))
+                <a href="{{ route('instructor.classes.index') }}"
+                   class="inline-flex items-center justify-center gap-2 px-5 py-3 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition text-sm font-medium whitespace-nowrap">
+                    <i class="fas fa-times text-xs"></i>
+                    Clear
+                </a>
+            @endif
         </div>
-        <button type="submit" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium">
-            <i class="fas fa-search mr-1.5"></i> Search
-        </button>
         @if(request('search'))
-            <a href="{{ route('instructor.classes.index') }}" class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium text-center">
-                <i class="fas fa-times mr-1"></i> Clear
-            </a>
+            <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                Results for "<span class="font-medium text-gray-900 dark:text-white">{{ request('search') }}</span>"
+                <a href="{{ route('instructor.classes.index') }}" class="text-gray-900 dark:text-white hover:underline ml-2">Clear</a>
+            </p>
         @endif
     </form>
 
     @if($classes->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($classes as $class)
-                <a href="{{ route('instructor.classes.show', $class) }}" 
-                   class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md hover:border-primary/30 dark:hover:border-primary/30 transition group">
-                    
-                    {{-- Header --}}
-                    <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
-                        <div class="flex items-center gap-2 mb-1">
-                            <div class="w-8 h-8 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-chalkboard text-primary text-sm"></i>
-                            </div>
-                            <h3 class="text-base font-bold text-gray-900 dark:text-white group-hover:text-primary transition truncate">{{ $class->name }}</h3>
+                <a href="{{ route('instructor.classes.show', $class) }}"
+                   class="border border-gray-200 dark:border-gray-800 rounded-lg p-5 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition group flex flex-col">
+
+                    {{-- Name + section --}}
+                    <div class="flex items-start gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-xs font-semibold text-white dark:text-gray-900">
+                            {{ strtoupper(substr($class->section ?? $class->name, -1)) }}
                         </div>
-                        @if($class->section)
-                            <span class="inline-block mt-1 px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                                Block {{ $class->section }}
-                            </span>
-                        @endif
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-base font-medium text-gray-900 dark:text-white truncate">
+                                {{ $class->name }}
+                            </h3>
+                            @if($class->section)
+                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                    Block {{ $class->section }}
+                                </p>
+                            @endif
+                        </div>
                     </div>
 
-                    {{-- Body --}}
-                    <div class="px-5 py-4">
-                        <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                            <span class="flex items-center gap-1.5">
-                                <i class="fas fa-users text-gray-400"></i>
-                                <span class="font-medium text-gray-700 dark:text-gray-300">{{ $class->students->count() }}</span>
-                                students
-                            </span>
-                            <span class="flex items-center gap-1.5">
-                                <i class="fas fa-tasks text-gray-400"></i>
-                               <span class="font-medium text-gray-700 dark:text-gray-300">{{ $class->assessments()->count() }}</span>
-                                assessments
-                            </span>
-                        </div>
+                    {{-- Stats --}}
+                    <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400 mb-4 pb-4 border-b border-gray-100 dark:border-gray-800">
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fas fa-users text-[10px]"></i>
+                            {{ $class->students->count() }} {{ Str::plural('student', $class->students->count()) }}
+                        </span>
+                        <span class="inline-flex items-center gap-1.5">
+                            <i class="fas fa-tasks text-[10px]"></i>
+                            {{ $class->assessments()->count() }} {{ Str::plural('assessment', $class->assessments()->count()) }}
+                        </span>
+                    </div>
 
-                        <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-700/50 rounded-xl px-4 py-3">
-                            <div>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-0.5">Class Code</p>
-                                <p class="text-lg font-bold text-primary tracking-[0.15em]">{{ $class->code }}</p>
-                            </div>
-                            <div class="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center group-hover:bg-primary transition">
-                                <i class="fas fa-arrow-right text-primary group-hover:text-white text-xs"></i>
-                            </div>
+                    {{-- Code + arrow --}}
+                    <div class="flex items-center justify-between gap-3">
+                        <div>
+                            <p class="text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+                                Class code
+                            </p>
+                            <p class="text-base font-semibold text-gray-900 dark:text-white tracking-[0.15em] font-mono">
+                                {{ $class->code }}
+                            </p>
                         </div>
+                        <i class="fas fa-arrow-right text-gray-300 dark:text-gray-600 group-hover:text-gray-900 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all text-xs"></i>
                     </div>
                 </a>
             @endforeach
         </div>
 
         @if($classes->hasPages())
-            <div class="mt-8">{{ $classes->links() }}</div>
+            <div class="mt-12 flex justify-center">
+                {{ $classes->links() }}
+            </div>
         @endif
     @else
-        <div class="text-center py-20 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div class="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-search text-3xl text-gray-400"></i>
+        {{-- Empty state --}}
+        @if(request('search'))
+            <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
+                <i class="fas fa-search text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No classes found</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Try a different search term.</p>
+                <a href="{{ route('instructor.classes.index') }}"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition text-sm font-medium">
+                    <i class="fas fa-times text-xs"></i>
+                    Clear search
+                </a>
             </div>
-            @if(request('search'))
-                <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-400">No Classes Found</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6">Try a different search term.</p>
-                <a href="{{ route('instructor.classes.index') }}" class="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm font-medium">
-                    <i class="fas fa-times mr-1"></i> Clear Search
+        @else
+            <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
+                <i class="fas fa-chalkboard text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No classes yet</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Create your first class and share the code with students.</p>
+                <a href="{{ route('instructor.classes.create') }}"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+                    <i class="fas fa-plus text-xs"></i>
+                    Create class
                 </a>
-            @else
-                <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-400">No Classes Yet</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 mb-6">Create your first class and share the code with students!</p>
-                <a href="{{ route('instructor.classes.create') }}" class="px-5 py-2.5 bg-primary text-white rounded-xl hover:bg-blue-600 transition text-sm font-medium shadow-sm">
-                    <i class="fas fa-plus mr-1.5"></i> Create Class
-                </a>
-            @endif
-        </div>
+            </div>
+        @endif
     @endif
 </div>
 @endsection

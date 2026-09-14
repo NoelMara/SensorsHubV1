@@ -3,146 +3,209 @@
 @section('title', $class->name)
 
 @section('content')
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24">
+
+    {{-- Back link --}}
+    <a href="{{ route('instructor.classes.index') }}"
+       class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-8 sm:mb-10">
+        <i class="fas fa-arrow-left text-xs"></i>
+        Back to Classes
+    </a>
+
     {{-- Header --}}
-    <div class="mb-8">
-        <a href="{{ route('instructor.classes.index') }}" class="text-primary hover:underline mb-2 inline-block text-sm">
-            <i class="fas fa-arrow-left mr-1"></i> Back to Classes
-        </a>
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">{{ $class->name }}</h1>
-                @if($class->section)
-                    <span class="inline-block mt-2 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-sm font-semibold">
-                        Block {{ $class->section }}
-                    </span>
-                @endif
-            </div>
+    <div class="mb-8 sm:mb-12">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+            Instructor · Class
+        </p>
+        <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white break-words">
+                {{ $class->name }}
+            </h1>
+            @if($class->section)
+                <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    · Block {{ $class->section }}
+                </span>
+            @endif
         </div>
         @if($class->description)
-            <p class="text-gray-500 dark:text-gray-400 mt-3 text-sm">{{ $class->description }}</p>
+            <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+                {{ $class->description }}
+            </p>
         @endif
     </div>
 
-        {{-- Tab Navigation --}}
-    <div class="mb-8">
-        <div class="flex flex-wrap items-center gap-1 border-b border-gray-200 dark:border-gray-700 pb-2">
-            <a href="{{ route('instructor.classes.announcements.index', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
-                <i class="fas fa-bullhorn mr-1"></i> Announcements
+    {{-- Tab nav — all links visible, scrolls horizontally on mobile --}}
+    <nav class="-mx-4 sm:mx-0 mb-8 sm:mb-12 border-b border-gray-200 dark:border-gray-800">
+        <div class="flex items-center gap-1 px-4 sm:px-0 overflow-x-auto pb-px scrollbar-hide">
+            <a href="{{ route('instructor.classes.announcements.index', $class) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
+                <i class="fas fa-bullhorn text-[11px]"></i>
+                Announcements
             </a>
-            <a href="{{ route('instructor.classes.modules.index', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
-                <i class="fas fa-book-open mr-1"></i> Modules
+            <a href="{{ route('instructor.classes.modules.index', $class) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
+                <i class="fas fa-book-open text-[11px]"></i>
+                Modules
             </a>
-            <a href="{{ route('instructor.classes.assessments.index', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
-                <i class="fas fa-tasks mr-1"></i> Assessments
+            <a href="{{ route('instructor.classes.assessments.index', $class) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
+                <i class="fas fa-tasks text-[11px]"></i>
+                Assessments
             </a>
-            <a href="{{ route('instructor.classes.quizzes.index', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary hover:border-b-2 hover:border-primary transition">
-                <i class="fas fa-question-circle mr-1"></i> Quizzes
+            <a href="{{ route('instructor.classes.quizzes.index', $class) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
+                <i class="fas fa-question-circle text-[11px]"></i>
+                Quizzes
             </a>
-            
-            {{-- More Dropdown --}}
-            <div class="relative" x-data="{ open: false }">
-                <button @click="open = !open" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition">
-                    <i class="fas fa-ellipsis-h mr-1"></i> More
-                </button>
-                <div x-show="open" @click.outside="open = false" class="absolute left-0 top-full mt-1 w-44 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                    <a href="{{ route('instructor.classes.leaderboard', $class) }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg">
-                        <i class="fas fa-trophy mr-2"></i> Leaderboard
-                    </a>
-                    <a href="{{ route('instructor.classes.analytics', $class) }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <i class="fas fa-chart-bar mr-2"></i> Analytics
-                    </a>
-                    <a href="{{ route('instructor.classes.resources', $class) }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-b-lg">
-                        <i class="fas fa-book mr-2"></i> Resources
-                    </a>
-                </div>
-            </div>
+            <a href="{{ route('instructor.classes.leaderboard', $class) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
+                <i class="fas fa-trophy text-[11px]"></i>
+                Leaderboard
+            </a>
+            <a href="{{ route('instructor.classes.analytics', $class) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
+                <i class="fas fa-chart-bar text-[11px]"></i>
+                Analytics
+            </a>
+            <a href="{{ route('instructor.classes.resources', $class) }}"
+               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
+                <i class="fas fa-book text-[11px]"></i>
+                Resources
+            </a>
 
-            <span class="text-gray-300 dark:text-gray-600 px-2">|</span>
-            
-            <a href="{{ route('instructor.classes.edit', $class) }}" class="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary transition">
-                <i class="fas fa-edit mr-1"></i> Edit
-            </a>
-            <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
-                onsubmit="return confirm('Delete this class? This cannot be undone.');" class="inline">
-                @csrf @method('DELETE')
-                <button type="submit" class="px-3 py-2 text-sm font-medium text-red-500 hover:text-red-700 transition">
-                    <i class="fas fa-trash mr-1"></i> Delete
-                </button>
-            </form>
+            {{-- Edit/Delete pushed to right (desktop only) --}}
+            <div class="hidden sm:flex items-center gap-2 ml-auto pl-4">
+                <a href="{{ route('instructor.classes.edit', $class) }}"
+                   class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition flex-shrink-0"
+                   title="Edit class">
+                    <i class="fas fa-edit text-xs"></i>
+                </a>
+                <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
+                    onsubmit="return confirm('Delete this class? This cannot be undone.');" class="inline">
+                    @csrf @method('DELETE')
+                    <button type="submit"
+                        class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500 transition flex-shrink-0"
+                        title="Delete class">
+                        <i class="fas fa-trash text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    {{-- Edit/Delete for mobile — shown as buttons below the nav --}}
+    <div class="flex sm:hidden items-center gap-2 mb-8">
+        <a href="{{ route('instructor.classes.edit', $class) }}"
+           class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-800 text-sm font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+            <i class="fas fa-edit text-xs"></i>
+            Edit
+        </a>
+        <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
+            onsubmit="return confirm('Delete this class? This cannot be undone.');" class="flex-1">
+            @csrf @method('DELETE')
+            <button type="submit"
+                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-800 text-sm font-medium text-gray-600 dark:text-gray-400 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500 transition">
+                <i class="fas fa-trash text-xs"></i>
+                Delete
+            </button>
+        </form>
+    </div>
+
+    {{-- Quick stats --}}
+    @php
+        $approved = $class->students->where('pivot.status', 'approved')->count();
+        $pending = $class->students->where('pivot.status', 'pending')->count();
+    @endphp
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8 sm:mb-12">
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fas fa-users text-emerald-500 text-xs"></i>
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Approved</p>
+            </div>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $approved }}</p>
+        </div>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fas fa-clock text-amber-500 text-xs"></i>
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Pending</p>
+            </div>
+            <p class="text-2xl font-semibold {{ $pending > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-white' }}">{{ $pending }}</p>
+        </div>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fas fa-book-open text-amber-500 text-xs"></i>
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Modules</p>
+            </div>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $class->modules()->count() }}</p>
+        </div>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fas fa-tasks text-emerald-500 text-xs"></i>
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Assessments</p>
+            </div>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $class->assessments()->count() }}</p>
+        </div>
+        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 col-span-2 sm:col-span-1">
+            <div class="flex items-center gap-2 mb-2">
+                <i class="fas fa-question-circle text-blue-500 text-xs"></i>
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Quizzes</p>
+            </div>
+            <p class="text-2xl font-semibold text-gray-900 dark:text-white">{{ $class->quizzes()->count() }}</p>
         </div>
     </div>
 
-    {{-- Quick Stats --}}
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
-        @php
-            $approved = $class->students->where('pivot.status', 'approved')->count();
-            $pending = $class->students->where('pivot.status', 'pending')->count();
-        @endphp
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">{{ $approved }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Approved</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-400">{{ $pending }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Pending</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-blue-600 dark:text-blue-400">{{ $class->modules()->count() }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Modules</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-purple-600 dark:text-purple-400">{{ $class->assessments()->count() }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Assessments</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 text-center">
-            <p class="text-xl sm:text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ $class->quizzes()->count() }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Quizzes</p>
-        </div>
-    </div>
-
-    {{-- Class Code --}}
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 mb-8 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <i class="fas fa-key text-blue-600 dark:text-blue-400"></i>
+    {{-- Class code --}}
+    <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-5 sm:p-6 mb-8 sm:mb-12 bg-gray-50 dark:bg-gray-900/50">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="min-w-0">
+                <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Class code</p>
+                <p class="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white tracking-[0.25em] font-mono break-all">{{ $class->code }}</p>
             </div>
+            <button type="button"
+                onclick="navigator.clipboard.writeText('{{ $class->code }}'); this.querySelector('span').textContent='Copied'; setTimeout(() => this.querySelector('span').textContent='Copy', 2000);"
+                class="inline-flex items-center justify-center gap-1.5 px-3 h-9 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition flex-shrink-0">
+                <i class="fas fa-copy text-[11px]"></i>
+                <span>Copy</span>
+            </button>
+        </div>
+    </section>
+
+    {{-- Students list --}}
+    <section>
+        <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
             <div>
-                <p class="text-xs text-gray-500 dark:text-gray-400">Class Code</p>
-                <p class="text-xl font-bold text-primary dark:text-blue-400 tracking-[0.2em]">{{ $class->code }}</p>
+                <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                    Students
+                </p>
+                <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    {{ $class->students->count() }} {{ Str::plural('student', $class->students->count()) }}
+                </h2>
             </div>
+            @if($pending > 0)
+                <form action="{{ route('instructor.classes.approve-all', $class) }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition text-sm font-medium">
+                        <i class="fas fa-check-double text-xs"></i>
+                        Approve all ({{ $pending }})
+                    </button>
+                </form>
+            @endif
         </div>
-        <button onclick="navigator.clipboard.writeText('{{ $class->code }}'); this.innerHTML='<i class=\'fas fa-check\'></i> Copied!'; setTimeout(()=>{this.innerHTML='<i class=\'fas fa-copy\'></i>'},2000)"
-            class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition text-xs font-medium">
-            <i class="fas fa-copy mr-1"></i> Copy
-        </button>
-    </div>
 
-    {{-- Students List --}}
-    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div class="px-5 py-4 border-b border-gray-200 dark:border-gray-700 space-y-3">
-            <div class="flex items-center justify-between">
-                <h2 class="text-base font-bold text-gray-900 dark:text-white">Students ({{ $class->students->count() }})</h2>
-                @if($pending > 0)
-                    <form action="{{ route('instructor.classes.approve-all', $class) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="px-3 py-1.5 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-xs font-medium">
-                            <i class="fas fa-check-double mr-1"></i> Approve All ({{ $pending }})
-                        </button>
-                    </form>
-                @endif
-            </div>
-            <div class="relative">
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
-                <input type="text" id="studentSearch" placeholder="Search students..." 
-                    class="w-full pl-9 pr-9 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white text-sm">
-                <button type="button" id="clearSearch" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                    <i class="fas fa-times text-xs"></i>
-                </button>
-            </div>
+        {{-- Search --}}
+        <div class="relative mb-6">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+            <input type="text" id="studentSearch" placeholder="Search students..."
+                class="w-full pl-11 pr-11 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm">
+            <button type="button" id="clearSearch"
+                class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
         </div>
+
         @if($class->students->count() > 0)
-            <div class="divide-y divide-gray-100 dark:divide-gray-700" id="studentList">
+            <div id="studentList" class="space-y-2">
                 @foreach($class->students as $student)
                     @php
                         $submissions = $student->submissions()
@@ -155,105 +218,125 @@
                         $submittedCount = $submissions->whereNotNull('submitted_at')->count() + $quizSubmissions->count();
                         $totalAssessments = $class->assessments()->count() + $class->quizzes()->count();
                     @endphp
-                    <div class="student-row px-5 py-3 flex items-center gap-4 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition" data-name="{{ strtolower($student->name) }}">
-                        <div class="flex items-center gap-3 min-w-0 flex-1">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0 text-xs font-semibold text-gray-500 dark:text-gray-400">
+
+                    <div class="student-row border border-gray-200 dark:border-gray-800 rounded-lg p-4"
+                         data-name="{{ strtolower($student->name) }}">
+
+                        {{-- Row 1: avatar + name + status --}}
+                        <div class="flex items-start gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center flex-shrink-0 text-sm font-semibold text-gray-700 dark:text-gray-300">
                                 {{ strtoupper(substr($student->name, 0, 1)) }}
                             </div>
-                            <div class="min-w-0">
+                            <div class="min-w-0 flex-1">
                                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $student->name }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $student->email }}</p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                @if($student->pivot->status === 'pending')
+                                    <span class="text-[10px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400">● Pending</span>
+                                @else
+                                    <span class="text-[10px] font-medium uppercase tracking-wider text-emerald-600 dark:text-emerald-400">● Approved</span>
+                                @endif
                             </div>
                         </div>
 
+                        {{-- Row 2: progress (only for approved students with submissions) --}}
                         @if($student->pivot->status === 'approved' && $totalAssessments > 0)
-                            <div class="hidden sm:flex items-center gap-3 flex-shrink-0">
-                                <div class="flex items-center gap-1.5">
-                                    <div class="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                        <div class="bg-green-500 dark:bg-green-400 h-2 rounded-full" style="width: {{ ($submittedCount / $totalAssessments) * 100 }}%"></div>
-                                    </div>
-                                    <span class="text-xs text-gray-600 dark:text-gray-400 font-medium">{{ $submittedCount }}/{{ $totalAssessments }}</span>
+                            <div class="flex items-center gap-3 mb-3 text-xs">
+                                <div class="flex-1 bg-gray-100 dark:bg-gray-800 rounded-full h-1.5">
+                                    <div class="bg-gray-500 dark:bg-gray-400 h-1.5 rounded-full transition-all"
+                                         style="width: {{ $totalAssessments > 0 ? ($submittedCount / $totalAssessments) * 100 : 0 }}%"></div>
                                 </div>
-                                <span class="text-xs font-semibold text-gray-700 dark:text-gray-300"><i class="fas fa-star text-yellow-500 mr-1"></i>{{ $totalPoints }} pts</span>
+                                <span class="text-gray-500 dark:text-gray-400 tabular-nums flex-shrink-0">{{ $submittedCount }}/{{ $totalAssessments }}</span>
+                                <span class="font-medium text-gray-700 dark:text-gray-300 tabular-nums flex-shrink-0">
+                                    <i class="fas fa-star text-amber-500 mr-1 text-[10px]"></i>{{ $totalPoints }} pts
+                                </span>
                             </div>
                         @elseif($student->pivot->status === 'approved')
-                            <span class="hidden sm:block text-xs text-gray-400 dark:text-gray-500">No submissions yet</span>
+                            <p class="text-xs text-gray-400 dark:text-gray-600 mb-3">No submissions yet</p>
                         @endif
 
-                        <div class="flex items-center gap-2 flex-shrink-0">
+                        {{-- Row 3: actions --}}
+                        <div class="flex items-center gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
                             @if($student->pivot->status === 'pending')
-                                <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">Pending</span>
-                                <form action="{{ route('instructor.classes.approve', [$class, $student->id]) }}" method="POST">
+                                <form action="{{ route('instructor.classes.approve', [$class, $student->id]) }}" method="POST" class="flex-1">
                                     @csrf
-                                    <button type="submit" class="p-1.5 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition" title="Approve">
-                                        <i class="fas fa-check"></i>
+                                    <button type="submit"
+                                        class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-emerald-500 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition text-xs font-medium">
+                                        <i class="fas fa-check text-[11px]"></i>
+                                        Approve
                                     </button>
                                 </form>
-                            @else
-                                <span class="hidden sm:inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">Approved</span>
                             @endif
                             <form action="{{ route('instructor.classes.reject', [$class, $student->id]) }}" method="POST"
-                                onsubmit="return confirm('Remove this student?');">
+                                onsubmit="return confirm('Remove this student?');"
+                                class="{{ $student->pivot->status === 'pending' ? 'flex-1' : 'ml-auto' }}">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="p-1.5 text-red-500 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition" title="Remove">
-                                    <i class="fas fa-user-minus"></i>
+                                <button type="submit"
+                                    class="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500 transition text-xs font-medium">
+                                    <i class="fas fa-user-minus text-[11px]"></i>
+                                    {{ $student->pivot->status === 'pending' ? 'Reject' : 'Remove' }}
                                 </button>
                             </form>
                         </div>
                     </div>
                 @endforeach
             </div>
-            <div id="noResults" class="hidden py-16 text-center">
-                <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-search text-2xl text-gray-400"></i>
-                </div>
-                <h3 class="text-base font-semibold text-gray-600 dark:text-gray-400">No Students Found</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">No students match your search.</p>
+
+            {{-- No search results --}}
+            <div id="noResults" class="hidden text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
+                <i class="fas fa-search text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No students found</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">No students match your search.</p>
             </div>
         @else
-            <div class="py-16 text-center">
-                <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-users text-2xl text-gray-400"></i>
-                </div>
-                <h3 class="text-base font-semibold text-gray-600 dark:text-gray-400">No Students Yet</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Share the class code above to get started!</p>
+            <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
+                <i class="fas fa-users text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No students yet</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Share the class code above to get started.</p>
             </div>
         @endif
-    </div>
+    </section>
 </div>
-
-{{-- Search Script --}}
-<script>
-    var searchInput = document.getElementById('studentSearch');
-    var clearBtn = document.getElementById('clearSearch');
-    
-    searchInput.addEventListener('input', function() {
-        var query = this.value.toLowerCase();
-        var found = false;
-        
-        clearBtn.classList.toggle('hidden', query === '');
-        
-        document.querySelectorAll('.student-row').forEach(function(row) {
-            var name = row.getAttribute('data-name');
-            var match = name.includes(query);
-            row.style.display = match ? '' : 'none';
-            if (match) found = true;
-        });
-        
-        var noResults = document.getElementById('noResults');
-        var studentList = document.getElementById('studentList');
-        if (!found && query !== '') {
-            noResults.classList.remove('hidden');
-            studentList.classList.add('hidden');
-        } else {
-            noResults.classList.add('hidden');
-            studentList.classList.remove('hidden');
-        }
-    });
-    
-    clearBtn.addEventListener('click', function() {
-        searchInput.value = '';
-        searchInput.dispatchEvent(new Event('input'));
-        searchInput.focus();
-    });
-</script>
 @endsection
+
+@push('scripts')
+<script>
+    const searchInput = document.getElementById('studentSearch');
+    const clearBtn = document.getElementById('clearSearch');
+    const noResults = document.getElementById('noResults');
+    const studentList = document.getElementById('studentList');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            const query = this.value.toLowerCase().trim();
+            let found = false;
+
+            clearBtn?.classList.toggle('hidden', query === '');
+
+            document.querySelectorAll('.student-row').forEach(row => {
+                const name = row.getAttribute('data-name');
+                const match = name.includes(query);
+                row.style.display = match ? '' : 'none';
+                if (match) found = true;
+            });
+
+            if (noResults && studentList) {
+                if (!found && query !== '') {
+                    noResults.classList.remove('hidden');
+                    studentList.classList.add('hidden');
+                } else {
+                    noResults.classList.add('hidden');
+                    studentList.classList.remove('hidden');
+                }
+            }
+        });
+
+        clearBtn?.addEventListener('click', function () {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
+        });
+    }
+</script>
+@endpush
