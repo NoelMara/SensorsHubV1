@@ -224,7 +224,7 @@
 
                         {{-- Row 1: avatar + name + status --}}
                         <div class="flex items-start gap-3 mb-3">
-                            <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center flex-shrink-0 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-sm font-semibold text-white dark:text-gray-900">
                                 {{ strtoupper(substr($student->name, 0, 1)) }}
                             </div>
                             <div class="min-w-0 flex-1">
