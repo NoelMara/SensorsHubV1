@@ -7,13 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class QuizSubmission extends Model
 {
     protected $fillable = [
-        'quiz_id', 'user_id', 'score', 'total_questions',
-        'correct_answers', 'status', 'submitted_at',
+    'quiz_id', 'user_id', 'score', 'total_questions',
+    'correct_answers', 'status', 'submitted_at', 'tab_switches',
     ];
 
     protected $casts = [
         'submitted_at' => 'datetime',
     ];
+
 
     public function quiz()
     {

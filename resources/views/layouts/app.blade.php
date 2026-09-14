@@ -703,8 +703,9 @@ header('Expires: 0');
     {{-- ========================== AI Chatbot ========================== --}}
     @auth
     @if(auth()->user()->role === 'student' || auth()->user()->role === 'instructor')
+    @unless(request()->routeIs('dashboard.classes.quizzes.show') || request()->routeIs('dashboard.classes.quizzes.submit') || request()->routeIs('instructor.classes.quizzes.show'))
     <style>
-        .chat-bubble {
+    .chat-bubble {
             position:fixed; bottom:80px; right:16px; z-index:9998;
             width:40px; height:40px; border-radius:50%;
             background:rgba(16,185,129,0.85); backdrop-filter:blur(8px);
@@ -890,6 +891,7 @@ header('Expires: 0');
             }
         }
     </script>
+    @endunless
         @endif
     @endauth
 

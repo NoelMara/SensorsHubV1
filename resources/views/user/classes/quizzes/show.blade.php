@@ -146,7 +146,17 @@
 
         @if(!auth()->user()->isInstructor() && !auth()->user()->isAdministrator())
 
-            <form method="POST" action="{{ route('dashboard.classes.quizzes.submit', [$class, $quiz]) }}">
+    {{-- Monitoring banner --}}
+    <div class="mb-6 flex items-start gap-3 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30 rounded-lg p-4">
+        <i class="fas fa-shield-halved text-amber-500 text-base shrink-0 mt-0.5"></i>
+        <div class="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+            <p class="font-semibold mb-0.5">This quiz is monitored.</p>
+            <p>Do not switch tabs, copy questions, or use AI tools. Your activity is being recorded for review.</p>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ route('dashboard.classes.quizzes.submit', [$class, $quiz]) }}" id="quizForm">
+        <input type="hidden" name="tab_switches" id="tabSwitchesInput" value="0">
                 @csrf
 
                 <div class="space-y-4">
@@ -182,6 +192,73 @@
                     </button>
                 </div>
             </form>
+
+            {{-- Honor-code modal --}}
+            <div id="honorModal" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                <div class="max-w-md w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-6 sm:p-8">
+                    <div class="flex items-start gap-3 mb-5">
+                        <i class="fas fa-shield-halved text-emerald-500 text-lg shrink-0 mt-0.5"></i>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Academic honesty</h3>
+                            <p class="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">Before you start</p>
+                        </div>
+                    </div>
+                    <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-2 mb-6">
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[6px] mt-2 text-gray-400"></i> Complete this quiz on your own.</li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[6px] mt-2 text-gray-400"></i> No AI tools, no notes, no other tabs.</li>
+                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[6px] mt-2 text-gray-400"></i> Tab switches and copy attempts are logged.</li>
+                    </ul>
+                    <button type="button" id="honorAccept"
+                        class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+                        I understand, start quiz
+                    </button>
+                </div>
+            </div>
+
+            <script>
+            (function() {
+                const form = document.getElementById('quizForm');
+                const modal = document.getElementById('honorModal');
+                const acceptBtn = document.getElementById('honorAccept');
+                const tabInput = document.getElementById('tabSwitchesInput');
+                let switches = 0;
+                let locked = false;
+
+                // Show modal on load — quiz content is behind it
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                acceptBtn.addEventListener('click', () => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    locked = true;
+                });
+
+                // Count tab switches
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && locked) {
+                        switches++;
+                        tabInput.value = switches;
+                    }
+                });
+
+                // Block copy/paste/cut on the form
+                ['copy', 'cut', 'paste', 'contextmenu'].forEach(evt => {
+                    form.addEventListener(evt, e => {
+                        e.preventDefault();
+                        return false;
+                    });
+                });
+
+                // Warn on submit if many switches
+                form.addEventListener('submit', (e) => {
+                    if (switches >= 3) {
+                        const ok = confirm(`You switched tabs ${switches} times during this quiz. This has been logged. Submit anyway?`);
+                        if (!ok) e.preventDefault();
+                    }
+                });
+            })();
+            </script>
 
         @else
             {{-- Instructor preview --}}

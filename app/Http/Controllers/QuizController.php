@@ -235,6 +235,7 @@ class QuizController extends Controller
             'correct_answers' => $correctCount,
             'status' => 'graded',
             'submitted_at' => now(),
+            'tab_switches' => (int) $request->input('tab_switches', 0),
         ]);
 
         $passed = ($correctCount / max($totalQuestions, 1)) * 100 >= $quiz->passing_score;

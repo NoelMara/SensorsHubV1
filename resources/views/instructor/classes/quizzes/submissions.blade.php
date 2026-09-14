@@ -51,18 +51,24 @@
                 <article class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
                     <div class="flex flex-wrap items-center justify-between gap-4">
 
-                        {{-- Student info --}}
-                        <div class="flex items-center gap-3 min-w-0 flex-1">
-                            <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-sm font-semibold text-white dark:text-gray-900">
-                                {{ strtoupper(substr($submission->user->name, 0, 1)) }}
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $submission->user->name }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $submission->submitted_at->format('M d, Y · h:i A') }}</p>
-                            </div>
-                        </div>
+        {{-- Student info --}}
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+            <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0 text-sm font-semibold text-white dark:text-gray-900">
+                {{ strtoupper(substr($submission->user->name, 0, 1)) }}
+            </div>
+            <div class="min-w-0">
+                <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $submission->user->name }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $submission->submitted_at->format('M d, Y · h:i A') }}</p>
+                @if(($submission->tab_switches ?? 0) > 0)
+                    <p class="text-[10px] font-medium uppercase tracking-wider text-amber-600 dark:text-amber-400 mt-1 inline-flex items-center gap-1">
+                        <i class="fas fa-triangle-exclamation text-[9px]"></i>
+                        {{ $submission->tab_switches }} tab {{ Str::plural('switch', $submission->tab_switches) }}
+                    </p>
+                @endif
+            </div>
+        </div>
 
-                        {{-- Score + result --}}
+            {{-- Score + result --}}
                         <div class="flex items-center gap-4 flex-shrink-0">
                             <div class="text-right">
                                 <p class="text-sm font-semibold tabular-nums {{ $passed ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">
