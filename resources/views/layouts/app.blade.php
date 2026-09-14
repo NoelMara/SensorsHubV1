@@ -519,6 +519,7 @@ header('Expires: 0');
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('form').forEach(function(form) {
                 if (form.hasAttribute('x-data')) return;
+                if (form.method.toUpperCase() === 'GET') return;
                 form.addEventListener('submit', function(e) {
                     var onsubmit = form.getAttribute('onsubmit');
                     if (onsubmit && onsubmit.includes('fileSizeError')) return;
