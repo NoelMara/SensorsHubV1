@@ -384,7 +384,7 @@ class QuizController extends Controller
     {
         if ($class->instructor_id !== auth()->id()) abort(403);
         if ($quiz->class_id !== $class->id) abort(404);
-        $submissions = $quiz->submissions()->with('user')->latest()->get();
+        $submissions = $quiz->submissions()->where('status', 'graded')->with('user')->latest()->get();
         return view('instructor.classes.quizzes.submissions', compact('class', 'quiz', 'submissions'));
     }
 
