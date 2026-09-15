@@ -219,6 +219,7 @@ header('Expires: 0');
                 <a href="{{ route('administrator.videos.index') }}" class="flex items-center gap-3 px-3 py-2 text-base rounded-lg {{ request()->routeIs('administrator.videos.*') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white' }}"><i class="fas fa-video w-5 text-center shrink-0"></i><span>Videos</span></a>
                 <a href="{{ route('administrator.logs') }}" class="flex items-center gap-3 px-3 py-2 text-base rounded-lg {{ request()->routeIs('administrator.logs') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white' }}"><i class="fas fa-history w-5 text-center shrink-0"></i><span>Activity Logs</span></a>
                 <a href="{{ route('administrator.backup') }}" class="flex items-center gap-3 px-3 py-2 text-base rounded-lg {{ request()->routeIs('administrator.backup*') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white' }}"><i class="fas fa-database w-5 text-center shrink-0"></i><span>Backup</span></a>
+                <a href="{{ route('administrator.feedback.index') }}" class="flex items-center gap-3 px-3 py-2 text-base rounded-lg {{ request()->routeIs('administrator.feedback.*') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white' }}"><i class="fas fa-comment-dots w-5 text-center shrink-0"></i><span>Feedback</span></a>
             @elseif($isInstructor)
                 <a href="{{ route('instructor.dashboard') }}" class="flex items-center gap-3 px-3 py-2 text-base rounded-lg {{ request()->routeIs('instructor.dashboard') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white' }}"><i class="fas fa-tachometer-alt w-5 text-center shrink-0"></i><span>Dashboard</span></a>
                 <a href="{{ route('instructor.classes.index') }}" class="flex items-center gap-3 px-3 py-2 text-base rounded-lg {{ request()->routeIs('instructor.classes.*') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white' }}"><i class="fas fa-chalkboard w-5 text-center shrink-0"></i><span>Classes</span></a>
@@ -248,6 +249,13 @@ header('Expires: 0');
                 <i class="fas fa-bell w-5 text-center shrink-0"></i><span>Notifications</span>
                 @if($unreadCount > 0)<span class="ml-auto bg-red-500 text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-medium">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>@endif
             </a>
+
+            @if(!$isAdministrator)
+                <a href="{{ $isInstructor ? route('instructor.feedback.create') : route('dashboard.feedback.create') }}"
+                   class="flex items-center gap-3 px-3 py-2 text-base rounded-lg {{ request()->routeIs('*.feedback.create') ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white' }} transition">
+                    <i class="fas fa-comment-dots w-5 text-center shrink-0"></i><span>Send feedback</span>
+                </a>
+            @endif
 
             <button id="sidebarDarkModeToggle" class="flex items-center gap-3 w-full px-3 py-2 text-base rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white transition">
                 <i class="fas fa-moon dark-icon-moon w-5 text-center shrink-0"></i><i class="fas fa-sun dark-icon-sun w-5 text-center shrink-0" style="display: none;"></i><span>Dark Mode</span>

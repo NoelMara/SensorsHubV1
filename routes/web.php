@@ -124,6 +124,12 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::post('/classes/join', [ClassroomController::class, 'join'])
         ->middleware('throttle:5,1')
         ->name('classes.join');
+
+    // Feedback (students + instructors)
+    Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
+    Route::post('/feedback', [\App\Http\Controllers\FeedbackController::class, 'store'])
+        ->middleware('throttle:5,10')
+        ->name('feedback.store');
     Route::get('/classes/{class}', [ClassroomController::class, 'studentShow'])->name('classes.show');
     Route::get('/classes/{class}/modules/{module}', [ModuleController::class, 'show'])->name('classes.modules.show');
     Route::get('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'show'])->name('classes.assessments.show');
@@ -217,6 +223,12 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::post('/classes/{class}/resources', [ClassroomController::class, 'storeResource'])->name('classes.resources.store');
     Route::delete('/classes/{class}/resources/{resource}', [ClassroomController::class, 'destroyResource'])->name('classes.resources.destroy');
 
+    // Feedback (instructor)
+    Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
+    Route::post('/feedback', [\App\Http\Controllers\FeedbackController::class, 'store'])
+        ->middleware('throttle:5,10')
+        ->name('feedback.store');
+
 
     // Suggestions Management
     Route::get('/suggestions', [AdminSuggestionController::class, 'index'])->name('suggestions.index');
@@ -243,6 +255,10 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
     // Activity Logs
     Route::get('/logs', [AdministratorDashboardController::class, 'logs'])->name('logs');
     Route::delete('/logs/clear', [AdministratorDashboardController::class, 'clearLogs'])->name('logs.clear');
+
+    // Feedback
+    Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('feedback.index');
+    Route::put('/feedback/{feedback}/status', [\App\Http\Controllers\FeedbackController::class, 'updateStatus'])->name('feedback.status');
 
     // Database Backup 
     Route::get('/backup', function () {
