@@ -16,6 +16,7 @@
                     Notifications
                 </h1>
                 @php $unreadCount = auth()->user()->notifications()->where('is_read', false)->count(); @endphp
+                @php $readCount = auth()->user()->notifications()->where('is_read', true)->count(); @endphp
                 @if($unreadCount > 0)
                     <span class="text-xs font-medium uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                         ● {{ $unreadCount }} unread
@@ -23,31 +24,55 @@
                 @endif
             </div>
 
-            {{-- Mark all as read --}}
-            @if($unreadCount > 0)
-                <form method="POST" action="{{ route('notifications.read-all') }}">
-                    @csrf
-                    <button type="submit" class="text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white underline underline-offset-4 decoration-gray-300 dark:decoration-gray-700 hover:decoration-gray-900 dark:hover:decoration-white transition">
-                        Mark all as read
-                    </button>
-                </form>
-            @endif
+            <div class="flex items-center gap-4">
+                {{-- Mark all as read --}}
+                @if($unreadCount > 0)
+                    <form method="POST" action="{{ route('notifications.read-all') }}">
+                        @csrf
+                        <button type="submit" class="text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white underline underline-offset-4 decoration-gray-300 dark:decoration-gray-700 hover:decoration-gray-900 dark:hover:decoration-white transition">
+                            Mark all as read
+                        </button>
+                    </form>
+                @endif
+
+                {{-- Clear read --}}
+                @if($readCount > 0)
+                    <form method="POST" action="{{ route('notifications.clear-read') }}" onsubmit="return confirm('Delete all read notifications? This cannot be undone.');">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 underline underline-offset-4 decoration-red-300 dark:decoration-red-800 hover:decoration-red-700 dark:hover:decoration-red-300 transition">
+                            Clear read ({{ $readCount }})
+                        </button>
+                    </form>
+                @endif
+            </div>
         </div>
     </div>
 
     @if($notifications->count() > 0)
         <div class="space-y-2">
             @foreach($notifications as $notification)
-                <a href="{{ $notification->link ?? '#' }}" 
-                    onclick="markAsRead({{ $notification->id }}, this)"
-                    class="notification-item block border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 transition relative group {{ $notification->is_read ? '' : 'bg-gray-50 dark:bg-gray-900/50' }}">
+                <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 transition relative group {{ $notification->is_read ? '' : 'bg-gray-50 dark:bg-gray-900/50' }}">
 
                     {{-- Unread dot --}}
                     @if(!$notification->is_read)
                         <span class="notification-dot absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     @endif
 
-                    <div class="pr-6">
+                    {{-- Delete button (appears on hover) --}}
+                    <form method="POST" action="{{ route('notifications.destroy', $notification) }}"
+                          onsubmit="return confirm('Delete this notification?');"
+                          class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition">
+                        @csrf @method('DELETE')
+                        <button type="submit"
+                            class="w-7 h-7 inline-flex items-center justify-center rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition"
+                            title="Delete">
+                            <i class="fas fa-trash text-xs"></i>
+                        </button>
+                    </form>
+
+                    <a href="{{ $notification->link ?? '#' }}"
+                        onclick="markAsRead({{ $notification->id }}, this)"
+                        class="block pr-10">
                         <p class="font-semibold text-gray-900 dark:text-white text-sm group-hover:text-primary transition">
                             {{ $notification->title }}
                         </p>
@@ -57,8 +82,8 @@
                         <p class="text-xs text-gray-400 dark:text-gray-600 mt-2">
                             {{ $notification->created_at->diffForHumans() }}
                         </p>
-                    </div>
-                </a>
+                    </a>
+                </div>
             @endforeach
         </div>
 

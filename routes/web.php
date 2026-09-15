@@ -76,6 +76,17 @@ Route::middleware('auth')->group(function () {
         $notifications = auth()->user()->notifications()->latest()->paginate(5);
         return view('notifications.index', compact('notifications'));
     })->name('notifications.index');
+
+    Route::delete('/notifications/{notification}', function (\App\Models\Notification $notification) {
+        if ($notification->user_id !== auth()->id()) abort(403);
+        $notification->delete();
+        return back()->with('success', 'Notification deleted.');
+    })->name('notifications.destroy');
+
+    Route::delete('/notifications/clear-read', function () {
+        auth()->user()->notifications()->where('is_read', true)->delete();
+        return back()->with('success', 'All read notifications cleared.');
+    })->name('notifications.clear-read');
 });
 
 // Report Routes
