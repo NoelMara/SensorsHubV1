@@ -223,6 +223,11 @@
                 const tabInput = document.getElementById('tabSwitchesInput');
                 let switches = 0;
                 let locked = false;
+                const storageKey = 'quiz_tab_switches_' + form.id;
+
+                // Restore counter from previous session (survives refresh)
+                switches = parseInt(sessionStorage.getItem(storageKey) || 0, 10);
+                tabInput.value = switches;
 
                 // Show modal on load — quiz content is behind it
                 modal.classList.remove('hidden');
@@ -239,6 +244,7 @@
                     if (document.hidden && locked) {
                         switches++;
                         tabInput.value = switches;
+                        sessionStorage.setItem(storageKey, switches);
                     }
                 });
 
@@ -257,6 +263,8 @@
                             return false; // cancel — button stays normal, user can retry
                         }
                     }
+                    // Clear sessionStorage before submit so it doesn't leak into next quiz
+                    sessionStorage.removeItem(storageKey);
                     // Passed — show loading state and submit
                     const btn = f.querySelector('button[type="submit"]');
                     if (btn) {
