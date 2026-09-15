@@ -49,10 +49,10 @@
                 {{ $assessment->points }} points
             </span>
             @if($assessment->due_date)
-                <span class="text-gray-300 dark:text-gray-700">Â·</span>
-                <span>Due {{ $assessment->due_date->format('M d, Y Â· h:i A') }}</span>
+                <span class="text-gray-300 dark:text-gray-700">·</span>
+                <span>Due {{ $assessment->due_date->format('M d, Y · h:i A') }}</span>
             @else
-                <span class="text-gray-300 dark:text-gray-700">Â·</span>
+                <span class="text-gray-300 dark:text-gray-700">·</span>
                 <span>No deadline</span>
             @endif
         </div>

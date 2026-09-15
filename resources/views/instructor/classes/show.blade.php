@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-8 sm:mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Instructor Â· Class
+            Instructor · Class
         </p>
         <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-4">
             <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white break-words">
@@ -23,7 +23,7 @@
             </h1>
             @if($class->section)
                 <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Â· Block {{ $class->section }}
+                    · Block {{ $class->section }}
                 </span>
             @endif
         </div>

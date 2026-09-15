@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Instructor Â· New
+            Instructor · New
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Add module
@@ -28,7 +28,7 @@
     {{-- Form --}}
     <form method="POST" action="{{ route('instructor.classes.modules.store', $class) }}"
         enctype="multipart/form-data"
-        onsubmit="const f=document.getElementById('file').files[0];if(f&&f.size>52428800){document.getElementById('fileSizeError').classList.remove('hidden');return false;}const b=this.querySelector('button[type=submit]');b.disabled=true;b.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving...';">
+        onsubmit="const f=document.getElementById('file').files[0];if(f&&f.size>52428800){document.getElementById('fileSizeError').classList.remove('hidden');return false;}const b=this.querySelector('button[type=submit]');b.disabled=true;b.innerHTML='<i class=&quot;fas fa-spinner fa-spin&quot;></i> Saving...';">
         @csrf
 
         <div class="space-y-6">

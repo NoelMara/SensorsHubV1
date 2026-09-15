@@ -37,10 +37,10 @@
                         â— {{ $project->difficulty }}
                     </span>
                     @if($project->is_featured)
-                        <span class="text-gray-500 dark:text-gray-400">Â· Featured</span>
+                        <span class="text-gray-500 dark:text-gray-400">· Featured</span>
                     @endif
                     @if($project->sensor)
-                        <span class="text-gray-400 dark:text-gray-600">Â·</span>
+                        <span class="text-gray-400 dark:text-gray-600">·</span>
                         <a href="{{ route('sensors.show', $project->sensor->slug) }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition inline-flex items-center gap-1.5">
                             <i class="fas fa-microchip"></i>
                             {{ $project->sensor->name }}

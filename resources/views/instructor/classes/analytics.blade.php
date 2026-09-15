@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Analytics Â· {{ $class->name }}
+            Analytics · {{ $class->name }}
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Analytics
@@ -115,7 +115,7 @@
                             <div class="flex items-baseline justify-between gap-3 mb-2">
                                 <span class="text-sm font-medium text-gray-900 dark:text-white truncate min-w-0">{{ $item['title'] }}</span>
                                 <span class="text-xs text-gray-500 dark:text-gray-400 tabular-nums flex-shrink-0">
-                                    {{ $item['submitted'] }}/{{ $item['total'] }} Â· {{ $item['average'] }}%
+                                    {{ $item['submitted'] }}/{{ $item['total'] }} · {{ $item['average'] }}%
                                 </span>
                             </div>
                             <div class="bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden">
@@ -148,7 +148,7 @@
                             <div class="flex items-baseline justify-between gap-3 mb-2">
                                 <span class="text-sm font-medium text-gray-900 dark:text-white truncate min-w-0">{{ $item['title'] }}</span>
                                 <span class="text-xs text-gray-500 dark:text-gray-400 tabular-nums flex-shrink-0">
-                                    {{ $item['submitted'] }}/{{ $item['total'] }} Â· {{ $item['average'] }}%
+                                    {{ $item['submitted'] }}/{{ $item['total'] }} · {{ $item['average'] }}%
                                 </span>
                             </div>
                             <div class="bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden">

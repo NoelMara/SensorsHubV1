@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Administrator Â· Account
+            Administrator · Account
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Settings
@@ -59,7 +59,7 @@
                         <span class="text-[10px] font-medium uppercase tracking-wider text-purple-600 dark:text-purple-400">
                             Administrator
                         </span>
-                        <span class="text-xs text-gray-400 dark:text-gray-600">Â·</span>
+                        <span class="text-xs text-gray-400 dark:text-gray-600">·</span>
                         <span class="text-xs text-gray-500 dark:text-gray-400">Joined {{ $user->created_at->format('M Y') }}</span>
                     </div>
                 </div>

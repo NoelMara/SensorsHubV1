@@ -23,7 +23,7 @@
             </h1>
             @if($class->section)
                 <span class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    Â· Block {{ $class->section }}
+                    · Block {{ $class->section }}
                 </span>
             @endif
         </div>

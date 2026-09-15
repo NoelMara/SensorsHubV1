@@ -27,19 +27,19 @@
                 <i class="fas fa-star text-xs"></i>
                 {{ $quiz->points }} points
             </span>
-            <span class="text-gray-300 dark:text-gray-700">Â·</span>
+            <span class="text-gray-300 dark:text-gray-700">·</span>
             <span class="inline-flex items-center gap-1.5">
                 <i class="fas fa-check text-xs"></i>
                 Pass: {{ $quiz->passing_score }}%
             </span>
-            <span class="text-gray-300 dark:text-gray-700">Â·</span>
+            <span class="text-gray-300 dark:text-gray-700">·</span>
             <span class="inline-flex items-center gap-1.5">
                 <i class="fas fa-question-circle text-xs"></i>
                 {{ $quiz->questions->count() }} {{ Str::plural('question', $quiz->questions->count()) }}
             </span>
             @if($quiz->due_date)
-                <span class="text-gray-300 dark:text-gray-700">Â·</span>
-                <span>Due {{ $quiz->due_date->format('M d Â· h:i A') }}</span>
+                <span class="text-gray-300 dark:text-gray-700">·</span>
+                <span>Due {{ $quiz->due_date->format('M d · h:i A') }}</span>
             @endif
         </div>
     </div>
@@ -127,7 +127,7 @@
                         Your result
                     </span>
                     <span class="text-sm font-semibold tabular-nums {{ $passed ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400' }}">
-                        {{ round($percent) }}% Â· Passing {{ $quiz->passing_score }}%
+                        {{ round($percent) }}% · Passing {{ $quiz->passing_score }}%
                     </span>
                 </div>
                 <div class="bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 overflow-hidden relative">
@@ -285,7 +285,7 @@
                         Preview
                     </p>
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Instructor view Â· correct answers shown
+                        Instructor view · correct answers shown
                     </h2>
                 </div>
 

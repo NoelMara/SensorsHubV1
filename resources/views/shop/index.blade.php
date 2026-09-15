@@ -56,11 +56,11 @@
                     @if(request('search'))
                         Results for "<span class="font-medium text-gray-900 dark:text-white">{{ request('search') }}</span>"
                     @endif
-                    @if(request('search') && (request('category') || request('sort'))) Â· @endif
+                    @if(request('search') && (request('category') || request('sort'))) · @endif
                     @if(request('category'))
                         Category: <span class="font-medium text-gray-900 dark:text-white">{{ request('category') }}</span>
                     @endif
-                    @if(request('category') && request('sort')) Â· @endif
+                    @if(request('category') && request('sort')) · @endif
                     @if(request('sort') && request('sort') !== 'latest')
                         Sorted: <span class="font-medium text-gray-900 dark:text-white">{{ str_replace('_', ' ', request('sort')) }}</span>
                     @endif

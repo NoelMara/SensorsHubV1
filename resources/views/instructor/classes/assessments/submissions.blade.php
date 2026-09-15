@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Submissions Â· {{ $class->name }}
+            Submissions · {{ $class->name }}
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4 break-words">
             {{ $assessment->title }}
@@ -26,7 +26,7 @@
                 <i class="fas fa-users text-xs"></i>
                 {{ $submissions->count() }} {{ Str::plural('submission', $submissions->count()) }}
             </span>
-            <span class="text-gray-300 dark:text-gray-700">Â·</span>
+            <span class="text-gray-300 dark:text-gray-700">·</span>
             <span class="inline-flex items-center gap-1.5">
                 <i class="fas fa-star text-xs"></i>
                 {{ $assessment->points }} points
@@ -47,7 +47,7 @@
                             </div>
                             <div class="min-w-0">
                                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $submission->user->name }}</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $submission->submitted_at->format('M d, Y Â· h:i A') }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $submission->submitted_at->format('M d, Y · h:i A') }}</p>
                             </div>
                         </div>
 

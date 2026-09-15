@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Instructor Â· Import
+            Instructor · Import
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Import quizzes
@@ -59,9 +59,9 @@
                                                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $quiz->title }}</p>
                                                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                                     {{ $quiz->points }} pts
-                                                    <span class="text-gray-300 dark:text-gray-700 mx-1">Â·</span>
+                                                    <span class="text-gray-300 dark:text-gray-700 mx-1">·</span>
                                                     {{ $quiz->questions->count() }} {{ Str::plural('question', $quiz->questions->count()) }}
-                                                    <span class="text-gray-300 dark:text-gray-700 mx-1">Â·</span>
+                                                    <span class="text-gray-300 dark:text-gray-700 mx-1">·</span>
                                                     Pass: {{ $quiz->passing_score }}%
                                                 </p>
                                             </div>

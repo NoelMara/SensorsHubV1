@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Administrator Â· Backup
+            Administrator · Backup
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Database backup
@@ -90,8 +90,8 @@
                             <div class="min-w-0">
                                 <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ $name }}</p>
                                 <p class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ date('M d, Y Â· h:i A', $date) }}
-                                    <span class="text-gray-300 dark:text-gray-700 mx-1">Â·</span>
+                                    {{ date('M d, Y · h:i A', $date) }}
+                                    <span class="text-gray-300 dark:text-gray-700 mx-1">·</span>
                                     {{ $size > 1048576 ? number_format($size / 1048576, 1) . ' MB' : number_format($size / 1024, 1) . ' KB' }}
                                 </p>
                             </div>

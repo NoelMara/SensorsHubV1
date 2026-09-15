@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Module {{ $module->order }} Â· {{ $class->name }}
+            Module {{ $module->order }} · {{ $class->name }}
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4 break-words">
             {{ $module->title }}
@@ -74,7 +74,7 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                         @if($module->file_size)
                             {{ $module->file_size > 1048576 ? number_format($module->file_size / 1048576, 1) . ' MB' : number_format($module->file_size / 1024, 1) . ' KB' }}
-                            <span class="text-gray-300 dark:text-gray-700 mx-1">Â·</span>
+                            <span class="text-gray-300 dark:text-gray-700 mx-1">·</span>
                         @endif
                         <span x-show="!downloading">Click to download</span>
                         <span x-show="downloading" class="text-blue-600 dark:text-blue-400 font-medium">

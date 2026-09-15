@@ -47,7 +47,7 @@
                     @if(request('search'))
                         Results for "<span class="font-medium text-gray-900 dark:text-white">{{ request('search') }}</span>"
                     @endif
-                    @if(request('search') && request('category')) Â·
+                    @if(request('search') && request('category')) ·
                     @endif
                     @if(request('category'))
                         Category: <span class="font-medium text-gray-900 dark:text-white">{{ request('category') }}</span>

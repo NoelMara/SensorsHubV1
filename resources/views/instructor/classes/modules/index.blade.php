@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Modules Â· {{ $class->name }}
+            Modules · {{ $class->name }}
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Modules
@@ -76,7 +76,7 @@
                                     <i class="fas fa-paperclip text-[10px]"></i>
                                     {{ $module->file_name }}
                                     @if($module->file_size)
-                                        <span class="text-gray-300 dark:text-gray-700">Â·</span>
+                                        <span class="text-gray-300 dark:text-gray-700">·</span>
                                         {{ $module->file_size > 1048576 ? number_format($module->file_size / 1048576, 1) . ' MB' : number_format($module->file_size / 1024, 1) . ' KB' }}
                                     @endif
                                 </p>
