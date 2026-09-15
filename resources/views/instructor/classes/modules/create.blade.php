@@ -28,7 +28,7 @@
     {{-- Form --}}
     <form method="POST" action="{{ route('instructor.classes.modules.store', $class) }}"
         enctype="multipart/form-data"
-        onsubmit="const f=document.getElementById('file').files[0];if(f&&f.size>52428800){document.getElementById('fileSizeError').classList.remove('hidden');return false;}const b=this.querySelector('button[type=submit]');b.disabled=true;b.innerHTML='Processing...';">
+        onsubmit="const f=document.getElementById('file').files[0];if(f&&f.size>52428800){document.getElementById('fileSizeError').classList.remove('hidden');return false;}const b=this.querySelector('button[type=submit]');b.disabled=true;b.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving...';">
         @csrf
 
         <div class="space-y-6">
