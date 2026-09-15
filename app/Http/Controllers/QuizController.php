@@ -340,6 +340,33 @@ class QuizController extends Controller
             return back()->with('error', 'You already submitted this quiz.');
         }
 
+        // If time limit expired, grade from saved answers instead of trusting the POST
+        if ($quiz->time_limit && $existing && $existing->started_at
+            && now()->greaterThan($existing->started_at->copy()->addMinutes($quiz->time_limit))) {
+
+            $totalQuestions = $quiz->questions->count();
+            $savedAnswers = QuizAnswer::where('user_id', auth()->id())
+                ->whereIn('quiz_question_id', $quiz->questions->pluck('id'))
+                ->get();
+            $correctCount = $savedAnswers->where('is_correct', true)->count();
+            $score = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * $quiz->points) : 0;
+
+            QuizSubmission::updateOrCreate(
+                ['quiz_id' => $quiz->id, 'user_id' => auth()->id()],
+                [
+                    'score' => $score,
+                    'total_questions' => $totalQuestions,
+                    'correct_answers' => $correctCount,
+                    'status' => 'graded',
+                    'submitted_at' => now(),
+                    'tab_switches' => (int) $request->input('tab_switches', 0),
+                ]
+            );
+
+            return redirect()->route('dashboard.classes.quizzes.show', [$class, $quiz])
+                ->with('success', 'Time expired — your saved answers were submitted automatically.');
+        }
+
         $answers = $request->input('answers', []);
         $questions = $quiz->questions()->with('options')->get();
         $correctCount = 0;
