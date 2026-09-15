@@ -133,6 +133,7 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::get('/classes/{class}/assessments', [AssessmentController::class, 'studentIndex'])->name('classes.assessments.index');
     Route::get('/classes/{class}/quizzes', [QuizController::class, 'studentIndex'])->name('classes.quizzes.index');
     Route::get('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'show'])->name('classes.quizzes.show');
+    Route::post('/classes/{class}/quizzes/{quiz}/start', [QuizController::class, 'start'])->name('classes.quizzes.start');
     Route::post('/classes/{class}/quizzes/{quiz}/submit', [QuizController::class, 'submit'])->name('classes.quizzes.submit');
 });
 

@@ -41,6 +41,7 @@ class QuizController extends Controller
             'points' => 'required|integer|min:1',
             'passing_score' => 'required|integer|min:0|max:100',
             'due_date' => 'nullable|date',
+            'time_limit' => 'nullable|integer|min:1|max:600',
             'is_published' => 'boolean',
             'questions' => 'required|array|min:1',
             'questions.*.question' => 'required|string',
@@ -57,6 +58,7 @@ class QuizController extends Controller
             'points' => $validated['points'],
             'passing_score' => $validated['passing_score'],
             'due_date' => $validated['due_date'] ?? null,
+            'time_limit' => $validated['time_limit'] ?? null,
             'is_published' => $request->has('is_published'),
         ]);
 
@@ -106,6 +108,7 @@ class QuizController extends Controller
             'points' => 'required|integer|min:1',
             'passing_score' => 'required|integer|min:0|max:100',
             'due_date' => 'nullable|date',
+            'time_limit' => 'nullable|integer|min:1|max:600',
             'is_published' => 'boolean',
             'questions' => 'required|array|min:1',
             'questions.*.question' => 'required|string',
@@ -121,6 +124,7 @@ class QuizController extends Controller
             'points' => $validated['points'],
             'passing_score' => $validated['passing_score'],
             'due_date' => $validated['due_date'] ?? null,
+            'time_limit' => $validated['time_limit'] ?? null,
             'is_published' => $request->has('is_published'),
         ]);
 
@@ -180,8 +184,53 @@ class QuizController extends Controller
         }
 
         $quiz->load('questions.options');
-        $submission = QuizSubmission::where('quiz_id', $quiz->id)->where('user_id', auth()->id())->first();
-        return view('user.classes.quizzes.show', compact('class', 'quiz', 'submission'));
+        $submission = QuizSubmission::where('quiz_id', $quiz->id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        // Only treat as "submitted" if it's actually been graded
+        $completedSubmission = $submission && $submission->status === 'graded' ? $submission : null;
+
+        return view('user.classes.quizzes.show', compact('class', 'quiz', 'submission', 'completedSubmission'));
+    }
+
+    // Student: Start Quiz (marks started_at for time limit)
+    public function start(Classroom $class, Quiz $quiz)
+    {
+        if ($quiz->class_id !== $class->id) abort(404);
+
+        $enrolled = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->exists();
+        if (!$enrolled) abort(403);
+
+        // If already submitted, do nothing
+        $existing = QuizSubmission::where('quiz_id', $quiz->id)
+            ->where('user_id', auth()->id())
+            ->first();
+        if ($existing) {
+            if ($existing->status === 'graded') {
+                return response()->json(['already_submitted' => true]);
+            }
+            return response()->json([
+                'started_at' => $existing->started_at
+                    ? $existing->started_at->toIso8601String()
+                    : null,
+            ]);
+        }
+
+        // Create a "in_progress" submission row if not exists
+        QuizSubmission::firstOrCreate(
+            ['quiz_id' => $quiz->id, 'user_id' => auth()->id()],
+            [
+                'status' => 'in_progress',
+                'started_at' => now(),
+                'tab_switches' => 0,
+            ]
+        );
+
+        return response()->json(['started_at' => now()->toIso8601String()]);
     }
 
     // Student: Submit Quiz
@@ -201,7 +250,9 @@ class QuizController extends Controller
         }
 
         $existing = QuizSubmission::where('quiz_id', $quiz->id)->where('user_id', auth()->id())->first();
-        if ($existing) return back()->with('error', 'You already submitted this quiz.');
+        if ($existing && $existing->status === 'graded') {
+            return back()->with('error', 'You already submitted this quiz.');
+        }
 
         $answers = $request->input('answers', []);
         $questions = $quiz->questions()->with('options')->get();
@@ -227,16 +278,17 @@ class QuizController extends Controller
 
         $score = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * $quiz->points) : 0;
 
-        QuizSubmission::create([
-            'quiz_id' => $quiz->id,
-            'user_id' => auth()->id(),
-            'score' => $score,
-            'total_questions' => $totalQuestions,
-            'correct_answers' => $correctCount,
-            'status' => 'graded',
-            'submitted_at' => now(),
-            'tab_switches' => (int) $request->input('tab_switches', 0),
-        ]);
+        QuizSubmission::updateOrCreate(
+            ['quiz_id' => $quiz->id, 'user_id' => auth()->id()],
+            [
+                'score' => $score,
+                'total_questions' => $totalQuestions,
+                'correct_answers' => $correctCount,
+                'status' => 'graded',
+                'submitted_at' => now(),
+                'tab_switches' => (int) $request->input('tab_switches', 0),
+            ]
+        );
 
         $passed = ($correctCount / max($totalQuestions, 1)) * 100 >= $quiz->passing_score;
         $emoji = $passed ? '🎉' : '📚';
@@ -308,6 +360,7 @@ class QuizController extends Controller
                 'points' => $quiz->points,
                 'passing_score' => $quiz->passing_score,
                 'due_date' => null,
+                'time_limit' => $quiz->time_limit,
                 'is_published' => false,
             ]);
 

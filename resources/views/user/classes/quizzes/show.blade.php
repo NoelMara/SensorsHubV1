@@ -37,6 +37,13 @@
                 <i class="fas fa-question-circle text-xs"></i>
                 {{ $quiz->questions->count() }} {{ Str::plural('question', $quiz->questions->count()) }}
             </span>
+            @if($quiz->time_limit)
+                <span class="text-gray-300 dark:text-gray-700">·</span>
+                <span class="inline-flex items-center gap-1.5">
+                    <i class="fas fa-clock text-xs"></i>
+                    {{ $quiz->time_limit }} min limit
+                </span>
+            @endif
             @if($quiz->due_date)
                 <span class="text-gray-300 dark:text-gray-700">·</span>
                 <span>Due {{ $quiz->due_date->format('M d · h:i A') }}</span>
@@ -74,12 +81,11 @@
     {{-- ============================================================= --}}
     {{-- Already Submitted — results view --}}
     {{-- ============================================================= --}}
-    @if($submission)
-        @php $percent = ($submission->correct_answers / max($submission->total_questions, 1)) * 100; @endphp
+    @if($completedSubmission)
+        @php $percent = ($completedSubmission->correct_answers / max($completedSubmission->total_questions, 1)) * 100; @endphp
         @php $passed = $percent >= $quiz->passing_score; @endphp
 
         <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-8">
-            {{-- Result headline --}}
             <div class="text-center mb-8">
                 @if($passed)
                     <i class="fas fa-trophy text-emerald-500 text-4xl mb-4 block"></i>
@@ -87,7 +93,7 @@
                         You passed!
                     </h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        Submitted {{ $submission->submitted_at->diffForHumans() }}
+                        Submitted {{ $completedSubmission->submitted_at->diffForHumans() }}
                     </p>
                 @else
                     <i class="fas fa-book text-red-500 text-4xl mb-4 block"></i>
@@ -95,16 +101,15 @@
                         Not quite
                     </h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400">
-                        Review the material and try again. Submitted {{ $submission->submitted_at->diffForHumans() }}
+                        Review the material and try again. Submitted {{ $completedSubmission->submitted_at->diffForHumans() }}
                     </p>
                 @endif
             </div>
 
-            {{-- Score grid --}}
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 text-center">
                     <p class="text-3xl font-semibold text-gray-900 dark:text-white tabular-nums mb-1">
-                        {{ $submission->score }}<span class="text-lg text-gray-400 dark:text-gray-600">/{{ $quiz->points }}</span>
+                        {{ $completedSubmission->score }}<span class="text-lg text-gray-400 dark:text-gray-600">/{{ $quiz->points }}</span>
                     </p>
                     <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                         Score
@@ -112,7 +117,7 @@
                 </div>
                 <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 text-center">
                     <p class="text-3xl font-semibold text-gray-900 dark:text-white tabular-nums mb-1">
-                        {{ $submission->correct_answers }}<span class="text-lg text-gray-400 dark:text-gray-600">/{{ $submission->total_questions }}</span>
+                        {{ $completedSubmission->correct_answers }}<span class="text-lg text-gray-400 dark:text-gray-600">/{{ $completedSubmission->total_questions }}</span>
                     </p>
                     <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
                         Correct
@@ -120,7 +125,6 @@
                 </div>
             </div>
 
-            {{-- Pass/fail threshold bar --}}
             <div class="border-t border-gray-100 dark:border-gray-800 pt-6">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">
@@ -146,6 +150,24 @@
 
         @if(!auth()->user()->isInstructor() && !auth()->user()->isAdministrator())
 
+    {{-- Sticky countdown bar (only shows if timed) --}}
+    @if($quiz->time_limit)
+        <div id="countdownBar" class="sticky top-16 z-30 mb-6 border border-gray-200 dark:border-gray-800 rounded-lg p-4 bg-white dark:bg-gray-900 shadow-sm">
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <i id="countdownIcon" class="fas fa-clock text-emerald-500 text-lg"></i>
+                    <div>
+                        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Time remaining</p>
+                        <p id="countdownText" class="text-2xl font-semibold tabular-nums text-gray-900 dark:text-white">--:--</p>
+                    </div>
+                </div>
+                <p id="countdownWarning" class="hidden text-xs font-medium text-amber-600 dark:text-amber-400 text-right max-w-xs">
+                    Less than 1 minute remaining!
+                </p>
+            </div>
+        </div>
+    @endif
+
     {{-- Monitoring banner --}}
     <div class="mb-6 flex items-start gap-3 border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/30 rounded-lg p-4">
         <i class="fas fa-shield-halved text-amber-500 text-base shrink-0 mt-0.5"></i>
@@ -157,125 +179,190 @@
 
     <form method="POST" action="{{ route('dashboard.classes.quizzes.submit', [$class, $quiz]) }}" id="quizForm" onsubmit="return confirmQuizSubmit(this);">
         <input type="hidden" name="tab_switches" id="tabSwitchesInput" value="0">
-                @csrf
+        @csrf
 
-                <div class="space-y-4">
-                    @foreach($quiz->questions as $index => $question)
-                        <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
-                            <div class="flex items-start gap-3 mb-4">
-                                <span class="text-xs font-semibold text-gray-400 dark:text-gray-600 tabular-nums flex-shrink-0 mt-0.5">
-                                    Q{{ $index + 1 }}
-                                </span>
-                                <h3 class="text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ $question->question }}
-                                </h3>
-                            </div>
-
-                            <div class="space-y-2 ml-7">
-                                @foreach($question->options as $option)
-                                    <label class="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-800 rounded-lg hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 cursor-pointer transition has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 dark:has-[:checked]:bg-emerald-950/20">
-                                        <input type="radio" name="answers[{{ $question->id }}]" value="{{ $option->id }}" required
-                                            class="h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-gray-300 dark:border-gray-700 flex-shrink-0">
-                                        <span class="text-sm text-gray-700 dark:text-gray-300">{{ $option->option_text }}</span>
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="mt-8 flex justify-end">
-                    <button type="submit"
-                        class="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
-                        <i class="fas fa-paper-plane text-xs"></i>
-                        Submit quiz
-                    </button>
-                </div>
-            </form>
-
-            {{-- Honor-code modal --}}
-            <div id="honorModal" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                <div class="max-w-md w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-6 sm:p-8">
-                    <div class="flex items-start gap-3 mb-5">
-                        <i class="fas fa-shield-halved text-emerald-500 text-lg shrink-0 mt-0.5"></i>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Academic honesty</h3>
-                            <p class="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">Before you start</p>
-                        </div>
+        <div class="space-y-4">
+            @foreach($quiz->questions as $index => $question)
+                <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-5">
+                    <div class="flex items-start gap-3 mb-4">
+                        <span class="text-xs font-semibold text-gray-400 dark:text-gray-600 tabular-nums flex-shrink-0 mt-0.5">
+                            Q{{ $index + 1 }}
+                        </span>
+                        <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+                            {{ $question->question }}
+                        </h3>
                     </div>
-                    <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-2 mb-6">
-                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[6px] mt-2 text-gray-400"></i> Complete this quiz on your own.</li>
-                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[6px] mt-2 text-gray-400"></i> No AI tools, no notes, no other tabs.</li>
-                        <li class="flex items-start gap-2"><i class="fas fa-circle text-[6px] mt-2 text-gray-400"></i> Tab switches and copy attempts are logged.</li>
-                    </ul>
-                    <button type="button" id="honorAccept"
-                        class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
-                        I understand, start quiz
-                    </button>
+
+                    <div class="space-y-2 ml-7">
+                        @foreach($question->options as $option)
+                            <label class="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-800 rounded-lg hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 cursor-pointer transition has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 dark:has-[:checked]:bg-emerald-950/20">
+                                <input type="radio" name="answers[{{ $question->id }}]" value="{{ $option->id }}" required
+                                    class="h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-gray-300 dark:border-gray-700 flex-shrink-0">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">{{ $option->option_text }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+        </div>
+
+        <div class="mt-8 flex justify-end">
+            <button type="submit"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+                <i class="fas fa-paper-plane text-xs"></i>
+                Submit quiz
+            </button>
+        </div>
+    </form>
+
+    {{-- Honor-code modal --}}
+    <div id="honorModal" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div class="max-w-md w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-xl p-6 sm:p-8">
+            <div class="flex items-start gap-3 mb-5">
+                <i class="fas fa-shield-halved text-emerald-500 text-lg shrink-0 mt-0.5"></i>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-1">Academic honesty</h3>
+                    <p class="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400">Before you start</p>
                 </div>
             </div>
+            <ul class="text-sm text-gray-700 dark:text-gray-300 space-y-2 mb-6">
+                <li class="flex items-start gap-2"><i class="fas fa-circle text-[6px] mt-2 text-gray-400"></i> Complete this quiz on your own.</li>
+                <li class="flex items-start gap-2"><i class="fas fa-circle text-[6px] mt-2 text-gray-400"></i> No AI tools, no notes, no other tabs.</li>
+                <li class="flex items-start gap-2"><i class="fas fa-circle text-[6px] mt-2 text-gray-400"></i> Tab switches and copy attempts are logged.</li>
+                @if($quiz->time_limit)
+                    <li class="flex items-start gap-2 text-amber-700 dark:text-amber-400"><i class="fas fa-clock text-[10px] mt-1"></i> <strong>This quiz has a {{ $quiz->time_limit }}-minute limit.</strong> The timer starts when you click below.</li>
+                @endif
+            </ul>
+            <button type="button" id="honorAccept"
+                class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
+                I understand, start quiz
+            </button>
+        </div>
+    </div>
 
-            <script>
-            (function() {
-                const form = document.getElementById('quizForm');
-                const modal = document.getElementById('honorModal');
-                const acceptBtn = document.getElementById('honorAccept');
-                const tabInput = document.getElementById('tabSwitchesInput');
-                let switches = 0;
-                let locked = false;
-                const storageKey = 'quiz_tab_switches_' + form.id;
+    <script>
+    (function() {
+        const form = document.getElementById('quizForm');
+        const modal = document.getElementById('honorModal');
+        const acceptBtn = document.getElementById('honorAccept');
+        const tabInput = document.getElementById('tabSwitchesInput');
+        const storageKey = 'quiz_tab_switches_' + form.id;
+        const startUrl = "{{ route('dashboard.classes.quizzes.start', [$class, $quiz]) }}";
+        const timeLimitMinutes = {{ $quiz->time_limit ?? 'null' }};
+        const existingStartedAt = @json($submission && $submission->started_at ? $submission->started_at->toIso8601String() : null);
+        let switches = parseInt(sessionStorage.getItem(storageKey) || 0, 10);
+        let locked = false;
+        let timerInterval = null;
 
-                // Restore counter from previous session (survives refresh)
-                switches = parseInt(sessionStorage.getItem(storageKey) || 0, 10);
-                tabInput.value = switches;
+        tabInput.value = switches;
 
-                // Show modal on load — quiz content is behind it
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
 
-                acceptBtn.addEventListener('click', () => {
-                    modal.classList.add('hidden');
-                    modal.classList.remove('flex');
-                    locked = true;
-                });
+        acceptBtn.addEventListener('click', async () => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            locked = true;
 
-                // Count tab switches
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden && locked) {
-                        switches++;
-                        tabInput.value = switches;
-                        sessionStorage.setItem(storageKey, switches);
-                    }
-                });
-
-                // Block copy/paste/cut/right-click on the form
-                ['copy', 'cut', 'paste', 'contextmenu'].forEach(evt => {
-                    form.addEventListener(evt, e => {
-                        e.preventDefault();
-                        return false;
-                    });
-                });
-
-                // Submit handler — called via onsubmit="return confirmQuizSubmit(this);"
-                window.confirmQuizSubmit = function(f) {
-                    if (switches >= 3) {
-                        if (!confirm(`You switched tabs ${switches} times during this quiz. This has been logged. Submit anyway?`)) {
-                            return false; // cancel — button stays normal, user can retry
+            // If time limit exists and no start time recorded yet, call start endpoint
+            if (timeLimitMinutes && !existingStartedAt) {
+                try {
+                    const res = await fetch(startUrl, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Content-Type': 'application/json',
                         }
+                    });
+                    const data = await res.json();
+                    if (data.started_at) {
+                        startCountdown(new Date(data.started_at));
                     }
-                    // Clear sessionStorage before submit so it doesn't leak into next quiz
-                    sessionStorage.removeItem(storageKey);
-                    // Passed — show loading state and submit
-                    const btn = f.querySelector('button[type="submit"]');
-                    if (btn) {
-                        btn.disabled = true;
-                        btn.classList.add('opacity-70', 'pointer-events-none');
-                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Submitting...</span>';
-                    }
-                    return true;
-                };
-            })();
-            </script>
+                } catch (e) {
+                    console.error('Failed to start quiz timer', e);
+                }
+            } else if (existingStartedAt) {
+                startCountdown(new Date(existingStartedAt));
+            }
+        });
+
+        function startCountdown(startedAt) {
+            const endTime = new Date(startedAt.getTime() + timeLimitMinutes * 60 * 1000);
+
+            function tick() {
+                const now = new Date();
+                const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+                const mins = Math.floor(remaining / 60);
+                const secs = remaining % 60;
+
+                document.getElementById('countdownText').textContent =
+                    String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+
+                // Warning at 60s
+                if (remaining <= 60 && remaining > 0) {
+                    document.getElementById('countdownWarning').classList.remove('hidden');
+                    document.getElementById('countdownIcon').classList.remove('text-emerald-500');
+                    document.getElementById('countdownIcon').classList.add('text-amber-500');
+                }
+
+                // Auto-submit at 0
+                if (remaining === 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }
+
+            tick();
+            timerInterval = setInterval(tick, 1000);
+        }
+
+        function autoSubmit() {
+            // Bypass the confirm dialog and just submit
+            const btn = form.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.classList.add('opacity-70', 'pointer-events-none');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Time up, submitting...';
+            }
+            // Use form.submit() to bypass onsubmit handler
+            HTMLFormElement.prototype.submit.call(form);
+        }
+
+        // Count tab switches
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && locked) {
+                switches++;
+                tabInput.value = switches;
+                sessionStorage.setItem(storageKey, switches);
+            }
+        });
+
+        // Block copy/paste/cut/right-click on the form
+        ['copy', 'cut', 'paste', 'contextmenu'].forEach(evt => {
+            form.addEventListener(evt, e => {
+                e.preventDefault();
+                return false;
+            });
+        });
+
+        // Submit handler
+        window.confirmQuizSubmit = function(f) {
+            if (switches >= 3) {
+                if (!confirm(`You switched tabs ${switches} times during this quiz. This has been logged. Submit anyway?`)) {
+                    return false;
+                }
+            }
+            sessionStorage.removeItem(storageKey);
+            const btn = f.querySelector('button[type="submit"]');
+            if (btn) {
+                btn.disabled = true;
+                btn.classList.add('opacity-70', 'pointer-events-none');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Submitting...</span>';
+            }
+            return true;
+        };
+    })();
+    </script>
 
         @else
             {{-- Instructor preview --}}
@@ -322,9 +409,7 @@
             </section>
         @endif
 
-    {{-- ============================================================= --}}
     {{-- Past Due --}}
-    {{-- ============================================================= --}}
     @else
         <section class="border border-gray-200 dark:border-gray-800 rounded-lg p-6">
             <div class="flex items-start gap-4">

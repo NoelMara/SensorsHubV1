@@ -8,7 +8,7 @@ class Quiz extends Model
 {
     protected $fillable = [
         'class_id', 'title', 'description', 'instructions',
-        'points', 'passing_score', 'due_date', 'is_published',
+        'points', 'passing_score', 'due_date', 'time_limit', 'is_published',
     ];
 
     protected $casts = [

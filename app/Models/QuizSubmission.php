@@ -8,11 +8,12 @@ class QuizSubmission extends Model
 {
     protected $fillable = [
     'quiz_id', 'user_id', 'score', 'total_questions',
-    'correct_answers', 'status', 'submitted_at', 'tab_switches',
+    'correct_answers', 'status', 'started_at', 'submitted_at', 'tab_switches',
     ];
 
     protected $casts = [
         'submitted_at' => 'datetime',
+        'started_at' => 'datetime',
     ];
 
 

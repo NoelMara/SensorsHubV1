@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('points')->default(10);
             $table->integer('passing_score')->default(60); // percentage
             $table->dateTime('due_date')->nullable();
+            $table->unsignedInteger('time_limit')->nullable(); // minutes, null = untimed
             $table->boolean('is_published')->default(false);
             $table->timestamps();
         });
@@ -59,7 +60,8 @@ return new class extends Migration
             $table->integer('score')->nullable();
             $table->integer('total_questions')->default(0);
             $table->integer('correct_answers')->default(0);
-            $table->string('status')->default('submitted'); // submitted, graded
+            $table->string('status')->default('submitted');
+            $table->timestamp('started_at')->nullable(); // when student first opened
             $table->timestamp('submitted_at')->nullable();
             $table->unsignedInteger('tab_switches')->default(0);
             $table->timestamps();

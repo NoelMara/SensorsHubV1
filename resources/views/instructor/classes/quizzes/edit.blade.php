@@ -63,7 +63,7 @@
             </div>
 
             {{-- Settings grid --}}
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-6">
                 <div>
                     <label for="points" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
                         Points <span class="text-red-500">*</span>
@@ -87,6 +87,15 @@
                     <input type="datetime-local" name="due_date" id="due_date"
                         value="{{ old('due_date', $quiz->due_date ? $quiz->due_date->format('Y-m-d\TH:i') : '') }}"
                         class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:border-emerald-500 transition text-sm">
+                </div>
+                <div>
+                    <label for="time_limit" class="block text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-2">
+                        Time limit <span class="text-gray-400 dark:text-gray-600 normal-case tracking-normal">(min)</span>
+                    </label>
+                    <input type="number" name="time_limit" id="time_limit" min="1" max="600"
+                        value="{{ old('time_limit', $quiz->time_limit) }}"
+                        placeholder="Blank = untimed"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm">
                 </div>
             </div>
 
@@ -251,23 +260,23 @@
             },
 
             checkAnswers(e) {
-            // 1. Validate every question has a correct answer marked
-            for (let i = 0; i < this.questions.length; i++) {
-                if (!this.questions[i].options.some(o => o.isCorrect)) {
-                    e.preventDefault();
-                    alert('Please mark a correct answer for Question ' + (i + 1) + '.');
-                    return;
+                // 1. Validate every question has a correct answer marked
+                for (let i = 0; i < this.questions.length; i++) {
+                    if (!this.questions[i].options.some(o => o.isCorrect)) {
+                        e.preventDefault();
+                        alert('Please mark a correct answer for Question ' + (i + 1) + '.');
+                        return;
+                    }
                 }
-            }
 
-            // 2. All good — disable button + show "Saving..."
-            const btn = e.target.querySelector('button[type="submit"]');
-            if (btn) {
-                btn.disabled = true;
-                btn.classList.add('opacity-70', 'pointer-events-none');
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i> Saving...';
-            }
-        },
+                // 2. All good — disable button + show "Saving..."
+                const btn = e.target.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'pointer-events-none');
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i> Saving...';
+                }
+            },
         }
     }
 </script>
