@@ -53,26 +53,27 @@
             @foreach($notifications as $notification)
                 <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 transition relative group {{ $notification->is_read ? '' : 'bg-gray-50 dark:bg-gray-900/50' }}">
 
-                    {{-- Unread dot --}}
-                    @if(!$notification->is_read)
-                        <span class="notification-dot absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    @endif
+                    {{-- Top row: dot (if unread) + delete button --}}
+                    <div class="absolute top-3 right-3 flex items-center gap-2">
+                        @if(!$notification->is_read)
+                            <span class="notification-dot w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        @endif
 
-                    {{-- Delete button (always visible) --}}
-                    <form method="POST" action="{{ route('notifications.destroy', $notification) }}"
-                          onsubmit="return confirm('Delete this notification?');"
-                          class="absolute bottom-3 right-3">
-                        @csrf @method('DELETE')
-                        <button type="submit"
-                            class="w-7 h-7 inline-flex items-center justify-center rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition"
-                            title="Delete">
-                            <i class="fas fa-trash text-xs"></i>
-                        </button>
-                    </form>
+                        <form method="POST" action="{{ route('notifications.destroy', $notification) }}"
+                              onsubmit="return confirm('Delete this notification?');">
+                            @csrf @method('DELETE')
+                            <button type="submit"
+                                class="w-6 h-6 inline-flex items-center justify-center rounded-md text-gray-300 dark:text-gray-600 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition"
+                                title="Delete">
+                                <i class="fas fa-times text-[10px]"></i>
+                            </button>
+                        </form>
+                    </div>
 
+                    {{-- Content (clickable to mark as read) --}}
                     <a href="{{ $notification->link ?? '#' }}"
                         onclick="markAsRead({{ $notification->id }}, this)"
-                        class="block pr-10">
+                        class="block pr-14">
                         <p class="font-semibold text-gray-900 dark:text-white text-sm group-hover:text-primary transition">
                             {{ $notification->title }}
                         </p>
