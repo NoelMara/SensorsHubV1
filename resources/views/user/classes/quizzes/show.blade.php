@@ -155,7 +155,7 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('dashboard.classes.quizzes.submit', [$class, $quiz]) }}" id="quizForm">
+    <form method="POST" action="{{ route('dashboard.classes.quizzes.submit', [$class, $quiz]) }}" id="quizForm" onsubmit="return confirmQuizSubmit(this);">
         <input type="hidden" name="tab_switches" id="tabSwitchesInput" value="0">
                 @csrf
 
@@ -242,7 +242,7 @@
                     }
                 });
 
-                // Block copy/paste/cut on the form
+                // Block copy/paste/cut/right-click on the form
                 ['copy', 'cut', 'paste', 'contextmenu'].forEach(evt => {
                     form.addEventListener(evt, e => {
                         e.preventDefault();
@@ -250,13 +250,22 @@
                     });
                 });
 
-                // Warn on submit if many switches
-                form.addEventListener('submit', (e) => {
+                // Submit handler — called via onsubmit="return confirmQuizSubmit(this);"
+                window.confirmQuizSubmit = function(f) {
                     if (switches >= 3) {
-                        const ok = confirm(`You switched tabs ${switches} times during this quiz. This has been logged. Submit anyway?`);
-                        if (!ok) e.preventDefault();
+                        if (!confirm(`You switched tabs ${switches} times during this quiz. This has been logged. Submit anyway?`)) {
+                            return false; // cancel — button stays normal, user can retry
+                        }
                     }
-                });
+                    // Passed — show loading state and submit
+                    const btn = f.querySelector('button[type="submit"]');
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.classList.add('opacity-70', 'pointer-events-none');
+                        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Submitting...</span>';
+                    }
+                    return true;
+                };
             })();
             </script>
 
