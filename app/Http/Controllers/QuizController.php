@@ -208,6 +208,10 @@ class QuizController extends Controller
                 'submitted_at' => now(),
             ]);
 
+            $passed = ($correctCount / max($totalQuestions, 1)) * 100 >= $quiz->passing_score;
+            $emoji = $passed ? '🎉' : '📚';
+            NotificationHelper::send(auth()->id(), "{$emoji} Quiz Result: {$quiz->title}", "{$correctCount}/{$totalQuestions} correct · {$score} points", route('dashboard.classes.quizzes.show', [$class, $quiz]));
+
             return redirect()->route('dashboard.classes.quizzes.show', [$class, $quiz])
                 ->with('success', 'Time expired — your saved answers were submitted automatically.');
         }
@@ -362,6 +366,10 @@ class QuizController extends Controller
                     'tab_switches' => (int) $request->input('tab_switches', 0),
                 ]
             );
+
+            $passed = ($correctCount / max($totalQuestions, 1)) * 100 >= $quiz->passing_score;
+            $emoji = $passed ? '🎉' : '📚';
+            NotificationHelper::send(auth()->id(), "{$emoji} Quiz Result: {$quiz->title}", "{$correctCount}/{$totalQuestions} correct · {$score} points", route('dashboard.classes.quizzes.show', [$class, $quiz]));
 
             return redirect()->route('dashboard.classes.quizzes.show', [$class, $quiz])
                 ->with('success', 'Time expired — your saved answers were submitted automatically.');
