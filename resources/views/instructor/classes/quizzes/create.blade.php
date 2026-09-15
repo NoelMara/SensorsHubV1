@@ -245,7 +245,6 @@
             },
 
             checkAnswers(e) {
-                // 1. Validate every question has a correct answer marked
                 for (let i = 0; i < this.questions.length; i++) {
                     if (!this.questions[i].options.some(o => o.isCorrect)) {
                         e.preventDefault();
@@ -254,12 +253,11 @@
                     }
                 }
 
-                // 2. All good — disable button + show "Saving..."
                 const btn = e.target.querySelector('button[type="submit"]');
                 if (btn) {
                     btn.disabled = true;
                     btn.classList.add('opacity-70', 'pointer-events-none');
-                    btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i> Saving...';
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i> Submitting...';
                 }
             },
         }
