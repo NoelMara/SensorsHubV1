@@ -40,13 +40,24 @@ class FeedbackController extends Controller
     {
         $query = Feedback::with('user')->latest();
 
+        // Search by message or user name
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('message', 'like', '%' . $search . '%')
+                  ->orWhereHas('user', function ($u) use ($search) {
+                      $u->where('name', 'like', '%' . $search . '%');
+                  });
+            });
+        }
+
         // Filter by status
-        if ($request->filled('status') && $request->status !== 'all') {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
         // Filter by type
-        if ($request->filled('type') && $request->type !== 'all') {
+        if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
 
