@@ -558,8 +558,6 @@ header('Expires: 0');
                     else if (text.includes('unban')) label = 'Unbanning';
                     else if (text.includes('reject')) label = 'Rejecting';
                     else if (text.includes('mark') || text.includes('read')) label = 'Updating';
-                    else if (text.includes('resolve')) label = 'Resolving';
-                    else if (text.includes('wont fix') || text.includes('won\'t fix')) label = 'Skipping';
                     else if (text.includes('join')) label = 'Joining';
                     else if (text.includes('grade')) label = 'Saving';
                     else if (text.includes('approve')) label = 'Approving';
