@@ -62,11 +62,11 @@
                         <form method="POST" action="{{ route('notifications.destroy', $notification) }}"
                               onsubmit="return confirm('Delete this notification?');">
                             @csrf @method('DELETE')
-                            <button type="submit"
-                                class="w-6 h-6 inline-flex items-center justify-center rounded-md text-gray-300 dark:text-gray-600 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition"
-                                title="Delete">
-                                <i class="fas fa-times text-[10px]"></i>
-                            </button>
+                                <button type="submit"
+                                    class="w-6 h-6 inline-flex items-center justify-center rounded-md text-red-500 dark:text-red-400 transition"
+                                    title="Delete">
+                                    <i class="fas fa-times text-[10px]"></i>
+                                </button>
                         </form>
                     </div>
 
