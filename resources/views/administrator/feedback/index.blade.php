@@ -161,16 +161,11 @@
 
                                 {{-- Action --}}
                                 <td class="px-5 py-4 align-top text-right">
-                                    <form method="POST" action="{{ route('administrator.feedback.status', $item) }}" class="inline">
-                                        @csrf @method('PUT')
-                                        <select name="status" onchange="this.form.submit()"
-                                            class="text-xs rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:border-emerald-500 transition cursor-pointer px-2 py-1.5">
-                                            <option value="new" {{ $item->status === 'new' ? 'selected' : '' }}>New</option>
-                                            <option value="read" {{ $item->status === 'read' ? 'selected' : '' }}>Read</option>
-                                            <option value="resolved" {{ $item->status === 'resolved' ? 'selected' : '' }}>Resolved</option>
-                                            <option value="wont_fix" {{ $item->status === 'wont_fix' ? 'selected' : '' }}>Won't fix</option>
-                                        </select>
-                                    </form>
+                                    <a href="{{ route('administrator.feedback.show', $item) }}"
+                                       class="inline-flex items-center gap-1.5 px-3 h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap">
+                                        View
+                                        <i class="fas fa-arrow-right text-[10px]"></i>
+                                    </a>
                                 </td>
                             </tr>
                         @endforeach

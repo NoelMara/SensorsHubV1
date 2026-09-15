@@ -74,6 +74,14 @@ class FeedbackController extends Controller
         return view('administrator.feedback.index', compact('feedback', 'counts'));
     }
 
+    // Admin: show one feedback
+    public function show(Feedback $feedback)
+    {
+        $feedback->load('user');
+
+        return view('administrator.feedback.show', compact('feedback'));
+    }
+
     // Admin: update status
     public function updateStatus(Request $request, Feedback $feedback)
     {

@@ -258,6 +258,7 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
 
     // Feedback
     Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('feedback.index');
+    Route::get('/feedback/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'show'])->name('feedback.show');
     Route::put('/feedback/{feedback}/status', [\App\Http\Controllers\FeedbackController::class, 'updateStatus'])->name('feedback.status');
 
     // Database Backup 
