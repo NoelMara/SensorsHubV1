@@ -175,6 +175,10 @@ class DashboardController extends Controller
             
             $output .= "-- Table: {$tableName}\n";
             
+            // Get column names so INSERT statements don't depend on column order
+            $columns = array_keys((array) $rows->first());
+            $columnList = implode(', ', $columns);
+            
             foreach ($rows as $row) {
                 $values = [];
                 foreach ((array) $row as $value) {
@@ -188,7 +192,7 @@ class DashboardController extends Controller
                         $values[] = "'" . str_replace("'", "''", $value) . "'";
                     }
                 }
-                $output .= "INSERT INTO {$tableName} VALUES (" . implode(', ', $values) . ");\n";
+                $output .= "INSERT INTO {$tableName} ({$columnList}) VALUES (" . implode(', ', $values) . ");\n";
             }
             $output .= "\n";
         }
