@@ -245,17 +245,21 @@
             },
 
             checkAnswers(e) {
+                // 1. Validate every question has a correct answer marked
                 for (let i = 0; i < this.questions.length; i++) {
                     if (!this.questions[i].options.some(o => o.isCorrect)) {
                         e.preventDefault();
-                        const btn = e.target.querySelector('button[type="submit"]');
-                        if (btn) {
-                            btn.disabled = false;
-                            btn.innerHTML = '<i class="fas fa-save text-xs"></i> Save quiz';
-                        }
                         alert('Please mark a correct answer for Question ' + (i + 1) + '.');
                         return;
                     }
+                }
+
+                // 2. All good — disable button + show "Saving..."
+                const btn = e.target.querySelector('button[type="submit"]');
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-70', 'pointer-events-none');
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i> Saving...';
                 }
             },
         }
