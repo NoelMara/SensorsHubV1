@@ -131,7 +131,7 @@
 
                                 {{-- Feedback --}}
                                 <td class="px-5 py-4 align-top max-w-xs">
-                                    <p class="text-sm text-gray-700 dark:text-gray-300">{{ Str::limit($item->message, 20) }}</p>
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 truncate">{{ Str::limit($item->message, 60) }}</p>
                                     @if($item->page_url)
                                         <p class="text-xs text-gray-400 dark:text-gray-600 mt-1 truncate">
                                             <i class="fas fa-link text-[10px] mr-1"></i>
