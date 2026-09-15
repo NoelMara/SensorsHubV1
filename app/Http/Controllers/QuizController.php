@@ -191,7 +191,13 @@ class QuizController extends Controller
         // Only treat as "submitted" if it's actually been graded
         $completedSubmission = $submission && $submission->status === 'graded' ? $submission : null;
 
-        return view('user.classes.quizzes.show', compact('class', 'quiz', 'submission', 'completedSubmission'));
+        // Load any previously saved answers (for autosave / refresh recovery)
+        $savedAnswers = QuizAnswer::where('user_id', auth()->id())
+            ->whereIn('quiz_question_id', $quiz->questions->pluck('id'))
+            ->pluck('selected_option_id', 'quiz_question_id')
+            ->toArray();
+
+        return view('user.classes.quizzes.show', compact('class', 'quiz', 'submission', 'completedSubmission', 'savedAnswers'));
     }
 
     // Student: Start Quiz (marks started_at for time limit)
@@ -231,6 +237,62 @@ class QuizController extends Controller
         );
 
         return response()->json(['started_at' => now()->toIso8601String()]);
+    }
+
+    // Student: Autosave a single answer
+    public function saveAnswer(Request $request, Classroom $class, Quiz $quiz)
+    {
+        if ($quiz->class_id !== $class->id) abort(404);
+
+        $enrolled = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->exists();
+        if (!$enrolled) abort(403);
+
+        // Don't allow saving if already graded
+        $submission = QuizSubmission::where('quiz_id', $quiz->id)
+            ->where('user_id', auth()->id())
+            ->first();
+        if ($submission && $submission->status === 'graded') {
+            return response()->json(['error' => 'already_submitted'], 400);
+        }
+
+        $request->validate([
+            'question_id' => 'required|integer',
+            'option_id' => 'required|integer',
+        ]);
+
+        $questionId = $request->input('question_id');
+        $optionId = $request->input('option_id');
+
+        // Verify the question belongs to this quiz
+        $question = $quiz->questions()->find($questionId);
+        if (!$question) {
+            return response()->json(['error' => 'invalid_question'], 400);
+        }
+
+        // Verify option belongs to this question
+        $option = $question->options()->find($optionId);
+        if (!$option) {
+            return response()->json(['error' => 'invalid_option'], 400);
+        }
+
+        $isCorrect = $option->is_correct;
+
+        // Upsert: replace any existing answer for this question + user
+        QuizAnswer::updateOrCreate(
+            [
+                'quiz_question_id' => $questionId,
+                'user_id' => auth()->id(),
+            ],
+            [
+                'selected_option_id' => $optionId,
+                'is_correct' => $isCorrect,
+            ]
+        );
+
+        return response()->json(['saved' => true]);
     }
 
     // Student: Submit Quiz

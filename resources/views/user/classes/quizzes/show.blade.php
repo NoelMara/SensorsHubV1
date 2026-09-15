@@ -196,8 +196,12 @@
                     <div class="space-y-2 ml-7">
                         @foreach($question->options as $option)
                             <label class="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-800 rounded-lg hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 cursor-pointer transition has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50 dark:has-[:checked]:bg-emerald-950/20">
-                                <input type="radio" name="answers[{{ $question->id }}]" value="{{ $option->id }}" required
-                                    class="h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-gray-300 dark:border-gray-700 flex-shrink-0">
+                                <input type="radio" name="answers[{{ $question->id }}]" value="{{ $option->id }}"
+                                data-question-id="{{ $question->id }}"
+                                data-option-id="{{ $option->id }}"
+                                {{ (isset($savedAnswers[$question->id]) && $savedAnswers[$question->id] == $option->id) ? 'checked' : '' }}
+                                required
+                                class="h-4 w-4 text-emerald-500 focus:ring-emerald-500 border-gray-300 dark:border-gray-700 flex-shrink-0">
                                 <span class="text-sm text-gray-700 dark:text-gray-300">{{ $option->option_text }}</span>
                             </label>
                         @endforeach
@@ -256,33 +260,59 @@
 
         tabInput.value = switches;
 
+        // Show honor modal on load
         modal.classList.remove('hidden');
         modal.classList.add('flex');
 
+        // Attach autosave to every radio button (runs on page load)
+        form.querySelectorAll('input[type="radio"][data-question-id]').forEach(radio => {
+            radio.addEventListener('change', async function() {
+                if (!locked) return;
+                try {
+                    await fetch("{{ route('dashboard.classes.quizzes.save-answer', [$class, $quiz]) }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            question_id: this.dataset.questionId,
+                            option_id: this.dataset.optionId,
+                        })
+                    });
+                } catch (e) {
+                    console.error('Autosave failed', e);
+                }
+            });
+        });
+
+        // Honor modal accept handler
         acceptBtn.addEventListener('click', async () => {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
             locked = true;
 
-            // If time limit exists and no start time recorded yet, call start endpoint
-            if (timeLimitMinutes && !existingStartedAt) {
-                try {
-                    const res = await fetch(startUrl, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Content-Type': 'application/json',
+            // Start the timer if this quiz is timed
+            if (timeLimitMinutes) {
+                if (existingStartedAt) {
+                    startCountdown(new Date(existingStartedAt));
+                } else {
+                    try {
+                        const res = await fetch(startUrl, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Content-Type': 'application/json',
+                            }
+                        });
+                        const data = await res.json();
+                        if (data.started_at) {
+                            startCountdown(new Date(data.started_at));
                         }
-                    });
-                    const data = await res.json();
-                    if (data.started_at) {
-                        startCountdown(new Date(data.started_at));
+                    } catch (e) {
+                        console.error('Failed to start quiz timer', e);
                     }
-                } catch (e) {
-                    console.error('Failed to start quiz timer', e);
                 }
-            } else if (existingStartedAt) {
-                startCountdown(new Date(existingStartedAt));
             }
         });
 
@@ -298,14 +328,12 @@
                 document.getElementById('countdownText').textContent =
                     String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
 
-                // Warning at 60s
                 if (remaining <= 60 && remaining > 0) {
                     document.getElementById('countdownWarning').classList.remove('hidden');
                     document.getElementById('countdownIcon').classList.remove('text-emerald-500');
                     document.getElementById('countdownIcon').classList.add('text-amber-500');
                 }
 
-                // Auto-submit at 0
                 if (remaining === 0) {
                     clearInterval(timerInterval);
                     autoSubmit();
@@ -317,14 +345,12 @@
         }
 
         function autoSubmit() {
-            // Bypass the confirm dialog and just submit
             const btn = form.querySelector('button[type="submit"]');
             if (btn) {
                 btn.disabled = true;
                 btn.classList.add('opacity-70', 'pointer-events-none');
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Time up, submitting...';
             }
-            // Use form.submit() to bypass onsubmit handler
             HTMLFormElement.prototype.submit.call(form);
         }
 
