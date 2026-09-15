@@ -58,10 +58,10 @@
                         <span class="notification-dot absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     @endif
 
-                    {{-- Delete button (appears on hover) --}}
+                    {{-- Delete button (always visible) --}}
                     <form method="POST" action="{{ route('notifications.destroy', $notification) }}"
                           onsubmit="return confirm('Delete this notification?');"
-                          class="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition">
+                          class="absolute bottom-3 right-3">
                         @csrf @method('DELETE')
                         <button type="submit"
                             class="w-7 h-7 inline-flex items-center justify-center rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition"
