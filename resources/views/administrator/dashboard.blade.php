@@ -214,7 +214,7 @@
                            class="block border border-gray-200 dark:border-gray-800 rounded-lg p-4 hover:border-gray-400 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
                             <p class="text-sm font-medium text-gray-900 dark:text-white truncate mb-1">{{ Str::limit($suggestion->title, 50) }}</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                by {{ $suggestion->user?->name ?? 'Deleted user' }} · {{ $suggestion->created_at->diffForHumans() }}
+                                by {{ $suggestion->user?->name ?? 'Deleted user' }} Â· {{ $suggestion->created_at->diffForHumans() }}
                             </p>
                         </a>
                     @endforeach

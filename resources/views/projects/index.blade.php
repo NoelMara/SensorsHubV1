@@ -55,11 +55,11 @@
                     @if(request('search'))
                         Results for "<span class="font-medium text-gray-900 dark:text-white">{{ request('search') }}</span>"
                     @endif
-                    @if(request('search') && (request('difficulty') || request('sensor_id'))) · @endif
+                    @if(request('search') && (request('difficulty') || request('sensor_id'))) Â· @endif
                     @if(request('difficulty'))
                         Difficulty: <span class="font-medium text-gray-900 dark:text-white">{{ request('difficulty') }}</span>
                     @endif
-                    @if(request('difficulty') && request('sensor_id')) · @endif
+                    @if(request('difficulty') && request('sensor_id')) Â· @endif
                     @if(request('sensor_id'))
                         Sensor: <span class="font-medium text-gray-900 dark:text-white">{{ $sensors->firstWhere('id', request('sensor_id'))?->name ?? 'Unknown' }}</span>
                     @endif
@@ -88,7 +88,7 @@
                         </span>
                         @if($project->is_featured)
                             <span class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                                · Featured
+                                Â· Featured
                             </span>
                         @endif
                         <span class="text-xs text-gray-400 dark:text-gray-600 ml-auto">

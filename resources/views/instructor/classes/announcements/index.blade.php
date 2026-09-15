@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Announcements · {{ $class->name }}
+            Announcements Â· {{ $class->name }}
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Announcements
@@ -73,7 +73,7 @@
                     {{-- Footer: exact date + actions --}}
                     <div class="flex items-center justify-between gap-4 pt-3 border-t border-gray-100 dark:border-gray-800">
                         <p class="text-xs text-gray-400 dark:text-gray-600">
-                            {{ $announcement->created_at->format('M d, Y · h:i A') }}
+                            {{ $announcement->created_at->format('M d, Y Â· h:i A') }}
                         </p>
                         <div class="flex items-center gap-2">
                             <a href="{{ route('instructor.classes.announcements.edit', [$class, $announcement]) }}"

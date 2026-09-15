@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Resources · {{ $class->name }}
+            Resources Â· {{ $class->name }}
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Manage resources
@@ -160,7 +160,7 @@
                                 <div class="flex items-center gap-2 mt-0.5">
                                     <span class="text-xs text-gray-500 dark:text-gray-400">{{ $project->difficulty }}</span>
                                     @if($project->sensor)
-                                        <span class="text-gray-300 dark:text-gray-700">·</span>
+                                        <span class="text-gray-300 dark:text-gray-700">Â·</span>
                                         <span class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ $project->sensor->name }}</span>
                                     @endif
                                 </div>

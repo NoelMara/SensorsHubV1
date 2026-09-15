@@ -171,7 +171,7 @@
                     <span class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                         {{ $project->difficulty }}
                     </span>
-                    <span class="text-xs text-gray-400 dark:text-gray-600">·</span>
+                    <span class="text-xs text-gray-400 dark:text-gray-600">Â·</span>
                     <span class="text-xs text-gray-500 dark:text-gray-400">
                         {{ $project->sensor?->name ?? 'General' }}
                     </span>

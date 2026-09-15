@@ -35,7 +35,7 @@
                         </span>
                         @if($project->is_featured)
                             <span class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                                · Featured
+                                Â· Featured
                             </span>
                         @endif
                         <span class="text-xs text-gray-400 dark:text-gray-600 ml-auto">

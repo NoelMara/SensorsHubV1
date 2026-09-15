@@ -26,7 +26,7 @@
                     @endif">
                     ● {{ $suggestion->status }}
                 </span>
-                <span class="text-xs text-gray-400 dark:text-gray-600">�</span>
+                <span class="text-xs text-gray-400 dark:text-gray-600">·</span>
                 <span class="text-xs text-gray-500 dark:text-gray-400">{{ $suggestion->created_at->format('M d, Y') }}</span>
             </div>
 

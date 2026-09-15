@@ -42,7 +42,7 @@
                     </div>
                     <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
                         <p class="text-xs text-gray-400 dark:text-gray-600">
-                            {{ $announcement->created_at->format('M d, Y · h:i A') }}
+                            {{ $announcement->created_at->format('M d, Y Â· h:i A') }}
                         </p>
                     </div>
                 </article>

@@ -27,7 +27,7 @@
                     {{ $suggestion->user?->name ?? 'Deleted user' }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">
-                    {{ $suggestion->created_at->format('M d, Y · h:i A') }}
+                    {{ $suggestion->created_at->format('M d, Y Â· h:i A') }}
                 </p>
             </div>
         </div>
@@ -86,11 +86,11 @@
             </div>
             <div>
                 <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-1.5">Submitted</p>
-                <p class="text-sm text-gray-900 dark:text-white">{{ $suggestion->created_at->format('M d, Y · h:i A') }}</p>
+                <p class="text-sm text-gray-900 dark:text-white">{{ $suggestion->created_at->format('M d, Y Â· h:i A') }}</p>
             </div>
             <div>
                 <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-1.5">Last Updated</p>
-                <p class="text-sm text-gray-900 dark:text-white">{{ $suggestion->updated_at->format('M d, Y · h:i A') }}</p>
+                <p class="text-sm text-gray-900 dark:text-white">{{ $suggestion->updated_at->format('M d, Y Â· h:i A') }}</p>
             </div>
         </section>
 

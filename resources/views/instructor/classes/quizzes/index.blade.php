@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Quizzes · {{ $class->name }}
+            Quizzes Â· {{ $class->name }}
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Quizzes
@@ -77,23 +77,23 @@
                                     <i class="fas fa-star text-[10px]"></i>
                                     {{ $quiz->points }} pts
                                 </span>
-                                <span class="text-gray-300 dark:text-gray-700">·</span>
+                                <span class="text-gray-300 dark:text-gray-700">Â·</span>
                                 <span class="inline-flex items-center gap-1">
                                     <i class="fas fa-check text-[10px]"></i>
                                     Pass: {{ $quiz->passing_score }}%
                                 </span>
-                                <span class="text-gray-300 dark:text-gray-700">·</span>
+                                <span class="text-gray-300 dark:text-gray-700">Â·</span>
                                 <span class="inline-flex items-center gap-1">
                                     <i class="fas fa-question-circle text-[10px]"></i>
                                     {{ $quiz->questions->count() }} {{ Str::plural('question', $quiz->questions->count()) }}
                                 </span>
-                                <span class="text-gray-300 dark:text-gray-700">·</span>
+                                <span class="text-gray-300 dark:text-gray-700">Â·</span>
                                 <span class="inline-flex items-center gap-1">
                                     <i class="fas fa-users text-[10px]"></i>
                                     {{ $quiz->submissions->count() }} {{ Str::plural('submission', $quiz->submissions->count()) }}
                                 </span>
                                 @if($quiz->due_date)
-                                    <span class="text-gray-300 dark:text-gray-700">·</span>
+                                    <span class="text-gray-300 dark:text-gray-700">Â·</span>
                                     <span class="inline-flex items-center gap-1">
                                         <i class="fas fa-clock text-[10px]"></i>
                                         Due {{ $quiz->due_date->format('M d') }}

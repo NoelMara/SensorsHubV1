@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Assessments · {{ $class->name }}
+            Assessments Â· {{ $class->name }}
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Assessments
@@ -90,7 +90,7 @@
                                     <i class="fas fa-star text-[10px]"></i>
                                     {{ $assessment->points }} pts
                                 </span>
-                                <span class="text-gray-300 dark:text-gray-700">·</span>
+                                <span class="text-gray-300 dark:text-gray-700">Â·</span>
                                 @if($assessment->due_date)
                                     <span class="inline-flex items-center gap-1">
                                         <i class="fas fa-clock text-[10px]"></i>
@@ -102,7 +102,7 @@
                                         No deadline
                                     </span>
                                 @endif
-                                <span class="text-gray-300 dark:text-gray-700">·</span>
+                                <span class="text-gray-300 dark:text-gray-700">Â·</span>
                                 <span class="inline-flex items-center gap-1">
                                     <i class="fas fa-users text-[10px]"></i>
                                     {{ $assessment->submissions->count() }} {{ Str::plural('submission', $assessment->submissions->count()) }}

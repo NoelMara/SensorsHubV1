@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Instructor · Import
+            Instructor Â· Import
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Import assessments
@@ -60,7 +60,7 @@
                                                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                                                     {{ $assessment->points }} pts
                                                     @if($assessment->due_date)
-                                                        <span class="text-gray-300 dark:text-gray-700 mx-1">·</span>
+                                                        <span class="text-gray-300 dark:text-gray-700 mx-1">Â·</span>
                                                         Due {{ $assessment->due_date->format('M d, Y') }}
                                                     @endif
                                                 </p>

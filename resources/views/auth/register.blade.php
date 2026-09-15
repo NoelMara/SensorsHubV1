@@ -249,7 +249,7 @@
                 {{-- Trust line --}}
                 <p class="mt-6 text-xs text-gray-400 dark:text-gray-600 text-center">
                     <i class="fas fa-shield-halved mr-1"></i>
-                    Free forever · No credit card required
+                    Free forever Â· No credit card required
                 </p>
             </div>
         </section>

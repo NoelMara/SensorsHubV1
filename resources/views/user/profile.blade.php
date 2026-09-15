@@ -63,7 +63,7 @@
                             {{ !$user->isAdministrator() && !$user->isInstructor() && !$user->isUser() ? 'text-emerald-600 dark:text-emerald-400' : '' }}">
                             {{ $user->isAdministrator() ? 'Administrator' : ($user->isInstructor() ? 'Instructor' : ($user->isUser() ? 'User' : 'Student')) }}
                         </span>
-                        <span class="text-xs text-gray-400 dark:text-gray-600">·</span>
+                        <span class="text-xs text-gray-400 dark:text-gray-600">Â·</span>
                         <span class="text-xs text-gray-500 dark:text-gray-400">Joined {{ $user->created_at->format('M Y') }}</span>
                     </div>
                 </div>

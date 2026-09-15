@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="mb-12">
         <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Administrator · Analytics
+            Administrator Â· Analytics
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
             Platform analytics
@@ -44,7 +44,7 @@
             <p class="text-2xl font-semibold text-gray-900 dark:text-white tabular-nums">{{ $totalContent }}</p>
         </div>
         <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">New · 30d</p>
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">New Â· 30d</p>
             <p class="text-2xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">{{ $newThisMonth }}</p>
         </div>
         <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
@@ -60,7 +60,7 @@
                 Timeline
             </p>
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                User growth · last 30 days
+                User growth Â· last 30 days
             </h2>
         </div>
 
@@ -108,7 +108,7 @@
                                     <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
                                         {{ $class['instructor'] }}
                                         @if($class['section'])
-                                            <span class="text-gray-300 dark:text-gray-700 mx-1">·</span>
+                                            <span class="text-gray-300 dark:text-gray-700 mx-1">Â·</span>
                                             Block {{ $class['section'] }}
                                         @endif
                                     </p>

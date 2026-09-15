@@ -118,7 +118,7 @@
                                     {{ $class->instructor->name }}
                                 </span>
                                 @if($class->section)
-                                    <span class="text-gray-400 dark:text-gray-600">·</span>
+                                    <span class="text-gray-400 dark:text-gray-600">Â·</span>
                                     <span>Block {{ $class->section }}</span>
                                 @endif
                             </div>
