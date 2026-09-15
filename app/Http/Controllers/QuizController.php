@@ -188,6 +188,30 @@ class QuizController extends Controller
             ->where('user_id', auth()->id())
             ->first();
 
+        // If time limit expired and student never submitted, auto-finalize from saved answers
+        if ($submission && $submission->status === 'in_progress'
+            && $quiz->time_limit && $submission->started_at
+            && now()->greaterThan($submission->started_at->copy()->addMinutes($quiz->time_limit))) {
+
+            $totalQuestions = $quiz->questions->count();
+            $savedAnswers = QuizAnswer::where('user_id', auth()->id())
+                ->whereIn('quiz_question_id', $quiz->questions->pluck('id'))
+                ->get();
+            $correctCount = $savedAnswers->where('is_correct', true)->count();
+            $score = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * $quiz->points) : 0;
+
+            $submission->update([
+                'score' => $score,
+                'total_questions' => $totalQuestions,
+                'correct_answers' => $correctCount,
+                'status' => 'graded',
+                'submitted_at' => now(),
+            ]);
+
+            return redirect()->route('dashboard.classes.quizzes.show', [$class, $quiz])
+                ->with('success', 'Time expired — your saved answers were submitted automatically.');
+        }
+
         // Only treat as "submitted" if it's actually been graded
         $completedSubmission = $submission && $submission->status === 'graded' ? $submission : null;
 
