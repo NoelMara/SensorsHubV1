@@ -177,7 +177,7 @@ class DashboardController extends Controller
             
             // Get column names so INSERT statements don't depend on column order
             $columns = array_keys((array) $rows->first());
-            $columnList = implode(', ', $columns);
+            $columnList = implode(', ', array_map(fn($c) => '"' . $c . '"', $columns));
             
             foreach ($rows as $row) {
                 $values = [];
