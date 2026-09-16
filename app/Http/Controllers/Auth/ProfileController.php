@@ -20,16 +20,6 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        \Log::info('USER profile update attempt', [
-            'has_file' => $request->hasFile('profile_image'),
-            'file_valid' => $request->file('profile_image')?->isValid(),
-            'file_error' => $request->file('profile_image')?->getError(),
-            'file_size' => $request->file('profile_image')?->getSize(),
-            'file_name' => $request->file('profile_image')?->getClientOriginalName(),
-            'post_max_size' => ini_get('post_max_size'),
-            'upload_max_filesize' => ini_get('upload_max_filesize'),
-        ]);
-
         $user = Auth::user();
 
         $request->validate([
@@ -65,8 +55,13 @@ class ProfileController extends Controller
                 }
             }
 
-            $result = $cloudinary->uploadApi()->upload($request->file('profile_image')->getRealPath());
-            $data['profile_image'] = $result['secure_url'];
+            try {
+                $result = $cloudinary->uploadApi()->upload($request->file('profile_image')->getRealPath());
+                $data['profile_image'] = $result['secure_url'];
+            } catch (\Exception $e) {
+                \Log::error('Cloudinary upload failed', ['error' => $e->getMessage()]);
+                return back()->with('error', 'Profile image upload failed. Please try again.');
+            }
         }
 
         $user->update($data);
