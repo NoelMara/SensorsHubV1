@@ -101,6 +101,11 @@ class QuizController extends Controller
         if ($class->instructor_id !== auth()->id()) abort(403);
         if ($quiz->class_id !== $class->id) abort(404);
 
+        // Prevent editing while a student is still taking the quiz
+        if ($quiz->submissions()->where('status', 'in_progress')->exists()) {
+            return back()->with('error', 'A student is currently taking this quiz. Please wait until they finish before editing.');
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
