@@ -77,8 +77,14 @@ class ModuleController extends Controller
     {
         if ($module->class_id !== $class->id) abort(404);
 
-        // Allow instructors to preview
-        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
+        // Allow only the class owner or admin to preview
+        if (auth()->user()->isAdministrator()) {
+            return view('user.classes.modules.show', compact('class', 'module'));
+        }
+        if (auth()->user()->isInstructor()) {
+            if ($class->instructor_id !== auth()->id()) {
+                abort(403);
+            }
             return view('user.classes.modules.show', compact('class', 'module'));
         }
         
@@ -224,8 +230,15 @@ class ModuleController extends Controller
 
     public function studentIndex(Classroom $class)
     {
-        // Allow instructors to view
-        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
+        // Allow only the class owner or admin to view
+        if (auth()->user()->isAdministrator()) {
+            $modules = $class->modules()->where('is_published', true)->orderBy('order')->paginate(10);
+            return view('user.classes.modules.index', compact('class', 'modules'));
+        }
+        if (auth()->user()->isInstructor()) {
+            if ($class->instructor_id !== auth()->id()) {
+                abort(403);
+            }
             $modules = $class->modules()->where('is_published', true)->orderBy('order')->paginate(10);
             return view('user.classes.modules.index', compact('class', 'modules'));
         }
