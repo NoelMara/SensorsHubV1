@@ -229,6 +229,14 @@
                                 You're registering as a <span class="font-medium text-gray-900 dark:text-white">User</span>.
                             </p>
 
+                            {{-- reCAPTCHA --}}
+                            <div>
+                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                @error('g-recaptcha-response')
+                                    <p class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             {{-- Submit --}}
                             <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
                                 Create account
