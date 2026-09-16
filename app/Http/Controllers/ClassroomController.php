@@ -120,6 +120,11 @@ class ClassroomController extends Controller
 
     public function join(Request $request)
     {
+        // Enforce: one class per student (blocks a second join attempt)
+        if (auth()->user()->classes()->exists()) {
+            return back()->with('error', 'You can only join one class.');
+        }
+
         $request->validate([
             'code' => 'required|string|size:6',
         ]);
