@@ -210,6 +210,12 @@ class QuizController extends Controller
 
             $passed = ($correctCount / max($totalQuestions, 1)) * 100 >= $quiz->passing_score;
             $emoji = $passed ? '🎉' : '📚';
+            NotificationHelper::send(
+                $class->instructor_id,
+                '📥 ' . $class->name . ($class->section ? ' (Block ' . $class->section . ')' : ''),
+                auth()->user()->name . ' submitted "' . $quiz->title . '" — ' . $correctCount . '/' . $totalQuestions . ' correct',
+                route('instructor.classes.quizzes.submissions', [$class, $quiz])
+            );
             NotificationHelper::send(auth()->id(), "{$emoji} Quiz Result: {$quiz->title}", "{$correctCount}/{$totalQuestions} correct · {$score} points", route('dashboard.classes.quizzes.show', [$class, $quiz]));
 
             return redirect()->route('dashboard.classes.quizzes.show', [$class, $quiz])
@@ -396,6 +402,12 @@ class QuizController extends Controller
 
             $passed = ($correctCount / max($totalQuestions, 1)) * 100 >= $quiz->passing_score;
             $emoji = $passed ? '🎉' : '📚';
+            NotificationHelper::send(
+                $class->instructor_id,
+                '📥 ' . $class->name . ($class->section ? ' (Block ' . $class->section . ')' : ''),
+                auth()->user()->name . ' submitted "' . $quiz->title . '" — ' . $correctCount . '/' . $totalQuestions . ' correct',
+                route('instructor.classes.quizzes.submissions', [$class, $quiz])
+            );
             NotificationHelper::send(auth()->id(), "{$emoji} Quiz Result: {$quiz->title}", "{$correctCount}/{$totalQuestions} correct · {$score} points", route('dashboard.classes.quizzes.show', [$class, $quiz]));
 
             return redirect()->route('dashboard.classes.quizzes.show', [$class, $quiz])
@@ -444,6 +456,12 @@ class QuizController extends Controller
 
         $passed = ($correctCount / max($totalQuestions, 1)) * 100 >= $quiz->passing_score;
         $emoji = $passed ? '🎉' : '📚';
+        NotificationHelper::send(
+            $class->instructor_id,
+            '📥 ' . $class->name . ($class->section ? ' (Block ' . $class->section . ')' : ''),
+            auth()->user()->name . ' submitted "' . $quiz->title . '" — ' . $correctCount . '/' . $totalQuestions . ' correct',
+            route('instructor.classes.quizzes.submissions', [$class, $quiz])
+        );
         NotificationHelper::send(auth()->id(), "{$emoji} Quiz Result: {$quiz->title}", "{$correctCount}/{$totalQuestions} correct · {$score} points", route('dashboard.classes.quizzes.show', [$class, $quiz]));
 
         return redirect()->route('dashboard.classes.quizzes.show', [$class, $quiz])->with('success', 'Quiz submitted! ' . $correctCount . '/' . $totalQuestions . ' correct.');
