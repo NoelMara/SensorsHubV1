@@ -323,6 +323,33 @@ class QuizController extends Controller
         return response()->json(['saved' => true]);
     }
 
+    // Student: Sync tab switch count without submitting
+    public function syncSwitches(Request $request, Classroom $class, Quiz $quiz)
+    {
+        if ($quiz->class_id !== $class->id) abort(404);
+
+        $enrolled = $class->students()
+            ->where('user_id', auth()->id())
+            ->wherePivot('status', 'approved')
+            ->exists();
+        if (!$enrolled) abort(403);
+
+        $submission = QuizSubmission::where('quiz_id', $quiz->id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$submission || $submission->status !== 'in_progress') {
+            return response()->json(['synced' => false]);
+        }
+
+        $reported = (int) $request->input('tab_switches', 0);
+        $newCount = max($reported, $submission->tab_switches ?? 0);
+
+        $submission->update(['tab_switches' => $newCount]);
+
+        return response()->json(['synced' => true, 'tab_switches' => $newCount]);
+    }
+
     // Student: Submit Quiz
     public function submit(Request $request, Classroom $class, Quiz $quiz)
     {

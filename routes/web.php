@@ -1,5 +1,24 @@
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| Application Routes
+|--------------------------------------------------------------------------
+|
+| Sections in this file, in order:
+|   1. Public          — anyone, no login needed
+|   2. Auth (guest)    — login / register / 2FA / admin entry
+|   3. Logout          — authenticated users only
+|   4. Notifications   — authenticated users only
+|   5. Report          — authenticated users only
+|   6. AI Chat         — authenticated users only, throttled
+|   7. Student         — /dashboard/* (students, instructors, admins via auth.redirect)
+|   8. Email Verify    — authenticated users only
+|   9. Instructor      — /instructor/* (instructor role only)
+|  10. Administrator   — /administrator/* (administrator role only)
+|
+*/
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -29,7 +48,9 @@ use App\Http\Controllers\Administrator\SuggestionController as AdministratorSugg
 use App\Http\Controllers\Administrator\ContentController as AdministratorContentController;
 use App\Http\Controllers\EmailVerificationController;
 
-// ─── Public Routes ────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 1. PUBLIC ROUTES — anyone can visit, no login required
+// ─────────────────────────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/sensors', [SensorController::class, 'index'])->name('sensors.index');
 Route::get('/sensors/{slug}', [SensorController::class, 'show'])->name('sensors.show');
@@ -39,28 +60,39 @@ Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/shop', [ProductController::class, 'index'])->name('shop.index');
 Route::get('/shop/{id}', [ProductController::class, 'show'])->name('shop.show');
 
-// ─── Community Suggestions (Public - requires auth to comment) ────────────────
+// Community Suggestions — public to view, requires login to comment
 Route::get('/community', [SuggestionController::class, 'community'])->name('suggestions.community');
 
-// ─── Authentication Routes ────────────────────────────────────────────────────
-// NOTE: No route-level throttle here — all rate limiting is handled
-//       manually inside LoginController using RateLimiter::hit/tooManyAttempts
-//       so only FAILED attempts count, not every request.
+// ─────────────────────────────────────────────────────────────────────────────
+// 2. AUTHENTICATION ROUTES (guest only) — login, register, 2FA, admin entry
+// ─────────────────────────────────────────────────────────────────────────────
+// NOTE: No route-level throttle on login — rate limiting is handled inside
+//       LoginController using RateLimiter::hit/tooManyAttempts, so only
+//       FAILED attempts count against the user, not every request.
 Route::middleware('guest')->group(function () {
+    // Regular user login / register
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::get('/sys/secure-entry', [LoginController::class, 'showAdministratorLoginForm'])->name('administrator.login');
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/login', [LoginController::class, 'login']);
-    Route::post('/sys/secure-entry', [LoginController::class, 'administratorLogin'])->name('administrator.login.submit');
+
+    // 2FA verification step for regular login
     Route::post('/login/verify', [LoginController::class, 'verifyCode'])->name('login.verify');
     Route::post('/login/resend', [LoginController::class, 'resendCode'])->name('login.resend');
+
+    // Administrator login (separate URL, separate credentials)
+    Route::get('/sys/secure-entry', [LoginController::class, 'showAdministratorLoginForm'])->name('administrator.login');
+    Route::post('/sys/secure-entry', [LoginController::class, 'administratorLogin'])->name('administrator.login.submit');
 });
 
+// ─────────────────────────────────────────────────────────────────────────────
+// 3. LOGOUT — any authenticated user
+// ─────────────────────────────────────────────────────────────────────────────
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Notification Routes
+// ─────────────────────────────────────────────────────────────────────────────
+// 4. NOTIFICATIONS — any authenticated user
+// ─────────────────────────────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
     Route::post('/notifications/{notification}/read', function (\App\Models\Notification $notification) {
         $notification->update(['is_read' => true]);
@@ -89,30 +121,39 @@ Route::middleware('auth')->group(function () {
     })->name('notifications.destroy');
 });
 
-// Report Routes
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. REPORT — any authenticated user can report content
+// ─────────────────────────────────────────────────────────────────────────────
 Route::post('/report', [App\Http\Controllers\ReportController::class, 'store'])
     ->middleware('auth')
     ->name('report.store');
 
-// ─── AI Chat Route ────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 6. AI CHAT — authenticated users, throttled (5 requests / minute)
+// ─────────────────────────────────────────────────────────────────────────────
 Route::post('/api/chat', [ChatController::class, 'send'])
     ->middleware(['auth', 'throttle:5,1'])
     ->name('chat.send');
 
-// ─── Student Dashboard Routes ────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 7. STUDENT DASHBOARD — /dashboard/* — any logged-in user
+//    Students see their own content. Instructors/admins redirected by auth.redirect.
+// ─────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->group(function () {
+
+    // Dashboard home
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
-    // Profile
+    // ── Profile (any authenticated user) ──
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Saved Projects
+    // ── Saved Projects (any authenticated user) ──
     Route::get('/saved-projects', [ProjectController::class, 'saved'])->name('saved');
     Route::post('/projects/{project}/save', [ProjectController::class, 'toggleSave'])->name('projects.save');
 
-    // My Suggestions
+    // ── My Suggestions (any authenticated user) ──
     Route::get('/suggestions', [SuggestionController::class, 'mySuggestions'])->name('suggestions');
     Route::post('/suggestions', [SuggestionController::class, 'store'])
         ->middleware('throttle:10,5')
@@ -124,23 +165,25 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     // View any suggestion (community-linked)
     Route::get('/suggestions/{suggestion}/view', [SuggestionController::class, 'show'])->name('suggestions.show');
 
-    // Comments (any authenticated user can comment)
+    // ── Comments on suggestions (any authenticated user) ──
     Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'storeComment'])
         ->middleware('throttle:10,5')
         ->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [SuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 
-     // Classes
+    // ── Classes (student view) ──
     Route::get('/classes', [ClassroomController::class, 'studentClasses'])->name('classes.index');
     Route::post('/classes/join', [ClassroomController::class, 'join'])
         ->middleware('throttle:5,1')
         ->name('classes.join');
 
-    // Feedback (students + instructors)
+    // ── Feedback (students + instructors) ──
     Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
     Route::post('/feedback', [\App\Http\Controllers\FeedbackController::class, 'store'])
         ->middleware('throttle:5,10')
         ->name('feedback.store');
+
+    // ── Class Detail Routes (student view of ONE class) ──
     Route::get('/classes/{class}', [ClassroomController::class, 'studentShow'])->name('classes.show');
     Route::get('/classes/{class}/modules/{module}', [ModuleController::class, 'show'])->name('classes.modules.show');
     Route::get('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'show'])->name('classes.assessments.show');
@@ -148,25 +191,37 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::get('/classes/{class}/announcements', [AnnouncementController::class, 'studentIndex'])->name('classes.announcements.index');
     Route::get('/classes/{class}/modules', [ModuleController::class, 'studentIndex'])->name('classes.modules.index');
     Route::get('/classes/{class}/assessments', [AssessmentController::class, 'studentIndex'])->name('classes.assessments.index');
+
+    // ── Quizzes (student flow: list → show → start → save → submit) ──
     Route::get('/classes/{class}/quizzes', [QuizController::class, 'studentIndex'])->name('classes.quizzes.index');
     Route::get('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'show'])->name('classes.quizzes.show');
     Route::post('/classes/{class}/quizzes/{quiz}/start', [QuizController::class, 'start'])->name('classes.quizzes.start');
     Route::post('/classes/{class}/quizzes/{quiz}/save-answer', [QuizController::class, 'saveAnswer'])->name('classes.quizzes.save-answer');
     Route::post('/classes/{class}/quizzes/{quiz}/submit', [QuizController::class, 'submit'])->name('classes.quizzes.submit');
+    // Sync tab-switch count while quiz is in progress
+    Route::post('/classes/{class}/quizzes/{quiz}/sync-switches', [QuizController::class, 'syncSwitches'])
+        ->name('classes.quizzes.sync-switches');
 });
 
-// ─── Email Verification Routes ────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 8. EMAIL VERIFICATION — authenticated but unverified users
+// ─────────────────────────────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
     Route::get('/email/verify', [EmailVerificationController::class, 'show'])->name('verification.notice');
     Route::post('/email/verify', [EmailVerificationController::class, 'verify'])->name('verification.verify');
     Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('verification.resend');
 });
 
-// ─── Instructor Routes ─────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 9. INSTRUCTOR ROUTES — /instructor/* — instructor role only
+//    Classes, announcements, modules, assessments, quizzes, leaderboard, analytics
+// ─────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('instructor.')->group(function () {
+
+    // Instructor dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Classes
+    // ── Classes (CRUD + student approval) ──
     Route::get('/classes', [ClassroomController::class, 'index'])->name('classes.index');
     Route::get('/classes/create', [ClassroomController::class, 'create'])->name('classes.create');
     Route::post('/classes', [ClassroomController::class, 'store'])->name('classes.store');
@@ -178,7 +233,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::post('/classes/{class}/approve-all', [ClassroomController::class, 'approveAll'])->name('classes.approve-all');
     Route::delete('/classes/{class}/reject/{user}', [ClassroomController::class, 'reject'])->name('classes.reject');
 
-    // Announcements
+    // ── Announcements (per class) ──
     Route::get('/classes/{class}/announcements', [AnnouncementController::class, 'index'])->name('classes.announcements.index');
     Route::get('/classes/{class}/announcements/create', [AnnouncementController::class, 'create'])->name('classes.announcements.create');
     Route::post('/classes/{class}/announcements', [AnnouncementController::class, 'store'])->name('classes.announcements.store');
@@ -188,7 +243,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::put('/classes/{class}/announcements/{announcement}', [AnnouncementController::class, 'update'])->name('classes.announcements.update');
     Route::delete('/classes/{class}/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('classes.announcements.destroy');
 
-    // Modules
+    // ── Modules (per class) ──
     Route::get('/classes/{class}/modules', [ModuleController::class, 'index'])->name('classes.modules.index');
     Route::get('/classes/{class}/modules/create', [ModuleController::class, 'create'])->name('classes.modules.create');
     Route::post('/classes/{class}/modules', [ModuleController::class, 'store'])->name('classes.modules.store');
@@ -198,7 +253,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::get('/classes/{class}/modules/{module}/edit', [ModuleController::class, 'edit'])->name('classes.modules.edit');
     Route::put('/classes/{class}/modules/{module}', [ModuleController::class, 'update'])->name('classes.modules.update');
 
-    // Assessments
+    // ── Assessments (per class) ──
     Route::get('/classes/{class}/assessments', [AssessmentController::class, 'index'])->name('classes.assessments.index');
     Route::get('/classes/{class}/assessments/create', [AssessmentController::class, 'create'])->name('classes.assessments.create');
     Route::post('/classes/{class}/assessments', [AssessmentController::class, 'store'])->name('classes.assessments.store');
@@ -211,7 +266,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::post('/classes/{class}/assessments/{assessment}/grade/{submission}', [AssessmentController::class, 'grade'])->name('classes.assessments.grade');
     Route::delete('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'destroy'])->name('classes.assessments.destroy');
 
-    // Quizzes
+    // ── Quizzes (per class) ──
     Route::get('/classes/{class}/quizzes', [QuizController::class, 'index'])->name('classes.quizzes.index');
     Route::get('/classes/{class}/quizzes/create', [QuizController::class, 'create'])->name('classes.quizzes.create');
     Route::post('/classes/{class}/quizzes', [QuizController::class, 'store'])->name('classes.quizzes.store');
@@ -223,56 +278,54 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::delete('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'destroy'])->name('classes.quizzes.destroy');
     Route::get('/classes/{class}/quizzes/{quiz}/submissions', [QuizController::class, 'submissions'])->name('classes.quizzes.submissions');
 
-    // Leaderboard
+    // ── Class insights ──
     Route::get('/classes/{class}/leaderboard', [ClassroomController::class, 'leaderboard'])->name('classes.leaderboard');
-
-    // Analytics
     Route::get('/classes/{class}/analytics', [ClassroomController::class, 'analytics'])->name('classes.analytics');
 
-    // Resources
+    // ── Class resources (attach sensors/projects/videos) ──
     Route::get('/classes/{class}/resources', [ClassroomController::class, 'resources'])->name('classes.resources');
     Route::post('/classes/{class}/resources', [ClassroomController::class, 'storeResource'])->name('classes.resources.store');
     Route::delete('/classes/{class}/resources/{resource}', [ClassroomController::class, 'destroyResource'])->name('classes.resources.destroy');
 
-    // Feedback (instructor)
+    // ── Feedback (instructor) ──
     Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
     Route::post('/feedback', [\App\Http\Controllers\FeedbackController::class, 'store'])
         ->middleware('throttle:5,10')
         ->name('feedback.store');
 
-
-    // Suggestions Management
+    // ── Suggestions Management (instructor view) ──
     Route::get('/suggestions', [AdminSuggestionController::class, 'index'])->name('suggestions.index');
     Route::get('/suggestions/{suggestion}', [AdminSuggestionController::class, 'show'])->name('suggestions.show');
     Route::put('/suggestions/{suggestion}/status', [AdminSuggestionController::class, 'updateStatus'])->name('suggestions.status');
-
-    // Comment routes (instructor)
     Route::post('/suggestions/{suggestion}/comment', [AdminSuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [AdminSuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 });
 
-// ─── Administrator Routes ───────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// 10. ADMINISTRATOR ROUTES — /administrator/* — administrator role only
+//     Users, content, logs, backups, feedback, suggestions
+// ─────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('administrator.')->group(function () {
-    Route::get('/dashboard', [AdministratorDashboardController::class, 'index'])->name('dashboard');
 
-    // Analytics
+    // Admin dashboard + analytics
+    Route::get('/dashboard', [AdministratorDashboardController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [AdministratorDashboardController::class, 'analytics'])->name('analytics');
 
-    // Profile
+    // ── Profile (admin's own account) ──
     Route::get('/profile', [AdministratorProfileController::class, 'show'])->name('profile');
     Route::match(['put', 'post'], '/profile/update', [AdministratorProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [AdministratorProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Activity Logs
+    // ── Activity Logs ──
     Route::get('/logs', [AdministratorDashboardController::class, 'logs'])->name('logs');
     Route::delete('/logs/clear', [AdministratorDashboardController::class, 'clearLogs'])->name('logs.clear');
 
-    // Feedback
+    // ── Feedback (admin view all) ──
     Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('feedback.index');
     Route::get('/feedback/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'show'])->name('feedback.show');
     Route::put('/feedback/{feedback}/status', [\App\Http\Controllers\FeedbackController::class, 'updateStatus'])->name('feedback.status');
 
-    // Database Backup 
+    // ── Database Backup ──
     Route::get('/backup', function () {
         return view('administrator.backup');
     })->name('backup');
@@ -280,7 +333,7 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
     Route::get('/backup/download/{filename}', [AdministratorDashboardController::class, 'downloadBackup'])->name('backup.download-file');
     Route::delete('/backup/delete/{filename}', [AdministratorDashboardController::class, 'deleteBackup'])->name('backup.delete');
 
-    // Users CRUD
+    // ── Users CRUD + moderation ──
     Route::get('/users', [AdministratorUserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [AdministratorUserController::class, 'create'])->name('users.create');
     Route::post('/users', [AdministratorUserController::class, 'store'])->name('users.store');
@@ -293,18 +346,16 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
     Route::post('/users/{user}/ban', [AdministratorUserController::class, 'ban'])->name('users.ban');
     Route::post('/users/{user}/unban', [AdministratorUserController::class, 'unban'])->name('users.unban');
 
-    // Suggestions Management
+    // ── Suggestions Management (admin, can delete) ──
     Route::get('/suggestions', [AdministratorSuggestionController::class, 'index'])->name('suggestions.index');
     Route::get('/suggestions/{suggestion}', [AdministratorSuggestionController::class, 'show'])->name('suggestions.show');
     Route::put('/suggestions/{suggestion}/status', [AdministratorSuggestionController::class, 'updateStatus'])->name('suggestions.status');
     Route::delete('/suggestions/{suggestion}', [AdministratorSuggestionController::class, 'destroy'])->name('suggestions.destroy');
     Route::delete('/suggestions/{suggestion}/comment/{comment}', [AdministratorSuggestionController::class, 'destroyComment'])->name('suggestions.comment.destroy');
-
-    // Comment routes (administrator)
     Route::post('/suggestions/{suggestion}/comment', [AdministratorSuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [AdministratorSuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 
-    // Content
+    // ── Content (sensors / projects / products / videos) ──
     Route::get('/sensors', [AdministratorContentController::class, 'sensors'])->name('sensors.index');
     Route::get('/projects', [AdministratorContentController::class, 'projects'])->name('projects.index');
     Route::get('/products', [AdministratorContentController::class, 'products'])->name('products.index');

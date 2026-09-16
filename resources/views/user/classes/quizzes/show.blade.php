@@ -260,9 +260,25 @@
 
         tabInput.value = switches;
 
+        function syncSwitches() {
+            fetch("{{ route('dashboard.classes.quizzes.sync-switches', [$class, $quiz]) }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ tab_switches: switches })
+            }).catch(() => {});
+        }
+
         // Show honor modal on load
         modal.classList.remove('hidden');
         modal.classList.add('flex');
+
+        // If the quiz was already started, sync immediately 
+        if (existingStartedAt) {
+            syncSwitches();
+        }
 
         // Attach autosave to every radio button (runs on page load)
         form.querySelectorAll('input[type="radio"][data-question-id]').forEach(radio => {
@@ -360,9 +376,10 @@
                 switches++;
                 tabInput.value = switches;
                 sessionStorage.setItem(storageKey, switches);
+                syncSwitches();
             }
         });
-
+        
         // Block copy/paste/cut/right-click on the form
         ['copy', 'cut', 'paste', 'contextmenu'].forEach(evt => {
             form.addEventListener(evt, e => {
