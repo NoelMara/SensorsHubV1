@@ -140,6 +140,11 @@ class AssessmentController extends Controller
             abort(404);
         }
 
+        // Instructors can't submit their own assessment
+        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
+            abort(403);
+        }
+
         $enrolled = $class->students()
             ->where('user_id', auth()->id())
             ->wherePivot('status', 'approved')
@@ -153,19 +158,28 @@ class AssessmentController extends Controller
             return back()->with('error', 'This assessment is past the due date.');
         }
 
+        // Block re-submit if already graded
+        $existing = AssessmentSubmission::where('assessment_id', $assessment->id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if ($existing && $existing->status === 'graded') {
+            return back()->with('error', 'This assessment has already been graded.');
+        }
+
         $validated = $request->validate([
             'content' => 'required|string',
         ]);
 
-        AssessmentSubmission::create([
-            'assessment_id' => $assessment->id,
-            'user_id' => auth()->id(),
-            'content' => $validated['content'],
-            'status' => 'submitted',
-            'submitted_at' => now(),
-        ]);
+        AssessmentSubmission::updateOrCreate(
+            ['assessment_id' => $assessment->id, 'user_id' => auth()->id()],
+            [
+                'content' => $validated['content'],
+                'status' => 'submitted',
+                'submitted_at' => now(),
+            ]
+        );
 
-        // Notify instructor
         NotificationHelper::send(
             $class->instructor_id,
             '📥 ' . $class->name . ($class->section ? ' (Block ' . $class->section . ')' : ''),
