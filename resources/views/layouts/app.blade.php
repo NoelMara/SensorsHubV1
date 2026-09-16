@@ -32,6 +32,7 @@ header('Expires: 0');
         }
         $isAdministrator = auth()->check() && auth()->user()->isAdministrator();
         $isInstructor = auth()->check() && auth()->user()->isInstructor();
+        $hideNav = request()->is('email/verify*');
     @endphp
 
     <!-- Toast Notifications -->
@@ -158,6 +159,7 @@ header('Expires: 0');
     @endguest
 
     @auth
+    @unless($hideNav)
     {{-- Top Nav for Logged-in Users (Mobile) + Sidebar for Desktop --}}
     
     {{-- Mobile Top Bar --}}
@@ -270,15 +272,16 @@ header('Expires: 0');
             </form>
         </div>
     </aside>
+    @endunless
     @endauth
 
     <!-- Main Content -->
-    <main class="flex-1 @auth lg:ml-60 pt-16 lg:pt-0 @else pt-16 @endauth transition-all duration-300">
+    <main class="flex-1 @auth @unless($hideNav) lg:ml-60 @endunless pt-16 lg:pt-0 @else pt-16 @endauth transition-all duration-300">
     @yield('content')
     </main>
 
         <!-- Footer -->
-    <footer class="bg-gray-950 border-t border-gray-900 @auth lg:ml-60 @endauth">
+    <footer class="bg-gray-950 border-t border-gray-900 @auth @unless($hideNav) lg:ml-60 @endunless @endauth">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
             {{-- Top: brand + columns --}}
