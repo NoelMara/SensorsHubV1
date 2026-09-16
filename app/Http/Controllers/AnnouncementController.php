@@ -91,11 +91,6 @@ class AnnouncementController extends Controller
             );
         }
 
-        if ($announcement->wasChanged('is_published') && !$announcement->is_published) {
-            Notification::where('link', route('dashboard.classes.announcements.index', $class))
-                ->delete();
-        }
-
         return redirect()
             ->route('instructor.classes.announcements.index', $class)
             ->with('success', 'Announcement updated!');
@@ -113,8 +108,18 @@ class AnnouncementController extends Controller
 
     public function studentIndex(Classroom $class)
     {
-        // Allow instructors to view
-        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
+        // Allow only the class owner or admin to view
+        if (auth()->user()->isAdministrator()) {
+            $announcements = $class->announcements()
+                ->where('is_published', true)
+                ->latest()
+                ->paginate(10);
+            return view('user.classes.announcements.index', compact('class', 'announcements'));
+        }
+        if (auth()->user()->isInstructor()) {
+            if ($class->instructor_id !== auth()->id()) {
+                abort(403);
+            }
             $announcements = $class->announcements()
                 ->where('is_published', true)
                 ->latest()
