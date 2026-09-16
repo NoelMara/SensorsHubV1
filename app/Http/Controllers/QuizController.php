@@ -416,12 +416,16 @@ class QuizController extends Controller
 
             if ($isCorrect) $correctCount++;
 
-            QuizAnswer::create([
-                'quiz_question_id' => $questionId,
-                'user_id' => auth()->id(),
-                'selected_option_id' => $optionId,
-                'is_correct' => $isCorrect,
-            ]);
+            QuizAnswer::updateOrCreate(
+                [
+                    'quiz_question_id' => $questionId,
+                    'user_id' => auth()->id(),
+                ],
+                [
+                    'selected_option_id' => $optionId,
+                    'is_correct' => $isCorrect,
+                ]
+            );
         }
 
         $score = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * $quiz->points) : 0;
