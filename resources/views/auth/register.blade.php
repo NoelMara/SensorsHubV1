@@ -79,6 +79,23 @@
         min-height: 78px;
     }
 
+    /* Small phones: scale down the widget so it fits inside the box */
+    @media (max-width: 380px) {
+        .recaptcha-box-body {
+            transform: scale(0.85);
+            transform-origin: center center;
+            min-height: 66px;
+        }
+    }
+
+    @media (max-width: 340px) {
+        .recaptcha-box-body {
+            transform: scale(0.75);
+            transform-origin: center center;
+            min-height: 58px;
+        }
+    }
+
 </style>
 @endpush
 
