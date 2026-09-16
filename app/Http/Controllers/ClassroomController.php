@@ -91,7 +91,28 @@ class ClassroomController extends Controller
         if ($class->instructor_id !== auth()->id()) {
             abort(403);
         }
+
+        // Capture enrolled students BEFORE deletion
+        $enrolledStudents = $class->students()
+            ->wherePivot('status', 'approved')
+            ->get();
+
+        $class->students()->detach();
         $class->delete();
+
+        // Demote anyone no longer in any approved class
+        foreach ($enrolledStudents as $student) {
+            if ($student->role !== 'student') continue;
+
+            $stillInAClass = $student->classes()
+                ->wherePivot('status', 'approved')
+                ->exists();
+
+            if (!$stillInAClass) {
+                $student->update(['role' => 'user']);
+            }
+        }
+
         ActivityLogHelper::log('deleted', 'class', "deleted class '{$class->name}'");
         return redirect()->route('instructor.classes.index')
             ->with('success', 'Class deleted successfully!');

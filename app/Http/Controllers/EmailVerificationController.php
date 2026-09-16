@@ -8,8 +8,12 @@ use Illuminate\Support\Facades\RateLimiter;
 
 class EmailVerificationController extends Controller
 {
-    public function show()
+    public function show(Request $request)
     {
+        if ($request->user()->email_verified_at) {
+            return $this->redirectToDashboard($request->user());
+        }
+
         return view('auth.verify-email');
     }
 
@@ -63,5 +67,18 @@ class EmailVerificationController extends Controller
         $user->notify(new VerifyEmailWithCode($code));
 
         return back()->with('message', 'A new verification code has been sent to your email!');
+    }
+
+    private function redirectToDashboard($user)
+    {
+        if ($user->isAdministrator()) {
+            return redirect()->route('administrator.dashboard');
+        }
+
+        if ($user->isInstructor()) {
+            return redirect()->route('instructor.dashboard');
+        }
+
+        return redirect()->route('dashboard.index');
     }
 }
