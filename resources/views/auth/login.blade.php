@@ -38,6 +38,14 @@
     .terminal-line {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
+
+    .recaptcha-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        min-height: 78px;
+    }
 </style>
 @endpush
 
@@ -273,6 +281,20 @@
                                     <input id="remember" name="remember" type="checkbox" class="w-4 h-4 rounded border-gray-300 dark:border-gray-700 text-emerald-600 dark:text-emerald-500 focus:ring-0 focus:ring-offset-0">
                                     Keep me signed in
                                 </label>
+
+                                {{-- reCAPTCHA (regular login only, not administrator) --}}
+                                @unless($isAdministratorLogin)
+                                    <div>
+                                        <div class="recaptcha-center">
+                                            <div class="g-recaptcha"
+                                                data-sitekey="{{ config('services.recaptcha.site_key') }}">
+                                            </div>
+                                        </div>
+                                        @error('g-recaptcha-response')
+                                            <p class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                @endunless
 
                                 <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
                                     {{ $isAdministratorLogin ? 'Sign in as administrator' : 'Sign in' }}
