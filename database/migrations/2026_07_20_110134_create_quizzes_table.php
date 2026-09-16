@@ -49,6 +49,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('selected_option_id')->nullable()->constrained('quiz_options')->onDelete('set null');
             $table->boolean('is_correct')->default(false);
+            $table->unique(['quiz_question_id', 'user_id']);
             $table->timestamps();
         });
 
@@ -61,9 +62,10 @@ return new class extends Migration
             $table->integer('total_questions')->default(0);
             $table->integer('correct_answers')->default(0);
             $table->string('status')->default('submitted');
-            $table->timestamp('started_at')->nullable(); // when student first opened
+            $table->timestamp('started_at')->nullable();
             $table->timestamp('submitted_at')->nullable();
             $table->unsignedInteger('tab_switches')->default(0);
+            $table->unique(['quiz_id', 'user_id']);
             $table->timestamps();
         });
     }
