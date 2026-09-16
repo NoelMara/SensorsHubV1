@@ -37,12 +37,46 @@
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
-    .recaptcha-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    min-height: 78px;
+    .recaptcha-box {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #fafafa;
+        padding: 14px 16px;
+    }
+    .dark .recaptcha-box {
+        border-color: #1f2937;
+        background: #0b0f17;
+    }
+
+    .recaptcha-box-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+    }
+    .recaptcha-box-header .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 9999px;
+        background: #10b981;
+        flex-shrink: 0;
+    }
+    .recaptcha-box-header .label {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: #6b7280;
+    }
+    .dark .recaptcha-box-header .label {
+        color: #9ca3af;
+    }
+
+    .recaptcha-box-body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 78px;
     }
 
 </style>
@@ -234,17 +268,21 @@
                             </p>
 
                             {{-- reCAPTCHA --}}
-                            <div>
-                                <div class="recaptcha-center">
+                            <div class="recaptcha-box">
+                                <div class="recaptcha-box-header">
+                                    <span class="dot"></span>
+                                    <span class="label">security check</span>
+                                </div>
+                                <div class="recaptcha-box-body">
                                     <div class="g-recaptcha"
                                         data-sitekey="{{ config('services.recaptcha.site_key') }}">
                                     </div>
                                 </div>
                                 @error('g-recaptcha-response')
-                                    <p class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    <p class="mt-3 text-xs text-red-600 dark:text-red-400 text-center">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
+
                             {{-- Submit --}}
                             <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
                                 Create account
