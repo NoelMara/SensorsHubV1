@@ -37,32 +37,13 @@
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
-    .recaptcha-wrapper {
+    .recaptcha-center {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 78px;
     width: 100%;
-    padding: 4px 0;
-}
-
-.recaptcha-wrapper > div {
-    line-height: 0;
-}
-
-.recaptcha-wrapper iframe {
-    display: block;
-}
-
-@media (max-width: 380px) {
-    .recaptcha-wrapper {
-        min-height: 66px;
+    min-height: 78px;
     }
-    .recaptcha-wrapper > div {
-        transform: scale(0.85);
-        transform-origin: center center;
-    }
-}
 
 </style>
 @endpush
@@ -254,14 +235,16 @@
 
                             {{-- reCAPTCHA --}}
                             <div>
-                                <div class="recaptcha-wrapper">
-                                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                <div class="recaptcha-center">
+                                    <div class="g-recaptcha"
+                                        data-sitekey="{{ config('services.recaptcha.site_key') }}">
+                                    </div>
                                 </div>
                                 @error('g-recaptcha-response')
                                     <p class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                             </div>
-
+                            
                             {{-- Submit --}}
                             <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition">
                                 Create account
