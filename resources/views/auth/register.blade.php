@@ -37,63 +37,10 @@
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
-    .recaptcha-box {
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        background: #fafafa;
-        padding: 14px 16px;
-    }
-    .dark .recaptcha-box {
-        border-color: #1f2937;
-        background: #0b0f17;
-    }
-
-    .recaptcha-box-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 12px;
-    }
-    .recaptcha-box-header .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 9999px;
-        background: #10b981;
-        flex-shrink: 0;
-    }
-    .recaptcha-box-header .label {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: #6b7280;
-    }
-    .dark .recaptcha-box-header .label {
-        color: #9ca3af;
-    }
-
-    .recaptcha-box-body {
+    .recaptcha-center {
         display: flex;
         justify-content: center;
-        align-items: center;
-        min-height: 78px;
-    }
-
-    /* Small phones: scale down the widget so it fits inside the box */
-    @media (max-width: 380px) {
-        .recaptcha-box-body {
-            transform: scale(0.85);
-            transform-origin: center center;
-            min-height: 66px;
-        }
-    }
-
-    @media (max-width: 340px) {
-        .recaptcha-box-body {
-            transform: scale(0.75);
-            transform-origin: center center;
-            min-height: 58px;
-        }
+        width: 100%;
     }
 
 </style>
@@ -285,18 +232,14 @@
                             </p>
 
                             {{-- reCAPTCHA --}}
-                            <div class="recaptcha-box">
-                                <div class="recaptcha-box-header">
-                                    <span class="dot"></span>
-                                    <span class="label">security check</span>
-                                </div>
-                                <div class="recaptcha-box-body">
+                            <div>
+                                <div class="recaptcha-center">
                                     <div class="g-recaptcha"
                                         data-sitekey="{{ config('services.recaptcha.site_key') }}">
                                     </div>
                                 </div>
                                 @error('g-recaptcha-response')
-                                    <p class="mt-3 text-xs text-red-600 dark:text-red-400 text-center">{{ $message }}</p>
+                                    <p class="mt-2 text-xs text-red-600 dark:text-red-400 text-center">{{ $message }}</p>
                                 @enderror
                             </div>
 
