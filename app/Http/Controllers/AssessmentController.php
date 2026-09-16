@@ -111,7 +111,16 @@ class AssessmentController extends Controller
             abort(404);
         }
 
-        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
+        if (auth()->user()->isAdministrator()) {
+            $submission = AssessmentSubmission::where('assessment_id', $assessment->id)
+                ->where('user_id', auth()->id())
+                ->first();
+            return view('user.classes.assessments.show', compact('class', 'assessment', 'submission'));
+        }
+        if (auth()->user()->isInstructor()) {
+            if ($class->instructor_id !== auth()->id()) {
+                abort(403);
+            }
             $submission = AssessmentSubmission::where('assessment_id', $assessment->id)
                 ->where('user_id', auth()->id())
                 ->first();
@@ -291,7 +300,14 @@ class AssessmentController extends Controller
 
     public function studentIndex(Classroom $class)
     {
-        if (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) {
+        if (auth()->user()->isAdministrator()) {
+            $assessments = $class->assessments()->where('is_published', true)->latest()->paginate(10);
+            return view('user.classes.assessments.index', compact('class', 'assessments'));
+        }
+        if (auth()->user()->isInstructor()) {
+            if ($class->instructor_id !== auth()->id()) {
+                abort(403);
+            }
             $assessments = $class->assessments()->where('is_published', true)->latest()->paginate(10);
             return view('user.classes.assessments.index', compact('class', 'assessments'));
         }
