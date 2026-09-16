@@ -37,9 +37,19 @@
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
-    .feature-row {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+    .recaptcha-wrapper {
+        width: 100%;
+        overflow: hidden;
+    }
+    .recaptcha-wrapper .g-recaptcha {
+        transform-origin: 0 0;
+    }
+
+    /* Mobile: scale down to fit */
+    @media (max-width: 360px) {
+        .recaptcha-wrapper .g-recaptcha {
+            transform: scale(0.85);
+        }
     }
 </style>
 @endpush
@@ -231,7 +241,9 @@
 
                             {{-- reCAPTCHA --}}
                             <div>
-                                <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                <div class="recaptcha-wrapper">
+                                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+                                </div>
                                 @error('g-recaptcha-response')
                                     <p class="mt-2 text-xs text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
