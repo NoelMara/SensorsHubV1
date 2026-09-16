@@ -38,19 +38,32 @@
     }
 
     .recaptcha-wrapper {
-        width: 100%;
-        overflow: hidden;
-    }
-    .recaptcha-wrapper .g-recaptcha {
-        transform-origin: 0 0;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 78px;
+    width: 100%;
+    padding: 4px 0;
+}
 
-    /* Mobile: scale down to fit */
-    @media (max-width: 360px) {
-        .recaptcha-wrapper .g-recaptcha {
-            transform: scale(0.85);
-        }
+.recaptcha-wrapper > div {
+    line-height: 0;
+}
+
+.recaptcha-wrapper iframe {
+    display: block;
+}
+
+@media (max-width: 380px) {
+    .recaptcha-wrapper {
+        min-height: 66px;
     }
+    .recaptcha-wrapper > div {
+        transform: scale(0.85);
+        transform-origin: center center;
+    }
+}
+
 </style>
 @endpush
 
