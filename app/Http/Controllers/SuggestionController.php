@@ -29,19 +29,6 @@ class SuggestionController extends Controller
     // ─── Show Single Suggestion ───────────────────────────────────────
     public function show(Suggestion $suggestion)
     {
-        // Instructors and Administrators can view any suggestion
-        if (in_array(auth()->user()->role, ['instructor', 'administrator'])) {
-            $suggestion->load(['user', 'comments.user']);
-            return view('user.suggestions-show', compact('suggestion'));
-        }
-
-        // Owners can view their own suggestions
-        if ($suggestion->user_id === auth()->id()) {
-            $suggestion->load(['user', 'comments.user']);
-            return view('user.suggestions-show', compact('suggestion'));
-        }
-
-        // Any authenticated user can view any suggestion (community access)
         $suggestion->load(['user', 'comments.user']);
         return view('user.suggestions-show', compact('suggestion'));
     }
