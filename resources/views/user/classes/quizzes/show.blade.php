@@ -6,7 +6,7 @@
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
 
     {{-- Back link --}}
-    <a href="{{ (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) ? route('instructor.classes.quizzes.index', $class) : route('dashboard.classes.quizzes.index', $class) }}"
+    <a href="{{ (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) ? route('instructor.classes.quizzes.index', $class) : route('dashboard.classes.show', $class) }}"
        class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
         <i class="fas fa-arrow-left text-xs"></i>
         Back to Quizzes

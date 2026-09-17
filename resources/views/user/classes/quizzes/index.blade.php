@@ -9,7 +9,7 @@
     <a href="{{ (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) ? route('instructor.classes.quizzes.index', $class) : route('dashboard.classes.show', $class) }}"
        class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
         <i class="fas fa-arrow-left text-xs"></i>
-        {{ (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) ? 'Back to Quizzes' : 'Back to Class' }}
+        {{ (auth()->user()->isInstructor() || auth()->user()->isAdministrator()) ? 'Back to Quizzes' : 'Back to Classroom' }}
     </a>
 
     {{-- Header --}}

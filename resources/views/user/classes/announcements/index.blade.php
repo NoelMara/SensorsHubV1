@@ -9,7 +9,7 @@
     <a href="{{ route('dashboard.classes.show', $class) }}"
        class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition mb-10">
         <i class="fas fa-arrow-left text-xs"></i>
-        Back to Class
+        Back to Classroom
     </a>
 
     {{-- Header --}}
