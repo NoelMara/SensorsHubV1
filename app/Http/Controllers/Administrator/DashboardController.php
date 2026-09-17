@@ -222,6 +222,11 @@ class DashboardController extends Controller
         if (!auth()->user()->isAdministrator()) {
             abort(403);
         }
+
+        // Only allow our backup file naming pattern
+        if (!preg_match('/^sensorshub-backup-[\d\-]+\.sql$/', $filename)) {
+            abort(404);
+        }
         
         $path = storage_path('app/backups/' . $filename);
         
@@ -236,6 +241,11 @@ class DashboardController extends Controller
     {
         if (!auth()->user()->isAdministrator()) {
             abort(403);
+        }
+
+        // Only allow our backup file naming pattern
+        if (!preg_match('/^sensorshub-backup-[\d\-]+\.sql$/', $filename)) {
+            abort(404);
         }
         
         $path = storage_path('app/backups/' . $filename);
