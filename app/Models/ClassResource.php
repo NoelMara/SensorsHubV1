@@ -14,9 +14,4 @@ class ClassResource extends Model
     {
         return $this->belongsTo(Classroom::class, 'class_id');
     }
-
-    public function resource()
-    {
-        return $this->morphTo('resource', 'resource_type', 'resource_id');
-    }
 }
