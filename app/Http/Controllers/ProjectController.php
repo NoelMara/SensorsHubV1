@@ -41,7 +41,10 @@ class ProjectController extends Controller
 
     public function show($slug)
     {
-        $project = Project::where('slug', $slug)->with('sensor')->firstOrFail();
+        $project = Project::where('slug', $slug)
+            ->where('is_active', true)
+            ->with('sensor')
+            ->firstOrFail();
         
         $isSaved = auth()->check() && SavedProject::where('user_id', auth()->id())
             ->where('project_id', $project->id)
