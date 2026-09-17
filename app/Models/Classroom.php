@@ -35,7 +35,11 @@ class Classroom extends Model
 
     public static function generateCode()
     {
-        return strtoupper(substr(md5(uniqid()), 0, 6));
+        do {
+            $code = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 6));
+        } while (self::where('code', $code)->exists());
+
+        return $code;
     }
 
     public function announcements()
