@@ -10,7 +10,7 @@ class SensorController extends Controller
     public function index(Request $request)
     {
         $query = Sensor::where('is_active', true)
-            ->withCount(['projects', 'videos']);  // ← ADD THIS
+            ->withCount(['projects', 'videos']); 
 
         // Search by name or description
         if ($request->filled('search')) {
@@ -29,6 +29,7 @@ class SensorController extends Controller
     {
         $sensor = Sensor::withCount(['projects', 'videos'])
             ->where('slug', $slug)
+            ->where('is_active', true)
             ->firstOrFail();
         
         $relatedProjects = $sensor->projects()
