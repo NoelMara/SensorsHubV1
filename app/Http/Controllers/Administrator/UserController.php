@@ -152,6 +152,10 @@ class UserController extends Controller
     }
     public function warn(Request $request, User $user)
         {
+            if ($user->isAdministrator()) {
+                return back()->with('error', 'You cannot warn an Administrator account.');
+            }
+
             $request->validate(['reason' => 'required|string|max:255']);
             
             $user->addWarning($request->reason);
@@ -167,6 +171,10 @@ class UserController extends Controller
 
     public function ban(Request $request, User $user)
     {
+        if ($user->isAdministrator()) {
+            return back()->with('error', 'You cannot ban an Administrator account.');
+        }
+
         $request->validate([
             'reason' => 'required|string|max:255',
             'ban_until' => 'nullable|date',
