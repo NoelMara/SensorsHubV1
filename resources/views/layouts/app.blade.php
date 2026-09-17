@@ -116,7 +116,7 @@ header('Expires: 0');
                         <span class="block text-xl sm:text-2xl font-bold tracking-tight text-gray-900 dark:text-white leading-tight">SensorsHub</span>
                     </a>
                 </div>
-                <div class="hidden lg:flex items-center gap-6">
+                <div class="hidden xl:flex items-center gap-6">
                     <a href="{{ route('home') }}" class="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">Home</a>
                     <a href="{{ route('sensors.index') }}" class="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">Sensors</a>
                     <a href="{{ route('projects.index') }}" class="text-base text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">Projects</a>
@@ -133,12 +133,12 @@ header('Expires: 0');
                         <i class="fas fa-moon dark-icon-moon w-4 text-center"></i><i class="fas fa-sun dark-icon-sun w-4 text-center" style="display: none;"></i>
                     </button>
                 </div>
-                <div class="lg:hidden flex items-center">
+                <div class="xl:hidden flex items-center">
                     <button id="mobileMenuButton" class="text-gray-700 dark:text-gray-300 p-2 -mr-2"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
         </div>
-        <div id="mobileMenu" class="hidden lg:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+        <div id="mobileMenu" class="hidden xl:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
             <div class="px-4 pt-2 pb-4 space-y-1">
                 <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"><i class="fas fa-home w-5"></i> Home</a>
                 <a href="{{ route('sensors.index') }}" class="flex items-center gap-3 px-3 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"><i class="fas fa-microchip w-5"></i> Sensors</a>
