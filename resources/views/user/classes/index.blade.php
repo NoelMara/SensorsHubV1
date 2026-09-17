@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Classes')
+@section('title', 'My Classroom')
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
@@ -11,10 +11,10 @@
             Dashboard
         </p>
         <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
-            My classes
+            My Classroom
         </h1>
         <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
-            Join a class using the code from your instructor.
+            Enter the code from your instructor to join your classroom.
         </p>
     </div>
 
@@ -95,7 +95,7 @@
                     Enrolled
                 </p>
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Your classes
+                    Your classroom
                 </h2>
             </div>
 
@@ -135,9 +135,9 @@
     @if($pendingClasses->count() === 0 && $approvedClasses->count() === 0)
         <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
             <i class="fas fa-chalkboard text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No classes yet</h3>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No classroom yet</h3>
             <p class="text-sm text-gray-500 dark:text-gray-400">
-                Enter a class code above to join your first class.
+                Enter a class code above to join your first classroom.
             </p>
         </div>
     @endif
