@@ -201,16 +201,6 @@ class ContentController extends Controller
         return $this->modelFor($type)::findOrFail($id);
     }
 
-    private function labelFor(string $type): string
-    {
-        return match ($type) {
-            'sensors' => 'Sensors',
-            'projects' => 'Projects',
-            'products' => 'Products',
-            'videos' => 'Videos',
-        };
-    }
-
     private function singularLabelFor(string $type): string
     {
         return match ($type) {
@@ -263,12 +253,15 @@ class ContentController extends Controller
             ]),
         };
 
-        if (in_array($type, ['sensors', 'products'], true)) {
-            $data['slug'] = Str::slug($data['name']);
-        }
+        // Only set slug on create — keep it stable on update
+        if ($item === null) {
+            if (in_array($type, ['sensors', 'products'], true)) {
+                $data['slug'] = Str::slug($data['name']);
+            }
 
-        if (in_array($type, ['projects', 'videos'], true)) {
-            $data['slug'] = Str::slug($data['title']);
+            if (in_array($type, ['projects', 'videos'], true)) {
+                $data['slug'] = Str::slug($data['title']);
+            }
         }
 
         if ($type === 'videos') {
@@ -277,16 +270,23 @@ class ContentController extends Controller
 
         if (in_array($type, ['sensors', 'products'])) {
             if ($request->hasFile('image')) {
-                $cloudinary = new \Cloudinary\Cloudinary([
-                    'cloud' => [
-                        'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
-                        'api_key'    => env('CLOUDINARY_API_KEY'),
-                        'api_secret' => env('CLOUDINARY_API_SECRET'),
-                    ],
-                    'url' => ['secure' => true],
-                ]);
-                $result = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath());
-                $data['image'] = $result['secure_url'];
+                try {
+                    $cloudinary = new \Cloudinary\Cloudinary([
+                        'cloud' => [
+                            'cloud_name' => env('CLOUDINARY_CLOUD_NAME'),
+                            'api_key'    => env('CLOUDINARY_API_KEY'),
+                            'api_secret' => env('CLOUDINARY_API_SECRET'),
+                        ],
+                        'url' => ['secure' => true],
+                    ]);
+                    $result = $cloudinary->uploadApi()->upload($request->file('image')->getRealPath());
+                    $data['image'] = $result['secure_url'];
+                } catch (\Exception $e) {
+                    \Log::error('Cloudinary upload failed', ['error' => $e->getMessage()]);
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'image' => 'Image upload failed. Please try again.',
+                    ]);
+                }
             } elseif ($item !== null) {
                 $data['image'] = $item->image;
             }
