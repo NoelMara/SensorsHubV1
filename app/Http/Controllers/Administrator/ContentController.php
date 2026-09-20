@@ -162,6 +162,9 @@ class ContentController extends Controller
         $item = $this->findItem($type, $id);
         $item->update($this->validatedData($request, $type, $item));
 
+        $name = $item->title ?? $item->name;
+        ActivityLogHelper::log('updated', $type, "updated {$type} '{$name}'");
+
         return redirect()->route('administrator.' . $type . '.index')
             ->with('success', $this->singularLabelFor($type) . ' updated successfully.');
     }

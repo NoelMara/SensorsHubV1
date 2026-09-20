@@ -58,8 +58,10 @@ class UserController extends Controller
             'email'             => $validated['email'],
             'role'              => $validated['role'],
             'password'          => Hash::make($validated['password']),
-            'email_verified_at' => now(), // admin created accounts are pre-verified
+            'email_verified_at' => now(),
         ]);
+
+        ActivityLogHelper::log('created', 'user', "created account '{$user->name}' ({$user->role})");
 
         return redirect()->route('administrator.users.index')
             ->with('success', 'Account created successfully.');
