@@ -91,7 +91,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <button type="button" onclick="document.getElementById('suggestionModal').classList.remove('hidden')"
-                class="w-full flex items-center gap-3 p-4 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg hover:border-gray-900 dark:hover:border-white hover:bg-gray-50 dark:hover:bg-gray-800/40 transition text-left cursor-pointer appearance-none bg-transparent">
+                class="w-full flex items-center gap-3 p-4 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg hover:border-gray-900 dark:hover:border-white active:border-gray-900 dark:active:border-white hover:bg-gray-50 dark:hover:bg-gray-800/40 active:bg-gray-50 dark:active:bg-gray-800/40 transition text-left cursor-pointer appearance-none bg-transparent">
                 <div class="w-10 h-10 rounded-lg bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0">
                     <i class="fas fa-plus text-sm text-white dark:text-gray-900"></i>
                 </div>
