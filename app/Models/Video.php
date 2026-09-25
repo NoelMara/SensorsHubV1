@@ -15,10 +15,12 @@ class Video extends Model
         'category',
         'description',
         'is_active',
+        'is_featured',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_featured' => 'boolean',
     ];
 
     public function sensor()

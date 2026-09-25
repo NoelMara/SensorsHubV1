@@ -19,7 +19,7 @@ class VideoController extends Controller
             $query->where('category', $request->category);
         }
 
-        $videos = $query->latest()->paginate(12)->appends($request->all());
+        $videos = $query->orderByDesc('is_featured')->latest()->paginate(12)->appends($request->all());
 
         return view('videos.index', compact('videos'));
     }

@@ -93,6 +93,7 @@ class ContentController extends Controller
             'total' => Video::count(),
             'active' => Video::where('is_active', true)->count(),
             'inactive' => Video::where('is_active', false)->count(),
+            'featured' => Video::where('is_featured', true)->count(),
         ];
 
         return view('administrator.content.index', [
@@ -297,7 +298,7 @@ class ContentController extends Controller
 
         $data['is_active'] = $request->has('is_active');
 
-        if ($type === 'projects') {
+        if (in_array($type, ['projects', 'videos'], true)) {
             $data['is_featured'] = $request->has('is_featured');
         }
 

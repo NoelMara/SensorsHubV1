@@ -103,6 +103,17 @@
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">When checked, this video is visible to users on the public tutorials page.</p>
                 </div>
             </label>
+
+            {{-- Featured toggle --}}
+            <label for="is_featured" class="flex items-start gap-3 border border-gray-200 dark:border-gray-800 rounded-lg p-4 cursor-pointer hover:border-gray-400 dark:hover:border-gray-600 transition">
+                <input type="checkbox" name="is_featured" id="is_featured" value="1"
+                    {{ old('is_featured') ? 'checked' : '' }}
+                    class="mt-0.5 h-4 w-4 rounded border-gray-300 dark:border-gray-700 text-amber-500 focus:ring-amber-500 cursor-pointer">
+                <div>
+                    <p class="text-sm font-medium text-gray-900 dark:text-white">Featured</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">When checked, this video is pinned to the top of the tutorials page.</p>
+                </div>
+            </label>
         </div>
 
         {{-- Actions --}}

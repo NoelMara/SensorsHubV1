@@ -39,7 +39,7 @@ class HomeController extends Controller
             $featuredProjects = Project::where('is_active', true)->latest()->take(4)->get();
         }
         
-        $latestVideos = Video::where('is_active', true)->latest()->take(4)->get();
+        $latestVideos = Video::where('is_active', true)->orderByDesc('is_featured')->latest()->take(4)->get();
         
         return view('home', compact('featuredSensors', 'featuredProjects', 'latestVideos'));
     }
