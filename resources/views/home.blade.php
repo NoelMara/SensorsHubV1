@@ -18,6 +18,27 @@
     .terminal-line {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
+
+    /* Reveal on scroll */
+    .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .reveal {
+            opacity: 1;
+            transform: none;
+            transition: none;
+        }
+    }
 </style>
 
 {{-- Hero --}}
@@ -115,7 +136,7 @@
 </section>
 
 {{-- Featured Sensors --}}
-<section class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+<section class="reveal bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div class="mb-12">
             <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">01 — Sensors</p>
@@ -156,7 +177,7 @@
 </section>
 
 {{-- Featured Projects --}}
-<section class="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+<section class="reveal bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div class="mb-12">
             <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">02 — Projects</p>
@@ -196,7 +217,7 @@
 
 {{-- Latest Tutorials --}}
 @if($latestVideos->count() > 0)
-<section class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+<section class="reveal bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div class="mb-12">
             <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">03 — Tutorials</p>
@@ -245,7 +266,7 @@
 @endif
 
 {{-- CTA --}}
-<section class="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+<section class="reveal bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
         <div class="max-w-2xl">
             <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">Get started</p>
@@ -301,6 +322,31 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeVideoModal();
     });
+
+    // Reveal on scroll
+    (function () {
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const revealables = document.querySelectorAll('.reveal');
+
+        if (prefersReduced) {
+            revealables.forEach(el => el.classList.add('is-visible'));
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.08,
+            rootMargin: '0px 0px -40px 0px',
+        });
+
+        revealables.forEach((el) => observer.observe(el));
+    })();
 </script>
 @endpush
 @endsection
