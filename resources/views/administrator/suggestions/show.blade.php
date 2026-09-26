@@ -139,6 +139,11 @@
                                     <span class="text-xs text-gray-500 dark:text-gray-400">
                                         {{ $comment->created_at->diffForHumans() }}
                                     </span>
+                                    @if($comment->flagged)
+                                        <span class="text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400">
+                                            ● Flagged
+                                        </span>
+                                    @endif
                                     @if($comment->created_at != $comment->updated_at)
                                         <span class="text-xs text-gray-400 dark:text-gray-600 italic">edited</span>
                                     @endif

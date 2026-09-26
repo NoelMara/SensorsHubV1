@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('sensor_type')->nullable();
             $table->string('status')->default('pending'); 
             $table->text('admin_notes')->nullable();
+            $table->boolean('flagged')->default(false);
+            $table->string('flag_reason')->nullable();
             $table->timestamps();
         });
     }

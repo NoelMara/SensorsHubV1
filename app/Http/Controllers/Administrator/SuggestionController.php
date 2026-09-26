@@ -29,6 +29,10 @@ class SuggestionController extends Controller
             $query->where('status', $request->status);
         }
 
+        if ($request->filled('flagged')) {
+            $query->where('flagged', $request->flagged === '1');
+        }
+
         $suggestions = $query->latest()->paginate(10)->withQueryString();
         $stats = [
             'total'       => Suggestion::count(),
@@ -36,6 +40,7 @@ class SuggestionController extends Controller
             'reviewed'    => Suggestion::where('status', 'reviewed')->count(),
             'implemented' => Suggestion::where('status', 'implemented')->count(),
             'rejected'    => Suggestion::where('status', 'rejected')->count(),
+            'flagged'     => Suggestion::where('flagged', true)->count(),
         ];
 
         return view('administrator.suggestions.index', compact('suggestions', 'stats'));
@@ -58,6 +63,18 @@ class SuggestionController extends Controller
         $suggestion->update($validated);
         ActivityLogHelper::log('changed', 'suggestion', "marked suggestion '{$suggestion->title}' as {$validated['status']}");
         return back()->with('success', 'Suggestion updated successfully.');
+    }
+
+    public function approve(Suggestion $suggestion)
+    {
+        $suggestion->update([
+            'flagged'     => false,
+            'flag_reason' => null,
+        ]);
+
+        ActivityLogHelper::log('approved', 'suggestion', "approved flagged suggestion '{$suggestion->title}'");
+
+        return back()->with('success', 'Suggestion approved and visible to the community.');
     }
 
     public function destroy(Suggestion $suggestion)

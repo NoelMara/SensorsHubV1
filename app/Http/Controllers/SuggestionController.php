@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Suggestion;
 use App\Helpers\ActivityLogHelper;
+use App\Helpers\ProfanityHelper;
 use App\Models\Comment;
 
 class SuggestionController extends Controller
@@ -12,7 +13,10 @@ class SuggestionController extends Controller
     // ─── Community View ───────────────────────────────────────────────
     public function community()
     {
-        $suggestions = Suggestion::with(['user', 'comments'])
+        $suggestions = Suggestion::with(['user', 'comments' => function ($q) {
+                $q->where('flagged', false);
+            }])
+            ->where('flagged', false)
             ->latest()
             ->paginate(12);
 
@@ -29,7 +33,22 @@ class SuggestionController extends Controller
     // ─── Show Single Suggestion ───────────────────────────────────────
     public function show(Suggestion $suggestion)
     {
-        $suggestion->load(['user', 'comments.user']);
+        // Flagged suggestions only visible to author + admins
+        if ($suggestion->flagged
+            && $suggestion->user_id !== auth()->id()
+            && auth()->user()->role !== 'administrator') {
+            abort(404);
+        }
+
+        $suggestion->load([
+            'user',
+            'comments' => function ($q) {
+                $q->where('flagged', false)
+                  ->orWhere('user_id', auth()->id());
+            },
+            'comments.user',
+        ]);
+
         return view('user.suggestions-show', compact('suggestion'));
     }
 
@@ -43,10 +62,24 @@ class SuggestionController extends Controller
             'sensor_type' => 'nullable|string|max:255',
         ]);
 
-       $suggestion = auth()->user()->suggestions()->create($request->only('title', 'description', 'difficulty', 'sensor_type'));
-       ActivityLogHelper::log('created', 'suggestion', "submitted a suggestion '{$suggestion->title}'");
+        $flagged = ProfanityHelper::has($request->title . ' ' . $request->description);
 
-        return back()->with('success', 'Suggestion submitted successfully! We\'ll review it soon.');
+        $suggestion = auth()->user()->suggestions()->create([
+            'title'       => $request->title,
+            'description' => $request->description,
+            'difficulty'  => $request->difficulty,
+            'sensor_type' => $request->sensor_type,
+            'flagged'     => $flagged,
+            'flag_reason' => $flagged ? 'profanity' : null,
+        ]);
+
+        ActivityLogHelper::log('created', 'suggestion', "submitted a suggestion '{$suggestion->title}'");
+
+        $msg = $flagged
+            ? 'Suggestion submitted — pending review.'
+            : 'Suggestion submitted successfully! We\'ll review it soon.';
+
+        return back()->with('success', $msg);
     }
 
     // ─── Edit Suggestion ──────────────────────────────────────────────
@@ -71,7 +104,16 @@ class SuggestionController extends Controller
             'sensor_type' => 'nullable|string|max:255',
         ]);
 
-        $suggestion->update($request->only('title', 'description', 'difficulty', 'sensor_type'));
+        $flagged = ProfanityHelper::has($request->title . ' ' . $request->description);
+
+        $suggestion->update([
+            'title'       => $request->title,
+            'description' => $request->description,
+            'difficulty'  => $request->difficulty,
+            'sensor_type' => $request->sensor_type,
+            'flagged'     => $flagged,
+            'flag_reason' => $flagged ? 'profanity' : null,
+        ]);
 
         return redirect()->route('dashboard.suggestions')
             ->with('success', 'Suggestion updated successfully.');
@@ -95,13 +137,24 @@ class SuggestionController extends Controller
             'body' => 'required|string|max:2000',
         ]);
 
+        
+        $flagged = ProfanityHelper::has($validated['body']);
+
         // One comment per user per suggestion (anti-spam)
         $suggestion->comments()->updateOrCreate(
             ['user_id' => auth()->id()],
-            ['body' => $validated['body']]
+            [
+                'body'        => $validated['body'],
+                'flagged'     => $flagged,
+                'flag_reason' => $flagged ? 'profanity' : null,
+            ]
         );
 
-        return back()->with('success', 'Comment added successfully.');
+        $msg = $flagged
+            ? 'Comment submitted — pending review.'
+            : 'Comment added successfully.';
+
+        return back()->with('success', $msg);
     }
 
     // ─── Update Comment ───────────────────────────────────────────────
@@ -113,7 +166,13 @@ class SuggestionController extends Controller
             'body' => 'required|string|max:2000',
         ]);
 
-        $comment->update(['body' => $validated['body']]);
+        $flagged = ProfanityHelper::has($validated['body']);
+
+        $comment->update([
+            'body'        => $validated['body'],
+            'flagged'     => $flagged,
+            'flag_reason' => $flagged ? 'profanity' : null,
+        ]);
 
         return back()->with('success', 'Comment updated successfully.');
     }

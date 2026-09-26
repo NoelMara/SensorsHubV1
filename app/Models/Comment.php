@@ -6,7 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-    protected $fillable = ['suggestion_id', 'user_id', 'body'];
+    protected $fillable = [
+        'suggestion_id',
+        'user_id',
+        'body',
+        'flagged',
+        'flag_reason',
+    ];
+
+    protected $casts = [
+        'flagged' => 'boolean',
+    ];
 
     public function suggestion()
     {

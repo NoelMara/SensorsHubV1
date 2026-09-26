@@ -64,14 +64,21 @@
                             <h3 class="text-base font-medium text-gray-900 dark:text-white break-words min-w-0">
                                 {{ $suggestion->title }}
                             </h3>
-                            <span class="text-[10px] font-medium uppercase tracking-wider flex-shrink-0
-                                @if($suggestion->status === 'pending') text-amber-600 dark:text-amber-400
-                                @elseif($suggestion->status === 'reviewed') text-blue-600 dark:text-blue-400
-                                @elseif($suggestion->status === 'implemented') text-emerald-600 dark:text-emerald-400
-                                @else text-red-600 dark:text-red-400
-                                @endif">
-                                ● {{ $suggestion->status }}
-                            </span>
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                @if($suggestion->flagged)
+                                    <span class="text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400">
+                                        ⚠ Pending review
+                                    </span>
+                                @endif
+                                <span class="text-[10px] font-medium uppercase tracking-wider
+                                    @if($suggestion->status === 'pending') text-amber-600 dark:text-amber-400
+                                    @elseif($suggestion->status === 'reviewed') text-blue-600 dark:text-blue-400
+                                    @elseif($suggestion->status === 'implemented') text-emerald-600 dark:text-emerald-400
+                                    @else text-red-600 dark:text-red-400
+                                    @endif">
+                                    ● {{ $suggestion->status }}
+                                </span>
+                            </div>
                         </div>
 
                         {{-- Description --}}

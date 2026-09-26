@@ -131,6 +131,11 @@
                                     @if($comment->created_at != $comment->updated_at)
                                         <span class="text-xs text-gray-400 dark:text-gray-600 italic">edited</span>
                                     @endif
+                                    @if($comment->flagged && $comment->user_id === auth()->id())
+                                        <span class="text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400">
+                                            ● Hidden — pending review
+                                        </span>
+                                    @endif
 
                                     @if(!auth()->user()->isAdministrator() && auth()->id() !== $comment->user_id)
                                         <form method="POST" action="{{ route('report.store') }}" class="inline ml-auto">

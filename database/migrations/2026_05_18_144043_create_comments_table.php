@@ -13,6 +13,8 @@ return new class extends Migration
             $table->foreignId('suggestion_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->text('body');
+            $table->boolean('flagged')->default(false);
+            $table->string('flag_reason')->nullable();
             $table->timestamps();
 
             // Each user can only comment once per suggestion

@@ -27,7 +27,7 @@
                     placeholder="Search by title, description, or user..."
                     class="w-full pl-11 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 outline-none focus:border-emerald-500 transition text-sm">
             </div>
-            <select name="status"
+                <select name="status"
                 class="px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:border-emerald-500 transition text-sm">
                 <option value="">All status</option>
                 <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
@@ -35,12 +35,18 @@
                 <option value="implemented" {{ request('status') === 'implemented' ? 'selected' : '' }}>Implemented</option>
                 <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
             </select>
+            <select name="flagged"
+                class="px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:border-emerald-500 transition text-sm">
+                <option value="">All items</option>
+                <option value="1" {{ request('flagged') === '1' ? 'selected' : '' }}>Flagged only</option>
+                <option value="0" {{ request('flagged') === '0' ? 'selected' : '' }}>Clean only</option>
+            </select>
             <button type="submit"
                 class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm whitespace-nowrap">
                 <i class="fas fa-search text-xs"></i>
                 Search
             </button>
-            @if(request('search') || request('status'))
+            @if(request('search') || request('status') || request()->filled('flagged'))
                 <a href="{{ route('administrator.suggestions.index') }}"
                    class="inline-flex items-center justify-center gap-2 px-5 py-3 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition text-sm font-medium whitespace-nowrap">
                     <i class="fas fa-times text-xs"></i>
@@ -51,7 +57,7 @@
     </form>
 
     {{-- Stats --}}
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-12">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-12">
         <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
             <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Total</p>
             <p class="text-2xl font-semibold text-gray-900 dark:text-white tabular-nums">{{ $stats['total'] }}</p>
@@ -65,8 +71,8 @@
             <p class="text-2xl font-semibold text-blue-600 dark:text-blue-400 tabular-nums">{{ $stats['reviewed'] }}</p>
         </div>
         <div class="border border-gray-200 dark:border-gray-800 rounded-lg p-4">
-            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Implemented</p>
-            <p class="text-2xl font-semibold text-emerald-600 dark:text-emerald-400 tabular-nums">{{ $stats['implemented'] }}</p>
+            <p class="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">Flagged</p>
+            <p class="text-2xl font-semibold text-red-600 dark:text-red-400 tabular-nums">{{ $stats['flagged'] }}</p>
         </div>
     </div>
 
@@ -114,14 +120,21 @@
 
                                 {{-- Status --}}
                                 <td class="px-5 py-4 align-top">
-                                    <span class="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider
-                                        @if($suggestion->status === 'pending') text-amber-600 dark:text-amber-400
-                                        @elseif($suggestion->status === 'reviewed') text-blue-600 dark:text-blue-400
-                                        @elseif($suggestion->status === 'implemented') text-emerald-600 dark:text-emerald-400
-                                        @else text-red-600 dark:text-red-400
-                                        @endif">
-                                        ● {{ $suggestion->status }}
-                                    </span>
+                                    <div class="flex flex-col gap-1">
+                                        <span class="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider
+                                            @if($suggestion->status === 'pending') text-amber-600 dark:text-amber-400
+                                            @elseif($suggestion->status === 'reviewed') text-blue-600 dark:text-blue-400
+                                            @elseif($suggestion->status === 'implemented') text-emerald-600 dark:text-emerald-400
+                                            @else text-red-600 dark:text-red-400
+                                            @endif">
+                                            ● {{ $suggestion->status }}
+                                        </span>
+                                        @if($suggestion->flagged)
+                                            <span class="whitespace-nowrap text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400">
+                                                ● Flagged
+                                            </span>
+                                        @endif
+                                    </div>
                                 </td>
 
                                 {{-- Date --}}
@@ -129,13 +142,25 @@
                                     <span class="text-xs text-gray-500 dark:text-gray-400">{{ $suggestion->created_at->format('M d, Y') }}</span>
                                 </td>
 
-                                {{-- Action --}}
+                                                                {{-- Action --}}
                                 <td class="px-5 py-4 align-top text-right">
-                                    <a href="{{ route('administrator.suggestions.show', $suggestion) }}"
-                                       class="inline-flex items-center gap-1.5 px-3 h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
-                                        View
-                                        <i class="fas fa-arrow-right text-[10px]"></i>
-                                    </a>
+                                    <div class="flex items-center justify-end gap-2">
+                                        @if($suggestion->flagged)
+                                            <form method="POST" action="{{ route('administrator.suggestions.approve', $suggestion) }}" class="inline">
+                                                @csrf
+                                                <button type="submit"
+                                                    class="inline-flex items-center gap-1.5 px-3 h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-emerald-500 hover:text-emerald-600 dark:hover:border-emerald-500 dark:hover:text-emerald-400 transition">
+                                                    <i class="fas fa-check text-[10px]"></i>
+                                                    Approve
+                                                </button>
+                                            </form>
+                                        @endif
+                                        <a href="{{ route('administrator.suggestions.show', $suggestion) }}"
+                                           class="inline-flex items-center gap-1.5 px-3 h-8 rounded-lg border border-gray-200 dark:border-gray-800 text-xs font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+                                            View
+                                            <i class="fas fa-arrow-right text-[10px]"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -152,7 +177,7 @@
     @else
         {{-- Empty state --}}
         <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
-            @if(request('search') || request('status'))
+            @if(request('search') || request('status') || request()->filled('flagged'))
                 <i class="fas fa-search text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No results found</h3>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Try adjusting your search or filters.</p>

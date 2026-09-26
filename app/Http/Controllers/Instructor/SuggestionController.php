@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Instructor;
 use App\Http\Controllers\Controller;
 use App\Models\Suggestion;
 use App\Models\Comment;
+use App\Helpers\ProfanityHelper;
 use Illuminate\Http\Request;
 
 class SuggestionController extends Controller
@@ -47,13 +48,23 @@ class SuggestionController extends Controller
             'body' => 'required|string|max:2000',
         ]);
 
+        $flagged = ProfanityHelper::has($validated['body']);
+
         // One comment per user per suggestion (anti-spam)
         $suggestion->comments()->updateOrCreate(
             ['user_id' => auth()->id()],
-            ['body' => $validated['body']]
+            [
+                'body'        => $validated['body'],
+                'flagged'     => $flagged,
+                'flag_reason' => $flagged ? 'profanity' : null,
+            ]
         );
 
-        return back()->with('success', 'Comment added successfully.');
+        $msg = $flagged
+            ? 'Comment submitted — pending review.'
+            : 'Comment added successfully.';
+
+        return back()->with('success', $msg);
     }
 
     public function updateComment(Request $request, Suggestion $suggestion, Comment $comment)
@@ -64,7 +75,13 @@ class SuggestionController extends Controller
             'body' => 'required|string|max:2000',
         ]);
 
-        $comment->update(['body' => $validated['body']]);
+        $flagged = ProfanityHelper::has($validated['body']);
+
+        $comment->update([
+            'body'        => $validated['body'],
+            'flagged'     => $flagged,
+            'flag_reason' => $flagged ? 'profanity' : null,
+        ]);
 
         return back()->with('success', 'Comment updated successfully.');
     }

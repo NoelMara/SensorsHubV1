@@ -14,6 +14,12 @@ class Suggestion extends Model
         'sensor_type',
         'status',
         'admin_notes',
+        'flagged',
+        'flag_reason',
+    ];
+
+    protected $casts = [
+        'flagged' => 'boolean',
     ];
 
     public function user()

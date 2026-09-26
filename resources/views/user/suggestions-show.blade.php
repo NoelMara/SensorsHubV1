@@ -11,6 +11,15 @@
         Back to My Suggestions
     </a>
 
+    @if($suggestion->flagged)
+        <div class="mb-6 border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/30 rounded-lg p-4">
+            <p class="text-sm text-red-700 dark:text-red-300">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                This content is pending review and is <strong>hidden from the community</strong> until an administrator approves it.
+            </p>
+        </div>
+    @endif
+
     <article class="border border-gray-200 dark:border-gray-800 rounded-lg p-6 sm:p-8">
 
         <div class="flex items-center gap-3 mb-6">
@@ -37,6 +46,11 @@
                 <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-gray-900 dark:text-white break-words">
                     {{ $suggestion->title }}
                 </h1>
+                @if($suggestion->flagged)
+                    <span class="text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400 flex-shrink-0">
+                        ⚠ Pending review
+                    </span>
+                @endif
                 <span class="text-[10px] font-medium uppercase tracking-wider flex-shrink-0
                     @if($suggestion->status === 'pending') text-amber-600 dark:text-amber-400
                     @elseif($suggestion->status === 'reviewed') text-blue-600 dark:text-blue-400
@@ -141,6 +155,11 @@
                                     @endif">
                                     {{ $comment->user?->role ?? 'user' }}
                                 </span>
+                                @if($comment->flagged && $comment->user_id === auth()->id())
+                                    <span class="text-[10px] font-medium uppercase tracking-wider text-red-600 dark:text-red-400 flex-shrink-0">
+                                        ● Hidden — pending review
+                                    </span>
+                                @endif
                             </div>
 
                             <div class="flex items-center gap-3 flex-shrink-0">
