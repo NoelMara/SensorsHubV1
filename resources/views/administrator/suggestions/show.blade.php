@@ -56,7 +56,16 @@
                     {{ strtoupper(substr($suggestion->user?->name ?? '?', 0, 1)) }}
                 @endif
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400">by {{ $suggestion->user?->name ?? 'Deleted user' }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">by
+                @if($suggestion->user)
+                    <a href="{{ route('administrator.users.show', $suggestion->user) }}"
+                    class="text-gray-900 dark:text-white font-medium hover:underline">
+                        {{ $suggestion->user->name }}
+                    </a>
+                @else
+                    Deleted user
+                @endif
+            </p>
         </div>
 
         {{-- Description --}}
@@ -133,9 +142,16 @@
                             </div>
                             <div class="flex-1 min-w-0">
                                 <div class="flex flex-wrap items-center gap-2">
-                                    <span class="text-sm font-medium text-gray-900 dark:text-white">
-                                        {{ $comment->user?->name ?? 'Deleted user' }}
-                                    </span>
+                                    @if($comment->user)
+                                        <a href="{{ route('administrator.users.show', $comment->user) }}"
+                                        class="text-sm font-medium text-gray-900 dark:text-white hover:underline">
+                                            {{ $comment->user->name }}
+                                        </a>
+                                    @else
+                                        <span class="text-sm font-medium text-gray-900 dark:text-white">
+                                            Deleted user
+                                        </span>
+                                    @endif
                                     <span class="text-xs text-gray-500 dark:text-gray-400">
                                         {{ $comment->created_at->diffForHumans() }}
                                     </span>
