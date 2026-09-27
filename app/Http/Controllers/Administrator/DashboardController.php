@@ -31,7 +31,11 @@ class DashboardController extends Controller
 
         $recentUsers = User::latest()->take(6)->get();
         $recentSuggestions = Suggestion::with('user')->latest()->take(5)->get();
+        // Recent comments from users only (excludes administrators)
         $recentComments = Comment::with(['user', 'suggestion'])
+            ->whereHas('user', function ($userQuery) {
+                $userQuery->where('role', '!=', 'administrator');
+            })
             ->latest()
             ->take(5)
             ->get();
