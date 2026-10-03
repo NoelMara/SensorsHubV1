@@ -12,6 +12,7 @@ use App\Models\Suggestion;
 use App\Models\User;
 use App\Models\Video;
 use App\Models\ActivityLog;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -136,7 +137,7 @@ class DashboardController extends Controller
             $totalBackups = 4;
         }
 
-        $tables = \DB::select("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'");
+        $tables = DB::select("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'");
         $tables = collect($tables)->sortBy(function($table) {
             $priority = [
                 'users' => 0,
@@ -173,7 +174,7 @@ class DashboardController extends Controller
         foreach ($tables as $table) {
             $tableName = $table->tablename;
             if (in_array($tableName, $skipTables)) continue;
-            $rows = \DB::table($tableName)->get();
+            $rows = DB::table($tableName)->get();
             
             if ($rows->isEmpty()) continue;
             
@@ -203,7 +204,7 @@ class DashboardController extends Controller
         
         // Reset sequences to avoid duplicate key errors on restore
         $output .= "\n-- Reset Sequences\n";
-        $sequences = \DB::select("SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'public'");
+        $sequences = DB::select("SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'public'");
         $skipSequences = ['migrations_id_seq', 'jobs_id_seq', 'failed_jobs_id_seq', 'cache_id_seq', 'sessions_id_seq'];
         foreach ($sequences as $sequence) {
             $seqName = $sequence->sequence_name;
@@ -263,7 +264,7 @@ class DashboardController extends Controller
 
     public function clearLogs()
     {
-        \App\Models\ActivityLog::truncate();
+        ActivityLog::truncate();
         return back()->with('success', 'All activity logs have been cleared.');
     }
 }

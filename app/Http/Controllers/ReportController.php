@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Report;
 use App\Models\Comment;
+use App\Models\Suggestion;
 use App\Models\User;
 use App\Helpers\NotificationHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ReportController extends Controller
 {
@@ -27,7 +29,7 @@ class ReportController extends Controller
         $isSuggestion = $validated['reportable_type'] === 'suggestion';
 
         if ($isSuggestion) {
-            $item = \App\Models\Suggestion::with('user')->find($validated['reportable_id']);
+            $item = Suggestion::with('user')->find($validated['reportable_id']);
         } else {
             $item = Comment::with('user')->find($validated['reportable_id']);
         }
@@ -39,7 +41,7 @@ class ReportController extends Controller
         // Create the report
         Report::create([
             'reporter_id' => auth()->id(),
-            'reportable_type' => $isSuggestion ? \App\Models\Suggestion::class : Comment::class,
+            'reportable_type' => $isSuggestion ? Suggestion::class : Comment::class,
             'reportable_id' => $item->id,
             'reason' => $validated['reason'],
         ]);
@@ -48,8 +50,8 @@ class ReportController extends Controller
         $reporterName = auth()->user()->name;
         $reportedUserName = $item->user?->name ?? 'Deleted user';
         $preview = $isSuggestion
-            ? \Str::limit($item->title, 50)
-            : \Str::limit($item->body, 50);
+            ? Str::limit($item->title, 50)
+            : Str::limit($item->body, 50);
         $itemType = $isSuggestion ? 'suggestion' : 'comment';
 
         $message = "{$reporterName} reported {$reportedUserName}'s {$itemType} \"{$preview}\" — Reason: {$validated['reason']}";
@@ -66,7 +68,7 @@ class ReportController extends Controller
         foreach ($admins as $admin) {
             NotificationHelper::send(
                 $admin->id,
-                '🚩 New Report',
+                '🚨 New Report',
                 $message,
                 $link
             );
