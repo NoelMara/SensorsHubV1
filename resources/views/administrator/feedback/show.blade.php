@@ -128,6 +128,25 @@
         </form>
     </section>
 
+        {{-- Delete --}}
+    <section class="border border-red-200 dark:border-red-900 rounded-lg p-6 mt-8">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-red-600 dark:text-red-400 mb-4">
+            Danger zone
+        </p>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Permanently delete this feedback. This cannot be undone.
+        </p>
+        <form method="POST" action="{{ route('administrator.feedback.destroy', $feedback) }}"
+              onsubmit="return confirm('Delete this feedback permanently?');">
+            @csrf @method('DELETE')
+            <button type="submit"
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-red-500 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20 transition text-sm font-medium">
+                <i class="fas fa-trash text-xs"></i>
+                Delete feedback
+            </button>
+        </form>
+    </section>
+
     {{-- Back --}}
     <div class="mt-12 pt-8 border-t border-gray-100 dark:border-gray-800">
         <a href="{{ route('administrator.feedback.index') }}"
