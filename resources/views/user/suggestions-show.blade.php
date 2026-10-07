@@ -165,7 +165,7 @@
                             <div class="flex items-center gap-3 flex-shrink-0">
                                 <span class="text-xs text-gray-500 dark:text-gray-400">{{ $comment->created_at->diffForHumans() }}</span>
                                 @auth
-                                    @if(!auth()->user()->isAdministrator() && auth()->id() !== $comment->user_id)
+                                    @if(!auth()->user()->isAdministrator() && auth()->id() !== $comment->user_id && !$comment->user?->isAdministrator())
                                         <form method="POST" action="{{ route('report.store') }}" class="inline">
                                             @csrf
                                             <input type="hidden" name="reportable_type" value="comment">

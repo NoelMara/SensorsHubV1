@@ -37,6 +37,9 @@ class ReportController extends Controller
         if (!$item) {
             return back()->with('error', 'The item you are trying to report does not exist.');
         }
+        if ($item->user?->isAdministrator()) {
+            return back()->with('error', 'You cannot report an administrator.');
+        }
 
         // Create the report
         Report::create([

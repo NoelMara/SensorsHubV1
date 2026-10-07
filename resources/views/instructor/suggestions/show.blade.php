@@ -137,7 +137,7 @@
                                         </span>
                                     @endif
 
-                                    @if(!auth()->user()->isAdministrator() && auth()->id() !== $comment->user_id)
+                                    @if(!auth()->user()->isAdministrator() && auth()->id() !== $comment->user_id && !$comment->user?->isAdministrator())
                                         <form method="POST" action="{{ route('report.store') }}" class="inline ml-auto">
                                             @csrf
                                             <input type="hidden" name="reportable_type" value="comment">
