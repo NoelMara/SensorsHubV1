@@ -49,7 +49,7 @@ use App\Http\Controllers\Administrator\ContentController as AdministratorContent
 use App\Http\Controllers\EmailVerificationController;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 1. PUBLIC ROUTES — anyone can visit, no login required
+// 1. PUBLIC CONTENT — visitors can browse sensors, projects, videos, products, and community suggestions.
 // ─────────────────────────────────────────────────────────────────────────────
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/sensors', [SensorController::class, 'index'])->name('sensors.index');
@@ -60,38 +60,38 @@ Route::get('/videos', [VideoController::class, 'index'])->name('videos.index');
 Route::get('/shop', [ProductController::class, 'index'])->name('shop.index');
 Route::get('/shop/{id}', [ProductController::class, 'show'])->name('shop.show');
 
-// Community Suggestions — public to view, requires login to comment
+// Displays community suggestions for everyone. Signed-in users can add comments.
 Route::get('/community', [SuggestionController::class, 'community'])->name('suggestions.community');
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 2. AUTHENTICATION ROUTES (guest only) — login, register, 2FA, admin entry
+// 2. GUEST AUTHENTICATION — registration, login, login-code verification, and administrator entry.
 // ─────────────────────────────────────────────────────────────────────────────
 // NOTE: No route-level throttle on login — rate limiting is handled inside
 //       LoginController using RateLimiter::hit/tooManyAttempts, so only
 //       FAILED attempts count against the user, not every request.
 Route::middleware('guest')->group(function () {
-    // Regular user login / register
+    // Shows the regular registration and login pages and processes their forms.
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/login', [LoginController::class, 'login']);
 
-    // 2FA verification step for regular login
+    // Completes the verification-code step after login and sends a new code when requested.
     Route::post('/login/verify', [LoginController::class, 'verifyCode'])->name('login.verify');
     Route::post('/login/resend', [LoginController::class, 'resendCode'])->name('login.resend');
 
-    // Administrator login (separate URL, separate credentials)
+    // Provides the separate administrator sign-in page and checks administrator credentials.
     Route::get('/sys/secure-entry', [LoginController::class, 'showAdministratorLoginForm'])->name('administrator.login');
     Route::post('/sys/secure-entry', [LoginController::class, 'administratorLogin'])->name('administrator.login.submit');
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 3. LOGOUT — any authenticated user
+// 3. LOGOUT — signs out the currently authenticated user.
 // ─────────────────────────────────────────────────────────────────────────────
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. NOTIFICATIONS — any authenticated user
+// 4. NOTIFICATIONS — shows a user's notifications and lets them mark or remove them.
 // ─────────────────────────────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
     Route::post('/notifications/{notification}/read', function (\App\Models\Notification $notification) {
@@ -122,38 +122,39 @@ Route::middleware('auth')->group(function () {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 5. REPORT — any authenticated user can report content
+// 5. REPORTING — lets signed-in users report inappropriate or incorrect content to administrators.
 // ─────────────────────────────────────────────────────────────────────────────
 Route::post('/report', [App\Http\Controllers\ReportController::class, 'store'])
     ->middleware('auth')
     ->name('report.store');
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 6. AI CHAT — authenticated users, throttled (5 requests / minute)
+// 6. AI CHAT — sends signed-in users' questions to the AI service with a request limit.
 // ─────────────────────────────────────────────────────────────────────────────
 Route::post('/api/chat', [ChatController::class, 'send'])
     ->middleware(['auth', 'throttle:5,1'])
     ->name('chat.send');
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 7. STUDENT DASHBOARD — /dashboard/* — any logged-in user
-//    Students see their own content. Instructors/admins redirected by auth.redirect.
+// 7. USER DASHBOARD AND CLASSROOMS — /dashboard/* for authenticated users.
+//    This is the normal signed-in user area for profiles, saved projects, suggestions,
+//    feedback, classes, learning modules, assessments, announcements, and quizzes.
 // ─────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->group(function () {
 
-    // Dashboard home
+    // Opens the signed-in user's main dashboard.
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
-    // ── Profile (any authenticated user) ──
+    // Lets a user update their account details, profile image, and password.
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // ── Saved Projects (any authenticated user) ──
+    // Shows saved projects and lets a user save or remove a project from their list.
     Route::get('/saved-projects', [ProjectController::class, 'saved'])->name('saved');
     Route::post('/projects/{project}/save', [ProjectController::class, 'toggleSave'])->name('projects.save');
 
-    // ── My Suggestions (any authenticated user) ──
+    // Lets a user submit suggestions and manage suggestions they created.
     Route::get('/suggestions', [SuggestionController::class, 'mySuggestions'])->name('suggestions');
     Route::post('/suggestions', [SuggestionController::class, 'store'])
         ->middleware('throttle:10,5')
@@ -162,28 +163,28 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::put('/suggestions/{suggestion}', [SuggestionController::class, 'update'])->name('suggestions.update');
     Route::delete('/suggestions/{suggestion}', [SuggestionController::class, 'destroy'])->name('suggestions.destroy');
 
-    // View any suggestion (community-linked)
+    // Opens a suggestion with its details, status, and related discussion.
     Route::get('/suggestions/{suggestion}/view', [SuggestionController::class, 'show'])->name('suggestions.show');
 
-    // ── Comments on suggestions (any authenticated user) ──
+    // Lets signed-in users join the discussion by adding or editing comments.
     Route::post('/suggestions/{suggestion}/comment', [SuggestionController::class, 'storeComment'])
         ->middleware('throttle:10,5')
         ->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [SuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 
-    // ── Classes (student view) ──
+    // Shows a student's classes and lets them join a class using its join code.
     Route::get('/classes', [ClassroomController::class, 'studentClasses'])->name('classes.index');
     Route::post('/classes/join', [ClassroomController::class, 'join'])
         ->middleware('throttle:5,1')
         ->name('classes.join');
 
-    // ── Feedback (students + instructors) ──
+    // Lets students and instructors send feedback about the platform.
     Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
     Route::post('/feedback', [\App\Http\Controllers\FeedbackController::class, 'store'])
         ->middleware('throttle:5,10')
         ->name('feedback.store');
 
-    // ── Class Detail Routes (student view of ONE class) ──
+    // Opens classroom content such as announcements, modules, assessments, and quizzes.
     Route::get('/classes/{class}', [ClassroomController::class, 'studentShow'])->name('classes.show');
     Route::get('/classes/{class}/modules/{module}', [ModuleController::class, 'show'])->name('classes.modules.show');
     Route::get('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'show'])->name('classes.assessments.show');
@@ -192,19 +193,19 @@ Route::middleware(['auth.redirect'])->prefix('dashboard')->name('dashboard.')->g
     Route::get('/classes/{class}/modules', [ModuleController::class, 'studentIndex'])->name('classes.modules.index');
     Route::get('/classes/{class}/assessments', [AssessmentController::class, 'studentIndex'])->name('classes.assessments.index');
 
-    // ── Quizzes (student flow: list → show → start → save → submit) ──
+    // Provides the student quiz process: view, start, save answers, and submit.
     Route::get('/classes/{class}/quizzes', [QuizController::class, 'studentIndex'])->name('classes.quizzes.index');
     Route::get('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'show'])->name('classes.quizzes.show');
     Route::post('/classes/{class}/quizzes/{quiz}/start', [QuizController::class, 'start'])->name('classes.quizzes.start');
     Route::post('/classes/{class}/quizzes/{quiz}/save-answer', [QuizController::class, 'saveAnswer'])->name('classes.quizzes.save-answer');
     Route::post('/classes/{class}/quizzes/{quiz}/submit', [QuizController::class, 'submit'])->name('classes.quizzes.submit');
-    // Sync tab-switch count while quiz is in progress
+    // Records tab switches while a student is taking a quiz.
     Route::post('/classes/{class}/quizzes/{quiz}/sync-switches', [QuizController::class, 'syncSwitches'])
         ->name('classes.quizzes.sync-switches');
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 8. EMAIL VERIFICATION — authenticated but unverified users
+// 8. EMAIL VERIFICATION — confirms a user's email address using the code sent by Brevo.
 // ─────────────────────────────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
     Route::get('/email/verify', [EmailVerificationController::class, 'show'])->name('verification.notice');
@@ -213,15 +214,16 @@ Route::middleware('auth')->group(function () {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 9. INSTRUCTOR ROUTES — /instructor/* — instructor role only
-//    Classes, announcements, modules, assessments, quizzes, leaderboard, analytics
+// 9. INSTRUCTOR TOOLS — /instructor/* for class and learning-content management.
+//    This area lets instructors build classes, publish learning content, review work,
+//    manage resources, and view class progress.
 // ─────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('instructor.')->group(function () {
 
-    // Instructor dashboard
+    // Opens the instructor dashboard with class and student information.
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // ── Classes (CRUD + student approval) ──
+    // Lets instructors create classes, edit them, and approve or reject students.
     Route::get('/classes', [ClassroomController::class, 'index'])->name('classes.index');
     Route::get('/classes/create', [ClassroomController::class, 'create'])->name('classes.create');
     Route::post('/classes', [ClassroomController::class, 'store'])->name('classes.store');
@@ -233,7 +235,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::post('/classes/{class}/approve-all', [ClassroomController::class, 'approveAll'])->name('classes.approve-all');
     Route::delete('/classes/{class}/reject/{user}', [ClassroomController::class, 'reject'])->name('classes.reject');
 
-    // ── Announcements (per class) ──
+    // Lets instructors publish, import, edit, and remove class announcements.
     Route::get('/classes/{class}/announcements', [AnnouncementController::class, 'index'])->name('classes.announcements.index');
     Route::get('/classes/{class}/announcements/create', [AnnouncementController::class, 'create'])->name('classes.announcements.create');
     Route::post('/classes/{class}/announcements', [AnnouncementController::class, 'store'])->name('classes.announcements.store');
@@ -243,7 +245,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::put('/classes/{class}/announcements/{announcement}', [AnnouncementController::class, 'update'])->name('classes.announcements.update');
     Route::delete('/classes/{class}/announcements/{announcement}', [AnnouncementController::class, 'destroy'])->name('classes.announcements.destroy');
 
-    // ── Modules (per class) ──
+    // Lets instructors upload, import, edit, and remove learning modules.
     Route::get('/classes/{class}/modules', [ModuleController::class, 'index'])->name('classes.modules.index');
     Route::get('/classes/{class}/modules/create', [ModuleController::class, 'create'])->name('classes.modules.create');
     Route::post('/classes/{class}/modules', [ModuleController::class, 'store'])->name('classes.modules.store');
@@ -253,7 +255,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::get('/classes/{class}/modules/{module}/edit', [ModuleController::class, 'edit'])->name('classes.modules.edit');
     Route::put('/classes/{class}/modules/{module}', [ModuleController::class, 'update'])->name('classes.modules.update');
 
-    // ── Assessments (per class) ──
+    // Lets instructors create assessments, review submissions, assign grades, and edit them.
     Route::get('/classes/{class}/assessments', [AssessmentController::class, 'index'])->name('classes.assessments.index');
     Route::get('/classes/{class}/assessments/create', [AssessmentController::class, 'create'])->name('classes.assessments.create');
     Route::post('/classes/{class}/assessments', [AssessmentController::class, 'store'])->name('classes.assessments.store');
@@ -266,7 +268,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::post('/classes/{class}/assessments/{assessment}/grade/{submission}', [AssessmentController::class, 'grade'])->name('classes.assessments.grade');
     Route::delete('/classes/{class}/assessments/{assessment}', [AssessmentController::class, 'destroy'])->name('classes.assessments.destroy');
 
-    // ── Quizzes (per class) ──
+    // Lets instructors create quizzes, manage questions, and review student submissions.
     Route::get('/classes/{class}/quizzes', [QuizController::class, 'index'])->name('classes.quizzes.index');
     Route::get('/classes/{class}/quizzes/create', [QuizController::class, 'create'])->name('classes.quizzes.create');
     Route::post('/classes/{class}/quizzes', [QuizController::class, 'store'])->name('classes.quizzes.store');
@@ -278,22 +280,22 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
     Route::delete('/classes/{class}/quizzes/{quiz}', [QuizController::class, 'destroy'])->name('classes.quizzes.destroy');
     Route::get('/classes/{class}/quizzes/{quiz}/submissions', [QuizController::class, 'submissions'])->name('classes.quizzes.submissions');
 
-    // ── Class insights ──
+    // Shows class rankings and learning-progress information.
     Route::get('/classes/{class}/leaderboard', [ClassroomController::class, 'leaderboard'])->name('classes.leaderboard');
     Route::get('/classes/{class}/analytics', [ClassroomController::class, 'analytics'])->name('classes.analytics');
 
-    // ── Class resources (attach sensors/projects/videos) ──
+    // Lets instructors connect public sensors, projects, and videos to a class.
     Route::get('/classes/{class}/resources', [ClassroomController::class, 'resources'])->name('classes.resources');
     Route::post('/classes/{class}/resources', [ClassroomController::class, 'storeResource'])->name('classes.resources.store');
     Route::delete('/classes/{class}/resources/{resource}', [ClassroomController::class, 'destroyResource'])->name('classes.resources.destroy');
 
-    // ── Feedback (instructor) ──
+    // Lets instructors send feedback about the platform.
     Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'create'])->name('feedback.create');
     Route::post('/feedback', [\App\Http\Controllers\FeedbackController::class, 'store'])
         ->middleware('throttle:5,10')
         ->name('feedback.store');
 
-    // ── Suggestions Management (instructor view) ──
+    // Lets instructors review community suggestions and participate in discussions.
     Route::get('/suggestions', [AdminSuggestionController::class, 'index'])->name('suggestions.index');
     Route::get('/suggestions/{suggestion}', [AdminSuggestionController::class, 'show'])->name('suggestions.show');
     Route::put('/suggestions/{suggestion}/status', [AdminSuggestionController::class, 'updateStatus'])->name('suggestions.status');
@@ -302,31 +304,31 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 10. ADMINISTRATOR ROUTES — /administrator/* — administrator role only
-//     Users, content, logs, backups, feedback, suggestions
+// 10. ADMINISTRATOR TOOLS — /administrator/* for platform administration.
+//     This area is for platform-wide management that should only be available to administrators.
 // ─────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('administrator.')->group(function () {
 
-    // Admin dashboard + analytics
+    // Opens the administrator dashboard and overall platform analytics.
     Route::get('/dashboard', [AdministratorDashboardController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [AdministratorDashboardController::class, 'analytics'])->name('analytics');
 
-    // ── Profile (admin's own account) ──
+    // Lets the administrator update their own profile and password.
     Route::get('/profile', [AdministratorProfileController::class, 'show'])->name('profile');
     Route::match(['put', 'post'], '/profile/update', [AdministratorProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/password', [AdministratorProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // ── Activity Logs ──
+    // Shows recorded activity and lets the administrator clear old log entries.
     Route::get('/logs', [AdministratorDashboardController::class, 'logs'])->name('logs');
     Route::delete('/logs/clear', [AdministratorDashboardController::class, 'clearLogs'])->name('logs.clear');
 
-    // ── Feedback (admin view all) ──
+    // Lets the administrator review, update, and remove user feedback.
     Route::get('/feedback', [\App\Http\Controllers\FeedbackController::class, 'index'])->name('feedback.index');
     Route::get('/feedback/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'show'])->name('feedback.show');
     Route::put('/feedback/{feedback}/status', [\App\Http\Controllers\FeedbackController::class, 'updateStatus'])->name('feedback.status');
     Route::delete('/feedback/{feedback}', [\App\Http\Controllers\FeedbackController::class, 'destroy'])->name('feedback.destroy');
 
-    // ── Database Backup ──
+    // Creates database backup files and lets the administrator download or delete them.
     Route::get('/backup', function () {
         return view('administrator.backup');
     })->name('backup');
@@ -334,7 +336,7 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
     Route::get('/backup/download/{filename}', [AdministratorDashboardController::class, 'downloadBackup'])->name('backup.download-file');
     Route::delete('/backup/delete/{filename}', [AdministratorDashboardController::class, 'deleteBackup'])->name('backup.delete');
 
-    // ── Users CRUD + moderation ──
+    // Lets the administrator create, edit, remove, assign roles, warn, ban, and unban users.
     Route::get('/users', [AdministratorUserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [AdministratorUserController::class, 'create'])->name('users.create');
     Route::post('/users', [AdministratorUserController::class, 'store'])->name('users.store');
@@ -347,7 +349,7 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
     Route::post('/users/{user}/ban', [AdministratorUserController::class, 'ban'])->name('users.ban');
     Route::post('/users/{user}/unban', [AdministratorUserController::class, 'unban'])->name('users.unban');
 
-    // ── Suggestions Management (admin, can delete) ──
+    // Lets the administrator review, approve, moderate, and remove suggestions or comments.
     Route::get('/suggestions', [AdministratorSuggestionController::class, 'index'])->name('suggestions.index');
     Route::get('/suggestions/{suggestion}', [AdministratorSuggestionController::class, 'show'])->name('suggestions.show');
     Route::put('/suggestions/{suggestion}/status', [AdministratorSuggestionController::class, 'updateStatus'])->name('suggestions.status');
@@ -357,7 +359,7 @@ Route::middleware(['auth', 'administrator'])->prefix('administrator')->name('adm
     Route::post('/suggestions/{suggestion}/comment', [AdministratorSuggestionController::class, 'storeComment'])->name('suggestions.comment.store');
     Route::put('/suggestions/{suggestion}/comment/{comment}', [AdministratorSuggestionController::class, 'updateComment'])->name('suggestions.comment.update');
 
-    // ── Content (sensors / projects / products / videos) ──
+    // Lets the administrator create, edit, and remove sensors, projects, products, and videos.
     Route::get('/sensors', [AdministratorContentController::class, 'sensors'])->name('sensors.index');
     Route::get('/projects', [AdministratorContentController::class, 'projects'])->name('projects.index');
     Route::get('/products', [AdministratorContentController::class, 'products'])->name('products.index');

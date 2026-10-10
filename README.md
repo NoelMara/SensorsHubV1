@@ -1,59 +1,189 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SensorHub
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+SensorHub is our group's educational platform for discovering sensors, exploring projects, and supporting hands-on learning. It combines public learning resources with class management tools for students, instructors, and administrators.
 
-## About Laravel
+This README is a quick guide for the SensorHub team. It explains the purpose of the project, the main user experiences, and how to run the application locally.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Browse sensors, projects, videos, and products
+- Save projects for later
+- Share suggestions, comments, and feedback
+- Join classes and view announcements and learning modules
+- Complete assessments and quizzes
+- Instructor tools for managing classes and course content
+- Administrator tools for managing users and platform content
+- Authenticated AI chat assistance
+- Email verification and content reporting
 
-## Learning Laravel
+## How the platform works
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+SensorHub has public learning content and role-based areas. Guests can explore the platform without an account, while registered users receive access to personal features. Instructors and administrators have separate tools based on their assigned roles.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Built with
 
-## Laravel Sponsors
+- **Backend:** PHP 8.2+, Laravel 12
+- **Frontend:** Blade, Tailwind CSS, JavaScript, Vite
+- **Database:** SQLite by default; MySQL and other Laravel-supported databases are supported
+- **Testing:** PHPUnit
+- **Services:** Cloudinary for images, Supabase Storage for module files, Brevo for verification email, Gemini for AI chat, and Google reCAPTCHA for registration
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Current integrations
 
-### Premium Partners
+- **Brevo:** Sends email verification codes through the custom `BrevoChannel`.
+- **Cloudinary:** Stores profile images and administrator-managed content images.
+- **Supabase Storage:** Stores module files uploaded by instructors and administrators.
+- **Gemini:** Provides authenticated AI chat.
+- **Google reCAPTCHA:** Protects registration.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Some administrator features currently use PostgreSQL-specific queries, including user search and database backups. If the database is changed to MySQL, those areas must be updated and tested.
 
-## Contributing
+## Requirements
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- PHP 8.2 or newer
+- Composer
+- Node.js and npm
+- SQLite or MySQL
+- Git
 
-## Code of Conduct
+## Installation
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Clone the project and install its dependencies:
 
-## Security Vulnerabilities
+```bash
+git clone <repository-url>
+cd SensorHub
+composer install
+npm install
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Create the environment file.
 
-## License
+**PowerShell:**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```powershell
+Copy-Item .env.example .env
+```
+
+**macOS/Linux:**
+
+```bash
+cp .env.example .env
+```
+
+Generate the application key:
+
+```bash
+php artisan key:generate
+```
+
+Configure the database and external services in `.env`. The default configuration uses SQLite. If needed, create the SQLite database file:
+
+```powershell
+New-Item database\database.sqlite -ItemType File
+```
+
+Run the migrations and seed the database:
+
+```bash
+php artisan migrate --seed
+```
+
+Build the frontend assets:
+
+```bash
+npm run build
+```
+
+## Running locally
+
+Start the Laravel server:
+
+```bash
+php artisan serve
+```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
+
+For development, `composer run dev` starts the application server, queue worker, logs, and Vite together:
+
+```bash
+composer run dev
+```
+
+## User roles and access
+
+### Guest
+
+Guest can browse sensors, projects, videos, products, and the public community area. An account is required for saved projects, suggestions, comments, classes, assessments, and other personal features.
+
+### Registered users and students
+
+Registered users can manage their profile, save projects, submit suggestions and feedback, comment on community content, and report content. Students can also join classes, view announcements and modules, complete assessments, and take quizzes.
+
+### Instructors
+
+Instructors can create and manage classes, approve or reject students, publish announcements, organize modules, create assessments and quizzes, and review class activity.
+
+### Administrators
+
+Administrators can manage users, profiles, platform content, suggestions, reports, and other system-level features.
+
+Access is controlled by authentication and role-based middleware. Users should only receive the role required for their responsibilities.
+
+## Testing
+
+```bash
+php artisan test
+```
+
+Or:
+
+```bash
+composer test
+```
+
+## Useful commands
+
+```bash
+php artisan route:list       # View registered routes
+php artisan migrate          # Apply database migrations
+php artisan db:seed          # Seed application data
+php artisan storage:link     # Create the public storage link when needed
+npm run build                # Build production assets
+```
+
+## Project structure
+
+```text
+app/          Application logic, controllers, models, and validation rules
+database/     Migrations, factories, seeders, and database files
+public/       Public entry point and static assets
+resources/    Blade views, stylesheets, and JavaScript
+routes/       Web and application routes
+tests/        Feature and unit tests
+```
+
+## Environment and security
+
+Copy `.env.example` to `.env` and provide the values required by your environment. Never commit `.env`, API keys, passwords, or other credentials.
+
+The database seeder creates or updates an administrator account using `ADMIN_EMAIL`, `ADMIN_NAME`, and `ADMIN_PASSWORD`. Set these values before running `php artisan migrate --seed`, and replace the example password with a strong password.
+
+Administrator database backups are generated locally in `storage/app/backups/`. They are not automatically uploaded to another service, so downloaded backups should be stored separately.
+
+## Team notes
+
+- Keep private credentials in `.env`, not in source files.
+- Use feature branches when making changes.
+- Run the test suite before submitting work:
+
+  ```bash
+  php artisan test
+  ```
+
+- Keep migrations, models, controllers, and views organized with the existing project structure.
+- Document major feature changes so other group members can understand and maintain them.
+
+
