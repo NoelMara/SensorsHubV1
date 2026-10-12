@@ -152,19 +152,7 @@
         <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
             <i class="fas fa-tasks text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No assessments yet</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Add your first assessment or import from another class.</p>
-            <div class="flex flex-wrap items-center justify-center gap-2">
-                <a href="{{ route('instructor.classes.assessments.create', $class) }}"
-                   class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
-                    <i class="fas fa-plus text-xs"></i>
-                    Add assessment
-                </a>
-                <a href="{{ route('instructor.classes.assessments.import', $class) }}"
-                   class="inline-flex items-center gap-2 px-5 py-2.5 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 rounded-lg hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition text-sm font-medium">
-                    <i class="fas fa-download text-xs"></i>
-                    Import
-                </a>
-            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Use the buttons above to add your first assessment or import one.</p>
         </div>
     @endif
 </div>

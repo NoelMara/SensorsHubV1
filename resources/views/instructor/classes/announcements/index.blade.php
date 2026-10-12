@@ -106,12 +106,7 @@
         <div class="text-center py-20 border border-dashed border-gray-200 dark:border-gray-800 rounded-lg">
             <i class="fas fa-bullhorn text-5xl text-gray-300 dark:text-gray-600 mb-4"></i>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">No announcements yet</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Post your first announcement to the class.</p>
-            <a href="{{ route('instructor.classes.announcements.create', $class) }}"
-               class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm">
-                <i class="fas fa-plus text-xs"></i>
-                New announcement
-            </a>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Use the button above to post your first announcement.</p>
         </div>
     @endif
 </div>
