@@ -34,29 +34,29 @@
         @endif
     </div>
 
-       {{-- Tab nav — single row, horizontal scroll on mobile --}}
-    @php
-        $tabs = [
-            ['route' => 'instructor.classes.announcements.index', 'icon' => 'fa-bullhorn', 'label' => 'Announcements'],
-            ['route' => 'instructor.classes.modules.index', 'icon' => 'fa-book-open', 'label' => 'Modules'],
-            ['route' => 'instructor.classes.assessments.index', 'icon' => 'fa-tasks', 'label' => 'Assessments'],
-            ['route' => 'instructor.classes.quizzes.index', 'icon' => 'fa-question-circle', 'label' => 'Quizzes'],
-            ['route' => 'instructor.classes.leaderboard', 'icon' => 'fa-trophy', 'label' => 'Leaderboard'],
-            ['route' => 'instructor.classes.gradebook', 'icon' => 'fa-table', 'label' => 'Gradebook'],
-            ['route' => 'instructor.classes.analytics', 'icon' => 'fa-chart-bar', 'label' => 'Analytics'],
-            ['route' => 'instructor.classes.resources', 'icon' => 'fa-book', 'label' => 'Resources'],
-        ];
-    @endphp
-
+    {{-- Tab nav --}}
     <nav class="-mx-4 sm:mx-0 mb-8 sm:mb-12">
         <div class="flex items-center gap-1 px-4 sm:px-0 overflow-x-auto scrollbar-hide">
+            @php
+                $tabs = [
+                    ['route' => 'instructor.classes.announcements.index', 'icon' => 'fa-bullhorn', 'label' => 'Announcements'],
+                    ['route' => 'instructor.classes.modules.index', 'icon' => 'fa-book-open', 'label' => 'Modules'],
+                    ['route' => 'instructor.classes.assessments.index', 'icon' => 'fa-tasks', 'label' => 'Assessments'],
+                    ['route' => 'instructor.classes.quizzes.index', 'icon' => 'fa-question-circle', 'label' => 'Quizzes'],
+                    ['route' => 'instructor.classes.leaderboard', 'icon' => 'fa-trophy', 'label' => 'Leaderboard'],
+                    ['route' => 'instructor.classes.gradebook', 'icon' => 'fa-table', 'label' => 'Gradebook'],
+                    ['route' => 'instructor.classes.analytics', 'icon' => 'fa-chart-bar', 'label' => 'Analytics'],
+                    ['route' => 'instructor.classes.resources', 'icon' => 'fa-book', 'label' => 'Resources'],
+                ];
+            @endphp
+
             @foreach($tabs as $tab)
                 @php $isActive = request()->routeIs($tab['route']); @endphp
                 <a href="{{ route($tab['route'], $class) }}"
                    class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium whitespace-nowrap flex-shrink-0 rounded-lg transition
                         {{ $isActive
-                            ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-sm'
-                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
+                            ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white'
+                            : 'text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400' }}">
                     <i class="fas {{ $tab['icon'] }} text-[10px]"></i>
                     {{ $tab['label'] }}
                 </a>
@@ -64,8 +64,8 @@
 
             <div class="flex items-center gap-2 ml-auto pl-4 flex-shrink-0">
                 <a href="{{ route('instructor.classes.edit', $class) }}"
-                class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition flex-shrink-0"
-                title="Edit class">
+                   class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition flex-shrink-0"
+                   title="Edit class">
                     <i class="fas fa-edit text-xs"></i>
                 </a>
                 <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
@@ -215,7 +215,7 @@
                             </div>
                         </div>
 
-                        {{-- Row 2: progress (only for approved students with submissions) --}}
+                        {{-- Row 2: progress --}}
                         @if($student->pivot->status === 'approved' && $totalAssessments > 0)
                             @php
                                 $progressPercent = $totalAssessments > 0 ? ($submittedCount / $totalAssessments) * 100 : 0;
