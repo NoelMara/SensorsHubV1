@@ -48,15 +48,15 @@
         ];
     @endphp
 
-    <nav class="-mx-4 sm:mx-0 mb-8 sm:mb-12 border-b border-gray-200 dark:border-gray-800">
+    <nav class="-mx-4 sm:mx-0 mb-8 sm:mb-12">
         <div class="flex items-center gap-0.5 px-4 sm:px-0 overflow-x-auto scrollbar-hide">
             @foreach($tabs as $tab)
                 @php $isActive = request()->routeIs($tab['route']); @endphp
                 <a href="{{ route($tab['route'], $class) }}"
-                class="inline-flex items-center gap-1.5 px-2.5 py-2.5 text-[13px] font-medium whitespace-nowrap flex-shrink-0 border-b-2 transition
+                class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium whitespace-nowrap flex-shrink-0 rounded-lg transition
                         {{ $isActive
-                            ? 'text-gray-900 dark:text-white border-emerald-500'
-                            : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-700' }}">
+                            ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
+                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
                     <i class="fas {{ $tab['icon'] }} text-[10px] opacity-80"></i>
                     {{ $tab['label'] }}
                 </a>
@@ -217,10 +217,14 @@
 
                         {{-- Row 2: progress (only for approved students with submissions) --}}
                         @if($student->pivot->status === 'approved' && $totalAssessments > 0)
+                            @php
+                                $progressPercent = $totalAssessments > 0 ? ($submittedCount / $totalAssessments) * 100 : 0;
+                                $progressColor = $progressPercent >= 75 ? 'bg-emerald-500' : ($progressPercent >= 50 ? 'bg-amber-500' : 'bg-red-500');
+                            @endphp
                             <div class="flex items-center gap-3 mb-3 text-xs">
                                 <div class="flex-1 bg-gray-100 dark:bg-gray-800 rounded-full h-1.5">
-                                    <div class="bg-gray-500 dark:bg-gray-400 h-1.5 rounded-full transition-all"
-                                         style="width: {{ $totalAssessments > 0 ? ($submittedCount / $totalAssessments) * 100 : 0 }}%"></div>
+                                    <div class="{{ $progressColor }} h-1.5 rounded-full transition-all"
+                                        style="width: {{ $progressPercent }}%"></div>
                                 </div>
                                 <span class="text-gray-500 dark:text-gray-400 tabular-nums flex-shrink-0">{{ $submittedCount }}/{{ $totalAssessments }}</span>
                                 <span class="font-medium text-gray-700 dark:text-gray-300 tabular-nums flex-shrink-0">
