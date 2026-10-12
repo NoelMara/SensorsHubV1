@@ -48,16 +48,16 @@
         ];
     @endphp
 
-    <nav class="-mx-4 sm:mx-0 mb-8 sm:mb-12">
-        <div class="flex items-center gap-0.5 px-4 sm:px-0 overflow-x-auto scrollbar-hide">
+    <nav class="-mx-4 sm:mx-0 mb-8 sm:mb-12 border-b border-gray-200 dark:border-gray-800">
+        <div class="flex items-center gap-1 px-4 sm:px-0 overflow-x-auto scrollbar-hide">
             @foreach($tabs as $tab)
                 @php $isActive = request()->routeIs($tab['route']); @endphp
                 <a href="{{ route($tab['route'], $class) }}"
-                class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium whitespace-nowrap flex-shrink-0 rounded-lg transition
+                class="inline-flex items-center gap-1.5 px-3 py-2.5 text-[13px] font-medium whitespace-nowrap flex-shrink-0 border-b-[3px] -mb-px transition
                         {{ $isActive
-                            ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm'
-                            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white' }}">
-                    <i class="fas {{ $tab['icon'] }} text-[10px] opacity-80"></i>
+                            ? 'text-gray-900 dark:text-white border-emerald-500 font-semibold'
+                            : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-700' }}">
+                    <i class="fas {{ $tab['icon'] }} text-[10px]"></i>
                     {{ $tab['label'] }}
                 </a>
             @endforeach
