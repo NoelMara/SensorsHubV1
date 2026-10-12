@@ -282,6 +282,42 @@ class ClassroomController extends Controller
         return view('instructor.classes.leaderboard', compact('class', 'leaderboard'));
     }
 
+    public function gradebook(Classroom $class)
+    {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $students = $class->students()
+            ->wherePivot('status', 'approved')
+            ->orderBy('name')
+            ->get();
+
+        $assessments = $class->assessments()
+            ->where('is_published', true)
+            ->orderBy('created_at')
+            ->get();
+
+        $quizzes = $class->quizzes()
+            ->where('is_published', true)
+            ->orderBy('created_at')
+            ->get();
+
+        $assessmentSubs = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))
+            ->whereNotNull('score')
+            ->get()
+            ->groupBy('user_id');
+
+        $quizSubs = QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))
+            ->whereNotNull('score')
+            ->get()
+            ->groupBy('user_id');
+
+        return view('instructor.classes.gradebook', compact(
+            'class', 'students', 'assessments', 'quizzes', 'assessmentSubs', 'quizSubs'
+        ));
+    }
+
     public function analytics(Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) {
@@ -356,27 +392,10 @@ class ClassroomController extends Controller
             ];
         }
 
-        // Student Performance - group by student in memory
-        $assessByStudent = $allAssessmentSubs->groupBy('user_id');
-        $quizByStudent = $allQuizSubs->groupBy('user_id');
-
-        $studentPerformance = [];
-        foreach ($students as $student) {
-            $sa = $assessByStudent->get($student->id, collect())->sum('score');
-            $sq = $quizByStudent->get($student->id, collect())->sum('score');
-            $studentPerformance[] = [
-                'name' => $student->name,
-                'profile_image' => $student->profile_image,
-                'assessment_avg' => $totalAssessmentPoints > 0 ? round(($sa / $totalAssessmentPoints) * 100, 1) : null,
-                'quiz_avg' => $totalQuizPoints > 0 ? round(($sq / $totalQuizPoints) * 100, 1) : null,
-                'overall' => ($totalAssessmentPoints + $totalQuizPoints) > 0 ? round((($sa + $sq) / ($totalAssessmentPoints + $totalQuizPoints)) * 100, 1) : null,
-            ];
-        }
-
         return view('instructor.classes.analytics', compact(
             'class', 'studentCount', 'assessmentCount', 'quizCount',
             'assessmentAvg', 'quizAvg', 'assessmentBreakdown', 'quizBreakdown',
-            'submissionTimeline', 'studentPerformance'
+            'submissionTimeline'
         ));
     }
 

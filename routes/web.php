@@ -282,6 +282,7 @@ Route::middleware(['auth.redirect', 'instructor'])->prefix('instructor')->name('
 
     // Shows class rankings and learning-progress information.
     Route::get('/classes/{class}/leaderboard', [ClassroomController::class, 'leaderboard'])->name('classes.leaderboard');
+    Route::get('/classes/{class}/gradebook', [ClassroomController::class, 'gradebook'])->name('classes.gradebook');
     Route::get('/classes/{class}/analytics', [ClassroomController::class, 'analytics'])->name('classes.analytics');
 
     // Lets instructors connect public sensors, projects, and videos to a class.

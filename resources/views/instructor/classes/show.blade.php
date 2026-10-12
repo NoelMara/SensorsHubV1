@@ -62,6 +62,11 @@
                 <i class="fas fa-trophy text-[11px]"></i>
                 Leaderboard
             </a>
+            <a href="{{ route('instructor.classes.gradebook', $class) }}"
+                class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
+                <i class="fas fa-table text-[11px]"></i>
+                Gradebook
+            </a>
             <a href="{{ route('instructor.classes.analytics', $class) }}"
                class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
                 <i class="fas fa-chart-bar text-[11px]"></i>
