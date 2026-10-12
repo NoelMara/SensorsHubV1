@@ -13,16 +13,23 @@
     </a>
 
     {{-- Header --}}
-    <div class="mb-12">
-        <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
-            Gradebook · {{ $class->name }}
-        </p>
-        <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
-            Gradebook
-        </h1>
-        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
-            All scores for {{ $students->count() }} {{ Str::plural('student', $students->count()) }}.
-        </p>
+    <div class="mb-12 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+        <div>
+            <p class="text-xs font-medium uppercase tracking-[0.15em] text-gray-500 dark:text-gray-400 mb-3">
+                Gradebook · {{ $class->name }}
+            </p>
+            <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 dark:text-white mb-4">
+                Gradebook
+            </h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+                All scores for {{ $students->count() }} {{ Str::plural('student', $students->count()) }}.
+            </p>
+        </div>
+        <a href="{{ route('instructor.classes.gradebook.export', $class) }}"
+          class="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition text-sm flex-shrink-0">
+            <i class="fas fa-download text-xs"></i>
+            Download CSV
+        </a>
     </div>
 
     @if($students->count() > 0 && ($assessments->count() > 0 || $quizzes->count() > 0))

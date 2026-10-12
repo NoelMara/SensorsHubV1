@@ -318,6 +318,90 @@ class ClassroomController extends Controller
         ));
     }
 
+    public function exportGradebook(Classroom $class)
+    {
+        if ($class->instructor_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $students = $class->students()
+            ->wherePivot('status', 'approved')
+            ->orderBy('name')
+            ->get();
+
+        $assessments = $class->assessments()
+            ->where('is_published', true)
+            ->orderBy('created_at')
+            ->get();
+
+        $quizzes = $class->quizzes()
+            ->where('is_published', true)
+            ->orderBy('created_at')
+            ->get();
+
+        $assessmentSubs = AssessmentSubmission::whereIn('assessment_id', $assessments->pluck('id'))
+            ->whereNotNull('score')
+            ->get()
+            ->groupBy('user_id');
+
+        $quizSubs = QuizSubmission::whereIn('quiz_id', $quizzes->pluck('id'))
+            ->whereNotNull('score')
+            ->get()
+            ->groupBy('user_id');
+
+        // Build the CSV
+        $filename = 'gradebook-' . $class->id . '-' . now()->format('Y-m-d') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () use ($students, $assessments, $quizzes, $assessmentSubs, $quizSubs) {
+            $file = fopen('php://output', 'w');
+
+            // Header row
+            $headerRow = ['Student'];
+            foreach ($assessments as $a) {
+                $headerRow[] = $a->title . ' (' . $a->points . ' pts)';
+            }
+            $headerRow[] = 'Assess Total';
+            foreach ($quizzes as $q) {
+                $headerRow[] = $q->title . ' (' . $q->points . ' pts)';
+            }
+            $headerRow[] = 'Quiz Total';
+            $headerRow[] = 'Grand Total';
+            fputcsv($file, $headerRow);
+
+            // Data rows
+            foreach ($students as $student) {
+                $studentAssessSubs = $assessmentSubs->get($student->id, collect())->keyBy('assessment_id');
+                $studentQuizSubs = $quizSubs->get($student->id, collect())->keyBy('quiz_id');
+
+                $row = [$student->name];
+
+                foreach ($assessments as $a) {
+                    $sub = $studentAssessSubs->get($a->id);
+                    $row[] = $sub?->score ?? '';
+                }
+                $row[] = $studentAssessSubs->sum('score');
+
+                foreach ($quizzes as $q) {
+                    $sub = $studentQuizSubs->get($q->id);
+                    $row[] = $sub?->score ?? '';
+                }
+                $row[] = $studentQuizSubs->sum('score');
+                $row[] = $studentAssessSubs->sum('score') + $studentQuizSubs->sum('score');
+
+                fputcsv($file, $row);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
     public function analytics(Classroom $class)
     {
         if ($class->instructor_id !== auth()->id()) {
