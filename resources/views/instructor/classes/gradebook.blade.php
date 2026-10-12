@@ -21,7 +21,7 @@
             Gradebook
         </h1>
         <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
-            All scores for {{ $students->count() }} {{ Str::plural('student', $students->count()) }} across {{ $assessments->count() + $quizzes->count() }} items.
+            All scores for {{ $students->count() }} {{ Str::plural('student', $students->count()) }}.
         </p>
     </div>
 
@@ -36,28 +36,41 @@
                                 Student
                             </th>
 
+                            {{-- Assessment columns --}}
                             @foreach($assessments as $assessment)
-                                <th class="px-3 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 min-w-[100px]"
+                                <th class="px-3 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 min-w-[90px]"
                                     title="{{ $assessment->title }} ({{ $assessment->points }} pts)">
                                     <div class="flex flex-col items-center gap-0.5">
                                         <span class="text-blue-600 dark:text-blue-400 text-[9px]">Assessment</span>
-                                        <span class="truncate max-w-[100px]">{{ Str::limit($assessment->title, 15) }}</span>
+                                        <span class="truncate max-w-[90px]">{{ Str::limit($assessment->title, 14) }}</span>
                                     </div>
                                 </th>
                             @endforeach
 
+                            {{-- Assessment Total column --}}
+                            <th class="px-3 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-blue-600 dark:text-blue-400 min-w-[100px] border-l-2 border-gray-200 dark:border-gray-800 bg-blue-50/50 dark:bg-blue-950/10">
+                                Assess Total
+                            </th>
+
+                            {{-- Quiz columns --}}
                             @foreach($quizzes as $quiz)
-                                <th class="px-3 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 min-w-[100px]"
+                                <th class="px-3 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 min-w-[90px] border-l-2 border-gray-200 dark:border-gray-800"
                                     title="{{ $quiz->title }} ({{ $quiz->points }} pts)">
                                     <div class="flex flex-col items-center gap-0.5">
                                         <span class="text-purple-600 dark:text-purple-400 text-[9px]">Quiz</span>
-                                        <span class="truncate max-w-[100px]">{{ Str::limit($quiz->title, 15) }}</span>
+                                        <span class="truncate max-w-[90px]">{{ Str::limit($quiz->title, 14) }}</span>
                                     </div>
                                 </th>
                             @endforeach
 
-                            <th class="pl-3 pr-5 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 min-w-[80px]">
-                                Total
+                            {{-- Quiz Total column --}}
+                            <th class="px-3 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-purple-600 dark:text-purple-400 min-w-[100px] border-l-2 border-gray-200 dark:border-gray-800 bg-purple-50/50 dark:bg-purple-950/10">
+                                Quiz Total
+                            </th>
+
+                            {{-- Grand Total column --}}
+                            <th class="pl-3 pr-5 py-3 text-center text-[10px] font-medium uppercase tracking-wider text-gray-900 dark:text-white min-w-[100px] border-l-2 border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-800">
+                                Grand Total
                             </th>
                         </tr>
                     </thead>
@@ -66,7 +79,10 @@
                             @php
                                 $studentAssessSubs = $assessmentSubs->get($student->id, collect())->keyBy('assessment_id');
                                 $studentQuizSubs = $quizSubs->get($student->id, collect())->keyBy('quiz_id');
-                                $total = $studentAssessSubs->sum('score') + $studentQuizSubs->sum('score');
+
+                                $assessTotal = $studentAssessSubs->sum('score');
+                                $quizTotal = $studentQuizSubs->sum('score');
+                                $grandTotal = $assessTotal + $quizTotal;
                             @endphp
 
                             <tr class="border-b border-gray-100 dark:border-gray-800/50 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition">
@@ -84,6 +100,7 @@
                                     </div>
                                 </td>
 
+                                {{-- Assessment cells --}}
                                 @foreach($assessments as $assessment)
                                     @php
                                         $sub = $studentAssessSubs->get($assessment->id);
@@ -101,13 +118,21 @@
                                     </td>
                                 @endforeach
 
+                                {{-- Assessment Total cell --}}
+                                <td class="px-3 py-3 text-center border-l-2 border-gray-200 dark:border-gray-800 bg-blue-50/30 dark:bg-blue-950/5">
+                                    <span class="text-sm font-semibold text-blue-700 dark:text-blue-400 tabular-nums">
+                                        {{ $assessTotal }}
+                                    </span>
+                                </td>
+
+                                {{-- Quiz cells --}}
                                 @foreach($quizzes as $quiz)
                                     @php
                                         $sub = $studentQuizSubs->get($quiz->id);
                                         $score = $sub?->score;
                                         $percent = ($score !== null && $quiz->points > 0) ? round(($score / $quiz->points) * 100) : null;
                                     @endphp
-                                    <td class="px-3 py-3 text-center">
+                                    <td class="px-3 py-3 text-center border-l-2 border-gray-100 dark:border-gray-800/50 first:border-l-2 first:border-gray-200 dark:first:border-gray-800">
                                         @if($score !== null)
                                             <span class="text-sm font-semibold tabular-nums {{ $percent >= 75 ? 'text-emerald-600 dark:text-emerald-400' : ($percent >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400') }}">
                                                 {{ $score }}
@@ -118,8 +143,18 @@
                                     </td>
                                 @endforeach
 
-                                <td class="pl-3 pr-5 py-3 text-center">
-                                    <span class="text-sm font-semibold text-gray-900 dark:text-white tabular-nums">{{ $total }}</span>
+                                {{-- Quiz Total cell --}}
+                                <td class="px-3 py-3 text-center border-l-2 border-gray-200 dark:border-gray-800 bg-purple-50/30 dark:bg-purple-950/5">
+                                    <span class="text-sm font-semibold text-purple-700 dark:text-purple-400 tabular-nums">
+                                        {{ $quizTotal }}
+                                    </span>
+                                </td>
+
+                                {{-- Grand Total cell --}}
+                                <td class="pl-3 pr-5 py-3 text-center border-l-2 border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-800">
+                                    <span class="text-sm font-bold text-gray-900 dark:text-white tabular-nums">
+                                        {{ $grandTotal }}
+                                    </span>
                                 </td>
                             </tr>
                         @endforeach

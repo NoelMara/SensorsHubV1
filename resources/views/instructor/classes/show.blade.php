@@ -34,52 +34,68 @@
         @endif
     </div>
 
-    {{-- Tab nav — all links visible, scrolls horizontally on mobile --}}
-    <nav class="-mx-4 sm:mx-0 mb-8 sm:mb-12 border-b border-gray-200 dark:border-gray-800">
-        <div class="flex items-center gap-1 px-4 sm:px-0 overflow-x-auto pb-px scrollbar-hide">
-            <a href="{{ route('instructor.classes.announcements.index', $class) }}"
-               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
-                <i class="fas fa-bullhorn text-[11px]"></i>
-                Announcements
-            </a>
-            <a href="{{ route('instructor.classes.modules.index', $class) }}"
-               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
-                <i class="fas fa-book-open text-[11px]"></i>
-                Modules
-            </a>
-            <a href="{{ route('instructor.classes.assessments.index', $class) }}"
-               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
-                <i class="fas fa-tasks text-[11px]"></i>
-                Assessments
-            </a>
-            <a href="{{ route('instructor.classes.quizzes.index', $class) }}"
-               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
-                <i class="fas fa-question-circle text-[11px]"></i>
-                Quizzes
-            </a>
-            <a href="{{ route('instructor.classes.leaderboard', $class) }}"
-               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
-                <i class="fas fa-trophy text-[11px]"></i>
-                Leaderboard
-            </a>
-            <a href="{{ route('instructor.classes.gradebook', $class) }}"
-                class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
-                <i class="fas fa-table text-[11px]"></i>
-                Gradebook
-            </a>
-            <a href="{{ route('instructor.classes.analytics', $class) }}"
-               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
-                <i class="fas fa-chart-bar text-[11px]"></i>
-                Analytics
-            </a>
-            <a href="{{ route('instructor.classes.resources', $class) }}"
-               class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition whitespace-nowrap flex-shrink-0">
-                <i class="fas fa-book text-[11px]"></i>
-                Resources
-            </a>
+    {{-- Tab nav — desktop: dropdowns, mobile: select --}}
+    @php
+        $tabs = [
+            'content' => [
+                'label' => 'Content',
+                'items' => [
+                    ['route' => 'instructor.classes.announcements.index', 'icon' => 'fa-bullhorn', 'label' => 'Announcements'],
+                    ['route' => 'instructor.classes.modules.index', 'icon' => 'fa-book-open', 'label' => 'Modules'],
+                    ['route' => 'instructor.classes.assessments.index', 'icon' => 'fa-tasks', 'label' => 'Assessments'],
+                    ['route' => 'instructor.classes.quizzes.index', 'icon' => 'fa-question-circle', 'label' => 'Quizzes'],
+                ],
+            ],
+            'insights' => [
+                'label' => 'Insights',
+                'items' => [
+                    ['route' => 'instructor.classes.leaderboard', 'icon' => 'fa-trophy', 'label' => 'Leaderboard'],
+                    ['route' => 'instructor.classes.gradebook', 'icon' => 'fa-table', 'label' => 'Gradebook'],
+                    ['route' => 'instructor.classes.analytics', 'icon' => 'fa-chart-bar', 'label' => 'Analytics'],
+                ],
+            ],
+            'resources' => [
+                'label' => 'Resources',
+                'items' => [
+                    ['route' => 'instructor.classes.resources', 'icon' => 'fa-book', 'label' => 'Resources'],
+                ],
+            ],
+        ];
+    @endphp
 
-            {{-- Edit/Delete pushed to right (desktop only) --}}
-            <div class="hidden sm:flex items-center gap-2 ml-auto pl-4">
+    {{-- Desktop nav --}}
+    <nav class="hidden sm:block mb-8 sm:mb-12 border-b border-gray-200 dark:border-gray-800">
+        <div class="flex items-center gap-1 pb-px">
+            @foreach($tabs as $groupKey => $group)
+                <div class="relative group/nav">
+                    @php
+                        $isGroupActive = collect($group['items'])->contains(fn($item) => request()->routeIs($item['route']));
+                    @endphp
+                    <button type="button"
+                        class="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium transition whitespace-nowrap
+                            {{ $isGroupActive ? 'text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white' }}">
+                        {{ $group['label'] }}
+                        <i class="fas fa-chevron-down text-[9px] opacity-60"></i>
+                    </button>
+
+                    <div class="invisible opacity-0 group-hover/nav:visible group-hover/nav:opacity-100 focus-within:visible focus-within:opacity-100 transition-all duration-150 absolute left-0 top-full mt-1 min-w-[180px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg shadow-lg z-20 py-1">
+                        @foreach($group['items'] as $item)
+                            @php $isActive = request()->routeIs($item['route']); @endphp
+                            <a href="{{ route($item['route'], $class) }}"
+                               class="flex items-center gap-2.5 px-3 py-2 text-sm transition
+                                    {{ $isActive ? 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-medium' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white' }}">
+                                <i class="fas {{ $item['icon'] }} text-[11px] w-4 text-center"></i>
+                                {{ $item['label'] }}
+                                @if($isActive)
+                                    <i class="fas fa-check text-[9px] ml-auto text-emerald-500"></i>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+
+            <div class="flex items-center gap-2 ml-auto pl-4">
                 <a href="{{ route('instructor.classes.edit', $class) }}"
                    class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition flex-shrink-0"
                    title="Edit class">
@@ -98,22 +114,50 @@
         </div>
     </nav>
 
-    {{-- Edit/Delete for mobile — shown as buttons below the nav --}}
-    <div class="flex sm:hidden items-center gap-2 mb-8">
-        <a href="{{ route('instructor.classes.edit', $class) }}"
-           class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-800 text-sm font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
-            <i class="fas fa-edit text-xs"></i>
-            Edit
-        </a>
-        <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
-            onsubmit="return confirm('Delete this class? This cannot be undone.');" class="flex-1">
-            @csrf @method('DELETE')
-            <button type="submit"
-                class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-800 text-sm font-medium text-gray-600 dark:text-gray-400 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500 transition">
-                <i class="fas fa-trash text-xs"></i>
-                Delete
-            </button>
-        </form>
+    {{-- Mobile nav --}}
+    <div class="sm:hidden mb-8">
+        <select
+            onchange="if(this.value) window.location.href = this.value;"
+            class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:border-emerald-500 transition text-sm font-medium">
+            <optgroup label="Content">
+                @foreach($tabs['content']['items'] as $item)
+                    <option value="{{ route($item['route'], $class) }}" {{ request()->routeIs($item['route']) ? 'selected' : '' }}>
+                        {{ $item['label'] }}
+                    </option>
+                @endforeach
+            </optgroup>
+            <optgroup label="Insights">
+                @foreach($tabs['insights']['items'] as $item)
+                    <option value="{{ route($item['route'], $class) }}" {{ request()->routeIs($item['route']) ? 'selected' : '' }}>
+                        {{ $item['label'] }}
+                    </option>
+                @endforeach
+            </optgroup>
+            <optgroup label="Resources">
+                @foreach($tabs['resources']['items'] as $item)
+                    <option value="{{ route($item['route'], $class) }}" {{ request()->routeIs($item['route']) ? 'selected' : '' }}>
+                        {{ $item['label'] }}
+                    </option>
+                @endforeach
+            </optgroup>
+        </select>
+
+        <div class="flex items-center gap-2 mt-3">
+            <a href="{{ route('instructor.classes.edit', $class) }}"
+               class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-800 text-sm font-medium text-gray-600 dark:text-gray-400 hover:border-gray-900 dark:hover:border-white hover:text-gray-900 dark:hover:text-white transition">
+                <i class="fas fa-edit text-xs"></i>
+                Edit
+            </a>
+            <form action="{{ route('instructor.classes.destroy', $class) }}" method="POST"
+                onsubmit="return confirm('Delete this class? This cannot be undone.');" class="flex-1">
+                @csrf @method('DELETE')
+                <button type="submit"
+                    class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-800 text-sm font-medium text-gray-600 dark:text-gray-400 hover:border-red-500 hover:text-red-500 dark:hover:border-red-500 dark:hover:text-red-500 transition">
+                    <i class="fas fa-trash text-xs"></i>
+                    Delete
+                </button>
+            </form>
+        </div>
     </div>
 
     {{-- Quick stats --}}
