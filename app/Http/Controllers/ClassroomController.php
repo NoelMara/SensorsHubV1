@@ -346,11 +346,11 @@ class ClassroomController extends Controller
         $allQuizSubs = QuizSubmission::whereIn('quiz_id', $quizIds)
             ->whereNotNull('score')->get();
 
-        // Averages
-        $assessmentAvg = $totalAssessmentPoints > 0 
-            ? round(($allAssessmentSubs->sum('score') / $totalAssessmentPoints) * 100, 1) : 0;
-        $quizAvg = $totalQuizPoints > 0 
-            ? round(($allQuizSubs->sum('score') / $totalQuizPoints) * 100, 1) : 0;
+        // Averages (divide by max points × student count so the % is correct)
+        $assessmentAvg = ($totalAssessmentPoints > 0 && $studentCount > 0)
+            ? round(($allAssessmentSubs->sum('score') / ($totalAssessmentPoints * $studentCount)) * 100, 1) : 0;
+        $quizAvg = ($totalQuizPoints > 0 && $studentCount > 0)
+            ? round(($allQuizSubs->sum('score') / ($totalQuizPoints * $studentCount)) * 100, 1) : 0;
 
         // Assessment Breakdown
         $assessmentBreakdown = [];
