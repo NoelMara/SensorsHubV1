@@ -38,42 +38,42 @@
     <nav class="-mx-4 sm:mx-0 mb-8 sm:mb-12">
         <div class="flex items-center gap-1 px-4 sm:px-0 overflow-x-auto scrollbar-hide">
             <a href="{{ route('instructor.classes.announcements.index', $class) }}"
-            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
                 <i class="fas fa-bullhorn text-[10px]"></i>
                 Announcements
             </a>
             <a href="{{ route('instructor.classes.modules.index', $class) }}"
-            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
                 <i class="fas fa-book-open text-[10px]"></i>
                 Modules
             </a>
             <a href="{{ route('instructor.classes.assessments.index', $class) }}"
-            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
                 <i class="fas fa-tasks text-[10px]"></i>
                 Assessments
             </a>
             <a href="{{ route('instructor.classes.quizzes.index', $class) }}"
-            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
                 <i class="fas fa-question-circle text-[10px]"></i>
                 Quizzes
             </a>
             <a href="{{ route('instructor.classes.leaderboard', $class) }}"
-            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
                 <i class="fas fa-trophy text-[10px]"></i>
                 Leaderboard
             </a>
             <a href="{{ route('instructor.classes.gradebook', $class) }}"
-            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
                 <i class="fas fa-table text-[10px]"></i>
                 Gradebook
             </a>
             <a href="{{ route('instructor.classes.analytics', $class) }}"
-            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
                 <i class="fas fa-chart-bar text-[10px]"></i>
                 Analytics
             </a>
             <a href="{{ route('instructor.classes.resources', $class) }}"
-            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
+            class="inline-flex items-center gap-1.5 px-3 py-2 text-[13px] font-medium text-gray-600 dark:text-gray-400 hover:text-emerald-700 dark:hover:text-emerald-400 whitespace-nowrap flex-shrink-0 rounded-lg transition">
                 <i class="fas fa-book text-[10px]"></i>
                 Resources
             </a>
