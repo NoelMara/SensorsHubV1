@@ -347,7 +347,7 @@
         <a href="{{ route('dashboard.classes.index') }}"
            class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition">
             <i class="fas fa-arrow-left text-xs"></i>
-            Back to My Classes
+            Back to Classroom
         </a>
     </div>
 </div>
